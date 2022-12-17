@@ -14,11 +14,7 @@
         <div class="card-body login-card-body">
           <p class="login-box-msg">Inicia sesion</p>
 
-          <form
-            [formGroup]="loginForm"
-            (ngSubmit)="onSubmit()"
-            autocomplete="off"
-          >
+          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
             <div class="input-group mb-3">
               <input
                 type="text"
@@ -41,6 +37,7 @@
                 class="form-control"
                 placeholder="Contraseña"
                 formControlName="password"
+                autocomplete="on"
               />
               <div class="input-group-append">
                 <div class="input-group-text">

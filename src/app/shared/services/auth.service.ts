@@ -29,52 +29,19 @@ export class AuthService {
       return of(false);
     } else {
       token = localStorage.getItem('token') || '';
-
-      this.apiService = new ApiService(this.http);
-      await this.apiService
-        .postService(ApiRequest.postLoginRenewToken, {
-          token: token,
-        })
-        .subscribe((resp) => {
-          console.log(resp.ok);
-          if (resp.ok == true) {
-            localStorage.setItem('token', resp.token!);
-            return of(true);
-          } else {
-            this.logout();
-            return of(false);
-          }
-        });
+      return of(true);
     }
-    return of(false);
   }
   async authVerificationCheck() {
     var token = '';
-    var bool = null;
 
     if (!localStorage.getItem('token') || '') {
       this.utSV.navigateToPath('/login');
+
       return false;
     } else {
       token = localStorage.getItem('token') || '';
-
-      this.apiService = new ApiService(this.http);
-      await this.apiService
-        .postService(ApiRequest.postLoginRenewToken, {
-          token: token,
-        })
-        .subscribe((resp) => {
-          console.log(resp.ok);
-          if (resp.ok == true) {
-            localStorage.setItem('token', resp.token!);
-            this.utSV.navigateToPath('/home');
-            return true;
-          } else {
-            this.logout();
-            return false;
-          }
-        });
-      return null;
+      return true;
     }
   }
 
@@ -89,24 +56,6 @@ export class AuthService {
           catchError((err) => of(err));
         })
       );
-  }
-
-  renewToken() {
-    const token = localStorage.getItem('token') || '';
-    this.apiService = new ApiService(this.http);
-    this.apiService
-      .postService(ApiRequest.postLoginRenewToken, {
-        token: token,
-      })
-      .subscribe((resp) => {
-        if (resp.ok == true) {
-          localStorage.setItem('token', resp.token!);
-          return true;
-        } else {
-          this.logout();
-          return false;
-        }
-      });
   }
 
   logout() {

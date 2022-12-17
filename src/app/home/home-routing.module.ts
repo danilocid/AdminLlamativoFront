@@ -12,6 +12,13 @@ const routes: Routes = [
         path: '',
         component: DashboardComponent,
       },
+      {
+        path: 'configuracion',
+        loadChildren: () =>
+          import('./configuracion/configuracion.module').then(
+            (m) => m.ConfiguracionModule
+          ),
+      },
     ],
   },
 ];

@@ -6,6 +6,8 @@ import { HomeComponent } from './home/home.component';
 import { NavbarComponent } from './partials/navbar/navbar.component';
 import { SidebarComponent } from './partials/sidebar/sidebar.component';
 import { FooterComponent } from './partials/footer/footer.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
 
 @NgModule({
   declarations: [
@@ -15,6 +17,6 @@ import { FooterComponent } from './partials/footer/footer.component';
     SidebarComponent,
     FooterComponent,
   ],
-  imports: [CommonModule, HomeRoutingModule],
+  imports: [CommonModule, HomeRoutingModule, FormsModule, ReactiveFormsModule],
 })
 export class HomeModule {}

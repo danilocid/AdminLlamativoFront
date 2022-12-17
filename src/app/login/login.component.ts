@@ -41,7 +41,6 @@ export class LoginComponent implements OnInit, AfterViewInit {
     this.spinner.show();
     this.logedIn = await this.authSV.authVerificationCheck();
     console.log(this.logedIn);
-
     this.spinner.hide();
   }
   onSubmit() {

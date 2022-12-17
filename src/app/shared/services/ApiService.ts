@@ -8,6 +8,8 @@ export class ApiService {
   baseURL = environment.urlBackend;
   header = new HttpHeaders();
 
+  //add token to header
+
   constructor(private http: HttpClient) {}
 
   postService(infoUrl: string, json: any): Observable<any> {
@@ -18,7 +20,11 @@ export class ApiService {
   }
 
   getService(infoUrl: string): Observable<any> {
+    let token = localStorage.getItem('token') || '';
+    this.header = this.header.set('Bearer', token);
+
     let info = this.http.get(infoUrl, { headers: this.header });
+
     return info;
   }
 }

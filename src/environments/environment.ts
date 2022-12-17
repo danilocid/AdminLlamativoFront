@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  urlBackend: 'http://localhost:8080',
+  urlBackend: 'http://127.0.0.1:5001/sivig-ae865/us-central1',
 };
 
 /*
