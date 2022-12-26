@@ -19,6 +19,16 @@ const routes: Routes = [
             (m) => m.ConfiguracionModule
           ),
       },
+      {
+        path: 'articulos',
+        loadChildren: () =>
+          import('./articulos/articulos.module').then((m) => m.ArticulosModule),
+      },
+      {
+        // captura cualquier ruta que no este definida
+        path: '**',
+        redirectTo: '/home',
+      },
     ],
   },
 ];

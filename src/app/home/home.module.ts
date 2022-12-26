@@ -8,6 +8,7 @@ import { SidebarComponent } from './partials/sidebar/sidebar.component';
 import { FooterComponent } from './partials/footer/footer.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
+import { DataTablesModule } from 'angular-datatables';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,12 @@ import { BrowserModule } from '@angular/platform-browser';
     SidebarComponent,
     FooterComponent,
   ],
-  imports: [CommonModule, HomeRoutingModule, FormsModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    HomeRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    DataTablesModule.forRoot(),
+  ],
 })
 export class HomeModule {}

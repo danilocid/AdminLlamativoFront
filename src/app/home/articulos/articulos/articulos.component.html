@@ -1,0 +1,80 @@
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">Articulos</h1>
+      </div>
+      <!-- /.col -->
+
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</div>
+<section class="content">
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">Listado de articulos</h4>
+      </div>
+
+      <div class="card-body">
+        <a [routerLink]="['create']" class="btn btn-primary"
+          >Agregar articulo</a
+        >
+        <table
+          datatable
+          [dtOptions]="dtOptions"
+          [dtTrigger]="dtTrigger"
+          class="row-border hover"
+        >
+          <thead class="table-light">
+            <tr>
+              <th>Id</th>
+              <th>Interno</th>
+              <th>Barra</th>
+              <th>Descripcion</th>
+              <th>Stock</th>
+              <th>Costo</th>
+              <th>PVP</th>
+              <th>Activo</th>
+
+              <th>Editar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of users">
+              <td>{{ item["id"] }}</td>
+              <td>{{ item["cod_interno"] }}</td>
+              <td>{{ item["cod_barras"] }}</td>
+              <td>{{ item["descripcion"] }}</td>
+              <td>{{ item["stock"] }}</td>
+              <td>
+                {{
+                  item["costo_neto"] + item["costo_imp"]
+                    | currency : "CLP" : "symbol-narrow" : "1.0-0"
+                }}
+              </td>
+              <td>
+                {{
+                  item["venta_neto"] + item["venta_imp"]
+                    | currency : "CLP" : "symbol-narrow" : "1.0-0"
+                }}
+              </td>
+
+              <td *ngIf="item['activo']">Activo</td>
+              <td *ngIf="!item['activo']">Inactivo</td>
+
+              <td>
+                <a class="me-1 text-success pointer"
+                  >Editar <i class="fas fa-edit"></i>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,6 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
 //import pacman from NgxSpinnerModule;
-@import "../node_modules/ngx-spinner/animations/pacman.css";
+//@import "../node_modules/ngx-spinner/animations/pacman.css";
 @import "https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback";
 @import "assets/css/adminlte.css";
 @import "assets/plugins/fontawesome-free/css/all.min.css";
+//@import "assets/css/dataTables.bootstrap4.min.css";
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+  padding: 0 !important;
+}

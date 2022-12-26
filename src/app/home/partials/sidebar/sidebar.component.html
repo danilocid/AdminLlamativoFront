@@ -1,6 +1,6 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
   <!-- Brand Logo -->
-  <a href="/" class="brand-link">
+  <a href="/home" class="brand-link">
     <span class="brand-text font-weight-light">
       <b>SIVIG</b>
     </span>
@@ -19,6 +19,28 @@
       >
         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
+
+        <li class="nav-item has-treeview" [routerLinkActive]="['menu-open']">
+          <a class="nav-link" [class.active]="isActive('articulos')">
+            <i class="nav-icon fas fa-box"></i>
+            <p>
+              Inventario
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a
+                [routerLink]="['articulos']"
+                [routerLinkActive]="['active']"
+                class="nav-link"
+              >
+                <i class="fas fa-warehouse nav-icon"></i>
+                <p>Articulos</p>
+              </a>
+            </li>
+          </ul>
+        </li>
         <li class="nav-item has-treeview" [routerLinkActive]="['menu-open']">
           <a class="nav-link" [class.active]="isActive('configuracion')">
             <i class="nav-icon fas fa-cog"></i>

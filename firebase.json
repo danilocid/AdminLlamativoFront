@@ -1,11 +1,10 @@
 {
   "hosting": {
     "public": "dist/front",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "prebuilds": {
+      "predeploy": "npm run build"
+    },
     "rewrites": [
       {
         "source": "**",

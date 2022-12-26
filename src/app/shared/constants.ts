@@ -5,6 +5,9 @@ export const ApiRequest = {
 
   //users
   getUsers: environment.urlBackend + '/users/AllUsers',
+
+  //articulos
+  getArticulos: environment.urlBackend + '/productsGetAll',
 };
 export function FormatDataTableGlobal(): any {
   return {
@@ -28,6 +31,7 @@ export function FormatDataTableGlobal(): any {
       infoFiltered: '(filtrado de _MAX_ elementos en total)',
       infoFilteredEmpty:
         'Mostrando desde _START_ al _END_ de _TOTAL_ elementos (filtrado de 0 elementos en total)',
+      emptyTable: 'No hay datos disponibles',
     },
   };
 }
