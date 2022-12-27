@@ -1,0 +1,45 @@
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">Articulos</h1>
+      </div>
+      <!-- /.col -->
+
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</div>
+<section class="content">
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">Ver articulo {{ producto.descripcion }}</h4>
+      </div>
+
+      <div class="card-body">
+        <div class="row">
+          <div class="col">
+            <p>Id: {{ producto.id }}</p>
+            <p>Interno: {{ producto.cod_interno }}</p>
+            <p>Barra: {{ producto.cod_barras }}</p>
+            <p>Costo Neto: {{ producto.costo_neto }}</p>
+            <p>Costo Imp: {{ producto.costo_imp }}</p>
+            <p>Costo Total: {{ producto.costo_neto + producto.costo_imp }}</p>
+          </div>
+          <div class="col">
+            <p>Descripcion: {{ producto.descripcion }}</p>
+            <p *ngIf="producto.activo">Estado: activo</p>
+            <p *ngIf="!producto.activo">Estado: inactivo</p>
+            <p>Stock: {{ producto.stock }}</p>
+            <p>PVP Neto: {{ producto.venta_neto }}</p>
+            <p>PVP Imp: {{ producto.venta_imp }}</p>
+            <p>PVP Total: {{ producto.venta_neto + producto.venta_imp }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

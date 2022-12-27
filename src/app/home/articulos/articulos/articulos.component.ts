@@ -9,6 +9,7 @@ import { HttpClient } from '@angular/common/http';
 import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
 import { OnDestroy } from '@angular/core';
+import { Product } from '../../../shared/models/product.model';
 
 @Component({
   selector: 'app-articulos',
@@ -22,7 +23,7 @@ export class ArticulosComponent implements OnInit, AfterViewInit, OnDestroy {
   dtTrigger: Subject<any> = new Subject<any>();
   dtOptions: DataTables.Settings = {};
   private apiService!: ApiService;
-  users = [];
+  products: Product[] = [];
   date = new Date();
 
   constructor(
@@ -61,7 +62,7 @@ export class ArticulosComponent implements OnInit, AfterViewInit, OnDestroy {
     this.apiService.getService(ApiRequest.getArticulos).subscribe({
       next: (resp) => {
         console.table(resp.result);
-        this.users = resp.result;
+        this.products = resp.result;
         this.dtTrigger.next(this.dtOptions);
         this.spinner.hide();
       },

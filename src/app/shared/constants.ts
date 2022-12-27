@@ -8,6 +8,7 @@ export const ApiRequest = {
 
   //articulos
   getArticulos: environment.urlBackend + '/productsGetAll',
+  getArticulosById: environment.urlBackend + '/productsGetById',
 };
 export function FormatDataTableGlobal(): any {
   return {

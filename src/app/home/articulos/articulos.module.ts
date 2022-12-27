@@ -6,6 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { ArticulosComponent } from './articulos/articulos.component';
 import { CreateComponent } from './create/create.component';
+import { VerArticulosComponent } from './verArticulos/verArticulos.component';
 
 @NgModule({
   imports: [
@@ -15,7 +16,7 @@ import { CreateComponent } from './create/create.component';
     FormsModule,
     ReactiveFormsModule,
   ],
-  declarations: [ArticulosComponent, CreateComponent],
+  declarations: [ArticulosComponent, CreateComponent, VerArticulosComponent],
   exports: [ArticulosComponent],
 })
 export class ArticulosModule {}

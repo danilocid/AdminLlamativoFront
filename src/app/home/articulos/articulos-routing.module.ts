@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CreateComponent } from './create/create.component';
 import { ArticulosComponent } from './articulos/articulos.component';
+import { VerArticulosComponent } from './verArticulos/verArticulos.component';
 
 const routes: Routes = [
   {
@@ -9,8 +10,12 @@ const routes: Routes = [
     component: ArticulosComponent,
   },
   {
-    path: 'articulos/create',
+    path: 'create',
     component: CreateComponent,
+  },
+  {
+    path: 'ver/:id',
+    component: VerArticulosComponent,
   },
 ];
 
