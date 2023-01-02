@@ -10,6 +10,7 @@ import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { Product } from '../../../shared/models/product.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-articulos',
@@ -30,6 +31,7 @@ export class ArticulosComponent implements OnInit, AfterViewInit, OnDestroy {
     private titleService: Title,
     private spinner: NgxSpinnerService,
     private uS: UtilService,
+    private router: Router,
     private alertSV: AlertService,
     private http: HttpClient
   ) {
@@ -61,6 +63,10 @@ export class ArticulosComponent implements OnInit, AfterViewInit, OnDestroy {
     ); */
     this.apiService.getService(ApiRequest.getArticulos).subscribe({
       next: (resp) => {
+        if (resp.status === 401) {
+          this.router.navigate(['/login']);
+          return;
+        }
         console.table(resp.result);
         this.products = resp.result;
         this.dtTrigger.next(this.dtOptions);

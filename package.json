@@ -1,13 +1,14 @@
 {
   "name": "front",
-  "version": "0.0.1-25122022",
+  "version": "0.0.1-02012023",
   "locale": "es_CL",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --ssl",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "deploy": "ng build && firebase deploy"
   },
   "private": true,
   "dependencies": {

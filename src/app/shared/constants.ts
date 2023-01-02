@@ -1,6 +1,5 @@
 import { environment } from 'src/environments/environment';
 export const ApiRequest = {
-  postLoginRenewToken: environment.urlBackend + '/users/renew',
   postLogin: environment.urlBackend + '/login',
 
   //users
@@ -9,6 +8,7 @@ export const ApiRequest = {
   //articulos
   getArticulos: environment.urlBackend + '/productsGetAll',
   getArticulosById: environment.urlBackend + '/productsGetById',
+  updateArticulo: environment.urlBackend + '/productsUpdate',
 };
 export function FormatDataTableGlobal(): any {
   return {

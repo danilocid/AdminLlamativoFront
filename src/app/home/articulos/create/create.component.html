@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
-        <h1 class="m-0">Usuarios</h1>
+        <h1 class="m-0">Articulos</h1>
       </div>
       <!-- /.col -->
 
@@ -16,103 +16,197 @@
   <div class="container-fluid">
     <div class="card">
       <div class="card-header">
-        <h4 class="card-title">Crear usuario</h4>
+        <h4 class="card-title">{{ title }}</h4>
       </div>
 
       <div class="card-body">
         <form
-          [formGroup]="newUserForm"
+          [formGroup]="productForm"
           (submit)="onSubmit()"
           method="post"
           action=""
         >
           <div class="form-group col-lg-4">
-            <label for="name">Usuario</label>
+            <label for="name">Codigo interno</label>
             <input
               type="text"
-              [ngClass]="isValidField('userName') ? 'is-invalid' : ''"
+              [ngClass]="isValidField('cod_interno') ? 'is-invalid' : ''"
               class="form-control"
-              id="userName"
-              name="userName"
-              placeholder="usuario"
-              formControlName="userName"
+              id="cod_interno"
+              name="cod_interno"
+              placeholder="Codigo interno"
+              formControlName="cod_interno"
               required
             />
-            <div *ngIf="isValidField('userName')" class="invalid-feedback">
-              Ingresa un usuario
+            <div *ngIf="isValidField('cod_interno')" class="invalid-feedback">
+              El codigo interno es requerido
             </div>
           </div>
 
           <div class="form-group col-lg-4">
-            <label for="name">Nombre</label>
+            <label for="name">Codigo de barras</label>
             <input
               type="text"
-              [ngClass]="isValidField('name') ? 'is-invalid' : ''"
+              [ngClass]="isValidField('cod_barras') ? 'is-invalid' : ''"
               class="form-control"
-              id="name"
-              name="name"
-              placeholder="Nombre"
-              formControlName="name"
+              id="cod_barras"
+              name="cod_barras"
+              placeholder="Codigo de barras"
+              formControlName="cod_barras"
               required
             />
+            <div *ngIf="isValidField('cod_barras')" class="invalid-feedback">
+              El codigo de barras es requerido
+            </div>
           </div>
 
           <div class="form-group col-lg-4">
-            <label for="name">Mail</label>
+            <label for="name">Descripcion</label>
             <input
-              formControlName="email"
-              type="email"
-              [ngClass]="isValidField('email') ? 'is-invalid' : ''"
+              formControlName="descripcion"
+              type="text"
+              [ngClass]="isValidField('descripcion') ? 'is-invalid' : ''"
               class="form-control"
-              id="email"
-              name="email"
-              placeholder="e-mail"
+              id="descripcion"
+              name="descripcion"
+              placeholder="Descripcion"
               required
             />
-          </div>
-          <div class="form-group col-lg-4">
-            <label for="name">Contraseña</label>
-            <input
-              formControlName="password"
-              [ngClass]="isValidField('password') ? 'is-invalid' : ''"
-              type="password"
-              class="form-control"
-              id="password"
-              name="password"
-              placeholder="Contraseña"
-              required
-            />
-            <div *ngIf="validatePassword()" class="invalid-feedback">
-              Las contraseñas no coinciden
+            <div *ngIf="isValidField('descripcion')" class="invalid-feedback">
+              Ingresa una descripcion
             </div>
           </div>
-          <div class="form-group col-lg-4">
-            <label for="name">Confirmar contraseña</label>
+          <div class="form-group row">
+            <div class="form-group col-lg-1 col-sm-4">
+              <label for="name">Costo neto</label>
+              <input
+                formControlName="costo_neto"
+                min="1"
+                [ngClass]="isValidField('costo_neto') ? 'is-invalid' : ''"
+                type="number"
+                class="form-control"
+                id="costo_neto"
+                name="costo_neto"
+                placeholder="Costo neto"
+                required
+                ((keyup))="updateCostoTotal()"
+                (change)="updateCostoTotal()"
+              />
+              <div *ngIf="isValidField('costo_neto')" class="invalid-feedback">
+                Ingresa costo neto
+              </div>
+            </div>
+            <div class="form-group col-lg-1 col-sm-4">
+              <label for="name">Costo IMP</label>
+              <input
+                formControlName="costo_imp"
+                readonly
+                type="number"
+                class="form-control"
+                id="costo_imp"
+                name="costo_imp"
+                placeholder="Costo imp"
+                required
+              />
+            </div>
+            <div class="form-group col-lg-1 col-sm-4">
+              <label for="name">Costo total</label>
+              <input
+                formControlName="costo_total"
+                [ngClass]="isValidField('costo_total') ? 'is-invalid' : ''"
+                type="number"
+                class="form-control"
+                id="costo_total"
+                name="costo_total"
+                placeholder="Costo total"
+                required
+                (change)="updateCostoNeto()"
+              />
+              <div *ngIf="isValidField('costo_total')" class="invalid-feedback">
+                Ingresa costo total
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="form-group col-lg-1 col-sm-4">
+              <label for="name">Venta neto</label>
+              <input
+                formControlName="venta_neto"
+                [ngClass]="isValidField('venta_neto') ? 'is-invalid' : ''"
+                type="number"
+                class="form-control"
+                id="venta_neto"
+                name="venta_neto"
+                placeholder="Venta neto"
+                required
+                ((keyup))="updateVentaTotal()"
+                (change)="updateVentaTotal()"
+              />
+              <div *ngIf="isValidField('venta_neto')" class="invalid-feedback">
+                Ingresa venta neto
+              </div>
+            </div>
+            <div class="form-group col-lg-1 col-sm-4">
+              <label for="name">Venta IMP</label>
+              <input
+                formControlName="venta_imp"
+                readonly
+                type="number"
+                class="form-control"
+                id="venta_imp"
+                name="venta_imp"
+                placeholder="Venta imp"
+                required
+              />
+            </div>
+            <div class="form-group col-lg-1 col-sm-4">
+              <label for="name">Venta total</label>
+              <input
+                formControlName="venta_total"
+                [ngClass]="isValidField('venta_total') ? 'is-invalid' : ''"
+                type="number"
+                class="form-control"
+                id="venta_total"
+                name="venta_total"
+                placeholder="Venta total"
+                required
+                (change)="updateVentaNeto()"
+              />
+              <div *ngIf="isValidField('venta_total')" class="invalid-feedback">
+                Ingresa venta total
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-lg-2 col-sm-6">
+            <label for="name">Stock critico</label>
             <input
-              formControlName="password_confirmation"
-              [ngClass]="
-                isValidField('password_confirmation') ? 'is-invalid' : ''
-              "
-              [ngClass]="validatePassword() ? 'is-invalid' : ''"
-              type="password"
+              formControlName="stock_critico"
+              [ngClass]="isValidField('stock_critico') ? 'is-invalid' : ''"
+              type="number"
               class="form-control"
-              id="password_confirmation"
-              name="password_confirmation"
-              placeholder="Confirmar contraseña"
+              id="stock_critico"
+              min="1"
+              name="stock_critico"
+              placeholder="Stock critico"
               required
             />
-            <div
-              *ngIf="isValidField('password_confirmation')"
-              class="invalid-feedback"
+            <div *ngIf="isValidField('stock_critico')" class="invalid-feedback">
+              Ingresa stock critico
+            </div>
+          </div>
+          <div class="form-group col-lg-2 col-sm-6">
+            <label for="name">Activo</label>
+            <select
+              formControlName="activo"
+              [ngClass]="isValidField('activo') ? 'is-invalid' : ''"
+              class="form-control"
+              id="activo"
+              name="activo"
+              required
             >
-              Ingresa una contraseña
-            </div>
-            <div *ngIf="validatePassword()" class="invalid-feedback">
-              Las contraseñas no coinciden
-            </div>
-            <div *ngIf="!validatePassword()" class="valid-feedback">
-              Las contraseñas no coinciden
-            </div>
+              <option value="1">Si</option>
+              <option value="0">No</option>
+            </select>
           </div>
           <div class="form-group col-lg-4">
             <button type="submit" class="btn btn-primary">Guardar</button>

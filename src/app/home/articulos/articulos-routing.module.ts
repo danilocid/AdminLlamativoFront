@@ -17,6 +17,10 @@ const routes: Routes = [
     path: 'ver/:id',
     component: VerArticulosComponent,
   },
+  {
+    path: 'editar/:id',
+    component: CreateComponent,
+  },
 ];
 
 @NgModule({
