@@ -123,7 +123,26 @@ export class CreateComponent implements OnInit {
     this.spinner.show(); */
   }
   createProduct() {
-    throw new Error('Method not implemented.');
+    this.spinner.show();
+    this.apiService
+      .postService(ApiRequest.createArticulo, this.productForm.value)
+      .subscribe(
+        (resp) => {
+          if (resp.status == 401) {
+            this.router.navigate(['/login']);
+            return;
+          }
+          console.log(resp);
+          this.alertSV.alertBasic('Exito', 'Articulo creado', 'success');
+          this.spinner.hide();
+          this.router.navigate(['/home/articulos']);
+        },
+        (err) => {
+          console.log(err);
+          this.alertSV.alertBasic('Error', err.error.msg, 'error');
+          this.spinner.hide();
+        }
+      );
   }
   updateProduct() {
     this.alertSV.verificationAlertWithFunction(
