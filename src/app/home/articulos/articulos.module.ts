@@ -7,6 +7,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ArticulosComponent } from './articulos/articulos.component';
 import { CreateComponent } from './create/create.component';
 import { VerArticulosComponent } from './verArticulos/verArticulos.component';
+import { AjustesDeInventarioComponent } from './ajustesDeInventario/ajustesDeInventario.component';
 
 @NgModule({
   imports: [
@@ -16,7 +17,12 @@ import { VerArticulosComponent } from './verArticulos/verArticulos.component';
     FormsModule,
     ReactiveFormsModule,
   ],
-  declarations: [ArticulosComponent, CreateComponent, VerArticulosComponent],
+  declarations: [
+    ArticulosComponent,
+    CreateComponent,
+    VerArticulosComponent,
+    AjustesDeInventarioComponent,
+  ],
   exports: [ArticulosComponent],
 })
 export class ArticulosModule {}

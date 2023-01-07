@@ -40,6 +40,18 @@
               </a>
             </li>
           </ul>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a
+                [routerLink]="['articulos/ajustes']"
+                [routerLinkActive]="['active']"
+                class="nav-link"
+              >
+                <i class="fas fa-clipboard-list nav-icon"></i>
+                <p>Ajustes de Inventario</p>
+              </a>
+            </li>
+          </ul>
         </li>
         <li class="nav-item has-treeview" [routerLinkActive]="['menu-open']">
           <a class="nav-link" [class.active]="isActive('configuracion')">
