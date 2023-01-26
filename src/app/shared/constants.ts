@@ -1,15 +1,25 @@
 import { environment } from 'src/environments/environment';
 export const ApiRequest = {
-  postLogin: environment.urlBackend + '/login',
-
-  //users
-  getUsers: environment.urlBackend + '/users/AllUsers',
-
+  postLogin: environment.urlBackend + '/users-login',
+  getUsers: environment.urlBackend + '/users',
   //articulos
   getArticulos: environment.urlBackend + '/productsGetAll',
   getArticulosById: environment.urlBackend + '/productsGetById',
   updateArticulo: environment.urlBackend + '/productsUpdate',
   createArticulo: environment.urlBackend + '/productsCreate',
+
+  //issues
+  getIssues: environment.urlBackend + '/issues',
+  getIssuesById: environment.urlBackend + '/issues/',
+  updateIssue: environment.urlBackend + '/issues/',
+  createIssue: environment.urlBackend + '/issues',
+  reportIssue: environment.urlBackend + '/issues/report',
+  secctionsIssue: environment.urlBackend + '/issues/sections/all',
+  seccionsIssueById: environment.urlBackend + '/issues/section/',
+  statusIssue: environment.urlBackend + '/issues/status/all',
+  statusIssueById: environment.urlBackend + '/issues/status/',
+  typeIssue: environment.urlBackend + '/issues/types/all',
+  typeIssueById: environment.urlBackend + '/issues/type/',
 };
 export function FormatDataTableGlobal(): any {
   return {

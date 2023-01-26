@@ -1,0 +1,70 @@
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">Issues</h1>
+      </div>
+      <!-- /.col -->
+
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</div>
+<section class="content">
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">Listado de Issues</h4>
+      </div>
+
+      <div class="card-body">
+        <a [routerLink]="['create']" class="btn btn-primary">Agregar issue</a>
+        <table
+          datatable
+          [dtOptions]="dtOptions"
+          [dtTrigger]="dtTrigger"
+          class="row-border hover"
+        >
+          <thead class="table-light">
+            <tr>
+              <th>Id</th>
+              <th>issue</th>
+              <th>Seccion</th>
+              <th>Tipo</th>
+              <th>Status</th>
+              <th>Creado</th>
+              <th>Editado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of issues">
+              <td>{{ item.id }}</td>
+              <td>{{ item["issue"] }}</td>
+              <td>{{ item.issue_section.name }}</td>
+              <td>{{ item.issue_type.issue_type }}</td>
+              <td>{{ item.issue_status.name }}</td>
+              <td>
+                {{ item["createdAt"] | date : "dd/MM/yyyy HH:mm" : "UTC -3" }}
+              </td>
+              <td>
+                {{ item["updatedAt"] | date : "dd/MM/yyyy HH:mm" : "UTC -3" }}
+              </td>
+
+              <td>
+                <a
+                  routerLink="editar/{{ item['id'] }}"
+                  class="me-1 text-success pointer"
+                >
+                  <i class="fas fa-edit"></i>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>

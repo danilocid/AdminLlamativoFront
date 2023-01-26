@@ -6,16 +6,23 @@ import { DataTablesModule } from 'angular-datatables';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { CreateComponent } from './usuarios/create/create.component';
+import { AllIssuesComponent } from './issues/allIssues/allIssues.component';
+import { CreateIssueComponent } from './issues/createIssue/createIssue.component';
 
 @NgModule({
   imports: [
     CommonModule,
     ConfigRoutingModule,
-    DataTablesModule,
+    DataTablesModule.forRoot(),
     FormsModule,
     ReactiveFormsModule,
   ],
-  declarations: [UsuariosComponent, CreateComponent],
+  declarations: [
+    UsuariosComponent,
+    CreateComponent,
+    AllIssuesComponent,
+    CreateIssueComponent,
+  ],
   exports: [UsuariosComponent],
 })
 export class ConfiguracionModule {}
