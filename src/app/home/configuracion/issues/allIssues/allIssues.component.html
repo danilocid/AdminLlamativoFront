@@ -17,6 +17,15 @@
     <div class="card">
       <div class="card-header">
         <h4 class="card-title">Listado de Issues</h4>
+        <div class="card-tools">
+          <button
+            type="button"
+            class="btn btn-tool"
+            data-card-widget="collapse"
+          >
+            <i class="fas fa-minus"></i>
+          </button>
+        </div>
       </div>
 
       <div class="card-body">
@@ -43,9 +52,9 @@
             <tr *ngFor="let item of issues">
               <td>{{ item.id }}</td>
               <td>{{ item["issue"] }}</td>
-              <td>{{ item.issue_section.name }}</td>
-              <td>{{ item.issue_type.issue_type }}</td>
-              <td>{{ item.issue_status.name }}</td>
+              <td>{{ item.Seccion }}</td>
+              <td>{{ item.Tipo }}</td>
+              <td>{{ item.Status }}</td>
               <td>
                 {{ item["createdAt"] | date : "dd/MM/yyyy HH:mm" : "UTC -3" }}
               </td>
@@ -64,6 +73,56 @@
             </tr>
           </tbody>
         </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">Resumen de Issues</h4>
+        <div class="card-tools">
+          <button
+            type="button"
+            class="btn btn-tool"
+            data-card-widget="collapse"
+          >
+            <i class="fas fa-minus"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <h5>Status</h5>
+        <div class="row">
+          <div class="col-md-2 col-sm-4 col-6" *ngFor="let Status of status">
+            <div class="info-box">
+              <div class="info-box-content">
+                <span class="info-box-text">{{ Status.name }}</span>
+                <span class="info-box-number">{{ Status.issues_count }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <h5>Secciones</h5>
+        <div class="row">
+          <div class="col-md-2 col-sm-4 col-6" *ngFor="let sec of section">
+            <div class="info-box">
+              <div class="info-box-content">
+                <span class="info-box-text">{{ sec.name }}</span>
+                <span class="info-box-number">{{ sec.issues_count }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <h5>Tipo</h5>
+        <div class="row">
+          <div class="col-md-2 col-sm-4 col-6" *ngFor="let tip of type">
+            <div class="info-box">
+              <div class="info-box-content">
+                <span class="info-box-text">{{ tip.issue_type }}</span>
+                <span class="info-box-number">{{ tip.issues_count }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

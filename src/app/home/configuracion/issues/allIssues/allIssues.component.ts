@@ -24,6 +24,9 @@ export class AllIssuesComponent implements OnInit {
   dtOptions: DataTables.Settings = {};
   private apiService!: ApiService;
   issues = [];
+  status = [];
+  type = [];
+  section = [];
   date = new Date();
   constructor(
     private titleService: Title,
@@ -47,21 +50,36 @@ export class AllIssuesComponent implements OnInit {
           this.router.navigate(['/login']);
           return;
         }
-        //console.table(resp.issues);
-        //console.log(resp.issues);
         //this.rerender();
-        this.issues = resp.issues;
+        this.issues = resp.result;
         this.dtTrigger.next(this.dtOptions);
 
         this.spinner.hide();
       },
       (error) => {
-        console.log(error);
         if (error.status === 401 || error.status === 403) {
           this.router.navigate(['/login']);
           return;
         }
-        console.log('error ' + error.status);
+        this.spinner.hide();
+        this.alertSV.alertBasic('Error', error.error.msg, 'error');
+      }
+    );
+    this.apiService.getService(ApiRequest.reportIssue).subscribe(
+      (resp) => {
+        if (resp.status === 401 || resp.status === 403) {
+          this.router.navigate(['/login']);
+          return;
+        }
+        this.status = resp.statuses;
+        this.type = resp.types;
+        this.section = resp.sections;
+      },
+      (error) => {
+        if (error.status === 401 || error.status === 403) {
+          this.router.navigate(['/login']);
+          return;
+        }
         this.spinner.hide();
         this.alertSV.alertBasic('Error', error.error.msg, 'error');
       }

@@ -32,7 +32,6 @@ export class CreateComponent implements OnInit {
     // this.titleService.setTitle('Articulos - Ver');
     this.spinner.show();
     this.idProducto = this.route.snapshot.paramMap.get('id')!;
-    console.log(this.idProducto + ' idProducto');
     //if idProducto is not null, then the title should be "Editar Articulo"
 
     if (this.idProducto != null) {
@@ -77,7 +76,6 @@ export class CreateComponent implements OnInit {
             this.router.navigate(['/login']);
             return;
           }
-          console.table(resp.result);
           this.producto = resp.result[0];
           this.productForm.patchValue({
             id: this.producto.id,
@@ -96,13 +94,11 @@ export class CreateComponent implements OnInit {
           this.spinner.hide();
         },
         (err) => {
-          console.log(err);
           this.spinner.hide();
         }
       );
   }
   onSubmit() {
-    console.log(this.productForm.value);
     if (this.productForm.invalid) {
       this.productForm.markAllAsTouched();
       this.alertSV.alertBasic(
@@ -132,13 +128,11 @@ export class CreateComponent implements OnInit {
             this.router.navigate(['/login']);
             return;
           }
-          console.log(resp);
           this.alertSV.alertBasic('Exito', 'Articulo creado', 'success');
           this.spinner.hide();
           this.router.navigate(['/home/articulos']);
         },
         (err) => {
-          console.log(err);
           this.alertSV.alertBasic('Error', err.error.msg, 'error');
           this.spinner.hide();
         }
@@ -161,7 +155,6 @@ export class CreateComponent implements OnInit {
                 this.router.navigate(['/login']);
                 return;
               }
-              console.log(resp);
               this.spinner.hide();
               this.alertSV.alertBasic(
                 'Exito',
@@ -171,11 +164,9 @@ export class CreateComponent implements OnInit {
               this.router.navigate(['/home/articulos']);
             },
             (err) => {
-              console.log(err);
               this.spinner.hide();
             }
           );
-        console.log('editar');
       }
     );
   }

@@ -41,18 +41,14 @@ export class UsuariosComponent implements OnInit, AfterViewInit {
     try {
       this.apiService.getService(ApiRequest.getUsers).subscribe(
         (resp) => {
-          console.table(resp.result);
           this.users = resp.result;
           this.spinner.hide();
         },
         (error) => {
-          console.log(error);
-          console.log('error ' + error.status);
           this.alertSV.alertBasic('Error', error.error.message, 'error');
         }
       );
     } catch (error) {
-      console.log('error', error);
       return;
     }
     this.rerender();

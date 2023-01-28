@@ -49,14 +49,11 @@ export class ArticulosComponent implements OnInit, AfterViewInit, OnDestroy {
     }; */
     /* this.apiService.getService(ApiRequest.getArticulos).subscribe(
       (resp) => {
-        console.table(resp.result);
         this.users = resp.result;
         this.rerender();
         this.spinner.hide();
       },
       (error) => {
-        console.log(error);
-        console.log('error ' + error.status);
         this.spinner.hide();
         this.alertSV.alertBasic('Error', error.error.msg, 'error');
       }
@@ -67,18 +64,15 @@ export class ArticulosComponent implements OnInit, AfterViewInit, OnDestroy {
           this.router.navigate(['/login']);
           return;
         }
-        //console.table(resp.result);
         this.products = resp.result;
         this.dtTrigger.next(this.dtOptions);
         this.spinner.hide();
       },
       error: (error) => {
-        console.log(error);
         if (error.status === 401 || error.status === 403) {
           this.router.navigate(['/login']);
           return;
         }
-        console.log('error ' + error.status);
         this.spinner.hide();
         this.alertSV.alertBasic('Error', error.error.msg, 'error');
       },

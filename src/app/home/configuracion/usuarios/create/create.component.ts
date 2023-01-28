@@ -38,7 +38,6 @@ export class CreateComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.newUserForm.value);
     if (this.newUserForm.invalid) {
       this.newUserForm.markAllAsTouched();
       return;
@@ -46,7 +45,6 @@ export class CreateComponent implements OnInit {
     if (!this.validatePassword()) {
       this.newUserForm.controls['password'].invalid;
       this.newUserForm.controls['password_confirmation'].invalid;
-      console.log('Las contraseñas no coinciden');
       return;
     }
     this.createUser();
@@ -65,10 +63,8 @@ export class CreateComponent implements OnInit {
   validatePassword() {
     const { password, password_confirmation } = this.newUserForm.value;
     if (password === password_confirmation) {
-      console.log('Las contraseñas coinciden');
       return false;
     } else {
-      console.log('Las contraseñas no coinciden');
       return true;
     }
   }

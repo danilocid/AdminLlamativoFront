@@ -1,12 +1,12 @@
 {
   "name": "front",
-  "version": "0.0.1-260123",
+  "version": "0.0.1-270123",
   "locale": "es_CL",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --ssl",
     "build": "ng build",
-    "watch": "ng build --watch --configuration development",
+    "watch": "ng build --watch --configuration production",
     "test": "ng test",
     "deploy": "ng build && firebase deploy"
   },

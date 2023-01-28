@@ -25,9 +25,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     this.titleService.setTitle('Login');
     this.buildForm();
   }
-  ngAfterViewInit(): void {
-    console.log(this.logedIn);
-  }
+  ngAfterViewInit(): void {}
   private buildForm() {
     this.loginForm = this.fb.group({
       user: [
@@ -40,7 +38,6 @@ export class LoginComponent implements OnInit, AfterViewInit {
   async ngOnInit(): Promise<void> {
     this.spinner.show();
     this.logedIn = await this.authSV.authVerificationCheck();
-    console.log(this.logedIn);
     this.spinner.hide();
   }
   onSubmit() {

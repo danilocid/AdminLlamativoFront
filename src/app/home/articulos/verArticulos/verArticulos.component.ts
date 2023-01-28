@@ -31,19 +31,15 @@ export class VerArticulosComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.idProducto + ' idProducto');
     this.apiService = new ApiService(this.http);
     this.apiService
       .postService(ApiRequest.getArticulosById, { id: this.idProducto })
       .subscribe(
         (resp) => {
-          console.table(resp.result);
           this.producto = resp.result[0];
           this.spinner.hide();
         },
         (error) => {
-          console.log(error);
-          console.log('error ' + error.status);
           this.spinner.hide();
           this.alertSV.alertBasic('Error', error.error.msg, 'error');
         }

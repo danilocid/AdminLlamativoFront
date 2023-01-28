@@ -52,28 +52,24 @@ export class CreateIssueComponent implements OnInit {
     });
     this.apiService = new ApiService(this.http);
     this.apiService.getService(ApiRequest.statusIssue).subscribe((resp) => {
-      console.log(resp.status);
-      this.issueStatus = resp.status;
+      this.issueStatus = resp.result;
     });
     this.apiService.getService(ApiRequest.secctionsIssue).subscribe((resp) => {
-      console.log(resp.sections);
-      this.issueSection = resp.sections;
+      this.issueSection = resp.result;
     });
     this.apiService.getService(ApiRequest.typeIssue).subscribe((resp) => {
-      console.log(resp.types);
-      this.issueType = resp.types;
+      this.issueType = resp.result;
     });
     if (this.idIssue) {
       this.apiService
-        .getService(ApiRequest.getIssuesById + this.idIssue)
+        .postService(ApiRequest.getIssuesById, '{"id":' + this.idIssue + '}')
         .subscribe((resp) => {
-          console.log(resp.issue);
           this.issueForm.setValue({
-            id: resp.issue.id,
-            id_status: resp.issue.id_status,
-            id_section: resp.issue.id_section,
-            id_type: resp.issue.id_type,
-            issue: resp.issue.issue,
+            id: resp.result[0].id,
+            id_status: resp.result[0].id_status,
+            id_section: resp.result[0].id_section,
+            id_type: resp.result[0].id_type,
+            issue: resp.result[0].issue,
           });
           this.spinner.hide();
         });
@@ -82,7 +78,6 @@ export class CreateIssueComponent implements OnInit {
     }
   }
   onSubmit() {
-    console.log(this.issueForm.value);
     if (this.issueForm.invalid) {
       this.issueForm.markAllAsTouched();
       /*  this.alertSV.alertBasic(
@@ -110,7 +105,6 @@ export class CreateIssueComponent implements OnInit {
       .postService(ApiRequest.createIssue, this.issueForm.value)
       .subscribe(
         (resp) => {
-          console.log(resp);
           this.spinner.hide();
           this.alertSV.alertBasic(
             'Creación',
@@ -120,7 +114,6 @@ export class CreateIssueComponent implements OnInit {
           this.uS.navigateToPath('home/configuracion/issues');
         },
         (err) => {
-          console.log(err);
           this.spinner.hide();
           this.alertSV.alertBasic('Error', 'Error al crear el issue', 'error');
         }
@@ -130,10 +123,9 @@ export class CreateIssueComponent implements OnInit {
   updateIssue() {
     this.spinner.show();
     this.apiService
-      .postService(ApiRequest.updateIssue + this.idIssue, this.issueForm.value)
+      .postService(ApiRequest.updateIssue, this.issueForm.value)
       .subscribe(
         (resp) => {
-          console.log(resp);
           this.spinner.hide();
           this.alertSV.alertBasic(
             'Actualización',
@@ -143,7 +135,6 @@ export class CreateIssueComponent implements OnInit {
           this.uS.navigateToPath('home/configuracion/issues');
         },
         (err) => {
-          console.log(err);
           this.spinner.hide();
           this.alertSV.alertBasic(
             'Error',

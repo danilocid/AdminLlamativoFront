@@ -9,17 +9,14 @@ export const ApiRequest = {
   createArticulo: environment.urlBackend + '/productsCreate',
 
   //issues
-  getIssues: environment.urlBackend + '/issues',
-  getIssuesById: environment.urlBackend + '/issues/',
-  updateIssue: environment.urlBackend + '/issues/',
-  createIssue: environment.urlBackend + '/issues',
-  reportIssue: environment.urlBackend + '/issues/report',
-  secctionsIssue: environment.urlBackend + '/issues/sections/all',
-  seccionsIssueById: environment.urlBackend + '/issues/section/',
-  statusIssue: environment.urlBackend + '/issues/status/all',
-  statusIssueById: environment.urlBackend + '/issues/status/',
-  typeIssue: environment.urlBackend + '/issues/types/all',
-  typeIssueById: environment.urlBackend + '/issues/type/',
+  getIssues: environment.urlBackend + '/issues-GetAll',
+  getIssuesById: environment.urlBackend + '/issues-GetById',
+  updateIssue: environment.urlBackend + '/issues-Update',
+  createIssue: environment.urlBackend + '/issues-Create',
+  reportIssue: environment.urlBackend + '/issues-Report',
+  secctionsIssue: environment.urlBackend + '/issues-GetAllSections',
+  statusIssue: environment.urlBackend + '/issues-GetAllStatus',
+  typeIssue: environment.urlBackend + '/issues-GetAllTypes',
 };
 export function FormatDataTableGlobal(): any {
   return {
