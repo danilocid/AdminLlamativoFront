@@ -3,10 +3,10 @@ export const ApiRequest = {
   postLogin: environment.urlBackend + '/users-login',
   getUsers: environment.urlBackend + '/users',
   //articulos
-  getArticulos: environment.urlBackend + '/productsGetAll',
-  getArticulosById: environment.urlBackend + '/productsGetById',
-  updateArticulo: environment.urlBackend + '/productsUpdate',
-  createArticulo: environment.urlBackend + '/productsCreate',
+  getArticulos: environment.urlBackend + '/products-GetAll',
+  getArticulosById: environment.urlBackend + '/products-Get',
+  updateArticulo: environment.urlBackend + '/products-Update',
+  createArticulo: environment.urlBackend + '/products-Create',
 
   //issues
   getIssues: environment.urlBackend + '/issues-GetAll',
