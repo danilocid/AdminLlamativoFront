@@ -42,7 +42,7 @@ export class AllIssuesComponent implements OnInit {
 
   ngOnInit() {
     this.dtOptions = FormatDataTableGlobal();
-    this.dtOptions.order = [0, 'desc'];
+    this.dtOptions.order = [4, 'asc'];
     this.apiService = new ApiService(this.http);
     this.apiService.getService(ApiRequest.getIssues).subscribe(
       (resp) => {

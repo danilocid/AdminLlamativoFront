@@ -5,6 +5,8 @@ export const ApiRequest = {
   //articulos
   getArticulos: environment.urlBackend + '/products-GetAll',
   getArticulosById: environment.urlBackend + '/products-Get',
+  getMovimientosArticulosById:
+    environment.urlBackend + '/products-GetMovements',
   updateArticulo: environment.urlBackend + '/products-Update',
   createArticulo: environment.urlBackend + '/products-Create',
 
