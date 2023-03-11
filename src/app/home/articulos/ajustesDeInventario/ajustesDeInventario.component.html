@@ -1,3 +1,77 @@
-<p>
-  ajustesDeInventario works!
-</p>
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">Ajustes de inventario</h1>
+      </div>
+      <!-- /.col -->
+
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</div>
+<section class="content">
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">Listado de ajustes</h4>
+      </div>
+
+      <div class="card-body">
+        <div class="row">
+          <div class="col">
+            <a [routerLink]="['inventory']" class="btn btn-primary"
+              >Agregar inventario aleatorio</a
+            >
+          </div>
+        </div>
+        <table
+          datatable
+          [dtOptions]="dtOptions"
+          [dtTrigger]="dtTrigger"
+          class="row-border hover"
+        >
+          <thead class="table-light">
+            <tr>
+              <th>Id</th>
+              <th>Tipo movimiento</th>
+              <th>Obs</th>
+              <th>Entradas</th>
+              <th>Salidas</th>
+              <th>Costo</th>
+              <th>Usuario</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of inventories">
+              <td>{{ item.id }}</td>
+              <td>{{ item.tipo_movimiento }}</td>
+              <td>{{ item.observaciones }}</td>
+              <td>{{ item.entradas }}</td>
+              <td>{{ item.salidas }}</td>
+              <td>
+                {{
+                  item["costo_neto"] + item["costo_imp"]
+                    | currency : "CLP" : "symbol-narrow" : "1.0-0"
+                }}
+              </td>
+              <td>{{ item.name }}</td>
+
+              <td>
+                <a
+                  routerLink="ver/{{ item['id'] }}"
+                  class="me-1 text-warning pointer"
+                >
+                  <i class="fas fa-eye"></i>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>

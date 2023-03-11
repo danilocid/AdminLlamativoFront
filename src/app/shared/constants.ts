@@ -9,6 +9,15 @@ export const ApiRequest = {
     environment.urlBackend + '/products-GetMovements',
   updateArticulo: environment.urlBackend + '/products-Update',
   createArticulo: environment.urlBackend + '/products-Create',
+  getLastCount: environment.urlBackend + '/products-GetLastCount',
+
+  //movimientos
+  getMovimientos: environment.urlBackend + '/products-GetMovementsTypes',
+
+  //inventario
+  saveInventory: environment.urlBackend + '/products-SaveMovement',
+  getAllInventory: environment.urlBackend + '/products-GetAllMovements',
+  getInventoryById: environment.urlBackend + '/products-GetMovementDetail',
 
   //issues
   getIssues: environment.urlBackend + '/issues-GetAll',
@@ -32,8 +41,8 @@ export function FormatDataTableGlobal(): any {
       searchPlaceholder: 'Buscar',
       paginate: {
         first: '<<',
-        previous: '<<',
-        next: '>>',
+        previous: '<',
+        next: '>',
         last: '>>',
       },
       infoempty: 'No hay registros',
@@ -43,6 +52,7 @@ export function FormatDataTableGlobal(): any {
       infoFilteredEmpty:
         'Mostrando desde _START_ al _END_ de _TOTAL_ elementos (filtrado de 0 elementos en total)',
       emptyTable: 'No hay datos disponibles',
+      infoEmpty: 'No hay registros',
     },
   };
 }

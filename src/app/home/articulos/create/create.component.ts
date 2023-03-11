@@ -128,13 +128,14 @@ export class CreateComponent implements OnInit {
             this.router.navigate(['/login']);
             return;
           }
-          this.alertSV.alertBasic('Exito', 'Articulo creado', 'success');
           this.spinner.hide();
+          this.alertSV.alertBasic('Exito', 'Articulo creado', 'success');
+
           this.router.navigate(['/home/articulos']);
         },
         (err) => {
-          this.alertSV.alertBasic('Error', err.error.msg, 'error');
           this.spinner.hide();
+          this.alertSV.alertBasic('Error', err.error.msg, 'error');
         }
       );
   }
