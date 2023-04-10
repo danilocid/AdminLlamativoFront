@@ -12,7 +12,7 @@ import { ApiService } from 'src/app/shared/services/ApiService';
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
-  styleUrls: ['./create.component.css'],
+  styleUrls: [],
 })
 export class CreateComponent implements OnInit {
   private apiService!: ApiService;
@@ -29,7 +29,6 @@ export class CreateComponent implements OnInit {
     private route: ActivatedRoute,
     private alertSV: AlertService
   ) {
-    // this.titleService.setTitle('Articulos - Ver');
     this.spinner.show();
     this.idProducto = this.route.snapshot.paramMap.get('id')!;
     //if idProducto is not null, then the title should be "Editar Articulo"
@@ -70,8 +69,8 @@ export class CreateComponent implements OnInit {
   getProduct() {
     this.apiService
       .postService(ApiRequest.getArticulosById, { id: this.idProducto })
-      .subscribe(
-        (resp) => {
+      .subscribe({
+        next: (resp) => {
           if (resp.status == 401) {
             this.router.navigate(['/login']);
             return;
@@ -93,10 +92,10 @@ export class CreateComponent implements OnInit {
           });
           this.spinner.hide();
         },
-        (err) => {
+        error: (err) => {
           this.spinner.hide();
-        }
-      );
+        },
+      });
   }
   onSubmit() {
     if (this.productForm.invalid) {
@@ -113,17 +112,13 @@ export class CreateComponent implements OnInit {
     } else {
       this.createProduct();
     }
-
-    /*
-    this.createUser();
-    this.spinner.show(); */
   }
   createProduct() {
     this.spinner.show();
     this.apiService
       .postService(ApiRequest.createArticulo, this.productForm.value)
-      .subscribe(
-        (resp) => {
+      .subscribe({
+        next: (resp) => {
           if (resp.status == 401) {
             this.router.navigate(['/login']);
             return;
@@ -133,11 +128,11 @@ export class CreateComponent implements OnInit {
 
           this.router.navigate(['/home/articulos']);
         },
-        (err) => {
+        error: (err) => {
           this.spinner.hide();
           this.alertSV.alertBasic('Error', err.error.msg, 'error');
-        }
-      );
+        },
+      });
   }
   updateProduct() {
     this.alertSV.verificationAlertWithFunction(
@@ -150,8 +145,8 @@ export class CreateComponent implements OnInit {
         this.spinner.show();
         this.apiService
           .postService(ApiRequest.updateArticulo, this.productForm.value)
-          .subscribe(
-            (resp) => {
+          .subscribe({
+            next: (resp) => {
               if (resp.status == 401) {
                 this.router.navigate(['/login']);
                 return;
@@ -164,10 +159,12 @@ export class CreateComponent implements OnInit {
               );
               this.router.navigate(['/home/articulos']);
             },
-            (err) => {
+            error: (err) => {
+              console.log(err);
               this.spinner.hide();
-            }
-          );
+              this.alertSV.alertBasic('Error', err.error.msg, 'error');
+            },
+          });
       }
     );
   }

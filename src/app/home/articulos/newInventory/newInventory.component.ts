@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AlertService } from 'src/app/shared/services/alert.service';
@@ -8,7 +8,6 @@ import { ApiRequest, FormatDataTableGlobal } from 'src/app/shared/constants';
 import { HttpClient } from '@angular/common/http';
 import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
-import { OnDestroy } from '@angular/core';
 import { ProductInventory } from '../../../shared/models/productInventory.model';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -17,12 +16,11 @@ import { Product } from 'src/app/shared/models/product.model';
 @Component({
   selector: 'app-new-inventory',
   templateUrl: './newInventory.component.html',
-  styleUrls: ['./newInventory.component.css'],
+  styleUrls: [],
 })
-export class NewInventoryComponent implements OnInit, AfterViewInit, OnDestroy {
+export class NewInventoryComponent implements OnInit, OnDestroy {
   @ViewChild(DataTableDirective)
   dtElement!: DataTableDirective;
-  //dtTrigger = new Subject();
   dtTrigger: Subject<any> = new Subject<any>();
   dtOptions: DataTables.Settings = {};
   private apiService!: ApiService;
@@ -65,23 +63,8 @@ export class NewInventoryComponent implements OnInit, AfterViewInit, OnDestroy {
       obs: ['', [Validators.required]],
     });
     this.dtOptions = FormatDataTableGlobal();
-    //this.dtOptions.order = [0, 'asc'];
     this.apiService = new ApiService(this.http);
-    /* this.dtOptions = {
-      pagingType: 'full_numbers',
-      pageLength: 2,
-    }; */
-    /* this.apiService.getService(ApiRequest.getArticulos).subscribe(
-      (resp) => {
-        this.users = resp.result;
-        this.rerender();
-        this.spinner.hide();
-      },
-      (error) => {
-        this.spinner.hide();
-        this.alertSV.alertBasic('Error', error.error.msg, 'error');
-      }
-    ); */
+
     this.apiService.getService(ApiRequest.getArticulos).subscribe({
       next: (resp) => {
         if (resp.status === 401 || resp.status === 403) {
@@ -131,7 +114,6 @@ export class NewInventoryComponent implements OnInit, AfterViewInit, OnDestroy {
       );
       //return;
     }
-    //this.spinner.show();
     console.log(this.productsInventory);
     console.log(this.movementForm.value);
     let entradas = 0;
@@ -170,9 +152,6 @@ export class NewInventoryComponent implements OnInit, AfterViewInit, OnDestroy {
             this.alertSV.alertBasic('Exito', resp.msg, 'success');
             this.router.navigate(['/home/articulos/ajustes']);
           });
-          //this.alertSV.alertBasic('Exito', resp.msg, 'success');
-
-          //this.router.navigate(['/home/articulos/ajustes']);
         },
         error: (error) => {
           console.log(error);
@@ -281,7 +260,6 @@ export class NewInventoryComponent implements OnInit, AfterViewInit, OnDestroy {
     this.productsInventory = this.productsInventory.filter((x) => x.id !== id);
     this.rerender();
   }
-  ngAfterViewInit(): void {}
 
   ngOnDestroy(): void {
     // Do not forget to unsubscribe the event

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AlertService } from 'src/app/shared/services/alert.service';
@@ -8,22 +8,20 @@ import { ApiRequest, FormatDataTableGlobal } from 'src/app/shared/constants';
 import { HttpClient } from '@angular/common/http';
 import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
-import { Product } from '../../../shared/models/product.model';
 import { Router } from '@angular/router';
-
+import { Client } from 'src/app/shared/models/client.model';
 @Component({
-  selector: 'app-articulos',
-  templateUrl: './articulos.component.html',
-  styleUrls: [],
+  selector: 'app-clientes',
+  templateUrl: './clientes.component.html',
+  styleUrls: ['./clientes.component.scss'],
 })
-export class ArticulosComponent implements OnInit, OnDestroy {
+export class ClientesComponent implements OnInit {
   @ViewChild(DataTableDirective)
   dtElement!: DataTableDirective;
   dtTrigger: Subject<any> = new Subject<any>();
   dtOptions: DataTables.Settings = {};
   private apiService!: ApiService;
-  products: Product[] = [];
-  date = new Date();
+  clients: Client[] = [];
 
   constructor(
     private titleService: Title,
@@ -33,46 +31,28 @@ export class ArticulosComponent implements OnInit, OnDestroy {
     private alertSV: AlertService,
     private http: HttpClient
   ) {
-    this.titleService.setTitle('Articulos');
+    this.titleService.setTitle('Clientes');
     this.spinner.show();
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.dtOptions = FormatDataTableGlobal();
     this.apiService = new ApiService(this.http);
-
-    this.apiService.getService(ApiRequest.getArticulos).subscribe({
+    this.apiService.getService(ApiRequest.getClients).subscribe({
       next: (resp) => {
         if (resp.status === 401 || resp.status === 403) {
           this.router.navigate(['/login']);
           return;
         }
-        this.products = resp.result;
+        this.clients = resp.data;
         this.dtTrigger.next(this.dtOptions);
         this.spinner.hide();
+        console.log(this.clients);
       },
       error: (error) => {
-        if (error.status === 401 || error.status === 403) {
-          this.router.navigate(['/login']);
-          return;
-        }
         this.spinner.hide();
         this.alertSV.alertBasic('Error', error.error.msg, 'error');
       },
     });
-  }
-
-  rerender(): void {
-    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      // Destroy the table first
-      dtInstance.destroy();
-      // Call the dtTrigger to rerender again
-      this.dtTrigger.next(null);
-    });
-  }
-
-  ngOnDestroy(): void {
-    // Do not forget to unsubscribe the event
-    this.dtTrigger.unsubscribe();
   }
 }

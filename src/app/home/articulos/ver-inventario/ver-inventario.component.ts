@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AlertService } from 'src/app/shared/services/alert.service';
@@ -9,17 +9,15 @@ import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
-import { OnDestroy } from '@angular/core';
 
 @Component({
   selector: 'app-ver-inventario',
   templateUrl: './ver-inventario.component.html',
-  styleUrls: ['./ver-inventario.component.scss'],
+  styleUrls: [],
 })
 export class VerInventarioComponent implements OnInit, OnDestroy {
   @ViewChild(DataTableDirective)
   dtElement!: DataTableDirective;
-  //dtTrigger = new Subject();
   dtTrigger: Subject<any> = new Subject<any>();
   dtOptions: DataTables.Settings = {};
   private apiService!: ApiService;
@@ -48,8 +46,8 @@ export class VerInventarioComponent implements OnInit, OnDestroy {
       .postService(ApiRequest.getInventoryById, {
         id: this.idInventario,
       })
-      .subscribe(
-        (resp) => {
+      .subscribe({
+        next: (resp) => {
           this.movimiento = resp.movimiento[0];
           this.articulos = resp.productos;
           console.table(this.movimiento);
@@ -58,11 +56,11 @@ export class VerInventarioComponent implements OnInit, OnDestroy {
 
           this.spinner.hide();
         },
-        (error) => {
+        error: (error) => {
           this.spinner.hide();
           this.alertSV.alertBasic('Error', error.error.msg, 'error');
-        }
-      );
+        },
+      });
   }
 
   ngOnDestroy(): void {

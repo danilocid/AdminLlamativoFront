@@ -28,6 +28,17 @@ export const ApiRequest = {
   secctionsIssue: environment.urlBackend + '/issues-GetAllSections',
   statusIssue: environment.urlBackend + '/issues-GetAllStatus',
   typeIssue: environment.urlBackend + '/issues-GetAllTypes',
+
+  //clients
+  getClients: environment.urlBackend + '/clients-getAllClients',
+  getClientsByRut: environment.urlBackend + '/clients-getClientByRut',
+  createClient: environment.urlBackend + '/clients-addClient',
+  updateClient: environment.urlBackend + '/clients-updateClient',
+
+  //utils
+  getComunasByIdRegion:
+    environment.urlBackend + '/utils-getAllComunasByRegionId',
+  getRegiones: environment.urlBackend + '/utils-getAllRegions',
 };
 export function FormatDataTableGlobal(): any {
   return {

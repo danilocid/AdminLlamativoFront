@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AlertService } from 'src/app/shared/services/alert.service';
@@ -8,21 +8,18 @@ import { ApiRequest, FormatDataTableGlobal } from 'src/app/shared/constants';
 import { HttpClient } from '@angular/common/http';
 import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
-import { OnDestroy } from '@angular/core';
+
 import { Inventory } from '../../../shared/models/inventory.model';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-ajustesDeInventario',
   templateUrl: './ajustesDeInventario.component.html',
-  styleUrls: ['./ajustesDeInventario.component.css'],
+  styleUrls: [],
 })
-export class AjustesDeInventarioComponent
-  implements OnInit, AfterViewInit, OnDestroy
-{
+export class AjustesDeInventarioComponent implements OnInit, OnDestroy {
   @ViewChild(DataTableDirective)
   dtElement!: DataTableDirective;
-  //dtTrigger = new Subject();
   dtTrigger: Subject<any> = new Subject<any>();
   dtOptions: DataTables.Settings = {};
   private apiService!: ApiService;
@@ -40,7 +37,6 @@ export class AjustesDeInventarioComponent
     this.titleService.setTitle('Ajustes de Inventario');
     this.spinner.show();
   }
-  ngAfterViewInit(): void {}
 
   ngOnDestroy(): void {
     // Do not forget to unsubscribe the event

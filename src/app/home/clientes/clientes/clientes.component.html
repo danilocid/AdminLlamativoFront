@@ -1,0 +1,81 @@
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">Clientes</h1>
+      </div>
+      <!-- /.col -->
+
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</div>
+<section class="content">
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">Listado de clientes</h4>
+      </div>
+
+      <div class="card-body">
+        <a [routerLink]="['create']" class="btn btn-primary">Agregar cliente</a>
+        <table
+          datatable
+          [dtOptions]="dtOptions"
+          [dtTrigger]="dtTrigger"
+          class="row-border hover"
+          aria-label="Clientes"
+        >
+          <thead class="table-light">
+            <tr>
+              <th>RUT</th>
+              <th>Nombre</th>
+              <th>Giro</th>
+              <th>Direccion</th>
+              <th>Comuna</th>
+              <th>Region</th>
+              <th>Telefono</th>
+              <th>Mail</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of clients">
+              <td>{{ item.rut }}</td>
+              <td>{{ item.nombre }}</td>
+              <td>{{ item.giro }}</td>
+              <td>{{ item.direccion }}</td>
+              <td>{{ item.comuna }}</td>
+              <td>
+                {{ item.region }}
+              </td>
+              <td>
+                {{ item.telefono }}
+              </td>
+
+              <td>{{ item.mail }}</td>
+
+              <td>
+                <a
+                  routerLink="editar/{{ item.rut }}"
+                  class="me-1 text-success pointer"
+                >
+                  <i class="fas fa-edit"></i>
+                </a>
+                -
+                <a
+                  routerLink="ver/{{ item.rut }}"
+                  class="me-1 text-warning pointer"
+                >
+                  <i class="fas fa-eye"></i>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>

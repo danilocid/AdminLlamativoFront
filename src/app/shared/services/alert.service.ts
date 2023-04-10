@@ -32,7 +32,6 @@ export class AlertService {
    * @param icon Tipo de alert a mostrar 'success' | 'warning' | 'danger'| 'info'| 'question'
    *
    */
-
   public alertBasic(
     title: string,
     message: string,

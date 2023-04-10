@@ -1,0 +1,166 @@
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">Cliente</h1>
+      </div>
+      <!-- /.col -->
+
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</div>
+<section class="content">
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">{{ title }}</h4>
+      </div>
+
+      <div class="card-body">
+        <form
+          [formGroup]="clientForm"
+          (submit)="onSubmit()"
+          method="post"
+          action=""
+        >
+          <div class="form-group col-lg-4">
+            <label for="rut">RUT</label>
+            <input
+              type="text"
+              [ngClass]="isValidField('rut') ? 'is-invalid' : ''"
+              class="form-control"
+              id="rut"
+              [readonly]="isEditable()"
+              name="rut"
+              placeholder="RUT"
+              formControlName="rut"
+              required
+            />
+            <div *ngIf="isValidField('rut')" class="invalid-feedback">
+              El RUT es requerido
+            </div>
+          </div>
+          <div class="form-group col-lg-4">
+            <label for="nombre">Nombre - Razon social</label>
+            <input
+              type="text"
+              [ngClass]="isValidField('nombre') ? 'is-invalid' : ''"
+              class="form-control"
+              id="nombre"
+              name="nombre"
+              placeholder="nombre"
+              formControlName="nombre"
+              required
+            />
+            <div *ngIf="isValidField('nombre')" class="invalid-feedback">
+              El nombre es requerido
+            </div>
+          </div>
+
+          <div class="form-group col-lg-4">
+            <label for="giro">Giro</label>
+            <input
+              type="text"
+              [ngClass]="isValidField('giro') ? 'is-invalid' : ''"
+              class="form-control"
+              id="giro"
+              name="giro"
+              placeholder="Giro"
+              formControlName="giro"
+              required
+            />
+            <div *ngIf="isValidField('giro')" class="invalid-feedback">
+              El giro es requerido
+            </div>
+          </div>
+          <div class="form-group col-lg-4">
+            <label for="direccion">Direccion</label>
+            <input
+              type="text"
+              [ngClass]="isValidField('direccion') ? 'is-invalid' : ''"
+              class="form-control"
+              id="direccion"
+              name="direccion"
+              placeholder="Direccion"
+              formControlName="direccion"
+              required
+            />
+            <div *ngIf="isValidField('direccion')" class="invalid-feedback">
+              La direccion es requerida
+            </div>
+          </div>
+          <div class="form-group col-lg-4">
+            <label for="region">Region</label>
+            <ng-select
+              formControlName="region"
+              id=""
+              name=""
+              required
+              (change)="onChangeRegion()"
+            >
+              <option value="" selected disabled>Seleccione</option>
+              <ng-option *ngFor="let item of regions" value="{{ item.id }}">
+                {{ item.region }}
+              </ng-option>
+            </ng-select>
+            <div *ngIf="isValidField('region')" class="invalid-feedback">
+              La region es requerida
+            </div>
+          </div>
+          <div class="form-group col-lg-4">
+            <label for="comuna">Comuna</label>
+            <ng-select formControlName="comuna" id="" name="" required>
+              <option value="" selected disabled>Seleccione</option>
+              <ng-option *ngFor="let item of comunas" value="{{ item.id }}">
+                {{ item.comuna }}
+              </ng-option>
+            </ng-select>
+            <div *ngIf="isValidField('comuna')" class="invalid-feedback">
+              La comuna es requerida
+            </div>
+          </div>
+          <div class="form-group col-lg-4">
+            <label for="mail">Mail</label>
+            <input
+              type="email"
+              [ngClass]="isValidField('mail') ? 'is-invalid' : ''"
+              class="form-control"
+              id="mail"
+              name="mail"
+              placeholder="Mail"
+              formControlName="mail"
+              required
+            />
+            <div *ngIf="isValidField('mail')" class="invalid-feedback">
+              El mail es requerido
+            </div>
+          </div>
+          <div class="form-group col-lg-4">
+            <label for="telefono">Telefono</label>
+            <input
+              type="text"
+              [ngClass]="isValidField('telefono') ? 'is-invalid' : ''"
+              class="form-control"
+              id="telefono"
+              name="telefono"
+              placeholder="Telefono"
+              formControlName="telefono"
+              maxlength="9"
+              required
+            />
+            <div *ngIf="isValidField('telefono')" class="invalid-feedback">
+              El telefono es requerido
+            </div>
+          </div>
+
+          <div class="form-group col-lg-4">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

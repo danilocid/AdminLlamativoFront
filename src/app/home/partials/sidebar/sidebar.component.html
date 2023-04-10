@@ -53,6 +53,16 @@
             </li>
           </ul>
         </li>
+        <li class="nav-item">
+          <a
+            [routerLink]="['clientes']"
+            [routerLinkActive]="['active']"
+            class="nav-link"
+          >
+            <i class="nav-icon fas fa-user"></i>
+            <p>Clientes</p>
+          </a>
+        </li>
         <li class="nav-item has-treeview" [routerLinkActive]="['menu-open']">
           <a class="nav-link" [class.active]="isActive('configuracion')">
             <i class="nav-icon fas fa-cog"></i>

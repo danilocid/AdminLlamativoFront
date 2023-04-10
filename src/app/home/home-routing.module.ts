@@ -25,6 +25,11 @@ const routes: Routes = [
           import('./articulos/articulos.module').then((m) => m.ArticulosModule),
       },
       {
+        path: 'clientes',
+        loadChildren: () =>
+          import('./clientes/clientes.module').then((m) => m.ClientesModule),
+      },
+      {
         // captura cualquier ruta que no este definida
         path: '**',
         redirectTo: '/home',
