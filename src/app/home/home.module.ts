@@ -7,7 +7,6 @@ import { NavbarComponent } from './partials/navbar/navbar.component';
 import { SidebarComponent } from './partials/sidebar/sidebar.component';
 import { FooterComponent } from './partials/footer/footer.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
 import { DataTablesModule } from 'angular-datatables';
 
 @NgModule({

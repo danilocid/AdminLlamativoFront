@@ -12,7 +12,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'app-createIssue',
   templateUrl: './createIssue.component.html',
-  styleUrls: ['./createIssue.component.css'],
+  styleUrls: [],
 })
 export class CreateIssueComponent implements OnInit {
   private apiService!: ApiService;
@@ -80,11 +80,7 @@ export class CreateIssueComponent implements OnInit {
   onSubmit() {
     if (this.issueForm.invalid) {
       this.issueForm.markAllAsTouched();
-      /*  this.alertSV.alertBasic(
-        'Error',
-        'Todos los campos son obligatorios',
-        'warning'
-      ); */
+
       return;
     }
     if (this.idIssue != null) {
@@ -103,8 +99,8 @@ export class CreateIssueComponent implements OnInit {
     this.spinner.show();
     this.apiService
       .postService(ApiRequest.createIssue, this.issueForm.value)
-      .subscribe(
-        (resp) => {
+      .subscribe({
+        next: (resp) => {
           this.spinner.hide();
           this.alertSV.alertBasic(
             'Creación',
@@ -113,19 +109,19 @@ export class CreateIssueComponent implements OnInit {
           );
           this.uS.navigateToPath('home/configuracion/issues');
         },
-        (err) => {
+        error: (err) => {
           this.spinner.hide();
           this.alertSV.alertBasic('Error', 'Error al crear el issue', 'error');
-        }
-      );
+        },
+      });
   }
 
   updateIssue() {
     this.spinner.show();
     this.apiService
       .postService(ApiRequest.updateIssue, this.issueForm.value)
-      .subscribe(
-        (resp) => {
+      .subscribe({
+        next: (resp) => {
           this.spinner.hide();
           this.alertSV.alertBasic(
             'Actualización',
@@ -134,14 +130,14 @@ export class CreateIssueComponent implements OnInit {
           );
           this.uS.navigateToPath('home/configuracion/issues');
         },
-        (err) => {
+        error: (err) => {
           this.spinner.hide();
           this.alertSV.alertBasic(
             'Error',
             'Error al actualizar el issue',
             'error'
           );
-        }
-      );
+        },
+      });
   }
 }

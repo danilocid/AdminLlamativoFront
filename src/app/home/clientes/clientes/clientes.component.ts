@@ -13,7 +13,7 @@ import { Client } from 'src/app/shared/models/client.model';
 @Component({
   selector: 'app-clientes',
   templateUrl: './clientes.component.html',
-  styleUrls: ['./clientes.component.scss'],
+  styleUrls: [],
 })
 export class ClientesComponent implements OnInit {
   @ViewChild(DataTableDirective)

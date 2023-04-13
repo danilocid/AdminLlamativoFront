@@ -9,7 +9,7 @@ import { ApiService } from 'src/app/shared/services/ApiService';
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
-  styleUrls: ['./create.component.css'],
+  styleUrls: [],
 })
 export class CreateComponent implements OnInit {
   private apiService!: ApiService;

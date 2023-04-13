@@ -4,7 +4,6 @@ import { UsuariosComponent } from './usuarios/usuarios/usuarios.component';
 import { ConfigRoutingModule } from './config-routing.module';
 import { DataTablesModule } from 'angular-datatables';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
 import { CreateComponent } from './usuarios/create/create.component';
 import { AllIssuesComponent } from './issues/allIssues/allIssues.component';
 import { CreateIssueComponent } from './issues/createIssue/createIssue.component';

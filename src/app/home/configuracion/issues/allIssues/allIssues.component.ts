@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AlertService } from 'src/app/shared/services/alert.service';
@@ -8,18 +8,16 @@ import { ApiRequest, FormatDataTableGlobal } from 'src/app/shared/constants';
 import { HttpClient } from '@angular/common/http';
 import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
-import { OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-allIssues',
   templateUrl: './allIssues.component.html',
-  styleUrls: ['./allIssues.component.css'],
+  styleUrls: [],
 })
 export class AllIssuesComponent implements OnInit {
   @ViewChild(DataTableDirective)
   dtElement!: DataTableDirective;
-  //dtTrigger = new Subject();
   dtTrigger: Subject<any> = new Subject<any>();
   dtOptions: DataTables.Settings = {};
   private apiService!: ApiService;
@@ -44,29 +42,28 @@ export class AllIssuesComponent implements OnInit {
     this.dtOptions = FormatDataTableGlobal();
     this.dtOptions.order = [4, 'asc'];
     this.apiService = new ApiService(this.http);
-    this.apiService.getService(ApiRequest.getIssues).subscribe(
-      (resp) => {
+    this.apiService.getService(ApiRequest.getIssues).subscribe({
+      next: (resp) => {
         if (resp.status === 401 || resp.status === 403) {
           this.router.navigate(['/login']);
           return;
         }
-        //this.rerender();
         this.issues = resp.result;
         this.dtTrigger.next(this.dtOptions);
 
         this.spinner.hide();
       },
-      (error) => {
+      error: (error) => {
         if (error.status === 401 || error.status === 403) {
           this.router.navigate(['/login']);
           return;
         }
         this.spinner.hide();
         this.alertSV.alertBasic('Error', error.error.msg, 'error');
-      }
-    );
-    this.apiService.getService(ApiRequest.reportIssue).subscribe(
-      (resp) => {
+      },
+    });
+    this.apiService.getService(ApiRequest.reportIssue).subscribe({
+      next: (resp) => {
         if (resp.status === 401 || resp.status === 403) {
           this.router.navigate(['/login']);
           return;
@@ -75,15 +72,15 @@ export class AllIssuesComponent implements OnInit {
         this.type = resp.types;
         this.section = resp.sections;
       },
-      (error) => {
+      error: (error) => {
         if (error.status === 401 || error.status === 403) {
           this.router.navigate(['/login']);
           return;
         }
         this.spinner.hide();
         this.alertSV.alertBasic('Error', error.error.msg, 'error');
-      }
-    );
+      },
+    });
   }
 
   rerender(): void {
@@ -94,7 +91,6 @@ export class AllIssuesComponent implements OnInit {
       this.dtTrigger.next(null);
     });
   }
-  ngAfterViewInit(): void {}
 
   ngOnDestroy(): void {
     // Do not forget to unsubscribe the event

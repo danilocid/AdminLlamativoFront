@@ -13,7 +13,7 @@ import { validarRut } from 'src/app/shared/utils/validaRut';
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
-  styleUrls: ['./create.component.scss'],
+  styleUrls: [],
 })
 export class CreateComponent implements OnInit {
   private apiService!: ApiService;
@@ -56,7 +56,7 @@ export class CreateComponent implements OnInit {
       telefono: ['', [Validators.pattern('^[0-9]*$'), Validators.minLength(8)]],
       giro: ['', [Validators.required]],
     });
-    await this.getRegions();
+    this.getRegions();
     if (this.rutCliente != null) {
       this.getClientData();
     } else {
@@ -131,10 +131,6 @@ export class CreateComponent implements OnInit {
     this.getComunas(this.clientForm.get('region')?.value);
   }
   isValidField(field: string) {
-    /*  if (this.clientForm.controls[field].errors) {
-      console.log(field);
-      console.log(this.clientForm.controls[field].errors);
-    } */
     return (
       this.clientForm.controls[field].errors &&
       this.clientForm.controls[field].touched

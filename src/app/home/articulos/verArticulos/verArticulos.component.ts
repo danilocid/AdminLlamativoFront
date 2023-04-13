@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AlertService } from 'src/app/shared/services/alert.service';
@@ -10,17 +10,15 @@ import { ActivatedRoute } from '@angular/router';
 import { Product } from 'src/app/shared/models/product.model';
 import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
-import { OnDestroy } from '@angular/core';
 
 @Component({
   selector: 'app-verArticulos',
   templateUrl: './verArticulos.component.html',
-  styleUrls: ['./verArticulos.component.css'],
+  styleUrls: [],
 })
 export class VerArticulosComponent implements OnInit, OnDestroy {
   @ViewChild(DataTableDirective)
   dtElement!: DataTableDirective;
-  //dtTrigger = new Subject();
   dtTrigger: Subject<any> = new Subject<any>();
   dtOptions: DataTables.Settings = {};
   private apiService!: ApiService;
@@ -47,8 +45,8 @@ export class VerArticulosComponent implements OnInit, OnDestroy {
       .postService(ApiRequest.getMovimientosArticulosById, {
         id: this.idProducto,
       })
-      .subscribe(
-        (resp) => {
+      .subscribe({
+        next: (resp) => {
           this.producto = resp.result[0];
           this.movimientos = resp.movements;
           console.table(this.movimientos);
@@ -56,11 +54,11 @@ export class VerArticulosComponent implements OnInit, OnDestroy {
 
           this.spinner.hide();
         },
-        (error) => {
+        error: (error) => {
           this.spinner.hide();
           this.alertSV.alertBasic('Error', error.error.msg, 'error');
-        }
-      );
+        },
+      });
   }
 
   rerender(): void {

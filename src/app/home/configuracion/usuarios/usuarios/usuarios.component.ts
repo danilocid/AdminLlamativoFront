@@ -12,7 +12,7 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'app-usuarios',
   templateUrl: './usuarios.component.html',
-  styleUrls: ['./usuarios.component.css'],
+  styleUrls: [],
 })
 export class UsuariosComponent implements OnInit, AfterViewInit {
   @ViewChild(DataTableDirective, { static: false })
@@ -39,15 +39,15 @@ export class UsuariosComponent implements OnInit, AfterViewInit {
     this.dtOptions.order = [0, 'asc'];
     this.apiService = new ApiService(this.http);
     try {
-      this.apiService.getService(ApiRequest.getUsers).subscribe(
-        (resp) => {
+      this.apiService.getService(ApiRequest.getUsers).subscribe({
+        next: (resp) => {
           this.users = resp.result;
           this.spinner.hide();
         },
-        (error) => {
+        error: (error) => {
           this.alertSV.alertBasic('Error', error.error.message, 'error');
-        }
-      );
+        },
+      });
     } catch (error) {
       return;
     }
