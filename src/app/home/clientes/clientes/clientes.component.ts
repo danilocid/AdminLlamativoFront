@@ -47,7 +47,6 @@ export class ClientesComponent implements OnInit {
         this.clients = resp.data;
         this.dtTrigger.next(this.dtOptions);
         this.spinner.hide();
-        console.log(this.clients);
       },
       error: (error) => {
         this.spinner.hide();

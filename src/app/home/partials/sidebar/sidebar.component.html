@@ -19,7 +19,17 @@
       >
         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-
+        <li class="nav-item">
+          <a
+            [routerLink]="['ventas']"
+            [routerLinkActive]="['active']"
+            [class.active]="isActive('ventas')"
+            class="nav-link"
+          >
+            <i class="nav-icon fas fa-file-invoice-dollar"></i>
+            <p>Ventas</p>
+          </a>
+        </li>
         <li class="nav-item has-treeview" [routerLinkActive]="['menu-open']">
           <a class="nav-link" [class.active]="isActive('articulos')">
             <i class="nav-icon fas fa-box"></i>
@@ -45,6 +55,7 @@
               <a
                 [routerLink]="['articulos', 'ajustes']"
                 [routerLinkActive]="['active']"
+                [class.active]="isActive('ajustes')"
                 class="nav-link"
               >
                 <i class="fas fa-clipboard-list nav-icon"></i>

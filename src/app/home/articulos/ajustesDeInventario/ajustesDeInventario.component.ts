@@ -54,7 +54,6 @@ export class AjustesDeInventarioComponent implements OnInit, OnDestroy {
         }
         this.inventories = resp.result;
         this.dtTrigger.next(this.dtOptions);
-        console.log(this.inventories);
         this.spinner.hide();
       },
       error: (error) => {

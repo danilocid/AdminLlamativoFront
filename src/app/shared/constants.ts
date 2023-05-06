@@ -4,6 +4,7 @@ export const ApiRequest = {
   getUsers: environment.urlBackend + '/users',
   //articulos
   getArticulos: environment.urlBackend + '/products-GetAll',
+  getArticulosConStock: environment.urlBackend + '/products-GetAllWhitStock',
   getArticulosById: environment.urlBackend + '/products-Get',
   getMovimientosArticulosById:
     environment.urlBackend + '/products-GetMovements',
@@ -39,6 +40,11 @@ export const ApiRequest = {
   getComunasByIdRegion:
     environment.urlBackend + '/utils-getAllComunasByRegionId',
   getRegiones: environment.urlBackend + '/utils-getAllRegions',
+  getTipoDocumento: environment.urlBackend + '/utils-getAllTipoDocumento',
+  getMedioPago: environment.urlBackend + '/utils-getAllMedioPago',
+
+  //sales
+  createSale: environment.urlBackend + '/sales-addSale',
 };
 export function FormatDataTableGlobal(): any {
   return {

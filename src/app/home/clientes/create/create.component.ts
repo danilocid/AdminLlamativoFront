@@ -66,14 +66,12 @@ export class CreateComponent implements OnInit {
   getRegions() {
     this.apiService.getService(ApiRequest.getRegiones).subscribe({
       next: (response: any) => {
-        console.log(response);
         this.regions = response.data;
 
         this.spinner.hide();
       },
       error: (error: any) => {
         this.spinner.hide();
-        console.log(error);
         this.alertSV.alertBasic('Error', error.error.message, 'error');
       },
     });
@@ -83,13 +81,11 @@ export class CreateComponent implements OnInit {
       .postService(ApiRequest.getComunasByIdRegion, { regionid: idRegion })
       .subscribe({
         next: (response: any) => {
-          console.log(response);
           this.comunas = response.data;
           this.spinner.hide();
         },
         error: (error: any) => {
           this.spinner.hide();
-          console.log(error);
           this.alertSV.alertBasic('Error', error.error.message, 'error');
         },
       });
@@ -114,7 +110,6 @@ export class CreateComponent implements OnInit {
             telefono: this.cliente.telefono,
             giro: this.cliente.giro,
           });
-          console.log(this.cliente);
           //set the rut to readonly
           this.getComunas(this.cliente.id_region.toString());
           this.spinner.hide();
@@ -142,7 +137,6 @@ export class CreateComponent implements OnInit {
   onSubmit() {
     //check if the form is valid
     this.clientForm.markAllAsTouched();
-    console.log(this.clientForm.value);
     if (this.clientForm.invalid) {
       return Object.values(this.clientForm.controls).forEach((control) => {
         control.markAsTouched();
@@ -150,7 +144,6 @@ export class CreateComponent implements OnInit {
     }
 
     this.spinner.show();
-    console.log(this.rutCliente);
     if (this.rutCliente == '' || this.rutCliente == null) {
       //reescribe el rut para que sea valido
       this.clientForm
@@ -161,7 +154,6 @@ export class CreateComponent implements OnInit {
         .postService(ApiRequest.createClient, this.clientForm.value)
         .subscribe({
           next: (response: any) => {
-            console.log(response);
             this.spinner.hide();
             if (response.status == 401) {
               this.router.navigate(['/login']);
@@ -173,7 +165,6 @@ export class CreateComponent implements OnInit {
           },
           error: (error: any) => {
             this.spinner.hide();
-            console.log(error);
             this.alertSV.alertBasic('Error', error.error.msg, 'error');
           },
         });
@@ -187,7 +178,6 @@ export class CreateComponent implements OnInit {
         .postService(ApiRequest.updateClient, this.clientForm.value)
         .subscribe({
           next: (response: any) => {
-            console.log(response);
             this.spinner.hide();
             if (response.status == 401) {
               this.router.navigate(['/login']);
@@ -199,7 +189,6 @@ export class CreateComponent implements OnInit {
           },
           error: (error: any) => {
             this.spinner.hide();
-            console.log(error);
             this.alertSV.alertBasic('Error', error.error.msg, 'error');
           },
         });

@@ -1,0 +1,116 @@
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">Agregar venta</h1>
+      </div>
+      <!-- /.col -->
+
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</div>
+<section class="content" style="padding: 15px">
+  <div class="row">
+    <div class="col-7">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Detalle de la venta</h4>
+        </div>
+        <div class="card-body">
+          <table class="table" *ngIf="productsCart.length != 0">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio</th>
+                <th>Subtotal</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of productsCart">
+                <td>{{ item.descripcion }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.venta_neto + item.venta_imp }}</td>
+                <td>
+                  {{ item.quantity * (item.venta_imp + item.venta_neto) }}
+                </td>
+                <td>
+                  <button
+                    class="btn btn-danger btn-sm"
+                    (click)="removeProduct(item)"
+                  >
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <br />
+        </div>
+      </div>
+      <div class="card">
+        <!-- row number 1 -->
+        <div class="card-body">
+          <div class="row justify-cont">
+            <!-- Total -->
+            <div class="col-4">
+              <div class="input-group">
+                <span class="input-group-text">Total</span>
+                <input
+                  type="number"
+                  class="form-control"
+                  value="{{ total }}"
+                  disabled
+                />
+              </div>
+            </div>
+            <div class="col-2"></div>
+            <!-- Save and cancel buttons -->
+            <div class="col">
+              <button
+                class="btn btn-outline-danger"
+                type="button"
+                (click)="cancel()"
+              >
+                Cancelar <i class="fas fa-ban"></i>
+              </button>
+            </div>
+            <!-- Pay button -->
+            <div class="col">
+              <button
+                class="btn btn-outline-primary"
+                type="button"
+                [disabled]="!canSell()"
+                (click)="changeFunctionalityToPayment()"
+              >
+                Pagar <i class="far fa-check-circle"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-5">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">{{ sidePanel }}</h4>
+        </div>
+        <div class="card-body">
+          <app-producto
+            *ngIf="sidePanel == 'Productos'"
+            (productChange)="addProduct($event)"
+          ></app-producto>
+          <app-finaliza-venta
+            *ngIf="sidePanel == 'Pago'"
+            [productsCart]="productsCart"
+          ></app-finaliza-venta>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

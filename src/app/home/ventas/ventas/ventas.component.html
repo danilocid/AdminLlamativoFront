@@ -1,0 +1,72 @@
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">Ventas</h1>
+      </div>
+      <!-- /.col -->
+
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</div>
+<section class="content">
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">Listado de ventas</h4>
+      </div>
+
+      <div class="card-body">
+        <a [routerLink]="['create']" class="btn btn-primary">Agregar Venta</a>
+        <table
+          datatable
+          [dtOptions]="dtOptions"
+          class="row-border hover"
+          aria-label="Clientes"
+        >
+          <thead class="table-light">
+            <tr>
+              <th>Id</th>
+              <th>Cliente</th>
+              <th>Monto</th>
+              <th>Documento</th>
+              <th>Medio de pago</th>
+              <th>Fecha</th>
+              <th>Usuario</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of ventas">
+              <td>{{ item.id }}</td>
+              <td>{{ item.cliente }}</td>
+              <td>
+                {{
+                  item.monto_neto + item.monto_imp
+                    | currency : "CLP" : "symbol-narrow" : "1.0-0"
+                }}
+              </td>
+              <td>{{ item.tipo_documento }}</td>
+              <td>{{ item.medio_pago }}</td>
+              <td>{{ item.fecha }}</td>
+              <td>
+                {{ item.usuario }}
+              </td>
+              <td>
+                <a
+                  routerLink="ver/{{ item.id }}"
+                  class="me-1 text-warning pointer"
+                >
+                  <i class="fas fa-eye"></i>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>

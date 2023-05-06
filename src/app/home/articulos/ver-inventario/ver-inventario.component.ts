@@ -39,7 +39,6 @@ export class VerInventarioComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log(this.idInventario);
     this.dtOptions = FormatDataTableGlobal();
     this.apiService = new ApiService(this.http);
     this.apiService
@@ -50,8 +49,6 @@ export class VerInventarioComponent implements OnInit, OnDestroy {
         next: (resp) => {
           this.movimiento = resp.movimiento[0];
           this.articulos = resp.productos;
-          console.table(this.movimiento);
-          console.table(this.articulos);
           this.dtTrigger.next(this.dtOptions);
 
           this.spinner.hide();

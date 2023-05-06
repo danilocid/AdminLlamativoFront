@@ -91,7 +91,6 @@ export class NewInventoryComponent implements OnInit, OnDestroy {
           this.router.navigate(['/login']);
           return;
         }
-        console.log(resp.result);
         this.movementTypes = resp.result;
         this.spinner.hide();
       },
@@ -114,8 +113,6 @@ export class NewInventoryComponent implements OnInit, OnDestroy {
       );
       //return;
     }
-    console.log(this.productsInventory);
-    console.log(this.movementForm.value);
     let entradas = 0;
     let salidas = 0;
     let costo_neto = 0;
@@ -143,7 +140,6 @@ export class NewInventoryComponent implements OnInit, OnDestroy {
       })
       .subscribe({
         next: (resp) => {
-          console.log(resp);
           if (resp.status === 401 || resp.status === 403) {
             this.router.navigate(['/login']);
             return;
@@ -154,7 +150,6 @@ export class NewInventoryComponent implements OnInit, OnDestroy {
           });
         },
         error: (error) => {
-          console.log(error);
           if (error.status === 401 || error.status === 403) {
             this.router.navigate(['/login']);
             return;
@@ -177,7 +172,6 @@ export class NewInventoryComponent implements OnInit, OnDestroy {
     } else {
       //add to array
 
-      console.log(this.productForm.value.id.toString());
       //if product exist in array
       if (
         this.productsInventory.find(
@@ -239,8 +233,6 @@ export class NewInventoryComponent implements OnInit, OnDestroy {
     this.productForm.controls['id'].setValue('');
     this.productForm.controls['type'].setValue('1');
     this.productForm.controls['quantity'].setValue(1);
-    console.table(this.productsInventory);
-    console.log(this.productForm.value);
   }
   isValidField(field: string) {
     return (

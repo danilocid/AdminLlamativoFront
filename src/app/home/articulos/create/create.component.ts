@@ -160,7 +160,6 @@ export class CreateComponent implements OnInit {
               this.router.navigate(['/home/articulos']);
             },
             error: (err) => {
-              console.log(err);
               this.spinner.hide();
               this.alertSV.alertBasic('Error', err.error.msg, 'error');
             },
