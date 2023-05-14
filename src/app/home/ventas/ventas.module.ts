@@ -8,6 +8,7 @@ import { VentasRoutingModule } from './ventas-routing.module';
 import { CrearComponent } from './crear/crear.component';
 import { ProductoComponent } from './crear/producto/producto.component';
 import { FinalizaVentaComponent } from './crear/finaliza-venta/finaliza-venta.component';
+import { VerVentaComponent } from './verVenta/verVenta.component';
 
 @NgModule({
   imports: [
@@ -23,6 +24,7 @@ import { FinalizaVentaComponent } from './crear/finaliza-venta/finaliza-venta.co
     CrearComponent,
     ProductoComponent,
     FinalizaVentaComponent,
+    VerVentaComponent,
   ],
   exports: [],
 })

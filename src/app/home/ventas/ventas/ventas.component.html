@@ -24,6 +24,7 @@
         <table
           datatable
           [dtOptions]="dtOptions"
+          [dtTrigger]="dtTrigger"
           class="row-border hover"
           aria-label="Clientes"
         >
@@ -35,26 +36,23 @@
               <th>Documento</th>
               <th>Medio de pago</th>
               <th>Fecha</th>
-              <th>Usuario</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let item of ventas">
               <td>{{ item.id }}</td>
-              <td>{{ item.cliente }}</td>
+              <td>{{ item.nombre }}</td>
               <td>
                 {{
                   item.monto_neto + item.monto_imp
                     | currency : "CLP" : "symbol-narrow" : "1.0-0"
                 }}
               </td>
-              <td>{{ item.tipo_documento }}</td>
-              <td>{{ item.medio_pago }}</td>
-              <td>{{ item.fecha }}</td>
-              <td>
-                {{ item.usuario }}
-              </td>
+              <td>{{ item.tipo }}: {{ item.documento }}</td>
+              <td>{{ item.medio_de_pago }}</td>
+              <td>{{ item.fecha | date : "dd/MM/yyyy HH:mm" : "UTC" }}</td>
+
               <td>
                 <a
                   routerLink="ver/{{ item.id }}"

@@ -140,7 +140,7 @@ export class FinalizaVentaComponent implements OnInit {
               'Venta generada correctamente',
               'success'
             );
-            //this.router.navigate(['/home/ventas']);
+            this.router.navigate(['/home/ventas']);
           },
           error: (error) => {
             this.spinner.hide();

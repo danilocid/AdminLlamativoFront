@@ -45,6 +45,8 @@ export const ApiRequest = {
 
   //sales
   createSale: environment.urlBackend + '/sales-addSale',
+  getSales: environment.urlBackend + '/sales-getSales',
+  getSaleById: environment.urlBackend + '/sales-getSaleById',
 };
 export function FormatDataTableGlobal(): any {
   return {

@@ -1,0 +1,196 @@
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">Ver venta</h1>
+      </div>
+      <!-- /.col -->
+
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</div>
+<section class="content">
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">Resumen venta</h4>
+      </div>
+      <div class="card-body">
+        <div class="row justify-content-center align-items-center g-2">
+          <div class="col">
+            <p>ID: {{ idVenta }}</p>
+          </div>
+          <div class="col">
+            <p>Medio de pago: {{ venta.medio_de_pago }}</p>
+          </div>
+          <div class="col">{{ venta.tipo }}: {{ venta.documento }}</div>
+          <div class="col">
+            <p>
+              Fecha:
+              {{ venta.fecha | date : "EEEE dd/MM/yyyy HH:mm" : "UTC" }}
+            </p>
+          </div>
+        </div>
+        <div class="row justify-content-center align-items-center g-2">
+          <div class="col">
+            <p>
+              Total neto:
+              {{
+                venta.monto_neto | currency : "CLP" : "symbol-narrow" : "1.0-0"
+              }}
+            </p>
+          </div>
+          <div class="col">
+            Total I.V.A.:
+            {{ venta.monto_imp | currency : "CLP" : "symbol-narrow" : "1.0-0" }}
+          </div>
+          <div class="col">
+            Total:
+            {{
+              venta.monto_neto + venta.monto_imp
+                | currency : "CLP" : "symbol-narrow" : "1.0-0"
+            }}
+          </div>
+        </div>
+        <div class="row justify-content-center align-items-center g-2">
+          <div class="col">
+            <p>
+              Costo neto:
+              {{
+                venta.costo_neto | currency : "CLP" : "symbol-narrow" : "1.0-0"
+              }}
+            </p>
+          </div>
+          <div class="col">
+            Costo I.V.A.:
+            {{ venta.costo_imp | currency : "CLP" : "symbol-narrow" : "1.0-0" }}
+          </div>
+          <div class="col">
+            Total costo:
+            {{
+              venta.costo_neto + venta.costo_imp
+                | currency : "CLP" : "symbol-narrow" : "1.0-0"
+            }}
+          </div>
+        </div>
+        <div class="row justify-content-center align-items-center g-2">
+          <div class="col">
+            <p>
+              Ganancia:
+              {{
+                venta.monto_neto +
+                  venta.monto_imp -
+                  (venta.costo_neto + venta.costo_imp)
+                  | currency : "CLP" : "symbol-narrow" : "1.0-0"
+              }}
+            </p>
+          </div>
+          <div class="col">
+            % Ganancia:
+            {{
+              ((venta.monto_neto +
+                venta.monto_imp -
+                (venta.costo_neto + venta.costo_imp)) /
+                (venta.monto_neto + venta.monto_imp)) *
+                100 | number : "1.0-2"
+            }}
+          </div>
+          <div class="col">
+            Total costo:
+            {{
+              venta.costo_neto + venta.costo_imp
+                | currency : "CLP" : "symbol-narrow" : "1.0-0"
+            }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">Resumen venta</h4>
+      </div>
+      <div class="card-body">
+        <table class="table row-border hover">
+          <thead>
+            <th>Descripcion</th>
+            <th>Cantidad</th>
+            <th>Precio neto</th>
+            <th>Precio I.V.A.</th>
+            <th>Precio</th>
+            <th>Costo neto</th>
+            <th>Costo I.V.A.</th>
+            <th>Costo</th>
+            <th>Ganancia</th>
+            <th>% Ganancia</th>
+          </thead>
+          <tbody>
+            <tr *ngFor="let detalle of detalleVenta">
+              <td>
+                {{ detalle.descripcion }}
+              </td>
+              <td>
+                {{ detalle.cantidad }}
+              </td>
+              <td>
+                {{
+                  detalle.precio_neto
+                    | currency : "CLP" : "symbol-narrow" : "1.0-0"
+                }}
+              </td>
+              <td>
+                {{
+                  detalle.precio_imp
+                    | currency : "CLP" : "symbol-narrow" : "1.0-0"
+                }}
+              </td>
+              <td>
+                {{
+                  detalle.precio_imp + detalle.precio_neto
+                    | currency : "CLP" : "symbol-narrow" : "1.0-0"
+                }}
+              </td>
+              <td>
+                {{
+                  detalle.costo_neto
+                    | currency : "CLP" : "symbol-narrow" : "1.0-0"
+                }}
+              </td>
+              <td>
+                {{
+                  detalle.costo_imp
+                    | currency : "CLP" : "symbol-narrow" : "1.0-0"
+                }}
+              </td>
+              <td>
+                {{
+                  detalle.costo_imp + detalle.costo_neto
+                    | currency : "CLP" : "symbol-narrow" : "1.0-0"
+                }}
+              </td>
+              <td>
+                {{
+                  detalle.precio_imp +
+                    detalle.precio_neto -
+                    (detalle.costo_imp + detalle.costo_neto)
+                    | currency : "CLP" : "symbol-narrow" : "1.0-0"
+                }}
+              </td>
+              <td>
+                {{
+                  ((detalle.precio_imp +
+                    detalle.precio_neto -
+                    (detalle.costo_imp + detalle.costo_neto)) /
+                    (detalle.precio_imp + detalle.precio_neto)) *
+                    100 | number : "1.0-2"
+                }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
