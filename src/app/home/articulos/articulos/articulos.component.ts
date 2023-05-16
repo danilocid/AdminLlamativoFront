@@ -24,6 +24,8 @@ export class ArticulosComponent implements OnInit, OnDestroy {
   private apiService!: ApiService;
   products: Product[] = [];
   date = new Date();
+  active: boolean = false;
+  stock: boolean = false;
 
   constructor(
     private titleService: Title,
@@ -39,27 +41,39 @@ export class ArticulosComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.dtOptions = FormatDataTableGlobal();
+    this.getProducts();
+  }
+
+  private getProducts() {
     this.apiService = new ApiService(this.http);
 
-    this.apiService.getService(ApiRequest.getArticulos).subscribe({
-      next: (resp) => {
-        if (resp.status === 401 || resp.status === 403) {
-          this.router.navigate(['/login']);
-          return;
-        }
-        this.products = resp.result;
-        this.dtTrigger.next(this.dtOptions);
-        this.spinner.hide();
-      },
-      error: (error) => {
-        if (error.status === 401 || error.status === 403) {
-          this.router.navigate(['/login']);
-          return;
-        }
-        this.spinner.hide();
-        this.alertSV.alertBasic('Error', error.error.msg, 'error');
-      },
-    });
+    this.apiService
+      .getService(
+        ApiRequest.getArticulos +
+          '?stock=' +
+          this.stock +
+          '&active=' +
+          this.active
+      )
+      .subscribe({
+        next: (resp) => {
+          if (resp.status === 401 || resp.status === 403) {
+            this.router.navigate(['/login']);
+            return;
+          }
+          this.products = resp.result;
+          this.dtTrigger.next(this.dtOptions);
+          this.spinner.hide();
+        },
+        error: (error) => {
+          if (error.status === 401 || error.status === 403) {
+            this.router.navigate(['/login']);
+            return;
+          }
+          this.spinner.hide();
+          this.alertSV.alertBasic('Error', error.error.msg, 'error');
+        },
+      });
   }
 
   rerender(): void {
@@ -71,6 +85,26 @@ export class ArticulosComponent implements OnInit, OnDestroy {
     });
   }
 
+  changeStock() {
+    this.spinner.show();
+    this.products = [];
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      // Destroy the table first
+      dtInstance.destroy();
+    });
+    this.stock = !this.stock;
+    this.getProducts();
+  }
+  changeActive() {
+    this.spinner.show();
+    this.products = [];
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      // Destroy the table first
+      dtInstance.destroy();
+    });
+    this.active = !this.active;
+    this.getProducts();
+  }
   ngOnDestroy(): void {
     // Do not forget to unsubscribe the event
     this.dtTrigger.unsubscribe();

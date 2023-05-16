@@ -23,6 +23,31 @@
         <a [routerLink]="['create']" class="btn btn-primary"
           >Agregar articulo</a
         >
+        <br />
+
+        <div class="row">
+          <div class="form-group">
+            <label for="search">Activos</label>
+            <input
+              type="checkbox"
+              name=""
+              id=""
+              [checked]="active"
+              (change)="changeActive()"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="search">Con stock</label>
+            <input
+              type="checkbox"
+              name=""
+              id=""
+              [checked]="stock"
+              (change)="changeStock()"
+            />
+          </div>
+        </div>
         <table
           datatable
           [dtOptions]="dtOptions"
