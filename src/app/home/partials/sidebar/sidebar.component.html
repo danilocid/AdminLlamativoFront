@@ -30,40 +30,28 @@
             <p>Ventas</p>
           </a>
         </li>
-        <li class="nav-item has-treeview" [routerLinkActive]="['menu-open']">
-          <a class="nav-link" [class.active]="isActive('articulos')">
-            <i class="nav-icon fas fa-box"></i>
-            <p>
-              Inventario
-              <i class="right fas fa-angle-left"></i>
-            </p>
+        <li class="nav-item">
+          <a
+            [routerLink]="['articulos']"
+            [routerLinkActive]="['active']"
+            class="nav-link"
+          >
+            <i class="fas fa-warehouse nav-icon"></i>
+            <p>Articulos</p>
           </a>
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a
-                [routerLink]="['articulos']"
-                [routerLinkActive]="['active']"
-                class="nav-link"
-              >
-                <i class="fas fa-warehouse nav-icon"></i>
-                <p>Articulos</p>
-              </a>
-            </li>
-          </ul>
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a
-                [routerLink]="['articulos', 'ajustes']"
-                [routerLinkActive]="['active']"
-                [class.active]="isActive('ajustes')"
-                class="nav-link"
-              >
-                <i class="fas fa-clipboard-list nav-icon"></i>
-                <p>Ajustes de Inventario</p>
-              </a>
-            </li>
-          </ul>
         </li>
+        <li class="nav-item">
+          <a
+            [routerLink]="['articulos', 'ajustes']"
+            [routerLinkActive]="['active']"
+            [class.active]="isActive('ajustes')"
+            class="nav-link"
+          >
+            <i class="fas fa-clipboard-list nav-icon"></i>
+            <p>Ajustes de Inventario</p>
+          </a>
+        </li>
+
         <li class="nav-item">
           <a
             [routerLink]="['clientes']"
@@ -74,36 +62,16 @@
             <p>Clientes</p>
           </a>
         </li>
-        <li class="nav-item has-treeview" [routerLinkActive]="['menu-open']">
-          <a class="nav-link" [class.active]="isActive('configuracion')">
-            <i class="nav-icon fas fa-cog"></i>
-            <p>
-              Configuración
-              <i class="right fas fa-angle-left"></i>
-            </p>
+
+        <li class="nav-item">
+          <a
+            [routerLink]="['configuracion', 'issues']"
+            [routerLinkActive]="['active']"
+            class="nav-link"
+          >
+            <i class="fas fa-bug nav-icon"></i>
+            <p>Issues</p>
           </a>
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a
-                [routerLink]="['configuracion', 'usuarios']"
-                [routerLinkActive]="['active']"
-                class="nav-link"
-              >
-                <i class="fas fa-users nav-icon"></i>
-                <p>Usuarios</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                [routerLink]="['configuracion', 'issues']"
-                [routerLinkActive]="['active']"
-                class="nav-link"
-              >
-                <i class="fas fa-bug nav-icon"></i>
-                <p>Issues</p>
-              </a>
-            </li>
-          </ul>
         </li>
       </ul>
     </nav>

@@ -3,7 +3,7 @@
     <ng-select formControlName="id_cliente" id="" name="" required>
       <option value="" selected disabled>Seleccione</option>
       <ng-option *ngFor="let item of clients" value="{{ item.rut }}">
-        {{ item.nombre }} - {{ item.rut }}
+        {{ item.name }} - {{ item.rut }}
       </ng-option>
     </ng-select>
   </div>

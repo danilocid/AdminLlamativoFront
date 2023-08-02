@@ -50,8 +50,8 @@ export class CreateComponent implements OnInit {
       rut: ['', [Validators.required, validarRut]],
       nombre: ['', [Validators.required]],
       direccion: ['', [Validators.required]],
-      comuna: ['', [Validators.required]],
-      region: ['', [Validators.required]],
+      comuna: [, [Validators.required]],
+      region: [, [Validators.required]],
       mail: ['', [Validators.required, Validators.email]],
       telefono: ['', [Validators.pattern('^[0-9]*$'), Validators.minLength(8)]],
       giro: ['', [Validators.required]],
@@ -66,7 +66,7 @@ export class CreateComponent implements OnInit {
   getRegions() {
     this.apiService.getService(ApiRequest.getRegiones).subscribe({
       next: (response: any) => {
-        this.regions = response.data;
+        this.regions = response;
 
         this.spinner.hide();
       },
@@ -78,15 +78,15 @@ export class CreateComponent implements OnInit {
   }
   getComunas(idRegion: string) {
     this.apiService
-      .postService(ApiRequest.getComunasByIdRegion, { regionid: idRegion })
+      .getService(ApiRequest.getComunasByIdRegion + '/' + idRegion)
       .subscribe({
         next: (response: any) => {
-          this.comunas = response.data;
+          this.comunas = response;
           this.spinner.hide();
         },
         error: (error: any) => {
           this.spinner.hide();
-          this.alertSV.alertBasic('Error', error.error.message, 'error');
+          this.alertSV.alertBasic('Error', error.error, 'error');
         },
       });
     this.spinner.hide();
@@ -96,22 +96,22 @@ export class CreateComponent implements OnInit {
     //remove validation from rut
     this.clientForm.get('rut')?.clearValidators();
     this.apiService
-      .postService(ApiRequest.getClientsByRut, { rut: this.rutCliente })
+      .getService(ApiRequest.getClients + '/' + this.rutCliente)
       .subscribe({
         next: (response: any) => {
-          this.cliente = response.data[0];
+          this.cliente = response;
           this.clientForm.patchValue({
             rut: this.cliente.rut,
-            nombre: this.cliente.nombre,
-            direccion: this.cliente.direccion,
-            comuna: this.cliente.id_comuna.toString(),
-            region: this.cliente.id_region.toString(),
-            mail: this.cliente.mail,
-            telefono: this.cliente.telefono,
-            giro: this.cliente.giro,
+            nombre: this.cliente.name,
+            direccion: this.cliente.address,
+            comuna: this.cliente.commune.id.toString(),
+            region: this.cliente.region.id.toString(),
+            mail: this.cliente.email,
+            telefono: this.cliente.phone,
+            giro: this.cliente.activity,
           });
           //set the rut to readonly
-          this.getComunas(this.cliente.id_region.toString());
+          this.getComunas(this.cliente.region.id.toString());
           this.spinner.hide();
         },
         error: (error: any) => {
@@ -149,33 +149,51 @@ export class CreateComponent implements OnInit {
       this.clientForm
         .get('rut')
         ?.setValue(this.clientForm.get('rut')?.value.replace(/\./g, ''));
+      let body = {
+        rut: this.clientForm.get('rut')?.value,
+        name: this.clientForm.get('nombre')?.value,
+        activity: this.clientForm.get('giro')?.value,
+        address: this.clientForm.get('direccion')?.value,
+        commune: +this.clientForm.get('comuna')?.value,
+        region: +this.clientForm.get('region')?.value,
+        email: this.clientForm.get('mail')?.value,
+        phone: this.clientForm.get('telefono')?.value.toString(),
+      };
       //se crea el cliente
-      this.apiService
-        .postService(ApiRequest.createClient, this.clientForm.value)
-        .subscribe({
-          next: (response: any) => {
-            this.spinner.hide();
-            if (response.status == 401) {
-              this.router.navigate(['/login']);
-              return;
-            }
-            this.spinner.hide();
-            this.alertSV.alertBasic('Exito', 'Cliente creado', 'success');
-            this.router.navigate(['/home/clientes']);
-          },
-          error: (error: any) => {
-            this.spinner.hide();
-            this.alertSV.alertBasic('Error', error.error.msg, 'error');
-          },
-        });
+      this.apiService.postService(ApiRequest.getClients, body).subscribe({
+        next: (response: any) => {
+          this.spinner.hide();
+          if (response.status == 401) {
+            this.router.navigate(['/login']);
+            return;
+          }
+          this.spinner.hide();
+          this.alertSV.alertBasic('Exito', 'Cliente creado', 'success');
+          this.router.navigate(['/home/clientes']);
+        },
+        error: (error: any) => {
+          this.spinner.hide();
+          console.log(error.message);
+          this.alertSV.alertBasic('Error', error.error.error, 'error');
+        },
+      });
     } else {
       //reescribe el rut para que sea valido
       this.clientForm
         .get('rut')
         ?.setValue(this.clientForm.get('rut')?.value.replace(/\./g, ''));
       //se edita el cliente
+      let body = {
+        name: this.clientForm.get('nombre')?.value,
+        activity: this.clientForm.get('giro')?.value,
+        address: this.clientForm.get('direccion')?.value,
+        commune: +this.clientForm.get('comuna')?.value,
+        region: +this.clientForm.get('region')?.value,
+        email: this.clientForm.get('mail')?.value,
+        phone: this.clientForm.get('telefono')?.value.toString(),
+      };
       this.apiService
-        .postService(ApiRequest.updateClient, this.clientForm.value)
+        .patchService(ApiRequest.getClients + '/' + this.rutCliente, body)
         .subscribe({
           next: (response: any) => {
             this.spinner.hide();
@@ -189,7 +207,8 @@ export class CreateComponent implements OnInit {
           },
           error: (error: any) => {
             this.spinner.hide();
-            this.alertSV.alertBasic('Error', error.error.msg, 'error');
+            console.log(error.error);
+            this.alertSV.alertBasic('Error', error.error.error, 'error');
           },
         });
     }

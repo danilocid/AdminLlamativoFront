@@ -40,7 +40,25 @@ export class AllIssuesComponent implements OnInit {
 
   ngOnInit() {
     this.dtOptions = FormatDataTableGlobal();
-    this.dtOptions.order = [4, 'asc'];
+    //permite ordenar por fecha
+    this.dtOptions.columnDefs = [
+      {
+        targets: [4],
+        searchable: false,
+      },
+      {
+        targets: [3],
+        searchable: false,
+      },
+      {
+        targets: [2],
+        searchable: false,
+      },
+    ];
+    this.dtOptions.order = [
+      [5, 'desc'],
+      [4, 'desc'],
+    ];
     this.apiService = new ApiService(this.http);
     this.apiService.getService(ApiRequest.getIssues).subscribe({
       next: (resp) => {
@@ -48,7 +66,7 @@ export class AllIssuesComponent implements OnInit {
           this.router.navigate(['/login']);
           return;
         }
-        this.issues = resp.result;
+        this.issues = resp.issues;
         this.dtTrigger.next(this.dtOptions);
 
         this.spinner.hide();
@@ -68,7 +86,7 @@ export class AllIssuesComponent implements OnInit {
           this.router.navigate(['/login']);
           return;
         }
-        this.status = resp.statuses;
+        this.status = resp.status;
         this.type = resp.types;
         this.section = resp.sections;
       },

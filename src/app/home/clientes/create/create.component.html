@@ -115,7 +115,7 @@
             <ng-select formControlName="comuna" id="" name="" required>
               <option value="" selected disabled>Seleccione</option>
               <ng-option *ngFor="let item of comunas" value="{{ item.id }}">
-                {{ item.comuna }}
+                {{ item.comuns }}
               </ng-option>
             </ng-select>
             <div *ngIf="isValidField('comuna')" class="invalid-feedback">

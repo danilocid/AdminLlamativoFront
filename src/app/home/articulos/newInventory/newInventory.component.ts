@@ -144,10 +144,10 @@ export class NewInventoryComponent implements OnInit, OnDestroy {
             this.router.navigate(['/login']);
             return;
           }
-          this.spinner.hide().then(() => {
-            this.alertSV.alertBasic('Exito', resp.msg, 'success');
-            this.router.navigate(['/home/articulos/ajustes']);
-          });
+          this.spinner.hide();
+          this.alertSV.alertBasic('Exito', resp.msg, 'success');
+          window.location.reload();
+          //this.router.navigate(['/home/articulos/ajustes']);
         },
         error: (error) => {
           if (error.status === 401 || error.status === 403) {

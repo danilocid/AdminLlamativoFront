@@ -44,7 +44,7 @@ export class ClientesComponent implements OnInit {
           this.router.navigate(['/login']);
           return;
         }
-        this.clients = resp.data;
+        this.clients = resp;
         this.dtTrigger.next(this.dtOptions);
         this.spinner.hide();
       },
