@@ -30,15 +30,15 @@
             <label for="name">Codigo interno</label>
             <input
               type="text"
-              [ngClass]="isValidField('cod_interno') ? 'is-invalid' : ''"
+              [ngClass]="isValidField('internalCode') ? 'is-invalid' : ''"
               class="form-control"
-              id="cod_interno"
-              name="cod_interno"
+              id="internalCode"
+              name="internalCode"
               placeholder="Codigo interno"
-              formControlName="cod_interno"
+              formControlName="internalCode"
               required
             />
-            <div *ngIf="isValidField('cod_interno')" class="invalid-feedback">
+            <div *ngIf="isValidField('internalCode')" class="invalid-feedback">
               El codigo interno es requerido
             </div>
           </div>
@@ -47,15 +47,15 @@
             <label for="name">Codigo de barras</label>
             <input
               type="text"
-              [ngClass]="isValidField('cod_barras') ? 'is-invalid' : ''"
+              [ngClass]="isValidField('barCode') ? 'is-invalid' : ''"
               class="form-control"
-              id="cod_barras"
-              name="cod_barras"
+              id="barCode"
+              name="barCode"
+              maxlength="13"
               placeholder="Codigo de barras"
-              formControlName="cod_barras"
-              required
+              formControlName="barCode"
             />
-            <div *ngIf="isValidField('cod_barras')" class="invalid-feedback">
+            <div *ngIf="isValidField('barCode')" class="invalid-feedback">
               El codigo de barras es requerido
             </div>
           </div>
@@ -63,48 +63,48 @@
           <div class="form-group col-lg-4">
             <label for="name">Descripcion</label>
             <input
-              formControlName="descripcion"
+              formControlName="description"
               type="text"
-              [ngClass]="isValidField('descripcion') ? 'is-invalid' : ''"
+              [ngClass]="isValidField('description') ? 'is-invalid' : ''"
               class="form-control"
-              id="descripcion"
-              name="descripcion"
+              id="description"
+              name="description"
               placeholder="Descripcion"
               required
             />
-            <div *ngIf="isValidField('descripcion')" class="invalid-feedback">
+            <div *ngIf="isValidField('description')" class="invalid-feedback">
               Ingresa una descripcion
             </div>
           </div>
-          <div class="form-group row">
+          <div class="form-group row" style="padding-left: 10px">
             <div class="form-group col-lg-1 col-sm-4">
               <label for="name">Costo neto</label>
               <input
-                formControlName="costo_neto"
+                formControlName="netCost"
                 min="1"
-                [ngClass]="isValidField('costo_neto') ? 'is-invalid' : ''"
+                [ngClass]="isValidField('netCost') ? 'is-invalid' : ''"
                 type="number"
                 class="form-control"
-                id="costo_neto"
-                name="costo_neto"
+                id="netCost"
+                name="netCost"
                 placeholder="Costo neto"
                 required
                 ((keyup))="updateCostoTotal()"
                 (change)="updateCostoTotal()"
               />
-              <div *ngIf="isValidField('costo_neto')" class="invalid-feedback">
+              <div *ngIf="isValidField('netCost')" class="invalid-feedback">
                 Ingresa costo neto
               </div>
             </div>
             <div class="form-group col-lg-1 col-sm-4">
               <label for="name">Costo IMP</label>
               <input
-                formControlName="costo_imp"
+                formControlName="taxCost"
                 readonly
                 type="number"
                 class="form-control"
-                id="costo_imp"
-                name="costo_imp"
+                id="taxCost"
+                name="taxCost"
                 placeholder="Costo imp"
                 required
               />
@@ -127,34 +127,34 @@
               </div>
             </div>
           </div>
-          <div class="form-group row">
+          <div class="form-group row" style="padding-left: 10px">
             <div class="form-group col-lg-1 col-sm-4">
               <label for="name">Venta neto</label>
               <input
-                formControlName="venta_neto"
-                [ngClass]="isValidField('venta_neto') ? 'is-invalid' : ''"
+                formControlName="netSale"
+                [ngClass]="isValidField('netSale') ? 'is-invalid' : ''"
                 type="number"
                 class="form-control"
-                id="venta_neto"
-                name="venta_neto"
+                id="netSale"
+                name="netSale"
                 placeholder="Venta neto"
                 required
                 ((keyup))="updateVentaTotal()"
                 (change)="updateVentaTotal()"
               />
-              <div *ngIf="isValidField('venta_neto')" class="invalid-feedback">
+              <div *ngIf="isValidField('netSale')" class="invalid-feedback">
                 Ingresa venta neto
               </div>
             </div>
             <div class="form-group col-lg-1 col-sm-4">
               <label for="name">Venta IMP</label>
               <input
-                formControlName="venta_imp"
+                formControlName="taxSale"
                 readonly
                 type="number"
                 class="form-control"
-                id="venta_imp"
-                name="venta_imp"
+                id="taxSale"
+                name="taxSale"
                 placeholder="Venta imp"
                 required
               />
@@ -180,32 +180,32 @@
           <div class="form-group col-lg-2 col-sm-6">
             <label for="name">Stock critico</label>
             <input
-              formControlName="stock_critico"
-              [ngClass]="isValidField('stock_critico') ? 'is-invalid' : ''"
+              formControlName="stockMin"
+              [ngClass]="isValidField('stockMin') ? 'is-invalid' : ''"
               type="number"
               class="form-control"
-              id="stock_critico"
+              id="stockMin"
               min="1"
-              name="stock_critico"
+              name="stockMin"
               placeholder="Stock critico"
               required
             />
-            <div *ngIf="isValidField('stock_critico')" class="invalid-feedback">
+            <div *ngIf="isValidField('stockMin')" class="invalid-feedback">
               Ingresa stock critico
             </div>
           </div>
           <div class="form-group col-lg-2 col-sm-6">
             <label for="name">Activo</label>
             <select
-              formControlName="activo"
-              [ngClass]="isValidField('activo') ? 'is-invalid' : ''"
+              formControlName="active"
+              [ngClass]="isValidField('active') ? 'is-invalid' : ''"
               class="form-control"
-              id="activo"
-              name="activo"
+              id="active"
+              name="active"
               required
             >
-              <option value="1">Si</option>
-              <option value="0">No</option>
+              <option value="true">Si</option>
+              <option value="false">No</option>
             </select>
           </div>
           <div class="form-group col-lg-4">

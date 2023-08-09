@@ -45,18 +45,17 @@ export class CreateComponent implements OnInit {
   ngOnInit() {
     this.apiService = new ApiService(this.http);
     this.productForm = this.fb.group({
-      id: [''],
-      cod_interno: ['', [Validators.required]],
-      cod_barras: ['', [Validators.required]],
-      descripcion: ['', [Validators.required]],
-      costo_neto: ['', [Validators.required]],
-      costo_imp: ['', [Validators.required]],
+      internalCode: ['', [Validators.required]],
+      barCode: [''],
+      description: ['', [Validators.required]],
+      netCost: ['', [Validators.required]],
+      taxCost: ['', [Validators.required]],
       costo_total: ['', [Validators.required]],
-      venta_neto: ['', [Validators.required]],
-      venta_imp: ['', [Validators.required]],
+      netSale: ['', [Validators.required]],
+      taxSale: ['', [Validators.required]],
       venta_total: ['', [Validators.required]],
-      stock_critico: ['', [Validators.required]],
-      activo: ['', [Validators.required]],
+      stockMin: ['', [Validators.required]],
+      active: ['true', [Validators.required]],
     });
 
     if (this.idProducto != null) {
@@ -68,27 +67,26 @@ export class CreateComponent implements OnInit {
 
   getProduct() {
     this.apiService
-      .postService(ApiRequest.getArticulosById, { id: this.idProducto })
+      .getService(ApiRequest.getArticulos + '/' + this.idProducto)
       .subscribe({
         next: (resp) => {
           if (resp.status == 401) {
             this.router.navigate(['/login']);
             return;
           }
-          this.producto = resp.result[0];
+          this.producto = resp;
           this.productForm.patchValue({
-            id: this.producto.id,
-            cod_interno: this.producto.cod_interno,
-            cod_barras: this.producto.cod_barras,
-            descripcion: this.producto.descripcion,
-            costo_neto: this.producto.costo_neto,
-            costo_imp: this.producto.costo_imp,
-            costo_total: this.producto.costo_imp + this.producto.costo_neto,
-            venta_neto: this.producto.venta_neto,
-            venta_imp: this.producto.venta_imp,
-            venta_total: this.producto.venta_neto + this.producto.venta_imp,
-            stock_critico: this.producto.stock_critico,
-            activo: this.producto.activo,
+            internalCode: this.producto.internalCode,
+            barCode: this.producto.barCode,
+            description: this.producto.description,
+            netCost: this.producto.netCost,
+            taxCost: this.producto.taxCost,
+            costo_total: this.producto.taxCost + this.producto.netCost,
+            netSale: this.producto.netSale,
+            taxSale: this.producto.taxSale,
+            venta_total: this.producto.netCost + this.producto.netSale,
+            stockMin: this.producto.stockMin,
+            active: this.producto.active,
           });
           this.spinner.hide();
         },
@@ -115,24 +113,31 @@ export class CreateComponent implements OnInit {
   }
   createProduct() {
     this.spinner.show();
-    this.apiService
-      .postService(ApiRequest.createArticulo, this.productForm.value)
-      .subscribe({
-        next: (resp) => {
-          if (resp.status == 401) {
-            this.router.navigate(['/login']);
-            return;
-          }
-          this.spinner.hide();
-          this.alertSV.alertBasic('Exito', 'Articulo creado', 'success');
+    let product = this.productForm.value;
+    //remove the costo_total, venta_total fields
+    delete product.costo_total;
+    delete product.venta_total;
 
-          this.router.navigate(['/home/articulos']);
-        },
-        error: (err) => {
-          this.spinner.hide();
-          this.alertSV.alertBasic('Error', err.error.msg, 'error');
-        },
-      });
+    //if barCode is empty, then delete it
+    if (product.barCode == '') {
+      delete product.barCode;
+    }
+    this.apiService.postService(ApiRequest.getArticulos, product).subscribe({
+      next: (resp) => {
+        if (resp.status == 401) {
+          this.router.navigate(['/login']);
+          return;
+        }
+        this.spinner.hide();
+        this.alertSV.alertBasic('Exito', 'Articulo creado', 'success');
+
+        this.router.navigate(['/home/articulos']);
+      },
+      error: (err) => {
+        this.spinner.hide();
+        this.alertSV.alertBasic('Error', err.error.message, 'error');
+      },
+    });
   }
   updateProduct() {
     this.alertSV.verificationAlertWithFunction(
@@ -143,8 +148,16 @@ export class CreateComponent implements OnInit {
       'warning',
       () => {
         this.spinner.show();
+        let product = this.productForm.value;
+        //remove the costo_total, venta_total fields
+        delete product.costo_total;
+        delete product.venta_total;
+
         this.apiService
-          .postService(ApiRequest.updateArticulo, this.productForm.value)
+          .patchService(
+            ApiRequest.getArticulos + '/' + this.idProducto,
+            product
+          )
           .subscribe({
             next: (resp) => {
               if (resp.status == 401) {
@@ -161,21 +174,11 @@ export class CreateComponent implements OnInit {
             },
             error: (err) => {
               this.spinner.hide();
-              this.alertSV.alertBasic('Error', err.error.msg, 'error');
+              this.alertSV.alertBasic('Error', err.error.message, 'error');
             },
           });
       }
     );
-  }
-
-  createUser() {
-    const { name, userName, email, password } = this.productForm.value;
-    this.apiService.postService('users', {
-      name,
-      userName,
-      email,
-      password,
-    });
   }
 
   isValidField(field: string) {
@@ -186,9 +189,9 @@ export class CreateComponent implements OnInit {
   }
 
   updateCostoTotal() {
-    const costoNeto = this.productForm.controls['costo_neto'].value;
+    const costoNeto = this.productForm.controls['netCost'].value;
     const costoImp = costoNeto * 1.19 - costoNeto;
-    this.productForm.controls['costo_imp'].setValue(Math.round(costoImp));
+    this.productForm.controls['taxCost'].setValue(Math.round(costoImp));
     this.productForm.controls['costo_total'].setValue(
       Math.round(costoNeto * 1.19)
     );
@@ -197,15 +200,15 @@ export class CreateComponent implements OnInit {
     const costoTotal = this.productForm.controls['costo_total'].value;
     const costoImp =
       costoTotal - this.productForm.controls['costo_total'].value / 1.19;
-    this.productForm.controls['costo_imp'].setValue(Math.round(costoImp));
-    this.productForm.controls['costo_neto'].setValue(
+    this.productForm.controls['taxCost'].setValue(Math.round(costoImp));
+    this.productForm.controls['netCost'].setValue(
       Math.round(costoTotal - costoImp)
     );
   }
   updateVentaTotal() {
-    const ventaNeto = this.productForm.controls['venta_neto'].value;
+    const ventaNeto = this.productForm.controls['netSale'].value;
     const ventaImp = ventaNeto * 1.19 - ventaNeto;
-    this.productForm.controls['venta_imp'].setValue(Math.round(ventaImp));
+    this.productForm.controls['taxSale'].setValue(Math.round(ventaImp));
     this.productForm.controls['venta_total'].setValue(
       Math.round(ventaNeto * 1.19)
     );
@@ -213,8 +216,8 @@ export class CreateComponent implements OnInit {
   updateVentaNeto() {
     const ventaTotal = this.productForm.controls['venta_total'].value;
     const ventaImp = ventaTotal - ventaTotal / 1.19;
-    this.productForm.controls['venta_imp'].setValue(Math.round(ventaImp));
-    this.productForm.controls['venta_neto'].setValue(
+    this.productForm.controls['taxSale'].setValue(Math.round(ventaImp));
+    this.productForm.controls['netSale'].setValue(
       Math.round(ventaTotal - ventaImp)
     );
   }

@@ -115,10 +115,10 @@ export class FinalizaVentaComponent implements OnInit {
       var costo_imp = 0;
       //calculo de montos
       this.productsCart.forEach((element) => {
-        monto_neto += element.venta_neto * element.quantity;
-        monto_imp += element.venta_imp * element.quantity;
-        costo_neto += element.costo_neto * element.quantity;
-        costo_imp += element.costo_imp * element.quantity;
+        monto_neto += element.netSale * element.quantity;
+        monto_imp += element.taxSale * element.quantity;
+        costo_neto += element.netCost * element.quantity;
+        costo_imp += element.taxCost * element.quantity;
       });
       this.apiService
         .postService(ApiRequest.createSale, {

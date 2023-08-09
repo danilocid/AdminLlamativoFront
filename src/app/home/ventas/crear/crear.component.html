@@ -32,11 +32,11 @@
             </thead>
             <tbody>
               <tr *ngFor="let item of productsCart">
-                <td>{{ item.descripcion }}</td>
+                <td>{{ item.description }}</td>
                 <td>{{ item.quantity }}</td>
-                <td>{{ item.venta_neto + item.venta_imp }}</td>
+                <td>{{ item.netSale + item.taxSale }}</td>
                 <td>
-                  {{ item.quantity * (item.venta_imp + item.venta_neto) }}
+                  {{ item.quantity * (item.taxSale + item.netSale) }}
                 </td>
                 <td>
                   <button

@@ -9,8 +9,8 @@
     >
       <option value="" selected disabled>Seleccione</option>
       <ng-option *ngFor="let item of products" value="{{ item.id }}">
-        {{ item.descripcion }} - {{ item.cod_barras }} -
-        {{ item.cod_interno }}
+        {{ item.description }} - {{ item.barCode }} -
+        {{ item.internalCode }}
       </ng-option>
     </ng-select>
   </div>

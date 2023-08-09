@@ -42,12 +42,10 @@ export class VerArticulosComponent implements OnInit, OnDestroy {
     this.dtOptions = FormatDataTableGlobal();
     this.apiService = new ApiService(this.http);
     this.apiService
-      .postService(ApiRequest.getMovimientosArticulosById, {
-        id: this.idProducto,
-      })
+      .getService(ApiRequest.getArticulos + '/' + this.idProducto)
       .subscribe({
         next: (resp) => {
-          this.producto = resp.result[0];
+          this.producto = resp;
           this.movimientos = resp.movements;
           this.dtTrigger.next(this.dtOptions);
 

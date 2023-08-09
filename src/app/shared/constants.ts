@@ -3,7 +3,7 @@ export const ApiRequest = {
   postLogin: environment.urlBackend + 'login',
   getUsers: environment.urlBackend + '/users',
   //articulos
-  getArticulos: environment.urlBackend + '/products-GetAll',
+  getArticulos: environment.urlBackend + 'products',
   getArticulosConStock: environment.urlBackend + '/products-GetAllWhitStock',
   getArticulosById: environment.urlBackend + '/products-Get',
   getMovimientosArticulosById:
@@ -29,9 +29,6 @@ export const ApiRequest = {
 
   //clients
   getClients: environment.urlBackend + 'clients',
-  getClientsByRut: environment.urlBackend + '/clients-getClientByRut',
-  createClient: environment.urlBackend + '/clients-addClient',
-  updateClient: environment.urlBackend + '/clients-updateClient',
 
   //utils
   getComunasByIdRegion: environment.urlBackend + 'common/comuns',

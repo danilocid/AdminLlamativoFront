@@ -207,13 +207,13 @@ export class NewInventoryComponent implements OnInit, OnDestroy {
           id: this.productForm.value.id,
           descripcion: this.products.find(
             (x) => x.id.toString() === this.productForm.value.id.toString()
-          )?.descripcion,
+          )?.description,
           costo_neto: this.products.find(
             (x) => x.id.toString() === this.productForm.value.id.toString()
-          )?.costo_neto,
+          )?.netCost,
           costo_imp: this.products.find(
             (x) => x.id.toString() === this.productForm.value.id.toString()
-          )?.costo_imp,
+          )?.taxCost,
           stock: this.products.find(
             (x) => x.id.toString() === this.productForm.value.id.toString()
           )?.stock,
