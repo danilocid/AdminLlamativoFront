@@ -92,26 +92,18 @@
               <th>movimiento</th>
               <th>Cantidad</th>
               <th>Fecha</th>
-              <th>Usuario</th>
               <th>Ver</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let item of movimientos">
               <td>{{ item.id }}</td>
-              <td>{{ item["tipo_movimiento"] }}</td>
-              <td>{{ item["cantidad"] }}</td>
-              <td>{{ item["created_at"] }}</td>
+              <td>{{ item.movementType.movementType }}</td>
+              <td>{{ item.quantity }}</td>
+              <td>{{ item.createdAt }}</td>
 
               <td>
                 {{ item["name"] }}
-              </td>
-              <td>
-                <a
-                  [routerLink]="['/home/movimientos/verMovimiento', item.id]"
-                  class="btn btn-primary"
-                  >Ver</a
-                >
               </td>
             </tr>
           </tbody>

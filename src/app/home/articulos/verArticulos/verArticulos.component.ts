@@ -45,8 +45,9 @@ export class VerArticulosComponent implements OnInit, OnDestroy {
       .getService(ApiRequest.getArticulos + '/' + this.idProducto)
       .subscribe({
         next: (resp) => {
-          this.producto = resp;
-          this.movimientos = resp.movements;
+          this.producto = resp.product;
+          this.movimientos = resp.movementDetails;
+          console.log(this.movimientos);
           this.dtTrigger.next(this.dtOptions);
 
           this.spinner.hide();
