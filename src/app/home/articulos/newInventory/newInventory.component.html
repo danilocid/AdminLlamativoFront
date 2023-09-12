@@ -33,7 +33,13 @@
                 >
                   <div class="form-group">
                     <label for="name">Producto</label>
-                    <ng-select formControlName="id" id="" name="" required>
+                    <ng-select
+                      formControlName="id"
+                      id=""
+                      name=""
+                      required
+                      placeholder="Seleccione Producto"
+                    >
                       <option value="" selected disabled>Seleccione</option>
                       <ng-option
                         *ngFor="let item of products"
@@ -107,38 +113,30 @@
                     <tr>
                       <th>Id</th>
                       <th>Descripcion</th>
-                      <th>Stock</th>
                       <th>Costo</th>
                       <th>Entradas</th>
                       <th>Salidas</th>
-                      <th>Stock total</th>
                       <th>Eliminar</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr *ngFor="let item of productsInventory">
                       <td>{{ item.id }}</td>
-                      <td>{{ item.descripcion }}</td>
-                      <td>{{ item.stock }}</td>
+                      <td>{{ item.description }}</td>
 
                       <td>
                         {{
-                          item["costo_neto"] + item["costo_imp"]
+                          item.netCost + item.netCost
                             | currency : "CLP" : "symbol-narrow" : "1.0-0"
                         }}
                       </td>
                       <td>
-                        {{ item.entradas }}
+                        {{ item.entries }}
                       </td>
                       <td>
-                        {{ item.salidas }}
+                        {{ item.exits }}
                       </td>
-                      <td *ngIf="item.entradas != 0">
-                        {{ item.stock + item.entradas }}
-                      </td>
-                      <td *ngIf="item.salidas != 0">
-                        {{ item.stock - item.salidas }}
-                      </td>
+
                       <td>
                         <button
                           class="btn btn-danger"
@@ -203,7 +201,7 @@
                                 *ngFor="let item of movementTypes"
                                 value="{{ item.id }}"
                               >
-                                {{ item.tipo_movimiento }}
+                                {{ item.movementType }}
                               </ng-option>
                             </ng-select>
                           </div>

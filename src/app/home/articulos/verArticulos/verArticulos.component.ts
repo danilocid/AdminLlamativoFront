@@ -47,7 +47,6 @@ export class VerArticulosComponent implements OnInit, OnDestroy {
         next: (resp) => {
           this.producto = resp.product;
           this.movimientos = resp.movementDetails;
-          console.log(this.movimientos);
           this.dtTrigger.next(this.dtOptions);
 
           this.spinner.hide();

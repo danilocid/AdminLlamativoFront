@@ -12,6 +12,7 @@ import { ProductInventory } from '../../../shared/models/productInventory.model'
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Product } from 'src/app/shared/models/product.model';
+import { MovementType } from 'src/app/shared/models/inventory.model';
 
 @Component({
   selector: 'app-new-inventory',
@@ -26,18 +27,17 @@ export class NewInventoryComponent implements OnInit, OnDestroy {
   private apiService!: ApiService;
   productsInventory: ProductInventory[] = [];
   products: Product[] = [];
-  movementTypes: any[] = [];
+  movementTypes: MovementType[] = [];
   date = new Date();
   productForm: FormGroup;
   movementForm: FormGroup;
   newProduct: ProductInventory = {
     id: 0,
-    descripcion: '',
-    costo_neto: 0,
-    costo_imp: 0,
-    stock: 0,
-    entradas: 0,
-    salidas: 0,
+    entries: 0,
+    exits: 0,
+    netCost: 0,
+    taxCost: 0,
+    description: '',
   };
   constructor(
     private titleService: Title,
@@ -54,7 +54,7 @@ export class NewInventoryComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.productForm = this.fb.group({
-      id: ['', [Validators.required]],
+      id: [, [Validators.required]],
       type: ['1', [Validators.required]],
       quantity: [1, [Validators.required]],
     });
@@ -71,7 +71,7 @@ export class NewInventoryComponent implements OnInit, OnDestroy {
           this.router.navigate(['/login']);
           return;
         }
-        this.products = resp.result;
+        this.products = resp;
 
         this.dtTrigger.next(this.dtOptions);
         this.spinner.hide();
@@ -91,7 +91,7 @@ export class NewInventoryComponent implements OnInit, OnDestroy {
           this.router.navigate(['/login']);
           return;
         }
-        this.movementTypes = resp.result;
+        this.movementTypes = resp;
         this.spinner.hide();
       },
       error: (error) => {
@@ -105,38 +105,39 @@ export class NewInventoryComponent implements OnInit, OnDestroy {
     });
   }
   saveInventory() {
+    console.log(this.productsInventory.length);
     if (this.productsInventory.length === 0) {
       this.alertSV.alertBasic(
         'Error',
         'No hay productos para guardar',
         'warning'
       );
-      //return;
+      return;
     }
     let entradas = 0;
     let salidas = 0;
     let costo_neto = 0;
     let costo_imp = 0;
     this.productsInventory.forEach((element) => {
-      if (element.entradas > 0) {
-        entradas += element.entradas;
+      if (element.entries > 0) {
+        entradas += element.entries;
       }
-      if (element.salidas > 0) {
-        salidas += element.salidas;
+      if (element.exits > 0) {
+        salidas += element.exits;
       }
-      costo_neto += element.costo_neto;
-      costo_imp += element.costo_imp;
+      costo_neto += element.netCost;
+      costo_imp += element.taxCost;
     });
 
     this.apiService
-      .postService(ApiRequest.saveInventory, {
-        articulos: this.productsInventory,
-        tipo_movimiento: this.movementForm.value.movementType,
-        obs: this.movementForm.value.obs,
-        entradas: entradas,
-        salidas: salidas,
-        costo_neto: costo_neto,
-        costo_imp: costo_imp,
+      .postService(ApiRequest.getAllInventory, {
+        products: this.productsInventory,
+        movementType: +this.movementForm.value.movementType,
+        observations: this.movementForm.value.obs,
+        entries: entradas,
+        exits: salidas,
+        totalNetCost: costo_neto,
+        totalTaxCost: costo_imp,
       })
       .subscribe({
         next: (resp) => {
@@ -145,7 +146,7 @@ export class NewInventoryComponent implements OnInit, OnDestroy {
             return;
           }
           this.spinner.hide();
-          this.alertSV.alertBasic('Exito', resp.msg, 'success');
+          this.alertSV.alertBasic('Exito', 'Ajuste creado', 'success');
           window.location.reload();
           //this.router.navigate(['/home/articulos/ajustes']);
         },
@@ -155,7 +156,7 @@ export class NewInventoryComponent implements OnInit, OnDestroy {
             return;
           }
           this.spinner.hide();
-          this.alertSV.alertBasic('Error', error.error.msg, 'error');
+          this.alertSV.alertBasic('Error', error.error.message, 'error');
         },
       });
   }
@@ -182,46 +183,44 @@ export class NewInventoryComponent implements OnInit, OnDestroy {
         if (this.productForm.value.type === '1') {
           this.productsInventory.find(
             (x) => x.id.toString() === this.productForm.value.id.toString()
-          )!.entradas =
+          )!.entries =
             this.productsInventory.find(
               (x) => x.id.toString() === this.productForm.value.id.toString()
-            )!.entradas + this.productForm.value.quantity;
+            )!.entries + this.productForm.value.quantity;
           this.productsInventory.find(
             (x) => x.id.toString() === this.productForm.value.id.toString()
-          )!.salidas = 0;
+          )!.exits = 0;
         } else {
           this.productsInventory.find(
             (x) => x.id.toString() === this.productForm.value.id.toString()
-          )!.salidas =
+          )!.entries =
             this.productsInventory.find(
               (x) => x.id.toString() === this.productForm.value.id.toString()
-            )!.salidas + this.productForm.value.quantity;
+            )!.exits + this.productForm.value.quantity;
           this.productsInventory.find(
             (x) => x.id.toString() === this.productForm.value.id.toString()
-          )!.entradas = 0;
+          )!.entries = 0;
         }
         this.rerender();
         return;
       } else {
         this.productsInventory.push({
-          id: this.productForm.value.id,
-          descripcion: this.products.find(
-            (x) => x.id.toString() === this.productForm.value.id.toString()
-          )?.description,
-          costo_neto: this.products.find(
+          id: +this.productForm.value.id,
+
+          netCost: this.products.find(
             (x) => x.id.toString() === this.productForm.value.id.toString()
           )?.netCost,
-          costo_imp: this.products.find(
+          taxCost: this.products.find(
             (x) => x.id.toString() === this.productForm.value.id.toString()
           )?.taxCost,
-          stock: this.products.find(
+          description: this.products.find(
             (x) => x.id.toString() === this.productForm.value.id.toString()
-          )?.stock,
-          entradas:
+          )?.description,
+          entries:
             this.productForm.value.type === '1'
               ? this.productForm.value.quantity
               : 0,
-          salidas:
+          exits:
             this.productForm.value.type === '2'
               ? this.productForm.value.quantity
               : 0,

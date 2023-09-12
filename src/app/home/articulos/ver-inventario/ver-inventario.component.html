@@ -21,39 +21,39 @@
 
       <div class="card-body">
         <div class="row">
-          <div class="col">
+          <div class="col" *ngIf="movimiento != undefined">
             <p>Id: {{ movimiento.id }}</p>
 
             <p>
               Costo Neto:
               {{
-                movimiento.costo_neto
+                movimiento.totalNetCost
                   | currency : "CLP" : "symbol-narrow" : "1.0-0"
               }}
             </p>
             <p>
               Costo Imp:
               {{
-                movimiento.costo_imp
+                movimiento.totalTaxCost
                   | currency : "CLP" : "symbol-narrow" : "1.0-0"
               }}
             </p>
             <p>
               Costo Total:
               {{
-                movimiento.costo_neto + movimiento.costo_imp
+                movimiento.totalNetCost + movimiento.totalTaxCost
                   | currency : "CLP" : "symbol-narrow" : "1.0-0"
               }}
             </p>
           </div>
           <div class="col">
-            <p>observaciones: {{ movimiento.observaciones }}</p>
+            <p>observaciones: {{ movimiento.observation }}</p>
             <p>
               Fecha:
-              {{ movimiento.created_at || date | date : "dd/MM/yyyy HH:mm" }}
+              {{ movimiento.createdAt || date | date : "dd/MM/yyyy HH:mm" }}
             </p>
-            <p>Entradas {{ movimiento.entradas }}</p>
-            <p>Salidas {{ movimiento.salidas }}</p>
+            <p>Entradas {{ movimiento.entries }}</p>
+            <p>Salidas {{ movimiento.exits }}</p>
           </div>
         </div>
       </div>
@@ -82,14 +82,13 @@
           </thead>
           <tbody>
             <tr *ngFor="let item of articulos">
-              <td>{{ item.cod_interno }}</td>
-              <td>{{ item.descripcion }}</td>
-              <td>{{ item.entradas }}</td>
-              <td>{{ item.salidas }}</td>
+              <td>{{ item.product.internalCode }}</td>
+              <td>{{ item.product.description }}</td>
+              <td>{{ item.entries }}</td>
+              <td>{{ item.exits }}</td>
               <td>
                 {{
-                  (item.costo_neto + item.costo_imp) *
-                    (item.entradas + item.salidas)
+                  (item.netCost + item.taxCost) * (item.entries + item.exits)
                     | currency : "CLP" : "symbol-narrow" : "1.0-0"
                 }}
               </td>
