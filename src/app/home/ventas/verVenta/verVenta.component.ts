@@ -22,16 +22,38 @@ export class VerVentaComponent implements OnInit {
   dtOptions: DataTables.Settings = {};
   venta: Sale = {
     id: 0,
-    monto_neto: 0,
-    monto_imp: 0,
-    costo_neto: 0,
-    costo_imp: 0,
-    tipo: '',
-    documento: 0,
-    nombre: '',
-    medio_de_pago: '',
-    fecha: '',
+    TotalNet: 0,
+    TotalTax: 0,
+    TotalNetCost: 0,
+    TotalTaxCost: 0,
+    documentNumber: 0,
+    createdAt: '',
+    client: {
+      name: '',
+      activity: '',
+      address: '',
+      commune: {
+        id: 0,
+        comuns: '',
+      },
+      email: '',
+      phone: 0,
+      rut: '',
+      region: {
+        id: 0,
+        region: '',
+      },
+    },
+    documentType: {
+      id: 0,
+      documentType: '',
+    },
+    paymentMethod: {
+      id: 0,
+      paymentMethod: '',
+    },
   };
+
   detalleVenta: SaleDetail[] = [];
   date = new Date();
   private apiService!: ApiService;
@@ -53,15 +75,15 @@ export class VerVentaComponent implements OnInit {
     this.dtOptions = FormatDataTableGlobal();
     this.apiService = new ApiService(this.http);
     this.apiService
-      .postService(ApiRequest.getSaleById, { id: this.idVenta })
+      .getService(ApiRequest.getSales + '/' + this.idVenta)
       .subscribe({
         next: (resp) => {
-          console.log(resp);
+          //console.log(resp);
           //console.table(resp.sale[0]);
-          this.venta = resp.sale[0];
+          this.venta = resp.sale;
           //console.table(this.venta);
-          this.detalleVenta = resp.detail;
-          console.table(this.detalleVenta);
+          this.detalleVenta = resp.saleDetails;
+          //console.table(this.detalleVenta);
           this.dtTrigger.next(this.dtOptions);
           this.spinner.hide();
         },

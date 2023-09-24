@@ -8,6 +8,8 @@ import { AlertService } from 'src/app/shared/services/alert.service';
 import { Client } from '../../../../shared/models/client.model';
 import { Router } from '@angular/router';
 import { ProductCart } from 'src/app/shared/models/product.model';
+import { DocumentType } from 'src/app/shared/models/documentType.model';
+import { PaymentMethod } from 'src/app/shared/models/paymentMethod.model';
 
 @Component({
   selector: 'app-finaliza-venta',
@@ -18,8 +20,8 @@ export class FinalizaVentaComponent implements OnInit {
   clientForm: FormGroup;
   private apiService!: ApiService;
   clients: Client[] = [];
-  documentTypes: any[] = [];
-  medioDePago: any[] = [];
+  documentTypes: DocumentType[] = [];
+  medioDePago: PaymentMethod[] = [];
 
   @Input() productsCart: ProductCart[] = [];
 
@@ -43,7 +45,7 @@ export class FinalizaVentaComponent implements OnInit {
 
     this.apiService.getService(ApiRequest.getClients).subscribe({
       next: (resp) => {
-        this.clients = resp.data;
+        this.clients = resp;
         this.spinner.hide();
       },
       error: (error) => {
@@ -58,7 +60,7 @@ export class FinalizaVentaComponent implements OnInit {
           this.router.navigate(['/login']);
           return;
         }
-        this.documentTypes = resp.data;
+        this.documentTypes = resp;
         this.spinner.hide();
       },
       error: (error) => {
@@ -76,7 +78,7 @@ export class FinalizaVentaComponent implements OnInit {
           this.router.navigate(['/login']);
           return;
         }
-        this.medioDePago = resp.data;
+        this.medioDePago = resp;
         this.spinner.hide();
       },
       error: (error) => {
@@ -120,17 +122,28 @@ export class FinalizaVentaComponent implements OnInit {
         costo_neto += element.netCost * element.quantity;
         costo_imp += element.taxCost * element.quantity;
       });
+      let saleDetail = [];
+      this.productsCart.forEach((element) => {
+        saleDetail.push({
+          productId: element.id,
+          quantity: element.quantity,
+          net: element.netSale,
+          tax: element.taxSale,
+          netCost: element.netCost,
+          taxCost: element.taxCost,
+        });
+      });
       this.apiService
-        .postService(ApiRequest.createSale, {
-          cliente: this.clientForm.value.id_cliente,
-          medio_pago: this.clientForm.value.id_medio_pago,
-          tipo_documento: this.clientForm.value.id_tipo_documento,
-          documento: this.clientForm.value.numero_documento,
-          productos: this.productsCart,
-          monto_neto: monto_neto,
-          monto_imp: monto_imp,
-          costo_neto: costo_neto,
-          costo_imp: costo_imp,
+        .postService(ApiRequest.getSales, {
+          rut: this.clientForm.value.id_cliente,
+          paymentMethodId: this.clientForm.value.id_medio_pago,
+          documentTypeId: this.clientForm.value.id_tipo_documento,
+          documentNumber: this.clientForm.value.numero_documento,
+          saleDetails: saleDetail,
+          totalNet: monto_neto,
+          totalTax: monto_imp,
+          totalNetCost: costo_neto,
+          totalTaxCost: costo_imp,
         })
         .subscribe({
           next: (resp) => {

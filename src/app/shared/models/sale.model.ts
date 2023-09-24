@@ -1,22 +1,28 @@
+import { Client } from './client.model';
+import { DocumentType } from './documentType.model';
+import { PaymentMethod } from './paymentMethod.model';
+import { Product } from './product.model';
+
 export interface Sale {
   id: number;
-  monto_neto: number;
-  monto_imp: number;
-  costo_neto: number;
-  costo_imp: number;
-  tipo: string;
-  documento: number;
-  nombre: string;
-  medio_de_pago: string;
-  fecha: string;
+  TotalNet: number;
+  TotalTax: number;
+  TotalNetCost: number;
+  TotalTaxCost: number;
+  documentNumber: number;
+  createdAt: string;
+  client: Client;
+  documentType: DocumentType;
+  paymentMethod: PaymentMethod;
 }
 
 export interface SaleDetail {
-  articulo: number;
-  cantidad: number;
-  costo_neto: number;
-  costo_imp: number;
-  precio_neto: number;
-  precio_imp: number;
-  descripcion: string;
+  id: number;
+  saleId: number;
+  quantity: number;
+  netCost: number;
+  taxCost: number;
+  netSale: number;
+  taxSale: number;
+  product: Product;
 }

@@ -24,13 +24,15 @@
             <p>ID: {{ idVenta }}</p>
           </div>
           <div class="col">
-            <p>Medio de pago: {{ venta.medio_de_pago }}</p>
+            <p>Medio de pago: {{ venta.paymentMethod.paymentMethod }}</p>
           </div>
-          <div class="col">{{ venta.tipo }}: {{ venta.documento }}</div>
+          <div class="col">
+            {{ venta.documentType.documentType }}: {{ venta.documentNumber }}
+          </div>
           <div class="col">
             <p>
               Fecha:
-              {{ venta.fecha | date : "EEEE dd/MM/yyyy HH:mm" : "UTC" }}
+              {{ venta.createdAt | date : "EEEE dd/MM/yyyy HH:mm" : "UTC" }}
             </p>
           </div>
         </div>
@@ -39,18 +41,18 @@
             <p>
               Total neto:
               {{
-                venta.monto_neto | currency : "CLP" : "symbol-narrow" : "1.0-0"
+                venta.TotalNet | currency : "CLP" : "symbol-narrow" : "1.0-0"
               }}
             </p>
           </div>
           <div class="col">
             Total I.V.A.:
-            {{ venta.monto_imp | currency : "CLP" : "symbol-narrow" : "1.0-0" }}
+            {{ venta.TotalTax | currency : "CLP" : "symbol-narrow" : "1.0-0" }}
           </div>
           <div class="col">
             Total:
             {{
-              venta.monto_neto + venta.monto_imp
+              venta.TotalNet + venta.TotalTax
                 | currency : "CLP" : "symbol-narrow" : "1.0-0"
             }}
           </div>
@@ -60,18 +62,21 @@
             <p>
               Costo neto:
               {{
-                venta.costo_neto | currency : "CLP" : "symbol-narrow" : "1.0-0"
+                venta.TotalNetCost
+                  | currency : "CLP" : "symbol-narrow" : "1.0-0"
               }}
             </p>
           </div>
           <div class="col">
             Costo I.V.A.:
-            {{ venta.costo_imp | currency : "CLP" : "symbol-narrow" : "1.0-0" }}
+            {{
+              venta.TotalTaxCost | currency : "CLP" : "symbol-narrow" : "1.0-0"
+            }}
           </div>
           <div class="col">
             Total costo:
             {{
-              venta.costo_neto + venta.costo_imp
+              venta.TotalNetCost + venta.TotalTaxCost
                 | currency : "CLP" : "symbol-narrow" : "1.0-0"
             }}
           </div>
@@ -81,9 +86,9 @@
             <p>
               Ganancia:
               {{
-                venta.monto_neto +
-                  venta.monto_imp -
-                  (venta.costo_neto + venta.costo_imp)
+                venta.TotalNet +
+                  venta.TotalTax -
+                  (venta.TotalNetCost + venta.TotalTaxCost)
                   | currency : "CLP" : "symbol-narrow" : "1.0-0"
               }}
             </p>
@@ -91,17 +96,17 @@
           <div class="col">
             % Ganancia:
             {{
-              ((venta.monto_neto +
-                venta.monto_imp -
-                (venta.costo_neto + venta.costo_imp)) /
-                (venta.monto_neto + venta.monto_imp)) *
+              ((venta.TotalNet +
+                venta.TotalTax -
+                (venta.TotalNetCost + venta.TotalTaxCost)) /
+                (venta.TotalNet + venta.TotalTax)) *
                 100 | number : "1.0-2"
             }}
           </div>
           <div class="col">
             Total costo:
             {{
-              venta.costo_neto + venta.costo_imp
+              venta.TotalNetCost + venta.TotalTaxCost
                 | currency : "CLP" : "symbol-narrow" : "1.0-0"
             }}
           </div>
@@ -129,61 +134,57 @@
           <tbody>
             <tr *ngFor="let detalle of detalleVenta">
               <td>
-                {{ detalle.descripcion }}
+                {{ detalle.product.description }}
               </td>
               <td>
-                {{ detalle.cantidad }}
+                {{ detalle.quantity }}
               </td>
               <td>
                 {{
-                  detalle.precio_neto
+                  detalle.netSale | currency : "CLP" : "symbol-narrow" : "1.0-0"
+                }}
+              </td>
+              <td>
+                {{
+                  detalle.taxSale | currency : "CLP" : "symbol-narrow" : "1.0-0"
+                }}
+              </td>
+              <td>
+                {{
+                  detalle.netSale + detalle.taxSale
                     | currency : "CLP" : "symbol-narrow" : "1.0-0"
                 }}
               </td>
               <td>
                 {{
-                  detalle.precio_imp
+                  detalle.netCost | currency : "CLP" : "symbol-narrow" : "1.0-0"
+                }}
+              </td>
+              <td>
+                {{
+                  detalle.taxCost | currency : "CLP" : "symbol-narrow" : "1.0-0"
+                }}
+              </td>
+              <td>
+                {{
+                  detalle.netCost + detalle.taxCost
                     | currency : "CLP" : "symbol-narrow" : "1.0-0"
                 }}
               </td>
               <td>
                 {{
-                  detalle.precio_imp + detalle.precio_neto
+                  detalle.netSale +
+                    detalle.taxSale -
+                    (detalle.netCost + detalle.taxCost)
                     | currency : "CLP" : "symbol-narrow" : "1.0-0"
                 }}
               </td>
               <td>
                 {{
-                  detalle.costo_neto
-                    | currency : "CLP" : "symbol-narrow" : "1.0-0"
-                }}
-              </td>
-              <td>
-                {{
-                  detalle.costo_imp
-                    | currency : "CLP" : "symbol-narrow" : "1.0-0"
-                }}
-              </td>
-              <td>
-                {{
-                  detalle.costo_imp + detalle.costo_neto
-                    | currency : "CLP" : "symbol-narrow" : "1.0-0"
-                }}
-              </td>
-              <td>
-                {{
-                  detalle.precio_imp +
-                    detalle.precio_neto -
-                    (detalle.costo_imp + detalle.costo_neto)
-                    | currency : "CLP" : "symbol-narrow" : "1.0-0"
-                }}
-              </td>
-              <td>
-                {{
-                  ((detalle.precio_imp +
-                    detalle.precio_neto -
-                    (detalle.costo_imp + detalle.costo_neto)) /
-                    (detalle.precio_imp + detalle.precio_neto)) *
+                  ((detalle.netSale +
+                    detalle.taxSale -
+                    (detalle.netCost + detalle.taxCost)) /
+                    (detalle.netSale + detalle.taxSale)) *
                     100 | number : "1.0-2"
                 }}
               </td>

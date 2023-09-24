@@ -29,12 +29,13 @@ export class ProductoComponent implements OnInit {
     this.productForm = this.fb.group({
       id: ['Buscar producto', Validators.required],
       quantity: [1, Validators.required],
+      price: [0, Validators.required],
     });
     this.apiService = new ApiService(this.http);
 
-    this.apiService.getService(ApiRequest.getArticulosConStock).subscribe({
+    this.apiService.getService(ApiRequest.getArticulos + '?s=true').subscribe({
       next: (resp) => {
-        this.products = resp.result;
+        this.products = resp;
         this.spinner.hide();
       },
       error: (error) => {
@@ -53,10 +54,18 @@ export class ProductoComponent implements OnInit {
       if (quantity > product.stock) {
         quantity = product.stock;
       }
-      this.productChange.emit({
+      //get the price with tax, from the form, and split it on two variables, netSale and taxSale (taxSale = 19% of price)
+      let price = this.productForm.value.price;
+      let taxSale = price * 0.19;
+      let netSale = price - taxSale;
+
+      let productCart = {
         ...product,
+        netSale: netSale,
+        taxSale: taxSale,
         quantity: quantity,
-      });
+      };
+      this.productChange.emit(productCart);
       /* const productCart = this.productsCart.find(
         (p) => p.id.toString() === this.productForm.value.id.toString()
       );
@@ -71,6 +80,19 @@ export class ProductoComponent implements OnInit {
     }
     this.productForm.controls['quantity'].setValue(1);
     this.productForm.controls['id'].setValue('Buscar producto');
+    this.productForm.controls['price'].setValue(0);
+  }
+  onChangeProduct(event: any) {
+    console.log();
+    const product = this.products.find(
+      (p) =>
+        p.id.toString() === this.productForm.controls['id'].value.toString()
+    );
+    if (product) {
+      this.productForm.controls['price'].setValue(
+        product.netSale + product.taxSale
+      );
+    }
   }
   addProductEnter(event: any) {
     if (event.keyCode === 13) {

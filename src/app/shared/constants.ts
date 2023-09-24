@@ -33,12 +33,12 @@ export const ApiRequest = {
   //utils
   getComunasByIdRegion: environment.urlBackend + 'common/comuns',
   getRegiones: environment.urlBackend + 'common/regions',
-  getTipoDocumento: environment.urlBackend + '/utils-getAllTipoDocumento',
-  getMedioPago: environment.urlBackend + '/utils-getAllMedioPago',
+  getTipoDocumento: environment.urlBackend + 'common/document-types',
+  getMedioPago: environment.urlBackend + 'common/payment-methods',
 
   //sales
   createSale: environment.urlBackend + '/sales-addSale',
-  getSales: environment.urlBackend + '/sales-getSales',
+  getSales: environment.urlBackend + 'sales',
   getSaleById: environment.urlBackend + '/sales-getSaleById',
 };
 export function FormatDataTableGlobal(): any {

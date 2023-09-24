@@ -5,6 +5,7 @@
       id=""
       name=""
       (keyup)="addProductEnter($event)"
+      (change)="onChangeProduct($event)"
       required
     >
       <option value="" selected disabled>Seleccione</option>
@@ -22,6 +23,10 @@
       class="form-control"
       formControlName="quantity"
     />
+  </div>
+  <div class="form-group">
+    <span class="form-group-text">Precio</span>
+    <input type="number" min="1" class="form-control" formControlName="price" />
   </div>
   <div class="form-group">
     <button

@@ -11,7 +11,7 @@
     <ng-select formControlName="id_medio_pago" id="" name="" required>
       <option value="" selected disabled>Seleccione</option>
       <ng-option *ngFor="let item of medioDePago" value="{{ item.id }}">
-        {{ item.medio_de_pago }}
+        {{ item.paymentMethod }}
       </ng-option>
     </ng-select>
   </div>
@@ -19,7 +19,7 @@
     <ng-select formControlName="id_tipo_documento" id="" name="" required>
       <option value="" selected disabled>Seleccione</option>
       <ng-option *ngFor="let item of documentTypes" value="{{ item.id }}">
-        {{ item.tipo }}
+        {{ item.documentType }}
       </ng-option>
     </ng-select>
   </div>
