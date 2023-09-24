@@ -105,7 +105,6 @@ export class NewInventoryComponent implements OnInit, OnDestroy {
     });
   }
   saveInventory() {
-    console.log(this.productsInventory.length);
     if (this.productsInventory.length === 0) {
       this.alertSV.alertBasic(
         'Error',

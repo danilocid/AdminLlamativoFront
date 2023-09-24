@@ -62,8 +62,6 @@ export class ArticulosComponent implements OnInit, OnDestroy {
             return;
           }
           this.products = resp;
-          console.table(this.products);
-
           this.dtTrigger.next(this.dtOptions);
           this.spinner.hide();
         },

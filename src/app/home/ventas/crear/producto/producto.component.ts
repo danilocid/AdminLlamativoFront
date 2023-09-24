@@ -83,7 +83,6 @@ export class ProductoComponent implements OnInit {
     this.productForm.controls['price'].setValue(0);
   }
   onChangeProduct(event: any) {
-    console.log();
     const product = this.products.find(
       (p) =>
         p.id.toString() === this.productForm.controls['id'].value.toString()
