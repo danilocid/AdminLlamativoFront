@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
 
-  urlBackend: 'http://localhost/api/v1/',
+  urlBackend: 'https://us-central1-llamativo-admin.cloudfunctions.net/',
 };

@@ -47,7 +47,7 @@ export class AuthService {
 
   login(user: any, password: any) {
     return this.http
-      .post<AuthResponse>(ApiRequest.postLogin, { mail: user, password })
+      .post<AuthResponse>(ApiRequest.postLogin, { user, password })
       .pipe(
         tap((resp) => {
           if (resp.ok == true) {

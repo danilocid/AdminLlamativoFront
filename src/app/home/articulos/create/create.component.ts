@@ -74,7 +74,7 @@ export class CreateComponent implements OnInit {
             this.router.navigate(['/login']);
             return;
           }
-          this.producto = resp;
+          this.producto = resp.product;
           this.productForm.patchValue({
             internalCode: this.producto.internalCode,
             barCode: this.producto.barCode,
@@ -88,6 +88,7 @@ export class CreateComponent implements OnInit {
             stockMin: this.producto.stockMin,
             active: this.producto.active,
           });
+          console.log(this.producto);
           this.spinner.hide();
         },
         error: (err) => {

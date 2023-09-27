@@ -1,6 +1,6 @@
 import { environment } from 'src/environments/environment';
 export const ApiRequest = {
-  postLogin: environment.urlBackend + 'login',
+  postLogin: environment.urlBackend + 'users-login',
   getUsers: environment.urlBackend + '/users',
   //articulos
   getArticulos: environment.urlBackend + 'products',
@@ -21,8 +21,8 @@ export const ApiRequest = {
   getInventoryById: environment.urlBackend + '/products-GetMovementDetail',
 
   //issues
-  getIssues: environment.urlBackend + 'issues',
-  reportIssue: environment.urlBackend + 'issues/resume',
+  getIssues: environment.urlBackend + 'issues-GetAll',
+  reportIssue: environment.urlBackend + 'issues-Report',
   secctionsIssue: environment.urlBackend + 'issues/seccions',
   statusIssue: environment.urlBackend + 'issues/status',
   typeIssue: environment.urlBackend + 'issues/type',

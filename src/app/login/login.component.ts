@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     this.loginForm = this.fb.group({
       user: [
         '',
-        [Validators.required, Validators.minLength(3), Validators.email],
+        [Validators.required, Validators.minLength(3)],
       ] /* Validators.pattern('^[A-Z]+[.]$')] */,
       password: ['', [Validators.required, Validators.minLength(6)]],
     });

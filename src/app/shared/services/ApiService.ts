@@ -29,14 +29,7 @@ export class ApiService {
     this.httpHeaders['token'] = token;
     this.httpHeaders['Access-Control-Allow-Methods'] = 'POST';
     let info = this.http.post(infoUrl, json, {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'token',
-        'Access-Control-Allow-Methods': 'POST',
-
-        Authorization: 'Bearer ' + token,
-      }),
+      headers: this.httpHeaders,
     });
     return info;
   }
@@ -47,14 +40,7 @@ export class ApiService {
     this.httpHeaders['token'] = token;
     this.httpHeaders['Access-Control-Allow-Methods'] = 'POST';
     let info = this.http.patch(infoUrl, json, {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'token',
-        'Access-Control-Allow-Methods': 'POST',
-
-        Authorization: 'Bearer ' + token,
-      }),
+      headers: this.httpHeaders,
     });
     return info;
   }
@@ -65,14 +51,7 @@ export class ApiService {
     this.httpHeaders['token'] = token;
     this.httpHeaders['Access-Control-Allow-Methods'] = 'POST';
     let info = this.http.get(infoUrl, {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'token',
-        'Access-Control-Allow-Methods': 'POST',
-
-        Authorization: 'Bearer ' + token,
-      }),
+      headers: this.httpHeaders,
     });
 
     return info;

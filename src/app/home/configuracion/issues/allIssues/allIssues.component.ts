@@ -66,7 +66,7 @@ export class AllIssuesComponent implements OnInit {
           this.router.navigate(['/login']);
           return;
         }
-        this.issues = resp.issues;
+        this.issues = resp.result;
         this.dtTrigger.next(this.dtOptions);
 
         this.spinner.hide();
@@ -86,7 +86,7 @@ export class AllIssuesComponent implements OnInit {
           this.router.navigate(['/login']);
           return;
         }
-        this.status = resp.status;
+        this.status = resp.statuses;
         this.type = resp.types;
         this.section = resp.sections;
       },
