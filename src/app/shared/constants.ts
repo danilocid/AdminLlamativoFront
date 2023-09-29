@@ -22,10 +22,13 @@ export const ApiRequest = {
 
   //issues
   getIssues: environment.urlBackend + 'issues-GetAll',
+  getIssuesById: environment.urlBackend + 'issues-GetById',
   reportIssue: environment.urlBackend + 'issues-Report',
-  secctionsIssue: environment.urlBackend + 'issues/seccions',
-  statusIssue: environment.urlBackend + 'issues/status',
-  typeIssue: environment.urlBackend + 'issues/type',
+  secctionsIssue: environment.urlBackend + 'issues-GetAllSections',
+  statusIssue: environment.urlBackend + 'issues-GetAllStatus',
+  typeIssue: environment.urlBackend + 'issues-GetAllTypes',
+  createIssue: environment.urlBackend + 'issues-Create',
+  updateIssue: environment.urlBackend + 'issues-Update',
 
   //clients
   getClients: environment.urlBackend + 'clients',
@@ -42,7 +45,7 @@ export const ApiRequest = {
   getSaleById: environment.urlBackend + '/sales-getSaleById',
 
   //reports
-  dashboardReport: environment.urlBackend + 'reports/dashboard',
+  dashboardReport: environment.urlBackend + 'products-GetResume',
 };
 export function FormatDataTableGlobal(): any {
   return {

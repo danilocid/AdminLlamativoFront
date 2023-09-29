@@ -49,30 +49,28 @@ export class CreateIssueComponent implements OnInit {
       id_section: ['', [Validators.required, Validators.min(1)]],
       id_type: ['', [Validators.required, Validators.min(1)]],
       issue: ['', [Validators.required]],
-      description: ['', [Validators.required]],
     });
     this.apiService = new ApiService(this.http);
     this.apiService.getService(ApiRequest.statusIssue).subscribe((resp) => {
-      this.issueStatus = resp;
+      this.issueStatus = resp.result;
     });
     this.apiService.getService(ApiRequest.secctionsIssue).subscribe((resp) => {
-      this.issueSection = resp;
+      this.issueSection = resp.result;
     });
     this.apiService.getService(ApiRequest.typeIssue).subscribe((resp) => {
-      this.issueType = resp;
+      this.issueType = resp.result;
     });
     if (this.idIssue) {
       this.apiService
-        .getService(ApiRequest.getIssues + '/' + this.idIssue)
+        .postService(ApiRequest.getIssuesById, { id: this.idIssue })
         .subscribe({
           next: (resp) => {
             this.issueForm.setValue({
-              id: resp.id,
-              id_status: resp.issueStatus.id,
-              id_section: resp.issueSection.id,
-              id_type: resp.issueType.id,
-              issue: resp.title,
-              description: resp.description,
+              id: resp.result[0].id,
+              id_status: resp.result[0].id_status,
+              id_section: resp.result[0].id_section,
+              id_type: resp.result[0].id_type,
+              issue: resp.result[0].issue,
             });
             this.spinner.hide();
           },
@@ -110,13 +108,13 @@ export class CreateIssueComponent implements OnInit {
   createIssue() {
     this.spinner.show();
     let body = {
-      status: this.issueForm.value.id_status,
-      description: '-',
-      section: this.issueForm.value.id_section,
-      type: this.issueForm.value.id_type,
-      title: this.issueForm.value.issue,
+      id_status: this.issueForm.value.id_status,
+
+      id_section: this.issueForm.value.id_section,
+      id_type: this.issueForm.value.id_type,
+      issue: this.issueForm.value.issue,
     };
-    this.apiService.postService(ApiRequest.getIssues, body).subscribe({
+    this.apiService.postService(ApiRequest.createIssue, body).subscribe({
       next: (resp) => {
         this.spinner.hide();
         this.alertSV.alertBasic(
@@ -136,32 +134,31 @@ export class CreateIssueComponent implements OnInit {
   updateIssue() {
     this.spinner.show();
     let body = {
-      status: this.issueForm.value.id_status,
-      section: this.issueForm.value.id_section,
-      type: this.issueForm.value.id_type,
-      title: this.issueForm.value.issue,
-      description: this.issueForm.value.description,
+      id_status: this.issueForm.value.id_status,
+
+      id_section: this.issueForm.value.id_section,
+      id_type: this.issueForm.value.id_type,
+      issue: this.issueForm.value.issue,
+      id: this.idIssue,
     };
-    this.apiService
-      .patchService(ApiRequest.getIssues + '/' + this.idIssue, body)
-      .subscribe({
-        next: (resp) => {
-          this.spinner.hide();
-          this.alertSV.alertBasic(
-            'Actualización',
-            'Issue actualizado correctamente',
-            'success'
-          );
-          this.uS.navigateToPath('home/configuracion/issues');
-        },
-        error: (err) => {
-          this.spinner.hide();
-          this.alertSV.alertBasic(
-            'Error',
-            'Error al actualizar el issue',
-            'error'
-          );
-        },
-      });
+    this.apiService.postService(ApiRequest.updateIssue, body).subscribe({
+      next: (resp) => {
+        this.spinner.hide();
+        this.alertSV.alertBasic(
+          'Actualización',
+          'Issue actualizado correctamente',
+          'success'
+        );
+        this.uS.navigateToPath('home/configuracion/issues');
+      },
+      error: (err) => {
+        this.spinner.hide();
+        this.alertSV.alertBasic(
+          'Error',
+          'Error al actualizar el issue',
+          'error'
+        );
+      },
+    });
   }
 }
