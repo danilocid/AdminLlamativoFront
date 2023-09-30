@@ -41,8 +41,8 @@ export const ApiRequest = {
 
   //sales
   createSale: environment.urlBackend + '/sales-addSale',
-  getSales: environment.urlBackend + 'sales',
-  getSaleById: environment.urlBackend + '/sales-getSaleById',
+  getSales: environment.urlBackend + 'sales-getSales',
+  getSaleById: environment.urlBackend + 'sales-getSaleById',
 
   //reports
   dashboardReport: environment.urlBackend + 'products-GetResume',

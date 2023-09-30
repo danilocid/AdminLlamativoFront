@@ -39,7 +39,7 @@ export class VentasComponent implements OnInit {
     this.apiService = new ApiService(this.http);
     this.apiService.getService(ApiRequest.getSales).subscribe({
       next: (resp) => {
-        this.ventas = resp;
+        this.ventas = resp.sales;
         this.dtTrigger.next(this.dtOptions);
         this.spinner.hide();
       },
