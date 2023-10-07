@@ -35,7 +35,7 @@ export class ProductoComponent implements OnInit {
 
     this.apiService.getService(ApiRequest.getArticulos + '?s=true').subscribe({
       next: (resp) => {
-        this.products = resp;
+        this.products = resp.result;
         this.spinner.hide();
       },
       error: (error) => {
@@ -61,8 +61,8 @@ export class ProductoComponent implements OnInit {
 
       let productCart = {
         ...product,
-        netSale: netSale,
-        taxSale: taxSale,
+        venta_neto: netSale,
+        venta_imp: taxSale,
         quantity: quantity,
       };
       this.productChange.emit(productCart);
@@ -89,7 +89,7 @@ export class ProductoComponent implements OnInit {
     );
     if (product) {
       this.productForm.controls['price'].setValue(
-        product.netSale + product.taxSale
+        product.venta_imp + product.venta_neto
       );
     }
   }

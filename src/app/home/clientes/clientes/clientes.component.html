@@ -44,18 +44,18 @@
           <tbody>
             <tr *ngFor="let item of clients">
               <td>{{ item.rut }}</td>
-              <td>{{ item.name }}</td>
-              <td>{{ item.activity }}</td>
-              <td>{{ item.address }}</td>
-              <td>{{ item.commune.comuns }}</td>
+              <td>{{ item.nombre }}</td>
+              <td>{{ item.giro }}</td>
+              <td>{{ item.direccion }}</td>
+              <td>{{ item.comuna }}</td>
               <td>
-                {{ item.region.region }}
+                {{ item.region }}
               </td>
               <td>
-                {{ item.phone }}
+                {{ item.telefono }}
               </td>
 
-              <td>{{ item.email }}</td>
+              <td>{{ item.mail }}</td>
 
               <td>
                 <a

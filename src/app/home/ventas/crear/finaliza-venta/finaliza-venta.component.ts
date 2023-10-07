@@ -45,7 +45,8 @@ export class FinalizaVentaComponent implements OnInit {
 
     this.apiService.getService(ApiRequest.getClients).subscribe({
       next: (resp) => {
-        this.clients = resp;
+        console.log(resp);
+        this.clients = resp.data;
         this.spinner.hide();
       },
       error: (error) => {
@@ -60,7 +61,8 @@ export class FinalizaVentaComponent implements OnInit {
           this.router.navigate(['/login']);
           return;
         }
-        this.documentTypes = resp;
+        console.log(resp);
+        this.documentTypes = resp.data;
         this.spinner.hide();
       },
       error: (error) => {
@@ -78,7 +80,8 @@ export class FinalizaVentaComponent implements OnInit {
           this.router.navigate(['/login']);
           return;
         }
-        this.medioDePago = resp;
+        console.log(resp);
+        this.medioDePago = resp.data;
         this.spinner.hide();
       },
       error: (error) => {
@@ -117,24 +120,24 @@ export class FinalizaVentaComponent implements OnInit {
       var costo_imp = 0;
       //calculo de montos
       this.productsCart.forEach((element) => {
-        monto_neto += element.netSale * element.quantity;
-        monto_imp += element.taxSale * element.quantity;
-        costo_neto += element.netCost * element.quantity;
-        costo_imp += element.taxCost * element.quantity;
+        monto_neto += element.venta_neto * element.quantity;
+        monto_imp += element.venta_imp * element.quantity;
+        costo_neto += element.costo_neto * element.quantity;
+        costo_imp += element.costo_imp * element.quantity;
       });
       let saleDetail = [];
       this.productsCart.forEach((element) => {
         saleDetail.push({
           productId: element.id,
           quantity: element.quantity,
-          net: element.netSale,
-          tax: element.taxSale,
-          netCost: element.netCost,
-          taxCost: element.taxCost,
+          net: element.venta_neto,
+          tax: element.venta_imp,
+          netCost: element.costo_neto,
+          taxCost: element.costo_imp,
         });
       });
       this.apiService
-        .postService(ApiRequest.getSales, {
+        .postService(ApiRequest.createSale, {
           rut: this.clientForm.value.id_cliente,
           paymentMethodId: this.clientForm.value.id_medio_pago,
           documentTypeId: this.clientForm.value.id_tipo_documento,

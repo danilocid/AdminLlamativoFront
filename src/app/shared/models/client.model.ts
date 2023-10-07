@@ -1,13 +1,12 @@
-import { Commune } from './commun.model';
-import { Region } from './region.model';
-
 export interface Client {
   rut: string;
-  name: string;
-  activity: string;
-  address: string;
-  phone: number;
-  email: string;
-  commune: Commune;
-  region: Region;
+  nombre: string;
+  giro: string;
+  direccion: string;
+  telefono: string;
+  mail: string;
+  region: string;
+  id_region: number;
+  comuna: string;
+  id_comuna: number;
 }

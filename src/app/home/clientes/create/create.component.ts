@@ -102,16 +102,16 @@ export class CreateComponent implements OnInit {
           this.cliente = response;
           this.clientForm.patchValue({
             rut: this.cliente.rut,
-            nombre: this.cliente.name,
-            direccion: this.cliente.address,
-            comuna: this.cliente.commune.id.toString(),
-            region: this.cliente.region.id.toString(),
-            mail: this.cliente.email,
-            telefono: this.cliente.phone,
-            giro: this.cliente.activity,
+            nombre: this.cliente.nombre,
+            direccion: this.cliente.direccion,
+            comuna: this.cliente.id_comuna,
+            region: this.cliente.id_region,
+            mail: this.cliente.mail,
+            telefono: this.cliente.telefono,
+            giro: this.cliente.giro,
           });
           //set the rut to readonly
-          this.getComunas(this.cliente.region.id.toString());
+          this.getComunas(this.cliente.id_region.toString());
           this.spinner.hide();
         },
         error: (error: any) => {

@@ -40,13 +40,33 @@ export class VerArticulosComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.dtOptions = FormatDataTableGlobal();
+    this.getProductData();
+  }
+
+  private getProductData() {
     this.apiService = new ApiService(this.http);
     this.apiService
-      .getService(ApiRequest.getArticulos + '/' + this.idProducto)
+      .postService(ApiRequest.getArticulosById, { id: this.idProducto })
       .subscribe({
         next: (resp) => {
-          this.producto = resp.product;
-          this.movimientos = resp.movementDetails;
+          this.producto = resp.result[0];
+          this.getProductMovements();
+        },
+        error: (error) => {
+          this.spinner.hide();
+          this.alertSV.alertBasic('Error', error.error.msg, 'error');
+        },
+      });
+  }
+  private getProductMovements() {
+    this.apiService = new ApiService(this.http);
+    this.apiService
+      .postService(ApiRequest.getMovimientosArticulosById, {
+        id: this.idProducto,
+      })
+      .subscribe({
+        next: (resp) => {
+          this.movimientos = resp.movements;
           this.dtTrigger.next(this.dtOptions);
 
           this.spinner.hide();

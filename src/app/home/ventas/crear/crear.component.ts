@@ -78,7 +78,7 @@ export class CrearComponent implements OnInit {
   calcTotal() {
     this.total = 0;
     this.productsCart.forEach((p) => {
-      this.total += (p.netSale + p.taxSale) * p.quantity;
+      this.total += (p.venta_neto + p.venta_imp) * p.quantity;
     });
   }
 

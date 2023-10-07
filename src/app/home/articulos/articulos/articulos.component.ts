@@ -61,7 +61,7 @@ export class ArticulosComponent implements OnInit, OnDestroy {
             this.router.navigate(['/login']);
             return;
           }
-          this.products = resp;
+          this.products = resp.result;
           this.dtTrigger.next(this.dtOptions);
           this.spinner.hide();
         },

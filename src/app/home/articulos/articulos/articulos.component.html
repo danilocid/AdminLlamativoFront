@@ -71,25 +71,25 @@
           <tbody>
             <tr *ngFor="let item of products">
               <td>{{ item.id }}</td>
-              <td>{{ item.internalCode }}</td>
-              <td>{{ item.barCode }}</td>
-              <td>{{ item.description }}</td>
+              <td>{{ item.cod_interno }}</td>
+              <td>{{ item.cod_barras }}</td>
+              <td>{{ item.descripcion }}</td>
               <td>{{ item.stock }}</td>
               <td>
                 {{
-                  item.netCost + item.taxCost
+                  item.costo_neto + item.costo_imp
                     | currency : "CLP" : "symbol-narrow" : "1.0-0"
                 }}
               </td>
               <td>
                 {{
-                  item.netSale + item.taxSale
+                  item.venta_neto + item.venta_imp
                     | currency : "CLP" : "symbol-narrow" : "1.0-0"
                 }}
               </td>
 
-              <td *ngIf="item.active">Activo</td>
-              <td *ngIf="!item.active">Inactivo</td>
+              <td *ngIf="item.activo">Activo</td>
+              <td *ngIf="!item.activo">Inactivo</td>
 
               <td>
                 <a

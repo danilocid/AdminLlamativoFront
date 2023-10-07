@@ -46,7 +46,7 @@ export class CreateComponent implements OnInit {
     this.apiService = new ApiService(this.http);
     this.productForm = this.fb.group({
       internalCode: ['', [Validators.required]],
-      barCode: [''],
+      barCode: ['', [Validators.required]],
       description: ['', [Validators.required]],
       netCost: ['', [Validators.required]],
       taxCost: ['', [Validators.required]],
@@ -55,7 +55,7 @@ export class CreateComponent implements OnInit {
       taxSale: ['', [Validators.required]],
       venta_total: ['', [Validators.required]],
       stockMin: ['', [Validators.required]],
-      active: ['true', [Validators.required]],
+      active: ['1', [Validators.required]],
     });
 
     if (this.idProducto != null) {
@@ -67,26 +67,28 @@ export class CreateComponent implements OnInit {
 
   getProduct() {
     this.apiService
-      .getService(ApiRequest.getArticulos + '/' + this.idProducto)
+      .postService(ApiRequest.getArticulosById, {
+        id: this.idProducto,
+      })
       .subscribe({
         next: (resp) => {
           if (resp.status == 401) {
             this.router.navigate(['/login']);
             return;
           }
-          this.producto = resp.product;
+          this.producto = resp.result[0];
           this.productForm.patchValue({
-            internalCode: this.producto.internalCode,
-            barCode: this.producto.barCode,
-            description: this.producto.description,
-            netCost: this.producto.netCost,
-            taxCost: this.producto.taxCost,
-            costo_total: this.producto.taxCost + this.producto.netCost,
-            netSale: this.producto.netSale,
-            taxSale: this.producto.taxSale,
-            venta_total: this.producto.netCost + this.producto.netSale,
-            stockMin: this.producto.stockMin,
-            active: this.producto.active,
+            internalCode: this.producto.cod_interno,
+            barCode: this.producto.cod_barras,
+            description: this.producto.descripcion,
+            netCost: this.producto.costo_neto,
+            taxCost: this.producto.costo_imp,
+            costo_total: this.producto.costo_neto + this.producto.costo_imp,
+            netSale: this.producto.venta_neto,
+            taxSale: this.producto.venta_imp,
+            venta_total: this.producto.venta_imp + this.producto.venta_imp,
+            stockMin: this.producto.stock_critico,
+            active: this.producto.activo,
           });
           console.log(this.producto);
           this.spinner.hide();
@@ -114,16 +116,24 @@ export class CreateComponent implements OnInit {
   }
   createProduct() {
     this.spinner.show();
-    let product = this.productForm.value;
-    //remove the costo_total, venta_total fields
-    delete product.costo_total;
-    delete product.venta_total;
+    let product = {
+      id: this.idProducto,
+      cod_interno: this.productForm.controls['internalCode'].value,
+      cod_barras: this.productForm.controls['barCode'].value,
+      descripcion: this.productForm.controls['description'].value,
+      costo_neto: this.productForm.controls['netCost'].value,
+      costo_imp: this.productForm.controls['taxCost'].value,
+      venta_neto: this.productForm.controls['netSale'].value,
+      venta_imp: this.productForm.controls['taxSale'].value,
+      stock_critico: this.productForm.controls['stockMin'].value,
+      activo: this.productForm.controls['active'].value,
+    };
 
     //if barCode is empty, then delete it
-    if (product.barCode == '') {
-      delete product.barCode;
+    if (product.cod_barras == '') {
+      delete product.cod_barras;
     }
-    this.apiService.postService(ApiRequest.getArticulos, product).subscribe({
+    this.apiService.postService(ApiRequest.createArticulo, product).subscribe({
       next: (resp) => {
         if (resp.status == 401) {
           this.router.navigate(['/login']);
@@ -149,16 +159,20 @@ export class CreateComponent implements OnInit {
       'warning',
       () => {
         this.spinner.show();
-        let product = this.productForm.value;
-        //remove the costo_total, venta_total fields
-        delete product.costo_total;
-        delete product.venta_total;
-
+        let product = {
+          id: this.idProducto,
+          cod_interno: this.productForm.controls['internalCode'].value,
+          cod_barras: this.productForm.controls['barCode'].value,
+          descripcion: this.productForm.controls['description'].value,
+          costo_neto: this.productForm.controls['netCost'].value,
+          costo_imp: this.productForm.controls['taxCost'].value,
+          venta_neto: this.productForm.controls['netSale'].value,
+          venta_imp: this.productForm.controls['taxSale'].value,
+          stock_critico: this.productForm.controls['stockMin'].value,
+          activo: this.productForm.controls['active'].value,
+        };
         this.apiService
-          .patchService(
-            ApiRequest.getArticulos + '/' + this.idProducto,
-            product
-          )
+          .patchService(ApiRequest.updateArticulo, product)
           .subscribe({
             next: (resp) => {
               if (resp.status == 401) {

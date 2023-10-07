@@ -1,32 +1,32 @@
 export interface Product {
   id: number;
-  internalCode: string;
-  barCode: string;
-  description: string;
-  netCost: number;
-  taxCost: number;
-  netSale: number;
-  taxSale: number;
+  cod_interno: string;
+  cod_barras: string;
+  descripcion: string;
+  costo_neto: number;
+  costo_imp: number;
+  venta_neto: number;
+  venta_imp: number;
   stock: number;
-  stockMin: number;
-  active: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  stock_critico: number;
+  activo: number;
+  created_at: Date;
+  updated_at: Date;
 }
 
 export interface ProductCart {
   id: number;
-  internalCode: string;
-  barCode: string;
-  description: string;
-  netCost: number;
-  taxCost: number;
-  netSale: number;
-  taxSale: number;
+  cod_interno: string;
+  cod_barras: string;
+  descripcion: string;
+  costo_neto: number;
+  costo_imp: number;
+  venta_neto: number;
+  venta_imp: number;
   stock: number;
-  stockMin: number;
-  active: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  stock_critico: number;
+  activo: number;
+  created_at: Date;
+  updated_at: Date;
   quantity: number;
 }

@@ -1,4 +1,4 @@
 export interface PaymentMethod {
   id: number;
-  paymentMethod: string;
+  medio_de_pago: string;
 }

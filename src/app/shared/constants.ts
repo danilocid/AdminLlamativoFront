@@ -3,13 +3,12 @@ export const ApiRequest = {
   postLogin: environment.urlBackend + 'users-login',
   getUsers: environment.urlBackend + '/users',
   //articulos
-  getArticulos: environment.urlBackend + 'products',
+  getArticulos: environment.urlBackend + 'products-GetAll',
   getArticulosConStock: environment.urlBackend + '/products-GetAllWhitStock',
-  getArticulosById: environment.urlBackend + '/products-Get',
-  getMovimientosArticulosById:
-    environment.urlBackend + '/products-GetMovements',
-  updateArticulo: environment.urlBackend + '/products-Update',
-  createArticulo: environment.urlBackend + '/products-Create',
+  getArticulosById: environment.urlBackend + 'products-Get',
+  getMovimientosArticulosById: environment.urlBackend + 'products-GetMovements',
+  updateArticulo: environment.urlBackend + 'products-Update',
+  createArticulo: environment.urlBackend + 'products-Create',
   getLastCount: environment.urlBackend + '/products-GetLastCount',
 
   //movimientos
@@ -31,16 +30,16 @@ export const ApiRequest = {
   updateIssue: environment.urlBackend + 'issues-Update',
 
   //clients
-  getClients: environment.urlBackend + 'clients',
+  getClients: environment.urlBackend + 'clients-getAllClients',
 
   //utils
   getComunasByIdRegion: environment.urlBackend + 'common/comuns',
   getRegiones: environment.urlBackend + 'common/regions',
-  getTipoDocumento: environment.urlBackend + 'common/document-types',
-  getMedioPago: environment.urlBackend + 'common/payment-methods',
+  getTipoDocumento: environment.urlBackend + 'utils-getAllTipoDocumento',
+  getMedioPago: environment.urlBackend + 'utils-getAllMedioPago',
 
   //sales
-  createSale: environment.urlBackend + '/sales-addSale',
+  createSale: environment.urlBackend + 'sales-addSale',
   getSales: environment.urlBackend + 'sales-getSales',
   getSaleById: environment.urlBackend + 'sales-getSaleById',
 

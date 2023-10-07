@@ -208,13 +208,13 @@ export class NewInventoryComponent implements OnInit, OnDestroy {
 
           netCost: this.products.find(
             (x) => x.id.toString() === this.productForm.value.id.toString()
-          )?.netCost,
+          )?.costo_neto,
           taxCost: this.products.find(
             (x) => x.id.toString() === this.productForm.value.id.toString()
-          )?.taxCost,
+          )?.costo_imp,
           description: this.products.find(
             (x) => x.id.toString() === this.productForm.value.id.toString()
-          )?.description,
+          )?.descripcion,
           entries:
             this.productForm.value.type === '1'
               ? this.productForm.value.quantity

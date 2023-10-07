@@ -1,4 +1,4 @@
 export interface DocumentType {
   id: number;
-  documentType: string;
+  tipo: string;
 }
