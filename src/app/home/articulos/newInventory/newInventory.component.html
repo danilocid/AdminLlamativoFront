@@ -122,19 +122,19 @@
                   <tbody>
                     <tr *ngFor="let item of productsInventory">
                       <td>{{ item.id }}</td>
-                      <td>{{ item.description }}</td>
+                      <td>{{ item.descripcion }}</td>
 
                       <td>
                         {{
-                          item.netCost + item.netCost
+                          item.costo_neto + item.costo_imp
                             | currency : "CLP" : "symbol-narrow" : "1.0-0"
                         }}
                       </td>
                       <td>
-                        {{ item.entries }}
+                        {{ item.entradas }}
                       </td>
                       <td>
-                        {{ item.exits }}
+                        {{ item.salidas }}
                       </td>
 
                       <td>
@@ -201,7 +201,7 @@
                                 *ngFor="let item of movementTypes"
                                 value="{{ item.id }}"
                               >
-                                {{ item.movementType }}
+                                {{ item.tipo_movimiento }}
                               </ng-option>
                             </ng-select>
                           </div>

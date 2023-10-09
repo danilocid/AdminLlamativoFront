@@ -2,28 +2,27 @@ import { Product } from './product.model';
 
 export interface Inventory {
   id: number;
-  totalNetCost: number;
-  totalTaxCost: number;
-  entries: number;
-  exits: number;
-  movementType: MovementType;
-  createdAt: string;
-  updatedAt: string;
-  observation: string;
+  costo_neto: number;
+  costo_imp: number;
+  entradas: number;
+  salidas: number;
+  observaciones: string;
+  tipo_movimiento: string;
+  name: string;
+  created_at: string;
 }
 
 export interface MovementType {
   id: number;
-  movementType: string;
+  tipo_movimiento: string;
 }
 
 export interface InventoryDetail {
   id: number;
-  netCost: number;
-  taxCost: number;
-  entries: number;
-  exits: number;
-  product: Product;
-  createdAt: string;
-  updatedAt: string;
+  costo_neto: number;
+  costo_imp: number;
+  entradas: number;
+  salidas: number;
+  cod_interno: string;
+  descripcion: string;
 }

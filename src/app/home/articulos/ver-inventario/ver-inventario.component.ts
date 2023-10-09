@@ -28,17 +28,14 @@ export class VerInventarioComponent implements OnInit, OnDestroy {
   idInventario = '';
   movimiento: Inventory = {
     id: 0,
-    totalNetCost: 0,
-    totalTaxCost: 0,
-    entries: 0,
-    exits: 0,
-    movementType: {
-      id: 0,
-      movementType: '',
-    },
-    createdAt: '',
-    updatedAt: '',
-    observation: '',
+    costo_neto: 0,
+    costo_imp: 0,
+    entradas: 0,
+    salidas: 0,
+    tipo_movimiento: '',
+    created_at: '',
+    name: '',
+    observaciones: '',
   };
   articulos: InventoryDetail[] = [];
   date = new Date();
@@ -60,7 +57,7 @@ export class VerInventarioComponent implements OnInit, OnDestroy {
     this.dtOptions = FormatDataTableGlobal();
     this.apiService = new ApiService(this.http);
     this.apiService
-      .getService(ApiRequest.getAllInventory + '/' + this.idInventario)
+      .postService(ApiRequest.getInventoryById, { id: this.idInventario })
       .subscribe({
         next: (resp) => {
           if (resp.status) {
@@ -71,8 +68,8 @@ export class VerInventarioComponent implements OnInit, OnDestroy {
               this.router.navigate(['/home/articulos/ajustes']);
             }, 3000);
           }
-          this.movimiento = resp.inventory;
-          this.articulos = resp.inventoryDetails;
+          this.movimiento = resp.movimiento[0];
+          this.articulos = resp.productos;
           this.dtTrigger.next(this.dtOptions);
 
           this.spinner.hide();

@@ -33,11 +33,11 @@ export class NewInventoryComponent implements OnInit, OnDestroy {
   movementForm: FormGroup;
   newProduct: ProductInventory = {
     id: 0,
-    entries: 0,
-    exits: 0,
-    netCost: 0,
-    taxCost: 0,
-    description: '',
+    entradas: 0,
+    salidas: 0,
+    costo_neto: 0,
+    costo_imp: 0,
+    descripcion: '',
   };
   constructor(
     private titleService: Title,
@@ -71,7 +71,7 @@ export class NewInventoryComponent implements OnInit, OnDestroy {
           this.router.navigate(['/login']);
           return;
         }
-        this.products = resp;
+        this.products = resp.result;
 
         this.dtTrigger.next(this.dtOptions);
         this.spinner.hide();
@@ -91,7 +91,7 @@ export class NewInventoryComponent implements OnInit, OnDestroy {
           this.router.navigate(['/login']);
           return;
         }
-        this.movementTypes = resp;
+        this.movementTypes = resp.result;
         this.spinner.hide();
       },
       error: (error) => {
@@ -118,25 +118,25 @@ export class NewInventoryComponent implements OnInit, OnDestroy {
     let costo_neto = 0;
     let costo_imp = 0;
     this.productsInventory.forEach((element) => {
-      if (element.entries > 0) {
-        entradas += element.entries;
+      if (element.entradas > 0) {
+        entradas += element.entradas;
       }
-      if (element.exits > 0) {
-        salidas += element.exits;
+      if (element.salidas > 0) {
+        salidas += element.salidas;
       }
-      costo_neto += element.netCost;
-      costo_imp += element.taxCost;
+      costo_neto += element.costo_neto;
+      costo_imp += element.costo_imp;
     });
 
     this.apiService
-      .postService(ApiRequest.getAllInventory, {
-        products: this.productsInventory,
-        movementType: +this.movementForm.value.movementType,
-        observations: this.movementForm.value.obs,
-        entries: entradas,
-        exits: salidas,
-        totalNetCost: costo_neto,
-        totalTaxCost: costo_imp,
+      .postService(ApiRequest.saveInventory, {
+        articulos: this.productsInventory,
+        tipo_movimiento: +this.movementForm.value.movementType,
+        obs: this.movementForm.value.obs,
+        entradas,
+        salidas,
+        costo_neto,
+        costo_imp,
       })
       .subscribe({
         next: (resp) => {
@@ -182,23 +182,23 @@ export class NewInventoryComponent implements OnInit, OnDestroy {
         if (this.productForm.value.type === '1') {
           this.productsInventory.find(
             (x) => x.id.toString() === this.productForm.value.id.toString()
-          )!.entries =
+          )!.entradas =
             this.productsInventory.find(
               (x) => x.id.toString() === this.productForm.value.id.toString()
-            )!.entries + this.productForm.value.quantity;
+            )!.entradas + this.productForm.value.quantity;
           this.productsInventory.find(
             (x) => x.id.toString() === this.productForm.value.id.toString()
-          )!.exits = 0;
+          )!.salidas = 0;
         } else {
           this.productsInventory.find(
             (x) => x.id.toString() === this.productForm.value.id.toString()
-          )!.entries =
+          )!.salidas =
             this.productsInventory.find(
               (x) => x.id.toString() === this.productForm.value.id.toString()
-            )!.exits + this.productForm.value.quantity;
+            )!.salidas + this.productForm.value.quantity;
           this.productsInventory.find(
             (x) => x.id.toString() === this.productForm.value.id.toString()
-          )!.entries = 0;
+          )!.entradas = 0;
         }
         this.rerender();
         return;
@@ -206,20 +206,20 @@ export class NewInventoryComponent implements OnInit, OnDestroy {
         this.productsInventory.push({
           id: +this.productForm.value.id,
 
-          netCost: this.products.find(
+          costo_neto: this.products.find(
             (x) => x.id.toString() === this.productForm.value.id.toString()
           )?.costo_neto,
-          taxCost: this.products.find(
+          costo_imp: this.products.find(
             (x) => x.id.toString() === this.productForm.value.id.toString()
           )?.costo_imp,
-          description: this.products.find(
+          descripcion: this.products.find(
             (x) => x.id.toString() === this.productForm.value.id.toString()
           )?.descripcion,
-          entries:
+          entradas:
             this.productForm.value.type === '1'
               ? this.productForm.value.quantity
               : 0,
-          exits:
+          salidas:
             this.productForm.value.type === '2'
               ? this.productForm.value.quantity
               : 0,

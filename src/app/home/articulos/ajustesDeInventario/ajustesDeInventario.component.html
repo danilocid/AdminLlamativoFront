@@ -48,13 +48,13 @@
           <tbody>
             <tr *ngFor="let item of inventories">
               <td>{{ item.id }}</td>
-              <td>{{ item.movementType.movementType }}</td>
-              <td>{{ item.observation }}</td>
-              <td>{{ item.entries }}</td>
-              <td>{{ item.exits }}</td>
+              <td>{{ item.tipo_movimiento }}</td>
+              <td>{{ item.observaciones }}</td>
+              <td>{{ item.entradas }}</td>
+              <td>{{ item.salidas }}</td>
               <td>
                 {{
-                  item.totalNetCost + item.totalTaxCost
+                  item.costo_neto + item.costo_imp
                     | currency : "CLP" : "symbol-narrow" : "1.0-0"
                 }}
               </td>

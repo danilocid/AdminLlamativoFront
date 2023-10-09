@@ -52,7 +52,7 @@ export class AjustesDeInventarioComponent implements OnInit, OnDestroy {
           this.router.navigate(['/login']);
           return;
         }
-        this.inventories = resp;
+        this.inventories = resp.result;
         this.dtTrigger.next(this.dtOptions);
         this.spinner.hide();
       },

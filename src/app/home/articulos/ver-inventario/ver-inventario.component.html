@@ -27,33 +27,33 @@
             <p>
               Costo Neto:
               {{
-                movimiento.totalNetCost
+                movimiento.costo_neto
                   | currency : "CLP" : "symbol-narrow" : "1.0-0"
               }}
             </p>
             <p>
               Costo Imp:
               {{
-                movimiento.totalTaxCost
+                movimiento.costo_imp
                   | currency : "CLP" : "symbol-narrow" : "1.0-0"
               }}
             </p>
             <p>
               Costo Total:
               {{
-                movimiento.totalNetCost + movimiento.totalTaxCost
+                movimiento.costo_neto + movimiento.costo_imp
                   | currency : "CLP" : "symbol-narrow" : "1.0-0"
               }}
             </p>
           </div>
           <div class="col">
-            <p>observaciones: {{ movimiento.observation }}</p>
+            <p>observaciones: {{ movimiento.observaciones }}</p>
             <p>
               Fecha:
-              {{ movimiento.createdAt || date | date : "dd/MM/yyyy HH:mm" }}
+              {{ movimiento.created_at || date | date : "dd/MM/yyyy HH:mm" }}
             </p>
-            <p>Entradas {{ movimiento.entries }}</p>
-            <p>Salidas {{ movimiento.exits }}</p>
+            <p>Entradas {{ movimiento.entradas }}</p>
+            <p>Salidas {{ movimiento.salidas }}</p>
           </div>
         </div>
       </div>
@@ -82,13 +82,14 @@
           </thead>
           <tbody>
             <tr *ngFor="let item of articulos">
-              <td>{{ item.product.cod_interno }}</td>
-              <td>{{ item.product.descripcion }}</td>
-              <td>{{ item.entries }}</td>
-              <td>{{ item.exits }}</td>
+              <td>{{ item.cod_interno }}</td>
+              <td>{{ item.descripcion }}</td>
+              <td>{{ item.entradas }}</td>
+              <td>{{ item.salidas }}</td>
               <td>
                 {{
-                  (item.netCost + item.taxCost) * (item.entries + item.exits)
+                  (item.costo_neto + item.costo_imp) *
+                    (item.entradas + item.salidas)
                     | currency : "CLP" : "symbol-narrow" : "1.0-0"
                 }}
               </td>

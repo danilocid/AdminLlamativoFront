@@ -1,8 +1,8 @@
 export interface ProductInventory {
   id: number;
-  netCost: number;
-  taxCost: number;
-  entries: number;
-  exits: number;
-  description: string;
+  costo_neto: number;
+  costo_imp: number;
+  entradas: number;
+  salidas: number;
+  descripcion: string;
 }

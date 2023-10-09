@@ -12,12 +12,12 @@ export const ApiRequest = {
   getLastCount: environment.urlBackend + '/products-GetLastCount',
 
   //movimientos
-  getMovimientos: environment.urlBackend + 'products/movementTypes',
+  getMovimientos: environment.urlBackend + 'products-GetMovementsTypes',
 
   //inventario
-  saveInventory: environment.urlBackend + '/products-SaveMovement',
-  getAllInventory: environment.urlBackend + 'inventory',
-  getInventoryById: environment.urlBackend + '/products-GetMovementDetail',
+  saveInventory: environment.urlBackend + 'products-SaveMovement',
+  getAllInventory: environment.urlBackend + 'products-GetAllMovements',
+  getInventoryById: environment.urlBackend + 'products-GetMovementDetail',
 
   //issues
   getIssues: environment.urlBackend + 'issues-GetAll',
