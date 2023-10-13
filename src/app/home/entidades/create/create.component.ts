@@ -96,7 +96,7 @@ export class CreateComponent implements OnInit {
     //remove validation from rut
     this.clientForm.get('rut')?.clearValidators();
     this.apiService
-      .getService(ApiRequest.getClients + '/' + this.rutCliente)
+      .getService(ApiRequest.getEntities + '/' + this.rutCliente)
       .subscribe({
         next: (response: any) => {
           this.cliente = response;
@@ -160,7 +160,7 @@ export class CreateComponent implements OnInit {
         phone: this.clientForm.get('telefono')?.value.toString(),
       };
       //se crea el cliente
-      this.apiService.postService(ApiRequest.getClients, body).subscribe({
+      this.apiService.postService(ApiRequest.getEntities, body).subscribe({
         next: (response: any) => {
           this.spinner.hide();
           if (response.status == 401) {
@@ -193,7 +193,7 @@ export class CreateComponent implements OnInit {
         phone: this.clientForm.get('telefono')?.value.toString(),
       };
       this.apiService
-        .patchService(ApiRequest.getClients + '/' + this.rutCliente, body)
+        .patchService(ApiRequest.getEntities + '/' + this.rutCliente, body)
         .subscribe({
           next: (response: any) => {
             this.spinner.hide();

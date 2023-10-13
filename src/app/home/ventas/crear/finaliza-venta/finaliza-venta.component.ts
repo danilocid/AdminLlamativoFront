@@ -43,7 +43,7 @@ export class FinalizaVentaComponent implements OnInit {
     });
     this.apiService = new ApiService(this.http);
 
-    this.apiService.getService(ApiRequest.getClients).subscribe({
+    this.apiService.getService(ApiRequest.getEntities + '?t=c').subscribe({
       next: (resp) => {
         console.log(resp);
         this.clients = resp.data;

@@ -11,11 +11,11 @@ import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
 import { Client } from 'src/app/shared/models/client.model';
 @Component({
-  selector: 'app-clientes',
-  templateUrl: './clientes.component.html',
+  selector: 'app-entidades',
+  templateUrl: './entidades.component.html',
   styleUrls: [],
 })
-export class ClientesComponent implements OnInit {
+export class EntidadesComponent implements OnInit {
   @ViewChild(DataTableDirective)
   dtElement!: DataTableDirective;
   dtTrigger: Subject<any> = new Subject<any>();
@@ -31,26 +31,27 @@ export class ClientesComponent implements OnInit {
     private alertSV: AlertService,
     private http: HttpClient
   ) {
-    this.titleService.setTitle('Clientes');
+    this.titleService.setTitle('Entidades');
     this.spinner.show();
   }
 
   ngOnInit(): void {
     this.dtOptions = FormatDataTableGlobal();
     this.apiService = new ApiService(this.http);
-    this.apiService.getService(ApiRequest.getClients).subscribe({
+    this.apiService.getService(ApiRequest.getEntities + '?t=p').subscribe({
       next: (resp) => {
         if (resp.status === 401 || resp.status === 403) {
           this.router.navigate(['/login']);
           return;
         }
-        this.clients = resp;
+        this.clients = resp.data;
         this.dtTrigger.next(this.dtOptions);
         this.spinner.hide();
       },
       error: (error) => {
         this.spinner.hide();
-        this.alertSV.alertBasic('Error', error.error.msg, 'error');
+        console.log(error);
+        this.alertSV.alertBasic('Error', error.message, 'error');
       },
     });
   }

@@ -86,7 +86,7 @@ export class CreateComponent implements OnInit {
             costo_total: this.producto.costo_neto + this.producto.costo_imp,
             netSale: this.producto.venta_neto,
             taxSale: this.producto.venta_imp,
-            venta_total: this.producto.venta_imp + this.producto.venta_imp,
+            venta_total: this.producto.venta_imp + this.producto.venta_neto,
             stockMin: this.producto.stock_critico,
             active: this.producto.activo,
           });

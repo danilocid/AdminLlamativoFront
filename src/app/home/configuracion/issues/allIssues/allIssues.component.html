@@ -56,10 +56,10 @@
               <td>{{ item.Seccion }}</td>
               <td>{{ item.Tipo }}</td>
               <td>{{ item.Status }}</td>
-              <td>
+              <td [attr.data-order]="item['createdAt']">
                 {{ item["createdAt"] | date : "EE dd-MM-yy HH:mm" : "UTC -3" }}
               </td>
-              <td>
+              <td [attr.data-order]="item['updatedAt']">
                 {{ item["updatedAt"] | date : "EE dd-MM-yy HH:mm" : "UTC -3" }}
               </td>
               <td>

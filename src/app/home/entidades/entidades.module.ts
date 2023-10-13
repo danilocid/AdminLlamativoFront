@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ClientesComponent } from './clientes/clientes.component';
-import { ClientesRoutingModule } from './clientes-routing.module';
+import { EntidadesComponent } from './entidades/entidades.component';
+import { EntidadesRoutingModule } from './entidades-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DataTablesModule } from 'angular-datatables';
@@ -10,12 +10,12 @@ import { CreateComponent } from './create/create.component';
 @NgModule({
   imports: [
     CommonModule,
-    ClientesRoutingModule,
+    EntidadesRoutingModule,
     DataTablesModule.forRoot(),
     FormsModule,
     ReactiveFormsModule,
     NgSelectModule,
   ],
-  declarations: [ClientesComponent, CreateComponent],
+  declarations: [EntidadesComponent, CreateComponent],
 })
-export class ClientesModule {}
+export class EntidadesModule {}

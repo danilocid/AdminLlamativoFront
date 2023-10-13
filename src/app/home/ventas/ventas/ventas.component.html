@@ -51,7 +51,9 @@
               </td>
               <td>{{ item.tipo }}: {{ item.documento }}</td>
               <td>{{ item.medio_de_pago }}</td>
-              <td>{{ item.fecha | date : "dd/MM/yyyy HH:mm" : "UTC" }}</td>
+              <td [attr.data-order]="item.fecha">
+                {{ item.fecha | date : "dd/MM/yyyy HH:mm" : "UTC" }}
+              </td>
 
               <td>
                 <a

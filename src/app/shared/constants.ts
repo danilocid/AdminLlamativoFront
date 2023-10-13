@@ -29,8 +29,8 @@ export const ApiRequest = {
   createIssue: environment.urlBackend + 'issues-Create',
   updateIssue: environment.urlBackend + 'issues-Update',
 
-  //clients
-  getClients: environment.urlBackend + 'clients-getAllClients',
+  //entities
+  getEntities: environment.urlBackend + 'entities-GetAll',
 
   //utils
   getComunasByIdRegion: environment.urlBackend + 'common/comuns',
