@@ -29,7 +29,18 @@
       </div>
 
       <div class="card-body">
-        <a [routerLink]="['create']" class="btn btn-primary">Agregar issue</a>
+        <div class="row">
+          <a [routerLink]="['create']" class="btn btn-primary">Agregar issue</a>
+          <select
+            id="statusSelect"
+            class="form-control"
+            style="width: 100px; margin-left: 25px"
+            (change)="changeStatus()"
+          >
+            <option value="all">Todos</option>
+            <option value="pending" selected>Pendientes</option>
+          </select>
+        </div>
         <table
           datatable
           [dtOptions]="dtOptions"

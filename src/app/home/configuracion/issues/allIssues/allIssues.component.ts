@@ -26,6 +26,7 @@ export class AllIssuesComponent implements OnInit {
   type = [];
   section = [];
   date = new Date();
+  statusSelected = 'pending';
   constructor(
     private titleService: Title,
     private spinner: NgxSpinnerService,
@@ -60,26 +61,7 @@ export class AllIssuesComponent implements OnInit {
       [4, 'desc'],
     ];
     this.apiService = new ApiService(this.http);
-    this.apiService.getService(ApiRequest.getIssues).subscribe({
-      next: (resp) => {
-        if (resp.status === 401 || resp.status === 403) {
-          this.router.navigate(['/login']);
-          return;
-        }
-        this.issues = resp.result;
-        this.dtTrigger.next(this.dtOptions);
 
-        this.spinner.hide();
-      },
-      error: (error) => {
-        if (error.status === 401 || error.status === 403) {
-          this.router.navigate(['/login']);
-          return;
-        }
-        this.spinner.hide();
-        this.alertSV.alertBasic('Error', error.error.msg, 'error');
-      },
-    });
     this.apiService.getService(ApiRequest.reportIssue).subscribe({
       next: (resp) => {
         if (resp.status === 401 || resp.status === 403) {
@@ -99,6 +81,70 @@ export class AllIssuesComponent implements OnInit {
         this.alertSV.alertBasic('Error', error.error.msg, 'error');
       },
     });
+    this.getIssues();
+  }
+
+  private getIssues() {
+    this.apiService
+      .postService(ApiRequest.getIssues, {
+        status: this.statusSelected,
+      })
+      .subscribe({
+        next: (resp) => {
+          if (resp.status === 401 || resp.status === 403) {
+            this.router.navigate(['/login']);
+            return;
+          }
+          this.issues = resp.result;
+          this.dtTrigger.next(this.dtOptions);
+
+          this.spinner.hide();
+        },
+        error: (error) => {
+          if (error.status === 401 || error.status === 403) {
+            this.router.navigate(['/login']);
+            return;
+          }
+          this.spinner.hide();
+          this.alertSV.alertBasic('Error', error.error.msg, 'error');
+        },
+      });
+  }
+
+  changeStatus() {
+    this.spinner.show();
+    this.statusSelected = (<HTMLInputElement>(
+      document.getElementById('statusSelect')
+    )).value;
+    this.apiService
+      .postService(ApiRequest.getIssues, {
+        status: this.statusSelected,
+      })
+      .subscribe({
+        next: (resp) => {
+          if (resp.status === 401 || resp.status === 403) {
+            this.router.navigate(['/login']);
+            return;
+          }
+          this.issues = resp.result;
+          //destroy table
+          this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+            // Destroy the table first
+            dtInstance.destroy();
+          });
+          this.dtTrigger.next(this.dtOptions);
+
+          this.spinner.hide();
+        },
+        error: (error) => {
+          if (error.status === 401 || error.status === 403) {
+            this.router.navigate(['/login']);
+            return;
+          }
+          this.spinner.hide();
+          this.alertSV.alertBasic('Error', error.error.msg, 'error');
+        },
+      });
   }
 
   rerender(): void {
