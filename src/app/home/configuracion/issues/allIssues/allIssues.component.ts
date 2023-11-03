@@ -51,10 +51,6 @@ export class AllIssuesComponent implements OnInit {
         targets: [3],
         searchable: false,
       },
-      {
-        targets: [2],
-        searchable: false,
-      },
     ];
     this.dtOptions.order = [
       [5, 'desc'],
