@@ -1,4 +1,4 @@
-export interface Client {
+export interface Entidad {
   rut: string;
   nombre: string;
   giro: string;
@@ -9,4 +9,5 @@ export interface Client {
   id_region: number;
   comuna: string;
   id_comuna: number;
+  tipo: number;
 }

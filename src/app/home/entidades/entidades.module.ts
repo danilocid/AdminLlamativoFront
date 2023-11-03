@@ -10,8 +10,8 @@ import { CreateComponent } from './create/create.component';
 @NgModule({
   imports: [
     CommonModule,
-    EntidadesRoutingModule,
     DataTablesModule.forRoot(),
+    EntidadesRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     NgSelectModule,

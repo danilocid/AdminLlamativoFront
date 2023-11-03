@@ -31,10 +31,14 @@ export const ApiRequest = {
 
   //entities
   getEntities: environment.urlBackend + 'entities-GetAll',
+  updateEntity: environment.urlBackend + 'entities-Update',
+  createEntity: environment.urlBackend + 'entities-Create',
+  getEntityByRut: environment.urlBackend + 'entities-GetEntityByRut',
 
   //utils
-  getComunasByIdRegion: environment.urlBackend + 'common/comuns',
-  getRegiones: environment.urlBackend + 'common/regions',
+  getComunasByIdRegion:
+    environment.urlBackend + 'utils-getAllComunasByRegionId',
+  getRegiones: environment.urlBackend + 'utils-getAllRegions',
   getTipoDocumento: environment.urlBackend + 'utils-getAllTipoDocumento',
   getMedioPago: environment.urlBackend + 'utils-getAllMedioPago',
 

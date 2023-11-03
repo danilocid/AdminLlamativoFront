@@ -7,7 +7,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ApiRequest } from 'src/app/shared/constants';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { ApiService } from 'src/app/shared/services/ApiService';
-import { Client } from 'src/app/shared/models/client.model';
+import { Entidad } from 'src/app/shared/models/entidad.model';
 import { validarRut } from 'src/app/shared/utils/validaRut';
 
 @Component({
@@ -19,7 +19,7 @@ export class CreateComponent implements OnInit {
   private apiService!: ApiService;
   clientForm: FormGroup;
   rutCliente = '';
-  cliente: Client = {} as Client;
+  cliente: Entidad = {} as Entidad;
   title: string = '';
   regions: any[] = [];
   comunas: any[] = [];
@@ -55,6 +55,7 @@ export class CreateComponent implements OnInit {
       mail: ['', [Validators.required, Validators.email]],
       telefono: ['', [Validators.pattern('^[0-9]*$'), Validators.minLength(8)]],
       giro: ['', [Validators.required]],
+      tipo: ['B'],
     });
     this.getRegions();
     if (this.rutCliente != null) {
@@ -66,9 +67,11 @@ export class CreateComponent implements OnInit {
   getRegions() {
     this.apiService.getService(ApiRequest.getRegiones).subscribe({
       next: (response: any) => {
-        this.regions = response;
-
-        this.spinner.hide();
+        this.regions = response.data;
+        console.log(this.rutCliente);
+        if (this.rutCliente == null) {
+          this.spinner.hide;
+        }
       },
       error: (error: any) => {
         this.spinner.hide();
@@ -78,10 +81,12 @@ export class CreateComponent implements OnInit {
   }
   getComunas(idRegion: string) {
     this.apiService
-      .getService(ApiRequest.getComunasByIdRegion + '/' + idRegion)
+      .postService(ApiRequest.getComunasByIdRegion, {
+        regionid: idRegion,
+      })
       .subscribe({
         next: (response: any) => {
-          this.comunas = response;
+          this.comunas = response.data;
           this.spinner.hide();
         },
         error: (error: any) => {
@@ -96,23 +101,25 @@ export class CreateComponent implements OnInit {
     //remove validation from rut
     this.clientForm.get('rut')?.clearValidators();
     this.apiService
-      .getService(ApiRequest.getEntities + '/' + this.rutCliente)
+      .postService(ApiRequest.getEntityByRut, {
+        rut: this.rutCliente,
+      })
       .subscribe({
         next: (response: any) => {
-          this.cliente = response;
+          this.cliente = response.data;
           this.clientForm.patchValue({
             rut: this.cliente.rut,
             nombre: this.cliente.nombre,
             direccion: this.cliente.direccion,
-            comuna: this.cliente.id_comuna,
-            region: this.cliente.id_region,
+            comuna: this.cliente.id_comuna.toString(),
+            region: this.cliente.id_region.toString(),
             mail: this.cliente.mail,
             telefono: this.cliente.telefono,
             giro: this.cliente.giro,
+            tipo: this.cliente.tipo,
           });
           //set the rut to readonly
           this.getComunas(this.cliente.id_region.toString());
-          this.spinner.hide();
         },
         error: (error: any) => {
           this.spinner.hide();
@@ -142,7 +149,7 @@ export class CreateComponent implements OnInit {
         control.markAsTouched();
       });
     }
-
+    console.log(this.clientForm.value);
     this.spinner.show();
     if (this.rutCliente == '' || this.rutCliente == null) {
       //reescribe el rut para que sea valido
@@ -151,16 +158,17 @@ export class CreateComponent implements OnInit {
         ?.setValue(this.clientForm.get('rut')?.value.replace(/\./g, ''));
       let body = {
         rut: this.clientForm.get('rut')?.value,
-        name: this.clientForm.get('nombre')?.value,
-        activity: this.clientForm.get('giro')?.value,
-        address: this.clientForm.get('direccion')?.value,
-        commune: +this.clientForm.get('comuna')?.value,
+        nombre: this.clientForm.get('nombre')?.value,
+        giro: this.clientForm.get('giro')?.value,
+        direccion: this.clientForm.get('direccion')?.value,
+        comuna: +this.clientForm.get('comuna')?.value,
         region: +this.clientForm.get('region')?.value,
-        email: this.clientForm.get('mail')?.value,
-        phone: this.clientForm.get('telefono')?.value.toString(),
+        mail: this.clientForm.get('mail')?.value,
+        telefono: this.clientForm.get('telefono')?.value.toString(),
+        tipo: this.clientForm.get('tipo')?.value,
       };
       //se crea el cliente
-      this.apiService.postService(ApiRequest.getEntities, body).subscribe({
+      this.apiService.postService(ApiRequest.createEntity, body).subscribe({
         next: (response: any) => {
           this.spinner.hide();
           if (response.status == 401) {
@@ -184,33 +192,33 @@ export class CreateComponent implements OnInit {
         ?.setValue(this.clientForm.get('rut')?.value.replace(/\./g, ''));
       //se edita el cliente
       let body = {
-        name: this.clientForm.get('nombre')?.value,
-        activity: this.clientForm.get('giro')?.value,
-        address: this.clientForm.get('direccion')?.value,
-        commune: +this.clientForm.get('comuna')?.value,
+        rut: this.clientForm.get('rut')?.value,
+        nombre: this.clientForm.get('nombre')?.value,
+        giro: this.clientForm.get('giro')?.value,
+        direccion: this.clientForm.get('direccion')?.value,
+        comuna: +this.clientForm.get('comuna')?.value,
         region: +this.clientForm.get('region')?.value,
-        email: this.clientForm.get('mail')?.value,
-        phone: this.clientForm.get('telefono')?.value.toString(),
+        mail: this.clientForm.get('mail')?.value,
+        telefono: this.clientForm.get('telefono')?.value.toString(),
+        tipo: this.clientForm.get('tipo')?.value,
       };
-      this.apiService
-        .patchService(ApiRequest.getEntities + '/' + this.rutCliente, body)
-        .subscribe({
-          next: (response: any) => {
-            this.spinner.hide();
-            if (response.status == 401) {
-              this.router.navigate(['/login']);
-              return;
-            }
-            this.spinner.hide();
-            this.alertSV.alertBasic('Exito', 'Cliente editado', 'success');
-            this.router.navigate(['/home/clientes']);
-          },
-          error: (error: any) => {
-            this.spinner.hide();
-            console.log(error.error);
-            this.alertSV.alertBasic('Error', error.error.error, 'error');
-          },
-        });
+      this.apiService.postService(ApiRequest.updateEntity, body).subscribe({
+        next: (response: any) => {
+          this.spinner.hide();
+          if (response.status == 401) {
+            this.router.navigate(['/login']);
+            return;
+          }
+          this.spinner.hide();
+          this.alertSV.alertBasic('Exito', 'Cliente editado', 'success');
+          // this.router.navigate(['/home/entidades']);
+        },
+        error: (error: any) => {
+          this.spinner.hide();
+          console.log(error.error);
+          this.alertSV.alertBasic('Error', error.error.error, 'error');
+        },
+      });
     }
   }
 }

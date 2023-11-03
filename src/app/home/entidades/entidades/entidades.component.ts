@@ -9,7 +9,7 @@ import { HttpClient } from '@angular/common/http';
 import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
-import { Client } from 'src/app/shared/models/client.model';
+import { Entidad } from 'src/app/shared/models/entidad.model';
 @Component({
   selector: 'app-entidades',
   templateUrl: './entidades.component.html',
@@ -21,7 +21,7 @@ export class EntidadesComponent implements OnInit {
   dtTrigger: Subject<any> = new Subject<any>();
   dtOptions: DataTables.Settings = {};
   private apiService!: ApiService;
-  clients: Client[] = [];
+  entidades: Entidad[] = [];
 
   constructor(
     private titleService: Title,
@@ -38,13 +38,13 @@ export class EntidadesComponent implements OnInit {
   ngOnInit(): void {
     this.dtOptions = FormatDataTableGlobal();
     this.apiService = new ApiService(this.http);
-    this.apiService.getService(ApiRequest.getEntities + '?t=p').subscribe({
+    this.apiService.getService(ApiRequest.getEntities + '?t=b').subscribe({
       next: (resp) => {
         if (resp.status === 401 || resp.status === 403) {
           this.router.navigate(['/login']);
           return;
         }
-        this.clients = resp.data;
+        this.entidades = resp.data;
         this.dtTrigger.next(this.dtOptions);
         this.spinner.hide();
       },

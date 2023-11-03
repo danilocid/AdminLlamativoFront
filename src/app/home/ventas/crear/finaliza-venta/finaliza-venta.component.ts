@@ -5,7 +5,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ApiRequest } from 'src/app/shared/constants';
 import { ApiService } from 'src/app/shared/services/ApiService';
 import { AlertService } from 'src/app/shared/services/alert.service';
-import { Client } from '../../../../shared/models/client.model';
+import { Entidad } from '../../../../shared/models/entidad.model';
 import { Router } from '@angular/router';
 import { ProductCart } from 'src/app/shared/models/product.model';
 import { DocumentType } from 'src/app/shared/models/documentType.model';
@@ -19,7 +19,7 @@ import { PaymentMethod } from 'src/app/shared/models/paymentMethod.model';
 export class FinalizaVentaComponent implements OnInit {
   clientForm: FormGroup;
   private apiService!: ApiService;
-  clients: Client[] = [];
+  clients: Entidad[] = [];
   documentTypes: DocumentType[] = [];
   medioDePago: PaymentMethod[] = [];
 
