@@ -39,8 +39,7 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
-.firebase/hosting.ZGlzdFxmcm9udA.cache
-
+.firebase/
 #sonarqube
 /.scannerwork
 .firebase/
