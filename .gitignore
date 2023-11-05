@@ -6,12 +6,10 @@
 /out-tsc
 /bazel-out
 
-/.firebase
 # Node
 /node_modules
 npm-debug.log
 yarn-error.log
-.firebase/*
 # IDEs and editors
 .idea/
 .project
@@ -39,7 +37,6 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
-.firebase/
+.firebase/*
 #sonarqube
 /.scannerwork
-.firebase/
