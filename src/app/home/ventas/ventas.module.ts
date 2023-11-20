@@ -26,6 +26,6 @@ import { VerVentaComponent } from './verVenta/verVenta.component';
     FinalizaVentaComponent,
     VerVentaComponent,
   ],
-  exports: [],
+  exports: [ProductoComponent],
 })
 export class VentasModule {}

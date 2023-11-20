@@ -12,11 +12,11 @@ import { DocumentType } from 'src/app/shared/models/documentType.model';
 import { PaymentMethod } from 'src/app/shared/models/paymentMethod.model';
 
 @Component({
-  selector: 'app-finaliza-venta',
-  templateUrl: './finaliza-venta.component.html',
-  styleUrls: ['./finaliza-venta.component.css'],
+  selector: 'app-finalizaRecepcion',
+  templateUrl: './finalizaRecepcion.component.html',
+  styleUrls: ['./finalizaRecepcion.component.css'],
 })
-export class FinalizaVentaComponent implements OnInit {
+export class FinalizaRecepcionComponent implements OnInit {
   clientForm: FormGroup;
   private apiService!: ApiService;
   clients: Entidad[] = [];
@@ -36,14 +36,14 @@ export class FinalizaVentaComponent implements OnInit {
   ngOnInit() {
     this.spinner.show();
     this.clientForm = this.fb.group({
-      id_cliente: ['Buscar cliente', Validators.required],
+      id_cliente: ['Buscar proveedor', Validators.required],
       id_medio_pago: ['Medio de pago', Validators.required],
       id_tipo_documento: ['Tipo documento', Validators.required],
       numero_documento: ['1', Validators.required],
     });
     this.apiService = new ApiService(this.http);
 
-    this.apiService.getService(ApiRequest.getEntities + '?t=c').subscribe({
+    this.apiService.getService(ApiRequest.getEntities + '?t=p').subscribe({
       next: (resp) => {
         console.log(resp);
         this.clients = resp.data;
@@ -114,54 +114,49 @@ export class FinalizaVentaComponent implements OnInit {
       );
       return;
     } else {
-      var monto_neto = 0;
-      var monto_imp = 0;
       var costo_neto = 0;
       var costo_imp = 0;
+      var totalUnits = 0;
       //calculo de montos
       this.productsCart.forEach((element) => {
-        monto_neto += element.venta_neto * element.quantity;
-        monto_imp += element.venta_imp * element.quantity;
         costo_neto += element.costo_neto * element.quantity;
         costo_imp += element.costo_imp * element.quantity;
+        totalUnits += element.quantity;
       });
       let saleDetail = [];
       this.productsCart.forEach((element) => {
         saleDetail.push({
           productId: element.id,
           quantity: element.quantity,
-          net: element.venta_neto,
-          tax: element.venta_imp,
           netCost: element.costo_neto,
           taxCost: element.costo_imp,
         });
       });
       this.apiService
-        .postService(ApiRequest.createSale, {
+        .postService(ApiRequest.createRecepcion, {
           rut: this.clientForm.value.id_cliente,
-          paymentMethodId: this.clientForm.value.id_medio_pago,
-          documentTypeId: this.clientForm.value.id_tipo_documento,
-          documentNumber: this.clientForm.value.numero_documento,
+          paymentMethodId: +this.clientForm.value.id_medio_pago,
+          documentTypeId: +this.clientForm.value.id_tipo_documento,
+          documentNumber: +this.clientForm.value.numero_documento,
           saleDetails: saleDetail,
-          totalNet: monto_neto,
-          totalTax: monto_imp,
           totalNetCost: costo_neto,
           totalTaxCost: costo_imp,
+          totalUnits: totalUnits,
         })
         .subscribe({
           next: (resp) => {
             this.spinner.hide();
             this.alertSV.alertBasic(
               'Aviso',
-              'Venta generada correctamente',
+              'Recepcion generada correctamente',
               'success'
             );
-            this.router.navigate(['/ventas']);
+            this.router.navigate(['/recepciones']);
           },
           error: (error) => {
             this.spinner.hide();
             this.alertSV.alertBasic(
-              'Error al generar la venta',
+              'Error al generar la recepcion',
               error.error.msg,
               'error'
             );

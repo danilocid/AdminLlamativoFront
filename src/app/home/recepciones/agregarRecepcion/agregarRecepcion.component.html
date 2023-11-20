@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
-        <h1 class="m-0">Agregar venta</h1>
+        <h1 class="m-0">Agregar recepcion</h1>
       </div>
       <!-- /.col -->
 
@@ -17,7 +17,7 @@
     <div class="col-7">
       <div class="card">
         <div class="card-header">
-          <h4 class="card-title">Detalle de la venta</h4>
+          <h4 class="card-title">Detalle de la recepcion</h4>
         </div>
         <div class="card-body">
           <table class="table" *ngIf="productsCart.length != 0">
@@ -25,7 +25,9 @@
               <tr>
                 <th>Producto</th>
                 <th>Cantidad</th>
-                <th>Precio</th>
+                <th>Neto</th>
+                <th>IVA</th>
+                <th>Total</th>
                 <th>Subtotal</th>
                 <th>Acciones</th>
               </tr>
@@ -34,9 +36,11 @@
               <tr *ngFor="let item of productsCart">
                 <td>{{ item.descripcion }}</td>
                 <td>{{ item.quantity }}</td>
-                <td>{{ item.venta_imp + item.venta_neto }}</td>
+                <td>{{ item.costo_neto }}</td>
+                <td>{{ item.costo_imp }}</td>
+                <td>{{ item.costo_neto + item.costo_imp }}</td>
                 <td>
-                  {{ item.quantity * (item.venta_imp + item.venta_neto) }}
+                  {{ item.quantity * (item.costo_neto + item.costo_imp) }}
                 </td>
                 <td>
                   <button
@@ -87,23 +91,23 @@
                 [disabled]="!canSell()"
                 (click)="changeFunctionalityToPayment()"
               >
-                Pagar <i class="far fa-check-circle"></i>
+                Agregar <i class="far fa-check-circle"></i>
               </button>
             </div>
           </div>
         </div>
       </div>
     </div>
-
     <div class="col-5">
       <app-producto
         *ngIf="sidePanel == 'Productos'"
+        [type]="'Recepcion'"
         (productChange)="addProduct($event)"
       ></app-producto>
-      <app-finaliza-venta
-        *ngIf="sidePanel == 'Pago'"
+      <app-finalizaRecepcion
+        *ngIf="sidePanel == 'Finalizar'"
         [productsCart]="productsCart"
-      ></app-finaliza-venta>
+      ></app-finalizaRecepcion>
     </div>
   </div>
 </section>

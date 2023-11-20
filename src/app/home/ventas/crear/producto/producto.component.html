@@ -1,40 +1,56 @@
-<form [formGroup]="productForm" (submit)="addProduct()" class="form">
-  <div class="form-group">
-    <ng-select
-      formControlName="id"
-      id=""
-      name=""
-      (keyup)="addProductEnter($event)"
-      (change)="onChangeProduct($event)"
-      required
-    >
-      <option value="" selected disabled>Seleccione</option>
-      <ng-option *ngFor="let item of products" value="{{ item.id }}">
-        {{ item.descripcion }} - {{ item.cod_barras }} -
-        {{ item.cod_interno }}
-      </ng-option>
-    </ng-select>
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-title">Productos</h4>
+    <div class="card-tools">
+      <button type="button" class="btn btn-tool" (click)="getProducts()">
+        <i class="fas fa-sync-alt"></i>
+      </button>
+    </div>
   </div>
-  <div class="form-group">
-    <span class="form-group-text">Cantidad</span>
-    <input
-      type="number"
-      min="1"
-      class="form-control"
-      formControlName="quantity"
-    />
+  <div class="card-body">
+    <form [formGroup]="productForm" (submit)="addProduct()" class="form">
+      <div class="form-group">
+        <ng-select
+          formControlName="id"
+          id=""
+          name=""
+          (change)="onChangeProduct($event)"
+          required
+        >
+          <option value="" selected disabled>Seleccione</option>
+          <ng-option *ngFor="let item of products" value="{{ item.id }}">
+            {{ item.descripcion }} - {{ item.cod_barras }} -
+            {{ item.cod_interno }}
+          </ng-option>
+        </ng-select>
+      </div>
+      <div class="form-group">
+        <span class="form-group-text">Cantidad</span>
+        <input
+          type="number"
+          min="1"
+          class="form-control"
+          formControlName="quantity"
+        />
+      </div>
+      <div class="form-group">
+        <span class="form-group-text">Precio</span>
+        <input
+          type="number"
+          min="1"
+          class="form-control"
+          formControlName="price"
+        />
+      </div>
+      <div class="form-group">
+        <button
+          class="btn btn-outline-secondary"
+          type="button"
+          (click)="addProduct()"
+        >
+          Agregar <i class="fa-solid fa-add"></i>
+        </button>
+      </div>
+    </form>
   </div>
-  <div class="form-group">
-    <span class="form-group-text">Precio</span>
-    <input type="number" min="1" class="form-control" formControlName="price" />
-  </div>
-  <div class="form-group">
-    <button
-      class="btn btn-outline-secondary"
-      type="button"
-      (click)="addProduct()"
-    >
-      Agregar <i class="fa-solid fa-add"></i>
-    </button>
-  </div>
-</form>
+</div>

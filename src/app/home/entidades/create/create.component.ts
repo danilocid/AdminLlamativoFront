@@ -177,7 +177,7 @@ export class CreateComponent implements OnInit {
           }
           this.spinner.hide();
           this.alertSV.alertBasic('Exito', 'Cliente creado', 'success');
-          this.router.navigate(['/home/clientes']);
+          this.router.navigate(['/clientes']);
         },
         error: (error: any) => {
           this.spinner.hide();
@@ -211,7 +211,6 @@ export class CreateComponent implements OnInit {
           }
           this.spinner.hide();
           this.alertSV.alertBasic('Exito', 'Cliente editado', 'success');
-          // this.router.navigate(['/home/entidades']);
         },
         error: (error: any) => {
           this.spinner.hide();

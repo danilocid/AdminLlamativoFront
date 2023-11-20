@@ -15,6 +15,6 @@ export class NavbarComponent implements OnInit {
     localStorage.removeItem('token');
     localStorage.clear();
     sessionStorage.clear();
-    this.utSV.navigateToPath('/login');
+    window.location.reload();
   }
 }

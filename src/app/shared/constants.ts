@@ -49,6 +49,11 @@ export const ApiRequest = {
 
   //reports
   dashboardReport: environment.urlBackend + 'products-GetResume',
+
+  //recepciones
+  getRecepciones: environment.urlBackend + 'recepciones-GetAll',
+  getOneRecepcion: environment.urlBackend + 'recepciones-GetOne',
+  createRecepcion: environment.urlBackend + 'recepciones-Add',
 };
 export function FormatDataTableGlobal(): any {
   return {

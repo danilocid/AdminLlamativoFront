@@ -42,7 +42,18 @@
         </li>
         <li class="nav-item">
           <a
-            [routerLink]="['articulos', 'ajustes']"
+            [routerLink]="['recepciones']"
+            [routerLinkActive]="['recepciones']"
+            [class.active]="isActive('recepciones')"
+            class="nav-link"
+          >
+            <i class="nav-icon fas fa-boxes"></i>
+            <p>Recepciones</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            [routerLink]="['ajustes']"
             [routerLinkActive]="['active']"
             [class.active]="isActive('ajustes')"
             class="nav-link"

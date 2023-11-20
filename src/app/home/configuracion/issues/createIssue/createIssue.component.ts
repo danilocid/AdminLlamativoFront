@@ -122,7 +122,7 @@ export class CreateIssueComponent implements OnInit {
           'Issue creado correctamente',
           'success'
         );
-        this.uS.navigateToPath('home/configuracion/issues');
+        this.uS.navigateToPath('configuracion/issues');
       },
       error: (err) => {
         this.spinner.hide();
@@ -149,7 +149,7 @@ export class CreateIssueComponent implements OnInit {
           'Issue actualizado correctamente',
           'success'
         );
-        this.uS.navigateToPath('home/configuracion/issues');
+        this.uS.navigateToPath('configuracion/issues');
       },
       error: (err) => {
         this.spinner.hide();

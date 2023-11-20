@@ -142,7 +142,7 @@ export class CreateComponent implements OnInit {
         this.spinner.hide();
         this.alertSV.alertBasic('Exito', 'Articulo creado', 'success');
 
-        this.router.navigate(['/home/articulos']);
+        this.router.navigate(['/articulos']);
       },
       error: (err) => {
         this.spinner.hide();
@@ -185,7 +185,7 @@ export class CreateComponent implements OnInit {
                 'Articulo editado correctamente',
                 'success'
               );
-              this.router.navigate(['/home/articulos']);
+              this.router.navigate(['/articulos']);
             },
             error: (err) => {
               this.spinner.hide();

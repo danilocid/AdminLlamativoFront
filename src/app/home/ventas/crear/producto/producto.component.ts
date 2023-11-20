@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Product, ProductCart } from 'src/app/shared/models/product.model';
@@ -17,6 +17,8 @@ export class ProductoComponent implements OnInit {
   private apiService!: ApiService;
   productsCart: ProductCart[] = [];
   @Output() productChange = new EventEmitter<ProductCart>();
+  @Input() type = 'venta';
+  params = '?stock=true';
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
@@ -25,58 +27,78 @@ export class ProductoComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.spinner.show();
     this.productForm = this.fb.group({
       id: ['Buscar producto', Validators.required],
       quantity: [1, Validators.required],
       price: [0, Validators.required],
     });
+    if (this.type != 'venta') {
+      this.params = '';
+    }
+    this.getProducts();
+  }
+
+  getProducts() {
+    this.spinner.show();
     this.apiService = new ApiService(this.http);
 
-    this.apiService.getService(ApiRequest.getArticulos + '?s=true').subscribe({
-      next: (resp) => {
-        this.products = resp.result;
-        this.spinner.hide();
-      },
-      error: (error) => {
-        this.spinner.hide();
-        this.alertSV.alertBasic('Error', error.error.msg, 'error');
-      },
-    });
+    this.apiService
+      .getService(ApiRequest.getArticulos + this.params)
+      .subscribe({
+        next: (resp) => {
+          this.products = resp.result;
+          this.spinner.hide();
+        },
+        error: (error) => {
+          this.spinner.hide();
+          this.alertSV.alertBasic('Error', error.error.msg, 'error');
+        },
+      });
   }
 
   addProduct() {
     const product = this.products.find(
       (p) => p.id.toString() === this.productForm.value.id.toString()
     );
-    if (product) {
-      var quantity = this.productForm.value.quantity;
-      if (quantity > product.stock) {
-        quantity = product.stock;
-      }
-      //get the price with tax, from the form, and split it on two variables, netSale and taxSale (taxSale = 19% of price)
-      let price = this.productForm.value.price;
-      let taxSale = price * 0.19;
-      let netSale = price - taxSale;
+    if (this.type === 'venta') {
+      if (product) {
+        var quantity = this.productForm.value.quantity;
+        if (quantity > product.stock) {
+          quantity = product.stock;
+        }
+        //get the price with tax, from the form, and split it on two variables, netSale and taxSale (taxSale = 19% of price)
+        let price = this.productForm.value.price;
+        let taxSale = price * 0.19;
+        let netSale = price - taxSale;
 
-      let productCart = {
-        ...product,
-        venta_neto: netSale,
-        venta_imp: taxSale,
-        quantity: quantity,
-      };
-      this.productChange.emit(productCart);
-      /* const productCart = this.productsCart.find(
-        (p) => p.id.toString() === this.productForm.value.id.toString()
-      );
-      if (productCart) {
-        productCart.quantity += this.productForm.value.quantity;
-      } else {
-        this.productsCart.push({
+        let productCart = {
           ...product,
-          quantity: this.productForm.value.quantity,
-        });
-      } */
+          venta_neto: netSale,
+          venta_imp: taxSale,
+          quantity: quantity,
+        };
+        this.productChange.emit(productCart);
+      }
+    } else {
+      if (product) {
+        var quantity = this.productForm.value.quantity;
+        if (quantity > product.stock) {
+          quantity = product.stock;
+        }
+        //get the price with tax, from the form, and split it on two variables, netSale and taxSale (taxSale = 19% of price)
+        let price = this.productForm.value.price;
+        let taxCost = price * 0.19;
+        let netCost = price - taxCost;
+
+        let productCart = {
+          ...product,
+          costo_neto: netCost,
+          costo_imp: taxCost,
+          quantity: quantity,
+        };
+        this.productChange.emit(productCart);
+        console.log(productCart);
+      }
     }
     this.productForm.controls['quantity'].setValue(1);
     this.productForm.controls['id'].setValue('Buscar producto');
@@ -88,9 +110,15 @@ export class ProductoComponent implements OnInit {
         p.id.toString() === this.productForm.controls['id'].value.toString()
     );
     if (product) {
-      this.productForm.controls['price'].setValue(
-        product.venta_imp + product.venta_neto
-      );
+      if (this.type === 'venta') {
+        this.productForm.controls['price'].setValue(
+          product.venta_imp + product.venta_neto
+        );
+      } else {
+        this.productForm.controls['price'].setValue(
+          product.costo_imp + product.costo_neto
+        );
+      }
     }
   }
   addProductEnter(event: any) {

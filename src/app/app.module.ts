@@ -10,10 +10,19 @@ import { LoginComponent } from './login/login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DataTablesModule } from 'angular-datatables';
 import { registerLocaleData } from '@angular/common';
+import { SidebarComponent } from './home/partials/sidebar/sidebar.component';
+import { NavbarComponent } from './home/partials/navbar/navbar.component';
+import { FooterComponent } from './home/partials/footer/footer.component';
 registerLocaleData(localeEs, 'es');
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent],
+  declarations: [
+    AppComponent,
+    LoginComponent,
+    SidebarComponent,
+    NavbarComponent,
+    FooterComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,

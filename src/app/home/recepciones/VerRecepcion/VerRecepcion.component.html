@@ -1,0 +1,108 @@
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">Ver recepcion</h1>
+      </div>
+      <!-- /.col -->
+
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</div>
+<section class="content">
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">Ver recepcion {{ idRecepcion }}</h4>
+      </div>
+
+      <div class="card-body">
+        <div class="row">
+          <div class="col">
+            <p>Id: {{ dataRecepcion.id }}</p>
+
+            <p>
+              Costo Neto:
+              {{
+                dataRecepcion.costo_neto
+                  | currency : "CLP" : "symbol-narrow" : "1.0-0"
+              }}
+            </p>
+            <p>
+              Costo Imp:
+              {{
+                dataRecepcion.costo_imp
+                  | currency : "CLP" : "symbol-narrow" : "1.0-0"
+              }}
+            </p>
+            <p>
+              Costo Total:
+              {{
+                dataRecepcion.costo_neto + dataRecepcion.costo_imp
+                  | currency : "CLP" : "symbol-narrow" : "1.0-0"
+              }}
+            </p>
+          </div>
+          <div class="col">
+            <p>
+              Fecha:
+              {{ dataRecepcion.fecha | date : "dd/MM/yyyy" }}
+            </p>
+            <p>
+              Proveedor:
+              {{ dataRecepcion.nombre | titlecase }} ({{
+                dataRecepcion.proveedor
+              }})
+            </p>
+            <p>
+              Documento: {{ dataRecepcion.tipo | titlecase }} -
+              {{ dataRecepcion.documento }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">Ver articulos recepcion</h4>
+      </div>
+
+      <div class="card-body">
+        <table
+          datatable
+          [dtOptions]="dtOptions"
+          [dtTrigger]="dtTrigger"
+          class="row-border hover"
+          aria-label="Tabla"
+        >
+          <thead class="table-light">
+            <tr>
+              <th>Codigo interno</th>
+              <th>Descripcion</th>
+              <th>Cantidad</th>
+              <th>Costo total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of productsRecepcion">
+              <td>{{ item.cod_interno }}</td>
+              <td>{{ item.descripcion }}</td>
+              <td>{{ item.unidades }}</td>
+              <td>
+                {{
+                  item.costo_neto + item.costo_imp
+                    | currency : "CLP" : "symbol-narrow" : "1.0-0"
+                }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>

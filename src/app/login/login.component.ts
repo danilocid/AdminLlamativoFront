@@ -13,7 +13,6 @@ import { AlertService } from '../shared/services/alert.service';
 })
 export class LoginComponent implements OnInit, AfterViewInit {
   loginForm!: FormGroup;
-  logedIn: boolean | null | undefined;
   constructor(
     private spinner: NgxSpinnerService,
     private titleService: Title,
@@ -36,9 +35,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     });
   }
   async ngOnInit(): Promise<void> {
-    this.spinner.show();
-    this.logedIn = await this.authSV.authVerificationCheck();
-    this.spinner.hide();
+    this.authSV.authVerificationCheck();
   }
   onSubmit() {
     if (this.loginForm.invalid) {

@@ -35,13 +35,10 @@ export class AuthService {
   async authVerificationCheck() {
     var token = '';
 
-    if (!localStorage.getItem('token') || '') {
-      this.utSV.navigateToPath('/login');
-
-      return false;
+    if (!localStorage.getItem('token')) {
+      //this.utSV.navigateToPath('/login');
     } else {
-      token = localStorage.getItem('token') || '';
-      return true;
+      this.utSV.navigateToPath('/');
     }
   }
 
@@ -62,6 +59,6 @@ export class AuthService {
     localStorage.removeItem('token');
     localStorage.clear();
     sessionStorage.clear();
-    this.utSV.navigateToPath('/login');
+    window.location.reload();
   }
 }

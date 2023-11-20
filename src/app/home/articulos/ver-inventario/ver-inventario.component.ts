@@ -65,7 +65,7 @@ export class VerInventarioComponent implements OnInit, OnDestroy {
             this.alertSV.alertBasic('Error', resp.message, 'error');
             //set time out of 3 seconds
             setTimeout(() => {
-              this.router.navigate(['/home/articulos/ajustes']);
+              this.router.navigate(['/articulos/ajustes']);
             }, 3000);
           }
           this.movimiento = resp.movimiento[0];

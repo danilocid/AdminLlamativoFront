@@ -54,7 +54,7 @@ export class NewInventoryComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.productForm = this.fb.group({
-      id: [, [Validators.required]],
+      id: [[Validators.required]],
       type: ['1', [Validators.required]],
       quantity: [1, [Validators.required]],
     });
@@ -147,7 +147,6 @@ export class NewInventoryComponent implements OnInit, OnDestroy {
           this.spinner.hide();
           this.alertSV.alertBasic('Exito', 'Ajuste creado', 'success');
           window.location.reload();
-          //this.router.navigate(['/home/articulos/ajustes']);
         },
         error: (error) => {
           if (error.status === 401 || error.status === 403) {
