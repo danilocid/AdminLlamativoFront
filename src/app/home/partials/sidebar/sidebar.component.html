@@ -73,7 +73,17 @@
             <p>Entidades</p>
           </a>
         </li>
-
+        <li class="nav-item">
+          <a
+            [routerLink]="['compras']"
+            [routerLinkActive]="['compras']"
+            [class.active]="isActive('compras')"
+            class="nav-link"
+          >
+            <i class="nav-icon fas fa-file-invoice-dollar"></i>
+            <p>Compras</p>
+          </a>
+        </li>
         <li class="nav-item">
           <a
             [routerLink]="['configuracion', 'issues']"

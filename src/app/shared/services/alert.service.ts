@@ -89,16 +89,24 @@ export class AlertService {
   public alertVerification(
     title: string,
     message: string,
-    type: 'success' | 'error' | 'warning' | 'info' | 'question'
+    confirmText: string,
+    type: 'success' | 'error' | 'warning' | 'info' | 'question',
+    functionToExecute: any
   ) {
-    return this.verificationAlert.fire({
-      title: title,
-      text: message,
-      icon: type,
-      iconColor: '#ffffff',
-      background: '#4EBDAD',
-      confirmButtonText: 'Aceptar',
-    });
+    return this.customAlertNotification
+      .fire({
+        title: title,
+        text: message,
+        icon: type,
+        iconColor: '#ffffff',
+        background: '#4EBDAD',
+        confirmButtonText: confirmText,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          functionToExecute();
+        }
+      });
   }
 
   public verificationAlertWithFunction(

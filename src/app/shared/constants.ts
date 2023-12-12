@@ -54,6 +54,12 @@ export const ApiRequest = {
   getRecepciones: environment.urlBackend + 'recepciones-GetAll',
   getOneRecepcion: environment.urlBackend + 'recepciones-GetOne',
   createRecepcion: environment.urlBackend + 'recepciones-Add',
+
+  //compras
+  getComprasFromDb: environment.urlBackend + 'compras-GetAllFromDb',
+  getComprasFromApi: environment.urlBackend + 'compras-GetAllFromApi',
+  getComprasTipo: environment.urlBackend + 'compras-GetAllTypes',
+  updateCompra: environment.urlBackend + 'compras-UpdateCompra',
 };
 export function FormatDataTableGlobal(): any {
   return {

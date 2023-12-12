@@ -1,0 +1,114 @@
+<div
+  class="modal fade"
+  [ngClass]="{ show: show }"
+  id="staticBackdropLive"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLiveLabel"
+  [ngStyle]="{ display: show ? 'block' : 'none' }"
+  aria-modal="true"
+  role="dialog"
+  style="
+    --bs-modal-margin: 4rem;
+    --bs-modal-border-radius: 8px !important;
+    background: rgba(37, 37, 37, 0.5);
+    backdrop-filter: blur(2px);
+  "
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLiveLabel">
+          Editar compra
+        </h1>
+        <i
+          class="fas fa-times fa-lg"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="cerrarModal()"
+          style="cursor: pointer"
+        ></i>
+      </div>
+
+      <div class="modal-body">
+        <h4>Proveedor: {{ proveedor }}</h4>
+        <h5>{{ tipoDocumento }} - {{ numeroDocumento }}</h5>
+        <form [formGroup]="compraForm" (ngSubmit)="submit()">
+          <div class="form-group">
+            <label for="tipo">Tipo de comrpra</label>
+            <select class="form-control" formControlName="tipo">
+              <option *ngFor="let item of tiposCompra" value="{{ +item.id }}">
+                {{ item.tipo_compra }}
+              </option>
+            </select>
+            <span for="" class="invalid-feedback" *ngIf="isValidField('tipo')"
+              >El tipo de compra es requerido</span
+            >
+          </div>
+          <div class="form-group">
+            <label for="monto_total"> Monto total </label>
+            <input
+              type="number"
+              class="form-control"
+              formControlName="monto_total"
+              placeholder="Monto total"
+              readonly
+            />
+            <span
+              for=""
+              class="invalid-feedback"
+              *ngIf="isValidField('monto_total')"
+              >El monto total es requerido</span
+            >
+          </div>
+          <div class="form-group">
+            <label for="monto_total"> Costo total </label>
+            <input
+              type="number"
+              class="form-control"
+              formControlName="costo_total"
+              placeholder="Costo total"
+            />
+            <span
+              for=""
+              class="invalid-feedback"
+              *ngIf="isValidField('costo_total')"
+              >El costo total es requerido</span
+            >
+          </div>
+          <div class="form-group">
+            <label for="observaciones"> Observaciones </label>
+            <textarea
+              class="form-control"
+              formControlName="observaciones"
+              placeholder="Observaciones"
+            ></textarea>
+
+            <span
+              for=""
+              class="invalid-feedback"
+              *ngIf="isValidField('observaciones')"
+              >Las observaciones son requeridas</span
+            >
+          </div>
+          <div
+            class="row"
+            style="justify-content: center; text-align: center; display: flex"
+          >
+            <button
+              class="btn btn-success"
+              type="submit"
+              style="margin-right: 25px"
+            >
+              Guardar
+            </button>
+            <button class="btn btn-danger" (click)="cerrarModal()">
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
