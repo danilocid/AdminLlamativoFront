@@ -59,6 +59,11 @@
               Obtener datos desde API <i class="fas fa-retweet"></i>
             </button>
           </div>
+          <div style="padding-left: 20px">
+            <button class="btn btn-success" (click)="importFile()">
+              Importar datos <i class="fas fa-upload"></i>
+            </button>
+          </div>
         </div>
         <table
           datatable
@@ -120,3 +125,4 @@
   </div>
 </section>
 <app-editarCompra [show]="showModal" [compra]="compra"></app-editarCompra>
+<app-importFileCompra [show]="showModalImport"> </app-importFileCompra>

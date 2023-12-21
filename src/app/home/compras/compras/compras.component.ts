@@ -28,6 +28,7 @@ export class ComprasComponent implements OnInit {
   dateForm: FormGroup;
   private apiService!: ApiService;
   showModal: boolean = false;
+  showModalImport: boolean = false;
   constructor(
     private titleService: Title,
     private spinner: NgxSpinnerService,
@@ -130,5 +131,9 @@ export class ComprasComponent implements OnInit {
           this.alertSV.alertBasic('Error', err.error.msg, 'error');
         },
       });
+  }
+
+  importFile() {
+    this.showModalImport = true;
   }
 }

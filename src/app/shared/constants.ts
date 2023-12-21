@@ -60,6 +60,7 @@ export const ApiRequest = {
   getComprasFromApi: environment.urlBackend + 'compras-GetAllFromApi',
   getComprasTipo: environment.urlBackend + 'compras-GetAllTypes',
   updateCompra: environment.urlBackend + 'compras-UpdateCompra',
+  importFileCompra: environment.urlBackend + 'compras-ImportFile',
 };
 export function FormatDataTableGlobal(): any {
   return {
