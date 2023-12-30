@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
-        <h1 class="m-0">Compras</h1>
+        <h1 class="m-0">Reporte mensual</h1>
       </div>
       <!-- /.col -->
 
@@ -16,7 +16,7 @@
   <div class="container-fluid">
     <div class="card">
       <div class="card-header">
-        <h4 class="card-title">Listado de compras</h4>
+        <h4 class="card-title">Seleccionar mes y año</h4>
       </div>
 
       <div class="card-body">
@@ -55,26 +55,28 @@
             </div>
           </form>
           <div style="padding-left: 20px">
-            <button (click)="getDataFromApi()" class="btn btn-success">
-              Obtener datos desde API <i class="fas fa-retweet"></i>
-            </button>
-          </div>
-          <div style="padding-left: 20px">
-            <button class="btn btn-success" (click)="importFile()">
-              Importar datos <i class="fas fa-upload"></i>
+            <button class="btn btn-success" (click)="generatePdf()">
+              Generar PDF <i class="fas fa-retweet"></i>
             </button>
           </div>
         </div>
-        <table
-          datatable
-          [dtOptions]="dtOptions"
-          [dtTrigger]="dtTrigger"
-          class="row-border hover"
-          aria-label="Tabla"
-        >
+      </div>
+    </div>
+    <div class="card" *ngIf="data.length != 0">
+      <div class="card-body">
+        <p *ngFor="let item of data">
+          {{ item.title }}:
+          {{
+            item.isMoney ? "$" + (item.value | number) : (item.value | number)
+          }}
+        </p>
+      </div>
+    </div>
+    <div class="card" *ngIf="compras.length != 0">
+      <div class="card-body">
+        <table class="row-border hover table" aria-label="Tabla">
           <thead class="table-light">
             <tr>
-              <th>Id</th>
               <th>Proveedor</th>
               <th>Documento</th>
               <th>Fecha</th>
@@ -82,14 +84,12 @@
               <th>Costo</th>
               <th>Tipo</th>
               <th>Observaciones</th>
-              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let item of compras">
-              <td>{{ item.id }}</td>
               <td>{{ item.nombre }} ({{ item.proveedor }})</td>
-              <td>{{ item.tipo }} - {{ item.documento }}</td>
+              <td>(T{{ item.tipo_documento }}) - {{ item.documento }}</td>
               <td [attr.data-order]="item.fecha_documento">
                 {{ item.fecha_documento | date : "dd/MM/yyyy" : "UTC" }}
               </td>
@@ -111,12 +111,6 @@
               </td>
 
               <td>{{ item.observaciones }}</td>
-
-              <td>
-                <a (click)="editCompra(item)" class="me-1 text-success pointer">
-                  <i class="fas fa-edit"></i>
-                </a>
-              </td>
             </tr>
           </tbody>
         </table>
@@ -124,5 +118,3 @@
     </div>
   </div>
 </section>
-<app-editarCompra [show]="showModal" [compra]="compra"></app-editarCompra>
-<app-importFileCompra [show]="showModalImport"> </app-importFileCompra>

@@ -88,10 +88,22 @@
           <a
             [routerLink]="['configuracion', 'issues']"
             [routerLinkActive]="['active']"
+            [class.active]="isActive('issues')"
             class="nav-link"
           >
             <i class="fas fa-bug nav-icon"></i>
             <p>Issues</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            [routerLink]="['reportes']"
+            [routerLinkActive]="['active']"
+            [class.active]="isActive('reportes')"
+            class="nav-link"
+          >
+            <i class="fas fa-receipt nav-icon"></i>
+            <p>Reportes</p>
           </a>
         </li>
       </ul>

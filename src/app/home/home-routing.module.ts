@@ -42,6 +42,11 @@ const routes: Routes = [
       import('./compras/compras.module').then((m) => m.ComprasModule),
   },
   {
+    path: 'reportes',
+    loadChildren: () =>
+      import('./reportes/reportes.module').then((m) => m.ReportesModule),
+  },
+  {
     // captura cualquier ruta que no este definida
     path: '**',
     redirectTo: '/',
