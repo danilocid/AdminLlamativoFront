@@ -51,7 +51,7 @@ export class ReporteMensualComponent implements OnInit {
   submit() {
     this.data = [];
     this.compras = [];
-    //console.log(this.dateForm.value);
+    console.log(this.dateForm.value);
     this.spinner.show();
     this.apiService = new ApiService(this.http);
     this.apiService
@@ -100,10 +100,7 @@ export class ReporteMensualComponent implements OnInit {
   getCompras() {
     this.apiService = new ApiService(this.http);
     this.apiService
-      .postService(ApiRequest.getComprasFromDb, {
-        month: this.month,
-        year: this.year,
-      })
+      .postService(ApiRequest.getComprasFromDb, this.dateForm.value)
       .subscribe({
         next: (resp) => {
           if (resp.status === 401 || resp.status === 403) {
