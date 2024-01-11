@@ -91,7 +91,7 @@
               <td>{{ item.nombre }} ({{ item.proveedor }})</td>
               <td>(T{{ item.tipo_documento }}) - {{ item.documento }}</td>
               <td [attr.data-order]="item.fecha_documento">
-                {{ item.fecha_documento | date : "dd/MM/yyyy" : "UTC" }}
+                {{ item.fecha_documento | date : "dd/MM/yyyy" : "UTC + 3" }}
               </td>
               <td>
                 ${{
