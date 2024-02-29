@@ -82,9 +82,6 @@ export class ProductoComponent implements OnInit {
     } else {
       if (product) {
         var quantity = this.productForm.value.quantity;
-        if (quantity > product.stock) {
-          quantity = product.stock;
-        }
         //get the price with tax, from the form, and split it on two variables, netSale and taxSale (taxSale = 19% of price)
         let price = this.productForm.value.price;
         let taxCost = price * 0.19;

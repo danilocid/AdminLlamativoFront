@@ -1,0 +1,63 @@
+<div
+  class="modal fade"
+  [ngClass]="{ show: show }"
+  id="staticBackdropLive"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLiveLabel"
+  [ngStyle]="{ display: show ? 'block' : 'none' }"
+  aria-modal="true"
+  role="dialog"
+  style="
+    --bs-modal-margin: 4rem;
+    --bs-modal-border-radius: 8px !important;
+    background: rgba(37, 37, 37, 0.5);
+    backdrop-filter: blur(2px);
+  "
+>
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLiveLabel">
+          Agregar datos de reporte mensual
+        </h1>
+
+        <i
+          class="fas fa-times fa-lg"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="cerrarModal()"
+          style="cursor: pointer"
+        ></i>
+      </div>
+
+      <div class="modal-body">
+        <h4>{{ monthNames[month] }} - {{ year }}</h4>
+        <form [formGroup]="tipoDatoForm" (ngSubmit)="submit()">
+          <div class="form-group" *ngFor="let item of results">
+            <label for="tipo">{{ item.dato }}</label>
+            <input
+              class="form-control"
+              [type]="formDataType(item)"
+              [formControlName]="item.id"
+            />
+            <span
+              for=""
+              class="invalid-feedback"
+              *ngIf="isValidField(item.id.toString())"
+              >{{ item.dato }} es requerido</span
+            >
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-success" (click)="submit()" type="submit">
+          Guardar
+        </button>
+        <button class="btn btn-danger" (click)="cerrarModal()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>

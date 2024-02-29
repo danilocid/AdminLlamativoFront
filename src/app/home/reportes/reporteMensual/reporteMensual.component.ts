@@ -22,8 +22,9 @@ export class ReporteMensualComponent implements OnInit {
   year: any;
   data: { title: string; value: number; isMoney: boolean }[] = [];
   compras: any[] = [];
-
+  haveData = false;
   private apiService!: ApiService;
+  showAddForm = false;
 
   constructor(
     private titleService: Title,
@@ -51,13 +52,15 @@ export class ReporteMensualComponent implements OnInit {
   submit() {
     this.data = [];
     this.compras = [];
-    console.log(this.dateForm.value);
+    //console.log(this.dateForm.value);
     this.spinner.show();
     this.apiService = new ApiService(this.http);
     this.apiService
       .postService(ApiRequest.getReporteMensual, this.dateForm.value)
       .subscribe({
         next: (result: any) => {
+          this.month = this.dateForm.controls['month'].value - 1;
+          this.year = this.dateForm.controls['year'].value;
           //console.log(result);
           let total = 0;
           let totalMoney = 0;
@@ -124,7 +127,7 @@ export class ReporteMensualComponent implements OnInit {
             let montoTotal = 0;
             this.compras.forEach((compra) => {
               if (compra.tipo == element) {
-                let costoTotal =
+                const costoTotal =
                   compra.costo_neto_documento + compra.costo_imp_documento;
                 if (costoTotal != 0) {
                   total++;
@@ -153,7 +156,7 @@ export class ReporteMensualComponent implements OnInit {
             let montoTotal = 0;
             this.compras.forEach((compra) => {
               if (compra.tipo == element) {
-                let costoTotal =
+                const costoTotal =
                   compra.costo_neto_documento + compra.costo_imp_documento;
                 if (costoTotal == 0) {
                   total++;
@@ -177,11 +180,62 @@ export class ReporteMensualComponent implements OnInit {
             }
           });
 
-          this.spinner.hide();
+          this.getReportData();
         },
         error: (err) => {
           this.spinner.hide();
           this.alertSV.alertBasic('Error', err.error.msg, 'error');
+        },
+      });
+  }
+
+  getReportData() {
+    this.apiService = new ApiService(this.http);
+    this.apiService
+      .postService(ApiRequest.getReportData, this.dateForm.value)
+      .subscribe({
+        next: (result: any) => {
+          //console.log(result.result);
+          if (result.result.length == 0) {
+            this.haveData = false;
+          }
+          result.result.forEach((element: any) => {
+            //element.dato retorna el nombre del dato, modificar la primera letra en mayuscula
+            this.haveData = true;
+            this.data.push({
+              title:
+                element.dato.charAt(0).toUpperCase() + element.dato.slice(1),
+              value: element.valor,
+              isMoney: element.isMoney,
+            });
+          });
+          /* if (!this.haveData) {
+            this.getReportDataTypes();
+          } */
+          this.spinner.hide();
+        },
+        error: (error: any) => {
+          console.log(error);
+          this.alertSV.alertBasic('Error', error.error.msg, 'error');
+          this.spinner.hide();
+        },
+      });
+  }
+
+  getReportDataTypes() {
+    this.apiService = new ApiService(this.http);
+    this.apiService
+      .postService(ApiRequest.getTipoDatosReportes, {
+        activo: true,
+      })
+      .subscribe({
+        next: (result: any) => {
+          console.table(result.result);
+        },
+        error: (error: any) => {
+          console.log(error);
+          this.alertSV.alertBasic('Error', error.error.msg, 'error');
+          this.spinner.hide();
         },
       });
   }
@@ -191,7 +245,7 @@ export class ReporteMensualComponent implements OnInit {
     this.data.forEach((element) => {
       if (element.isMoney) {
         //add money format
-        var formatter = new Intl.NumberFormat('es-CL', {
+        const formatter = new Intl.NumberFormat('es-CL', {
           style: 'currency',
           currency: 'CLP',
         });
@@ -207,8 +261,8 @@ export class ReporteMensualComponent implements OnInit {
         ]);
       }
     });
-    let today = new Date();
-    let todayDate =
+    const today = new Date();
+    const todayDate =
       today.getDate() +
       '/' +
       (today.getMonth() + 1) +
@@ -234,8 +288,12 @@ export class ReporteMensualComponent implements OnInit {
       'Noviembre',
       'Diciembre ',
     ];
-    this.month = monthNames[this.month - 1];
-    var header = 'Reporte mensual ' + this.month + '-' + this.year;
+    const monthName = monthNames[this.dateForm.controls['month'].value - 1];
+    const header =
+      'Reporte mensual ' +
+      monthName +
+      '-' +
+      this.dateForm.controls['year'].value;
     const docsRecibidos = [];
     //header for docs recibidos (emisor, fecha, documento, neto, iva, total, tipo, observaciones)
     docsRecibidos.push([
@@ -254,8 +312,8 @@ export class ReporteMensualComponent implements OnInit {
     if (this.compras.length != 0) {
       this.compras.forEach((element) => {
         //format date to dd/mm/yyyy
-        let date = new Date(element.fecha_documento);
-        let fecha =
+        const date = new Date(element.fecha_documento);
+        const fecha =
           date.getDate() +
           '/' +
           (date.getMonth() + 1) +
@@ -263,14 +321,14 @@ export class ReporteMensualComponent implements OnInit {
           date.getFullYear();
 
         //format money
-        var formatter = new Intl.NumberFormat('es-CL', {
+        const formatter = new Intl.NumberFormat('es-CL', {
           style: 'currency',
           currency: 'CLP',
         });
-        let monto = formatter.format(
+        const monto = formatter.format(
           element.monto_neto_documento + element.monto_imp_documento
         );
-        let costo = formatter.format(
+        const costo = formatter.format(
           element.costo_neto_documento + element.costo_imp_documento
         );
         docsRecibidos.push([
@@ -340,5 +398,9 @@ export class ReporteMensualComponent implements OnInit {
     };
 
     pdfMake.createPdf(docDefinition).open();
+  }
+
+  showForm() {
+    this.showAddForm = !this.showAddForm;
   }
 }

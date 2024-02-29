@@ -9,7 +9,8 @@
     "watch": "ng build --watch --configuration production",
     "test": "ng test",
     "deploy": "ng build && firebase deploy",
-    "scanner": "sonar-scanner"
+    "scanner": "sonar-scanner",
+    "lint": "ng lint"
   },
   "private": true,
   "dependencies": {
@@ -38,11 +39,19 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^15.2.10",
+    "@angular-eslint/builder": "15.2.1",
+    "@angular-eslint/eslint-plugin": "15.2.1",
+    "@angular-eslint/eslint-plugin-template": "15.2.1",
+    "@angular-eslint/schematics": "15.2.1",
+    "@angular-eslint/template-parser": "15.2.1",
     "@angular/cli": "~15.2.10",
     "@angular/compiler-cli": "^15.2.10",
     "@types/datatables.net": "^1.10.24",
     "@types/jasmine": "~4.0.0",
     "@types/jquery": "^3.5.9",
+    "@typescript-eslint/eslint-plugin": "5.48.2",
+    "@typescript-eslint/parser": "5.48.2",
+    "eslint": "^8.33.0",
     "jasmine-core": "~4.1.0",
     "karma": "~6.3.0",
     "karma-chrome-launcher": "~3.1.0",

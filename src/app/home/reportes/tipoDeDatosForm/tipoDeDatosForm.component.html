@@ -20,7 +20,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="staticBackdropLiveLabel">
-          Editar compra
+          Tipos de datos
         </h1>
         <i
           class="fas fa-times fa-lg"
@@ -32,64 +32,55 @@
       </div>
 
       <div class="modal-body">
-        <h4>Proveedor: {{ proveedor }}</h4>
-        <h5>{{ tipoDocumento }} - {{ numeroDocumento }}</h5>
-        <form [formGroup]="compraForm" (ngSubmit)="submit()">
+        <form [formGroup]="tipoDatoForm" (ngSubmit)="submit()">
           <div class="form-group">
-            <label for="tipo">Tipo de compra</label>
-            <select class="form-control" formControlName="tipo">
-              <option *ngFor="let item of tiposCompra" value="{{ +item.id }}">
-                {{ item.tipo_compra }}
-              </option>
+            <label for="tipo">Tipo de dato</label>
+            <input class="form-control" type="text" formControlName="dato" />
+            <span for="" class="invalid-feedback" *ngIf="isValidField('dato')"
+              >El tipo de dato es requerido</span
+            >
+          </div>
+          <div class="form-group">
+            <label for="tipo">Orden</label>
+            <input class="form-control" type="number" formControlName="orden" />
+            <span for="" class="invalid-feedback" *ngIf="isValidField('orden')"
+              >El orden del tipo de dato es requerido</span
+            >
+          </div>
+          <div class="form-group">
+            <label for="tipo">Es numero?</label>
+            <select class="form-control" formControlName="isNumber">
+              <option value="1">Si</option>
+              <option value="0">No</option>
             </select>
-            <span for="" class="invalid-feedback" *ngIf="isValidField('tipo')"
-              >El tipo de compra es requerido</span
-            >
-          </div>
-          <div class="form-group">
-            <label for="monto_total"> Monto total </label>
-            <input
-              type="number"
-              class="form-control"
-              formControlName="monto_total"
-              placeholder="Monto total"
-              readonly
-            />
             <span
               for=""
               class="invalid-feedback"
-              *ngIf="isValidField('monto_total')"
-              >El monto total es requerido</span
+              *ngIf="isValidField('isNumber')"
+              >Es numero es requerido</span
             >
           </div>
           <div class="form-group">
-            <label for="monto_total"> Costo total </label>
-            <input
-              type="number"
-              class="form-control"
-              formControlName="costo_total"
-              placeholder="Costo total"
-            />
+            <label for="tipo">Es moneda?</label>
+            <select class="form-control" formControlName="isMoney">
+              <option value="1">Si</option>
+              <option value="0">No</option>
+            </select>
             <span
               for=""
               class="invalid-feedback"
-              *ngIf="isValidField('costo_total')"
-              >El costo total es requerido</span
+              *ngIf="isValidField('isMoney')"
+              >Es moneda es requerido</span
             >
           </div>
           <div class="form-group">
-            <label for="observaciones"> Observaciones </label>
-            <textarea
-              class="form-control"
-              formControlName="observaciones"
-              placeholder="Observaciones"
-            ></textarea>
-
-            <span
-              for=""
-              class="invalid-feedback"
-              *ngIf="isValidField('observaciones')"
-              >Las observaciones son requeridas</span
+            <label for="tipo">Activo</label>
+            <select class="form-control" formControlName="activo">
+              <option value="1">Si</option>
+              <option value="0">No</option>
+            </select>
+            <span for="" class="invalid-feedback" *ngIf="isValidField('activo')"
+              >activo es requerido</span
             >
           </div>
           <div

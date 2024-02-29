@@ -2,7 +2,7 @@ import { AbstractControl } from '@angular/forms';
 
 export function validarRut(
   control: AbstractControl
-): { [key: string]: any } | null {
+): { [key: string]: boolean } | null {
   const rut = control.value;
   if (!rut) {
     return null;
@@ -30,7 +30,7 @@ export function validarRut(
 function validarDigitoVerificador(rutNumber: number, dv: string) {
   let suma = 0;
   let factor = 2;
-  let resto;
+
   let expectedDv;
 
   for (let i = rutNumber.toString().length - 1; i >= 0; i--) {
@@ -38,7 +38,7 @@ function validarDigitoVerificador(rutNumber: number, dv: string) {
     factor = factor === 7 ? 2 : factor + 1;
   }
 
-  resto = suma % 11;
+  const resto = suma % 11;
   expectedDv = 11 - resto;
   if (expectedDv === 11) {
     expectedDv = 0;

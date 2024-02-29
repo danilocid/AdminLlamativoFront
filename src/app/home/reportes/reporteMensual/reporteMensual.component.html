@@ -59,10 +59,21 @@
               Generar PDF <i class="fas fa-retweet"></i>
             </button>
           </div>
+
+          <div style="padding-left: 10px">
+            <button class="btn btn-success" routerLink="tipos-datos">
+              Tipos de datos <i class="fas fa-clipboard-list"></i>
+            </button>
+          </div>
+          <div style="padding-left: 10px" *ngIf="!haveData">
+            <button class="btn btn-success" (click)="showForm()">
+              Agregar datos <i class="fas fa-clipboard-list"></i>
+            </button>
+          </div>
         </div>
       </div>
     </div>
-    <div class="card" *ngIf="data.length != 0">
+    <div class="card" *ngIf="data.length !== 0">
       <div class="card-body">
         <p *ngFor="let item of data">
           {{ item.title }}:
@@ -72,7 +83,7 @@
         </p>
       </div>
     </div>
-    <div class="card" *ngIf="compras.length != 0">
+    <div class="card" *ngIf="compras.length !== 0">
       <div class="card-body">
         <table class="row-border hover table" aria-label="Tabla">
           <thead class="table-light">
@@ -118,3 +129,8 @@
     </div>
   </div>
 </section>
+<app-agregar-datos-reporte
+  [show]="showAddForm"
+  [month]="month"
+  [year]="year"
+></app-agregar-datos-reporte>

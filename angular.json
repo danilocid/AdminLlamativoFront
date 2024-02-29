@@ -1,7 +1,6 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
-
   "newProjectRoot": "projects",
   "projects": {
     "front": {
@@ -22,10 +21,15 @@
             "outputPath": "dist/front",
             "index": "src/index.html",
             "main": "src/main.ts",
-            "polyfills": ["zone.js"],
+            "polyfills": [
+              "zone.js"
+            ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": ["src/favicon.ico", "src/assets"],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
             "styles": [
               "src/styles.scss",
               "node_modules/ngx-spinner/animations/pacman.css",
@@ -99,16 +103,32 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "main": "src/test.ts",
-            "polyfills": ["zone.js"],
+            "polyfills": [
+              "zone.js"
+            ],
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "inlineStyleLanguage": "scss",
-            "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["src/styles.scss"],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "src/styles.scss"
+            ],
             "scripts": [
               "src/assets/plugins/jquery/jquery.min.js",
               "src/assets/plugins/jquery-ui/jquery-ui.min.js",
               "src/assets/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
             ]
           }
         }
@@ -116,6 +136,9 @@
     }
   },
   "cli": {
-    "analytics": "e891fe26-eccd-44ab-8eec-da18eb8d0de0"
+    "analytics": "e891fe26-eccd-44ab-8eec-da18eb8d0de0",
+    "schematicCollections": [
+      "@angular-eslint/schematics"
+    ]
   }
 }

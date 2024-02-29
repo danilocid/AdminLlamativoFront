@@ -1,0 +1,81 @@
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">Reporte mensual - tipos de datos</h1>
+      </div>
+      <!-- /.col -->
+
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</div>
+<section class="content">
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">Tipos de datos</h4>
+      </div>
+
+      <div class="card-body">
+        <div style="padding-left: 20px">
+          <button class="btn btn-success" (click)="showModalCreate()">
+            Agregar tipo de dato <i class="fas fa-retweet"></i>
+          </button>
+        </div>
+
+        <table
+          datatable
+          [dtOptions]="dtOptions"
+          [dtTrigger]="dtTrigger"
+          class="row-border hover table"
+          aria-label="Tabla"
+        >
+          <thead class="table-light">
+            <tr>
+              <th>Id</th>
+              <th>Dato</th>
+              <th>Orden</th>
+              <th>Numero</th>
+              <th>Moneda</th>
+              <th>Activo</th>
+              <th>Editar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of tiposDatos">
+              <td>{{ item.id }}</td>
+
+              <td>
+                {{ item.dato }}
+              </td>
+              <td>{{ item.orden }}</td>
+              <td *ngIf="item.isNumber">Si</td>
+              <td *ngIf="!item.isNumber">No</td>
+              <td *ngIf="item.isMoney">Si</td>
+              <td *ngIf="!item.isMoney">No</td>
+              <td *ngIf="item.activo">Activo</td>
+              <td *ngIf="!item.activo">Inactivo</td>
+              <td>
+                <a
+                  (click)="showModalEdit(item)"
+                  class="me-1 pointer text-dark"
+                  style="cursor: pointer"
+                >
+                  Editar
+                  <i class="fas fa-edit text-success"></i>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+<app-tipoDeDatosForm
+  [show]="showModal"
+  [tipoDato]="tipoDato"
+></app-tipoDeDatosForm>

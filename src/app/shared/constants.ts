@@ -50,6 +50,13 @@ export const ApiRequest = {
   //reports
   dashboardReport: environment.urlBackend + 'products-GetResume',
   getReporteMensual: environment.urlBackend + 'reports-MonthlySales',
+  getTipoDatosReportes: environment.urlBackend + 'reports-GetReportDataTypes',
+  createTipoDatoReporte:
+    environment.urlBackend + 'reports-CreateReportDataType',
+  updateTipoDatoReporte:
+    environment.urlBackend + 'reports-UpdateReportDataType',
+  getReportData: environment.urlBackend + 'reports-GetReportData',
+  createReportData: environment.urlBackend + 'reports-CreateReportData',
 
   //recepciones
   getRecepciones: environment.urlBackend + 'recepciones-GetAll',

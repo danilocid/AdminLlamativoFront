@@ -5,6 +5,9 @@ import { DataTablesModule } from 'angular-datatables';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ReportesRoutingModule } from './reportes-routing.module';
+import { TipoDatosRepotesComponent } from './tipoDatosRepotes/tipoDatosRepotes.component';
+import { TipoDeDatosFormComponent } from './tipoDeDatosForm/tipoDeDatosForm.component';
+import { AgregarDatosReporteComponent } from './agregarDatosReporte/agregarDatosReporte.component';
 
 @NgModule({
   imports: [
@@ -15,6 +18,11 @@ import { ReportesRoutingModule } from './reportes-routing.module';
     NgSelectModule,
     ReportesRoutingModule,
   ],
-  declarations: [ReporteMensualComponent],
+  declarations: [
+    ReporteMensualComponent,
+    TipoDatosRepotesComponent,
+    TipoDeDatosFormComponent,
+    AgregarDatosReporteComponent,
+  ],
 })
 export class ReportesModule {}
