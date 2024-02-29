@@ -24,8 +24,8 @@ export class ArticulosComponent implements OnInit, OnDestroy {
   private apiService!: ApiService;
   products: Product[] = [];
   date = new Date();
-  active: boolean = true;
-  stock: boolean = false;
+  active = false;
+  stock = true;
 
   constructor(
     private titleService: Title,
