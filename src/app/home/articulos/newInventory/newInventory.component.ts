@@ -54,7 +54,7 @@ export class NewInventoryComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.productForm = this.fb.group({
-      id: [[Validators.required]],
+      id: ['Buscar producto', [Validators.required]],
       type: ['1', [Validators.required]],
       quantity: [1, [Validators.required]],
     });
@@ -227,7 +227,7 @@ export class NewInventoryComponent implements OnInit, OnDestroy {
         this.rerender();
       }
     }
-    this.productForm.controls['id'].setValue('');
+    this.productForm.controls['id'].setValue('Buscar producto');
     this.productForm.controls['type'].setValue('1');
     this.productForm.controls['quantity'].setValue(1);
   }

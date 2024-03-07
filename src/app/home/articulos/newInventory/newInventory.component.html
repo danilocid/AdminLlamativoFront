@@ -28,16 +28,12 @@
                 <form
                   [formGroup]="productForm"
                   (submit)="addCount()"
-                  method="post"
-                  action=""
+                  class="form"
                 >
                   <div class="form-group">
                     <label for="name">Producto</label>
                     <ng-select
                       formControlName="id"
-                      id=""
-                      name=""
-                      required
                       placeholder="Seleccione Producto"
                     >
                       <option value="" selected disabled>Seleccione</option>
