@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, tap, catchError } from 'rxjs/operators';
+import { tap, catchError } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { ApiRequest } from 'src/app/shared/constants';
 import { AuthResponse } from '../models/user.model';
@@ -21,20 +21,15 @@ export class AuthService {
   constructor(private http: HttpClient, private utSV: UtilService) {}
 
   async authVerification(): Promise<Observable<boolean>> {
-    var token = '';
-
     if (!localStorage.getItem('token') || '') {
       this.utSV.navigateToPath('/login');
 
       return of(false);
     } else {
-      token = localStorage.getItem('token') || '';
       return of(true);
     }
   }
   async authVerificationCheck() {
-    var token = '';
-
     if (!localStorage.getItem('token')) {
       //this.utSV.navigateToPath('/login');
     } else {
@@ -48,7 +43,7 @@ export class AuthService {
       .pipe(
         tap((resp) => {
           if (resp.ok == true) {
-            localStorage.setItem('token', resp.token!);
+            localStorage.setItem('token', resp.token);
           }
           catchError((err) => of(err));
         })

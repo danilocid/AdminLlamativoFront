@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -11,7 +11,7 @@ import { AlertService } from '../shared/services/alert.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent implements OnInit, AfterViewInit {
+export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   constructor(
     private spinner: NgxSpinnerService,
@@ -24,7 +24,6 @@ export class LoginComponent implements OnInit, AfterViewInit {
     this.titleService.setTitle('Login');
     this.buildForm();
   }
-  ngAfterViewInit(): void {}
   private buildForm() {
     this.loginForm = this.fb.group({
       user: [

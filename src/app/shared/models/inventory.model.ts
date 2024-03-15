@@ -1,5 +1,3 @@
-import { Product } from './product.model';
-
 export interface Inventory {
   id: number;
   costo_neto: number;

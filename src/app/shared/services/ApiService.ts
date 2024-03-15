@@ -1,7 +1,7 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -24,33 +24,33 @@ export class ApiService {
   constructor(private http: HttpClient) {}
 
   postService(infoUrl: string, json: any): Observable<any> {
-    let token = localStorage.getItem('token') || '';
+    const token = localStorage.getItem('token') || '';
 
     this.httpHeaders['token'] = token;
     this.httpHeaders['Access-Control-Allow-Methods'] = 'POST';
-    let info = this.http.post(infoUrl, json, {
+    const info = this.http.post(infoUrl, json, {
       headers: this.httpHeaders,
     });
     return info;
   }
 
   patchService(infoUrl: string, json: any): Observable<any> {
-    let token = localStorage.getItem('token') || '';
+    const token = localStorage.getItem('token') || '';
 
     this.httpHeaders['token'] = token;
     this.httpHeaders['Access-Control-Allow-Methods'] = 'POST';
-    let info = this.http.patch(infoUrl, json, {
+    const info = this.http.patch(infoUrl, json, {
       headers: this.httpHeaders,
     });
     return info;
   }
 
   getService(infoUrl: string): Observable<any> {
-    let token = localStorage.getItem('token') || '';
+    const token = localStorage.getItem('token') || '';
 
     this.httpHeaders['token'] = token;
     this.httpHeaders['Access-Control-Allow-Methods'] = 'POST';
-    let info = this.http.get(infoUrl, {
+    const info = this.http.get(infoUrl, {
       headers: this.httpHeaders,
     });
 

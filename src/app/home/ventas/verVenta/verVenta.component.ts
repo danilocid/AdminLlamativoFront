@@ -11,7 +11,7 @@ import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 @Component({
-  selector: 'app-verVenta',
+  selector: 'app-ver-venta',
   templateUrl: './verVenta.component.html',
   styleUrls: ['./verVenta.component.css'],
 })
@@ -46,7 +46,7 @@ export class VerVentaComponent implements OnInit {
   ) {
     this.titleService.setTitle('Ver venta');
     this.spinner.show();
-    this.idVenta = this.route.snapshot.paramMap.get('id')!;
+    this.idVenta = this.route.snapshot.paramMap.get('id');
   }
 
   ngOnInit() {

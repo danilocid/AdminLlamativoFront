@@ -83,9 +83,4 @@ export class VentasComponent implements OnInit {
       this.dtTrigger.next(null);
     });
   }
-
-  ngOnDestroy(): void {
-    // Do not forget to unsubscribe the event
-    this.dtTrigger.unsubscribe();
-  }
 }

@@ -1,5 +1,3 @@
-import { Product } from './product.model';
-
 export interface Sale {
   id: number;
   monto_neto: number;
