@@ -8,6 +8,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration production",
     "test": "ng test",
+    "pre:deploy": "npm version patch",
     "deploy": "ng build && firebase deploy",
     "scanner": "sonar-scanner",
     "lint": "ng lint"
