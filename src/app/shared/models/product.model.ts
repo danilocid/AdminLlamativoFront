@@ -12,6 +12,7 @@ export interface Product {
   activo: number;
   created_at: Date;
   updated_at: Date;
+  publicado: boolean;
 }
 
 export interface ProductCart {

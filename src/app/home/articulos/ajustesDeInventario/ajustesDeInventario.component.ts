@@ -13,7 +13,7 @@ import { Inventory } from '../../../shared/models/inventory.model';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-ajustesDeInventario',
+  selector: 'app-ajustes-de-inventario',
   templateUrl: './ajustesDeInventario.component.html',
   styleUrls: [],
 })

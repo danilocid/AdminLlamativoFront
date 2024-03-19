@@ -3,7 +3,6 @@ import { Title } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
 import { ApiService } from 'src/app/shared/services/ApiService';
 import { ApiRequest } from 'src/app/shared/constants';
-import { UtilService } from 'src/app/shared/services/util.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
 
 @Component({

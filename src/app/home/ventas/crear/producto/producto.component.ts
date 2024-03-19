@@ -62,16 +62,16 @@ export class ProductoComponent implements OnInit {
     );
     if (this.type === 'venta') {
       if (product) {
-        var quantity = this.productForm.value.quantity;
+        let quantity = this.productForm.value.quantity;
         if (quantity > product.stock) {
           quantity = product.stock;
         }
         //get the price with tax, from the form, and split it on two variables, netSale and taxSale (taxSale = 19% of price)
-        let price = this.productForm.value.price;
-        let taxSale = price * 0.19;
-        let netSale = price - taxSale;
+        const price = this.productForm.value.price;
+        const taxSale = price * 0.19;
+        const netSale = price - taxSale;
 
-        let productCart = {
+        const productCart = {
           ...product,
           venta_neto: netSale,
           venta_imp: taxSale,
@@ -81,13 +81,13 @@ export class ProductoComponent implements OnInit {
       }
     } else {
       if (product) {
-        var quantity = this.productForm.value.quantity;
+        const quantity = this.productForm.value.quantity;
         //get the price with tax, from the form, and split it on two variables, netSale and taxSale (taxSale = 19% of price)
-        let price = this.productForm.value.price;
-        let taxCost = price * 0.19;
-        let netCost = price - taxCost;
+        const price = this.productForm.value.price;
+        const taxCost = price * 0.19;
+        const netCost = price - taxCost;
 
-        let productCart = {
+        const productCart = {
           ...product,
           costo_neto: netCost,
           costo_imp: taxCost,
@@ -101,7 +101,7 @@ export class ProductoComponent implements OnInit {
     this.productForm.controls['id'].setValue('Buscar producto');
     this.productForm.controls['price'].setValue(0);
   }
-  onChangeProduct(event: any) {
+  onChangeProduct() {
     const product = this.products.find(
       (p) =>
         p.id.toString() === this.productForm.controls['id'].value.toString()

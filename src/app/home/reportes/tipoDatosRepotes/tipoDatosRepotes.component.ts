@@ -6,12 +6,10 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ApiRequest, FormatDataTableGlobal } from 'src/app/shared/constants';
 import { ApiService } from 'src/app/shared/services/ApiService';
 import { AlertService } from 'src/app/shared/services/alert.service';
-import { UtilService } from 'src/app/shared/services/util.service';
 import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
-
 @Component({
-  selector: 'app-tipoDatosRepotes',
+  selector: 'app-tipo-datos-repotes',
   templateUrl: './tipoDatosRepotes.component.html',
   styleUrls: ['./tipoDatosRepotes.component.css'],
 })
@@ -22,7 +20,7 @@ export class TipoDatosRepotesComponent implements OnInit {
   dtOptions: DataTables.Settings = {};
   tiposDatos: any[] = [];
   private apiService!: ApiService;
-  showModal: boolean = false;
+  showModal = false;
   tipoDato: any;
   constructor(
     private titleService: Title,

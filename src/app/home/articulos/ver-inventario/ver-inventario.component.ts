@@ -50,7 +50,7 @@ export class VerInventarioComponent implements OnInit, OnDestroy {
   ) {
     this.titleService.setTitle('Invetario - Ver');
     this.spinner.show();
-    this.idInventario = this.route.snapshot.paramMap.get('id')!;
+    this.idInventario = this.route.snapshot.paramMap.get('id');
   }
 
   ngOnInit(): void {

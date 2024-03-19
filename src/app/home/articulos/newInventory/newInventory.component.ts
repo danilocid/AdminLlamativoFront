@@ -181,23 +181,23 @@ export class NewInventoryComponent implements OnInit, OnDestroy {
         if (this.productForm.value.type === '1') {
           this.productsInventory.find(
             (x) => x.id.toString() === this.productForm.value.id.toString()
-          )!.entradas =
+          ).entradas =
             this.productsInventory.find(
               (x) => x.id.toString() === this.productForm.value.id.toString()
-            )!.entradas + this.productForm.value.quantity;
+            ).entradas + this.productForm.value.quantity;
           this.productsInventory.find(
             (x) => x.id.toString() === this.productForm.value.id.toString()
-          )!.salidas = 0;
+          ).salidas = 0;
         } else {
           this.productsInventory.find(
             (x) => x.id.toString() === this.productForm.value.id.toString()
-          )!.salidas =
+          ).salidas =
             this.productsInventory.find(
               (x) => x.id.toString() === this.productForm.value.id.toString()
-            )!.salidas + this.productForm.value.quantity;
+            ).salidas + this.productForm.value.quantity;
           this.productsInventory.find(
             (x) => x.id.toString() === this.productForm.value.id.toString()
-          )!.entradas = 0;
+          ).entradas = 0;
         }
         this.rerender();
         return;

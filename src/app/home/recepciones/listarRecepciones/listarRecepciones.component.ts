@@ -10,7 +10,7 @@ import { ApiService } from 'src/app/shared/services/ApiService';
 import { AlertService } from 'src/app/shared/services/alert.service';
 
 @Component({
-  selector: 'app-listarRecepciones',
+  selector: 'app-listar-recepciones',
   templateUrl: './listarRecepciones.component.html',
   styleUrls: ['./listarRecepciones.component.css'],
 })

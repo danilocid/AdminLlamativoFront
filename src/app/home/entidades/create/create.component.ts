@@ -20,7 +20,7 @@ export class CreateComponent implements OnInit {
   clientForm: FormGroup;
   rutCliente = '';
   cliente: Entidad = {} as Entidad;
-  title: string = '';
+  title = '';
   regions: any[] = [];
   comunas: any[] = [];
   constructor(
@@ -33,7 +33,7 @@ export class CreateComponent implements OnInit {
     private alertSV: AlertService
   ) {
     this.spinner.show();
-    this.rutCliente = this.route.snapshot.paramMap.get('id')!;
+    this.rutCliente = this.route.snapshot.paramMap.get('id');
 
     if (this.rutCliente != null) {
       this.titleService.setTitle('Editar Cliente');
@@ -50,8 +50,8 @@ export class CreateComponent implements OnInit {
       rut: ['', [Validators.required, validarRut]],
       nombre: ['', [Validators.required]],
       direccion: ['', [Validators.required]],
-      comuna: [, [Validators.required]],
-      region: [, [Validators.required]],
+      comuna: ['Seleccione', [Validators.required]],
+      region: ['Seleccione', [Validators.required]],
       mail: ['', [Validators.required, Validators.email]],
       telefono: ['', [Validators.pattern('^[0-9]*$'), Validators.minLength(8)]],
       giro: ['', [Validators.required]],
@@ -156,7 +156,7 @@ export class CreateComponent implements OnInit {
       this.clientForm
         .get('rut')
         ?.setValue(this.clientForm.get('rut')?.value.replace(/\./g, ''));
-      let body = {
+      const body = {
         rut: this.clientForm.get('rut')?.value,
         nombre: this.clientForm.get('nombre')?.value,
         giro: this.clientForm.get('giro')?.value,
@@ -191,7 +191,7 @@ export class CreateComponent implements OnInit {
         .get('rut')
         ?.setValue(this.clientForm.get('rut')?.value.replace(/\./g, ''));
       //se edita el cliente
-      let body = {
+      const body = {
         rut: this.clientForm.get('rut')?.value,
         nombre: this.clientForm.get('nombre')?.value,
         giro: this.clientForm.get('giro')?.value,

@@ -11,7 +11,7 @@ import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-allIssues',
+  selector: 'app-all-issues',
   templateUrl: './allIssues.component.html',
   styleUrls: [],
 })
@@ -150,10 +150,5 @@ export class AllIssuesComponent implements OnInit {
       // Call the dtTrigger to rerender again
       this.dtTrigger.next(null);
     });
-  }
-
-  ngOnDestroy(): void {
-    // Do not forget to unsubscribe the event
-    this.dtTrigger.unsubscribe();
   }
 }

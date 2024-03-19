@@ -8,12 +8,12 @@ import { AlertService } from 'src/app/shared/services/alert.service';
 import * as csv from 'csvtojson';
 
 @Component({
-  selector: 'app-importFileCompra',
+  selector: 'app-import-file-compra',
   templateUrl: './importFileCompra.component.html',
   styleUrls: ['./importFileCompra.component.css'],
 })
 export class ImportFileCompraComponent implements OnInit {
-  @Input() show: boolean = false;
+  @Input() show = false;
   fileForm!: FormGroup;
   private apiService!: ApiService;
   data: any;
@@ -44,7 +44,7 @@ export class ImportFileCompraComponent implements OnInit {
       return;
     } else {
       this.spinner.show();
-      let data = this.data;
+      const data = this.data;
       this.apiService = new ApiService(this.http);
       this.apiService
         .postService(ApiRequest.importFileCompra, {

@@ -1,11 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import {
-  Component,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ApiRequest } from 'src/app/shared/constants';
@@ -13,12 +7,12 @@ import { ApiService } from 'src/app/shared/services/ApiService';
 import { AlertService } from 'src/app/shared/services/alert.service';
 
 @Component({
-  selector: 'app-editarCompra',
+  selector: 'app-editar-compra',
   templateUrl: './editarCompra.component.html',
   styleUrls: ['./editarCompra.component.css'],
 })
 export class EditarCompraComponent implements OnInit, OnChanges {
-  @Input() show: boolean = false;
+  @Input() show = false;
   @Input() compra: any;
   tipoDocumento: any = '';
   proveedor: any = '';
@@ -46,7 +40,7 @@ export class EditarCompraComponent implements OnInit, OnChanges {
     this.getTipoCompra();
   }
 
-  ngOnChanges(SimpleChanges: SimpleChanges) {
+  ngOnChanges() {
     if (this.compra) {
       this.compraForm.patchValue({
         tipo: this.compra.tipo_compra,
@@ -91,7 +85,7 @@ export class EditarCompraComponent implements OnInit, OnChanges {
     } else {
       this.spinner.show();
       //console.log(this.compraForm.value);
-      let compra = {
+      const compra = {
         id: this.compra.id,
         tipo: +this.compraForm.get('tipo')?.value,
         monto_total: this.compraForm.get('monto_total')?.value,

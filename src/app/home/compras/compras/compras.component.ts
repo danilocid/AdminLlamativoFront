@@ -27,8 +27,8 @@ export class ComprasComponent implements OnInit {
   year: any;
   dateForm: FormGroup;
   private apiService!: ApiService;
-  showModal: boolean = false;
-  showModalImport: boolean = false;
+  showModal = false;
+  showModalImport = false;
   constructor(
     private titleService: Title,
     private spinner: NgxSpinnerService,

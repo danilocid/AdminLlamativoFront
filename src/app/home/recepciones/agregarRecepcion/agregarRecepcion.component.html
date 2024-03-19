@@ -20,7 +20,7 @@
           <h4 class="card-title">Detalle de la recepcion</h4>
         </div>
         <div class="card-body">
-          <table class="table" *ngIf="productsCart.length != 0">
+          <table class="table" *ngIf="productsCart.length !== 0">
             <thead>
               <tr>
                 <th>Producto</th>
@@ -100,14 +100,14 @@
     </div>
     <div class="col-5">
       <app-producto
-        *ngIf="sidePanel == 'Productos'"
+        *ngIf="sidePanel === 'Productos'"
         [type]="'Recepcion'"
         (productChange)="addProduct($event)"
       ></app-producto>
-      <app-finalizaRecepcion
-        *ngIf="sidePanel == 'Finalizar'"
+      <app-finaliza-recepcion
+        *ngIf="sidePanel === 'Finalizar'"
         [productsCart]="productsCart"
-      ></app-finalizaRecepcion>
+      ></app-finaliza-recepcion>
     </div>
   </div>
 </section>

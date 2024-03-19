@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { UtilService } from 'src/app/shared/services/util.service';
 
 @Component({
@@ -6,10 +6,8 @@ import { UtilService } from 'src/app/shared/services/util.service';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent {
   constructor(private utSV: UtilService) {}
-
-  ngOnInit() {}
 
   logout() {
     localStorage.removeItem('token');

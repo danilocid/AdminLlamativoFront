@@ -20,7 +20,7 @@
           <h4 class="card-title">Detalle de la venta</h4>
         </div>
         <div class="card-body">
-          <table class="table" *ngIf="productsCart.length != 0">
+          <table class="table" *ngIf="productsCart.length !== 0">
             <thead>
               <tr>
                 <th>Producto</th>
@@ -97,11 +97,11 @@
 
     <div class="col-5">
       <app-producto
-        *ngIf="sidePanel == 'Productos'"
+        *ngIf="sidePanel === 'Productos'"
         (productChange)="addProduct($event)"
       ></app-producto>
       <app-finaliza-venta
-        *ngIf="sidePanel == 'Pago'"
+        *ngIf="sidePanel === 'Pago'"
         [productsCart]="productsCart"
       ></app-finaliza-venta>
     </div>

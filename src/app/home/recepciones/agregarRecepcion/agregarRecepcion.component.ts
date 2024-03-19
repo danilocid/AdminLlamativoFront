@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -9,17 +9,17 @@ import { ApiService } from 'src/app/shared/services/ApiService';
 import { AlertService } from 'src/app/shared/services/alert.service';
 
 @Component({
-  selector: 'app-agregarRecepcion',
+  selector: 'app-agregar-recepcion',
   templateUrl: './agregarRecepcion.component.html',
   styleUrls: ['./agregarRecepcion.component.css'],
 })
-export class AgregarRecepcionComponent implements OnInit {
+export class AgregarRecepcionComponent {
   productForm: FormGroup;
   products: Product[] = [];
   private apiService!: ApiService;
   productsCart: ProductCart[] = [];
-  sidePanel: string = 'Productos';
-  total: number = 0;
+  sidePanel = 'Productos';
+  total = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -32,10 +32,8 @@ export class AgregarRecepcionComponent implements OnInit {
     this.titleService.setTitle('Agregar recepcion');
   }
 
-  ngOnInit() {}
-
   addProduct(product: ProductCart) {
-    var quantity = product.quantity;
+    const quantity = product.quantity;
 
     this.productsCart.push({
       ...product,

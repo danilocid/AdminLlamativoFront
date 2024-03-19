@@ -10,7 +10,7 @@ import { ApiService } from 'src/app/shared/services/ApiService';
 import { AlertService } from 'src/app/shared/services/alert.service';
 
 @Component({
-  selector: 'app-VerRecepcion',
+  selector: 'app-ver-recepcion',
   templateUrl: './VerRecepcion.component.html',
   styleUrls: ['./VerRecepcion.component.css'],
 })
@@ -33,7 +33,7 @@ export class VerRecepcionComponent implements OnInit {
   ) {
     this.titleService.setTitle('Recepciones - Ver');
     this.spinner.show();
-    this.idRecepcion = this.route.snapshot.paramMap.get('id')!;
+    this.idRecepcion = this.route.snapshot.paramMap.get('id');
   }
 
   ngOnInit() {

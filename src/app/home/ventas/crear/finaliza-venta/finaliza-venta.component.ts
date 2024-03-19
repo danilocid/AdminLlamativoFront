@@ -114,10 +114,10 @@ export class FinalizaVentaComponent implements OnInit {
       );
       return;
     } else {
-      var monto_neto = 0;
-      var monto_imp = 0;
-      var costo_neto = 0;
-      var costo_imp = 0;
+      let monto_neto = 0;
+      let monto_imp = 0;
+      let costo_neto = 0;
+      let costo_imp = 0;
       //calculo de montos
       this.productsCart.forEach((element) => {
         monto_neto += element.venta_neto * element.quantity;
@@ -125,7 +125,7 @@ export class FinalizaVentaComponent implements OnInit {
         costo_neto += element.costo_neto * element.quantity;
         costo_imp += element.costo_imp * element.quantity;
       });
-      let saleDetail = [];
+      const saleDetail = [];
       this.productsCart.forEach((element) => {
         saleDetail.push({
           productId: element.id,
@@ -149,7 +149,7 @@ export class FinalizaVentaComponent implements OnInit {
           totalTaxCost: costo_imp,
         })
         .subscribe({
-          next: (resp) => {
+          next: () => {
             this.spinner.hide();
             this.alertSV.alertBasic(
               'Aviso',

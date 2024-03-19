@@ -1,11 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import {
-  Component,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ApiRequest } from 'src/app/shared/constants';
@@ -13,14 +7,14 @@ import { ApiService } from 'src/app/shared/services/ApiService';
 import { AlertService } from 'src/app/shared/services/alert.service';
 
 @Component({
-  selector: 'app-tipoDeDatosForm',
+  selector: 'app-tipo-de-datos-form',
   templateUrl: './tipoDeDatosForm.component.html',
   styleUrls: ['./tipoDeDatosForm.component.css'],
 })
 export class TipoDeDatosFormComponent implements OnInit, OnChanges {
-  @Input() show: boolean = false;
+  @Input() show = false;
   @Input() tipoDato: any;
-  idTipoDato: number = 0;
+  idTipoDato = 0;
   tipoDatoForm!: FormGroup;
   private apiService!: ApiService;
 
@@ -51,7 +45,7 @@ export class TipoDeDatosFormComponent implements OnInit, OnChanges {
       this.tipoDatoForm.get(field)?.invalid
     );
   }
-  ngOnChanges(SimpleChanges: SimpleChanges) {
+  ngOnChanges() {
     if (this.tipoDato) {
       this.idTipoDato = this.tipoDato.id;
       this.tipoDatoForm.patchValue({

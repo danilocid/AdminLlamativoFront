@@ -1,10 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { Product, ProductCart } from 'src/app/shared/models/product.model';
-import { ApiService } from 'src/app/shared/services/ApiService';
-import { ApiRequest } from 'src/app/shared/constants';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AlertService } from 'src/app/shared/services/alert.service';
@@ -17,10 +15,9 @@ import { AlertService } from 'src/app/shared/services/alert.service';
 export class CrearComponent implements OnInit {
   productForm: FormGroup;
   products: Product[] = [];
-  private apiService!: ApiService;
   productsCart: ProductCart[] = [];
-  sidePanel: string = 'Productos';
-  total: number = 0;
+  sidePanel = 'Productos';
+  total = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -33,9 +30,11 @@ export class CrearComponent implements OnInit {
     this.titleService.setTitle('Agregar venta');
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.titleService.setTitle('Agregar venta');
+  }
   addProduct(product: ProductCart) {
-    var quantity = product.quantity;
+    let quantity = product.quantity;
     if (quantity > product.stock) {
       quantity = product.stock;
     }

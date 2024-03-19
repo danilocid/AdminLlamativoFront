@@ -19,7 +19,7 @@ export class CreateComponent implements OnInit {
   productForm: FormGroup;
   idProducto = '';
   producto: Product = {} as Product;
-  title: string = '';
+  title = '';
   constructor(
     private titleService: Title,
     private router: Router,
@@ -30,7 +30,7 @@ export class CreateComponent implements OnInit {
     private alertSV: AlertService
   ) {
     this.spinner.show();
-    this.idProducto = this.route.snapshot.paramMap.get('id')!;
+    this.idProducto = this.route.snapshot.paramMap.get('id');
     //if idProducto is not null, then the title should be "Editar Articulo"
 
     if (this.idProducto != null) {
@@ -93,7 +93,7 @@ export class CreateComponent implements OnInit {
           console.log(this.producto);
           this.spinner.hide();
         },
-        error: (err) => {
+        error: () => {
           this.spinner.hide();
         },
       });
@@ -116,7 +116,7 @@ export class CreateComponent implements OnInit {
   }
   createProduct() {
     this.spinner.show();
-    let product = {
+    const product = {
       id: this.idProducto,
       cod_interno: this.productForm.controls['internalCode'].value,
       cod_barras: this.productForm.controls['barCode'].value,
@@ -159,7 +159,7 @@ export class CreateComponent implements OnInit {
       'warning',
       () => {
         this.spinner.show();
-        let product = {
+        const product = {
           id: this.idProducto,
           cod_interno: this.productForm.controls['internalCode'].value,
           cod_barras: this.productForm.controls['barCode'].value,

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import packageJson from '../../../../../package.json';
 
 @Component({
@@ -6,9 +6,6 @@ import packageJson from '../../../../../package.json';
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss'],
 })
-export class FooterComponent implements OnInit {
+export class FooterComponent {
   public version: string = packageJson.version;
-  constructor() {}
-
-  ngOnInit(): void {}
 }

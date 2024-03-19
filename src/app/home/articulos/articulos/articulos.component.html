@@ -65,6 +65,7 @@
               <th>Costo</th>
               <th>PVP</th>
               <th>Activo</th>
+              <th>Publicado</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -90,6 +91,8 @@
 
               <td *ngIf="item.activo">Activo</td>
               <td *ngIf="!item.activo">Inactivo</td>
+              <td *ngIf="item.publicado">Si</td>
+              <td *ngIf="!item.publicado">No</td>
 
               <td>
                 <a

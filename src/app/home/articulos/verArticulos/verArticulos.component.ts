@@ -12,7 +12,7 @@ import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
 
 @Component({
-  selector: 'app-verArticulos',
+  selector: 'app-ver-articulos',
   templateUrl: './verArticulos.component.html',
   styleUrls: [],
 })
@@ -35,7 +35,7 @@ export class VerArticulosComponent implements OnInit, OnDestroy {
   ) {
     this.titleService.setTitle('Articulos - Ver');
     this.spinner.show();
-    this.idProducto = this.route.snapshot.paramMap.get('id')!;
+    this.idProducto = this.route.snapshot.paramMap.get('id');
   }
 
   ngOnInit() {

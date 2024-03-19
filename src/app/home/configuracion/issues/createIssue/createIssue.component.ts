@@ -10,7 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-createIssue',
+  selector: 'app-create-issue',
   templateUrl: './createIssue.component.html',
   styleUrls: [],
 })
@@ -32,7 +32,7 @@ export class CreateIssueComponent implements OnInit {
     private fb: FormBuilder
   ) {
     this.spinner.show();
-    this.idIssue = this.route.snapshot.paramMap.get('id')!;
+    this.idIssue = this.route.snapshot.paramMap.get('id');
     if (this.idIssue) {
       this.titleService.setTitle('Issues - Editar');
       this.title = 'Editar Issue';
@@ -74,7 +74,7 @@ export class CreateIssueComponent implements OnInit {
             });
             this.spinner.hide();
           },
-          error: (err) => {
+          error: () => {
             this.spinner.hide();
             this.alertSV.alertBasic(
               'Error',
@@ -107,7 +107,7 @@ export class CreateIssueComponent implements OnInit {
   }
   createIssue() {
     this.spinner.show();
-    let body = {
+    const body = {
       id_status: this.issueForm.value.id_status,
 
       id_section: this.issueForm.value.id_section,
@@ -115,7 +115,7 @@ export class CreateIssueComponent implements OnInit {
       issue: this.issueForm.value.issue,
     };
     this.apiService.postService(ApiRequest.createIssue, body).subscribe({
-      next: (resp) => {
+      next: () => {
         this.spinner.hide();
         this.alertSV.alertBasic(
           'Creación',
@@ -124,7 +124,7 @@ export class CreateIssueComponent implements OnInit {
         );
         this.uS.navigateToPath('configuracion/issues');
       },
-      error: (err) => {
+      error: () => {
         this.spinner.hide();
         this.alertSV.alertBasic('Error', 'Error al crear el issue', 'error');
       },
@@ -133,7 +133,7 @@ export class CreateIssueComponent implements OnInit {
 
   updateIssue() {
     this.spinner.show();
-    let body = {
+    const body = {
       id_status: this.issueForm.value.id_status,
 
       id_section: this.issueForm.value.id_section,
@@ -142,7 +142,7 @@ export class CreateIssueComponent implements OnInit {
       id: this.idIssue,
     };
     this.apiService.postService(ApiRequest.updateIssue, body).subscribe({
-      next: (resp) => {
+      next: () => {
         this.spinner.hide();
         this.alertSV.alertBasic(
           'Actualización',
@@ -151,7 +151,7 @@ export class CreateIssueComponent implements OnInit {
         );
         this.uS.navigateToPath('configuracion/issues');
       },
-      error: (err) => {
+      error: () => {
         this.spinner.hide();
         this.alertSV.alertBasic(
           'Error',

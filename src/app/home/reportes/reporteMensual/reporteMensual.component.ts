@@ -12,7 +12,7 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
-  selector: 'app-reporteMensual',
+  selector: 'app-reporte-mensual',
   templateUrl: './reporteMensual.component.html',
   styleUrls: ['./reporteMensual.component.css'],
 })
