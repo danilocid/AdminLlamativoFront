@@ -56,6 +56,8 @@ export class CreateComponent implements OnInit {
       venta_total: ['', [Validators.required]],
       stockMin: ['', [Validators.required]],
       active: ['1', [Validators.required]],
+      publicado: ['0', [Validators.required]],
+      enlace_ml: [],
     });
 
     if (this.idProducto != null) {
@@ -89,8 +91,9 @@ export class CreateComponent implements OnInit {
             venta_total: this.producto.venta_imp + this.producto.venta_neto,
             stockMin: this.producto.stock_critico,
             active: this.producto.activo,
+            publicado: this.producto.publicado,
+            enlace_ml: this.producto.enlace_ml,
           });
-          console.log(this.producto);
           this.spinner.hide();
         },
         error: () => {
@@ -127,6 +130,8 @@ export class CreateComponent implements OnInit {
       venta_imp: this.productForm.controls['taxSale'].value,
       stock_critico: this.productForm.controls['stockMin'].value,
       activo: this.productForm.controls['active'].value,
+      publicado: this.productForm.controls['publicado'].value,
+      enlace_ml: this.productForm.controls['enlace_ml'].value,
     };
 
     //if barCode is empty, then delete it
@@ -170,6 +175,8 @@ export class CreateComponent implements OnInit {
           venta_imp: this.productForm.controls['taxSale'].value,
           stock_critico: this.productForm.controls['stockMin'].value,
           activo: this.productForm.controls['active'].value,
+          publicado: this.productForm.controls['publicado'].value,
+          enlace_ml: this.productForm.controls['enlace_ml'].value,
         };
         this.apiService
           .patchService(ApiRequest.updateArticulo, product)

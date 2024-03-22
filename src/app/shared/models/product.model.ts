@@ -13,6 +13,7 @@ export interface Product {
   created_at: Date;
   updated_at: Date;
   publicado: boolean;
+  enlace_ml: string;
 }
 
 export interface ProductCart {

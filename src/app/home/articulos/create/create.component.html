@@ -208,6 +208,37 @@
               <option value="0">No</option>
             </select>
           </div>
+          <div class="form-group col-lg-2 col-sm-6">
+            <label for="name">Publicado</label>
+            <select
+              formControlName="publicado"
+              [ngClass]="isValidField('publicado') ? 'is-invalid' : ''"
+              class="form-control"
+              id="publicado"
+              name="publicado"
+              required
+            >
+              <option value="1">Si</option>
+              <option value="0">No</option>
+            </select>
+          </div>
+          <div class="form-group col-lg-2 col-sm-6">
+            <label for="name">Enlace MercadoLibre</label>
+            <input
+              formControlName="enlace_ml"
+              [ngClass]="isValidField('enlace_ml') ? 'is-invalid' : ''"
+              type="text"
+              class="form-control"
+              id="enlace_ml"
+              min="1"
+              name="enlace_ml"
+              placeholder="Enlace MercadoLibre"
+              required
+            />
+            <div *ngIf="isValidField('enlace_ml')" class="invalid-feedback">
+              Ingresa enlace de la publicacion
+            </div>
+          </div>
           <div class="form-group col-lg-4">
             <button type="submit" class="btn btn-primary">Guardar</button>
           </div>
