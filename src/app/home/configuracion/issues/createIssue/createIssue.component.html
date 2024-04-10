@@ -76,7 +76,7 @@
             >
               <option value="">Seleccione un tipo</option>
               <option *ngFor="let type of issueType" [value]="type.id">
-                {{ type.issue_type }}
+                {{ type.name }}
               </option>
             </select>
             <div *ngIf="isValidField('id_type')" class="invalid-feedback">

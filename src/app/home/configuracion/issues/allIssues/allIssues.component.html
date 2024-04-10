@@ -64,9 +64,9 @@
             <tr *ngFor="let item of issues">
               <td>{{ item.id }}</td>
               <td>{{ item.issue }}</td>
-              <td>{{ item.Seccion }}</td>
-              <td>{{ item.Tipo }}</td>
-              <td>{{ item.Status }}</td>
+              <td>{{ item.issueSection.name }}</td>
+              <td>{{ item.issueType.issue_type }}</td>
+              <td>{{ item.issueStatus.name }}</td>
               <td [attr.data-order]="item['createdAt']">
                 {{ item["createdAt"] | date : "EE dd-MM-yy HH:mm" : "UTC -3" }}
               </td>
@@ -107,7 +107,7 @@
             <div class="info-box">
               <div class="info-box-content">
                 <span class="info-box-text">{{ Status.name }}</span>
-                <span class="info-box-number">{{ Status.issues_count }}</span>
+                <span class="info-box-number">{{ Status.count }}</span>
               </div>
             </div>
           </div>
@@ -118,7 +118,7 @@
             <div class="info-box">
               <div class="info-box-content">
                 <span class="info-box-text">{{ sec.name }}</span>
-                <span class="info-box-number">{{ sec.issues_count }}</span>
+                <span class="info-box-number">{{ sec.count }}</span>
               </div>
             </div>
           </div>
@@ -128,8 +128,8 @@
           <div class="col-md-2 col-sm-4 col-6" *ngFor="let tip of type">
             <div class="info-box">
               <div class="info-box-content">
-                <span class="info-box-text">{{ tip.issue_type }}</span>
-                <span class="info-box-number">{{ tip.issues_count }}</span>
+                <span class="info-box-text">{{ tip.name }}</span>
+                <span class="info-box-number">{{ tip.count }}</span>
               </div>
             </div>
           </div>

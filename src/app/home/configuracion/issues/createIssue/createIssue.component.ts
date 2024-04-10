@@ -42,25 +42,33 @@ export class CreateIssueComponent implements OnInit {
     }
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    this.spinner.show();
     this.issueForm = this.fb.group({
       id: [''],
-      id_status: ['', [Validators.required, Validators.min(1)]],
+      id_status: [
+        { value: '1', disabled: true },
+        [Validators.required, Validators.min(1)],
+      ],
       id_section: ['', [Validators.required, Validators.min(1)]],
       id_type: ['', [Validators.required, Validators.min(1)]],
       issue: ['', [Validators.required]],
     });
     this.apiService = new ApiService(this.http);
-    this.apiService.getService(ApiRequest.statusIssue).subscribe((resp) => {
-      this.issueStatus = resp.result;
-    });
+    await this.apiService
+      .getService(ApiRequest.statusIssue)
+      .subscribe((resp) => {
+        this.issueStatus = resp.data;
+      });
     this.apiService.getService(ApiRequest.secctionsIssue).subscribe((resp) => {
-      this.issueSection = resp.result;
+      this.issueSection = resp.data;
     });
     this.apiService.getService(ApiRequest.typeIssue).subscribe((resp) => {
-      this.issueType = resp.result;
+      this.issueType = resp.data;
     });
     if (this.idIssue) {
+      // habilitar campos
+      this.issueForm.controls['id_status'].enable();
       this.apiService
         .postService(ApiRequest.getIssuesById, { id: this.idIssue })
         .subscribe({
@@ -108,13 +116,11 @@ export class CreateIssueComponent implements OnInit {
   createIssue() {
     this.spinner.show();
     const body = {
-      id_status: this.issueForm.value.id_status,
-
-      id_section: this.issueForm.value.id_section,
-      id_type: this.issueForm.value.id_type,
+      section_id: this.issueForm.value.id_section,
+      type_id: this.issueForm.value.id_type,
       issue: this.issueForm.value.issue,
     };
-    this.apiService.postService(ApiRequest.createIssue, body).subscribe({
+    this.apiService.postService(ApiRequest.getIssues, body).subscribe({
       next: () => {
         this.spinner.hide();
         this.alertSV.alertBasic(
@@ -134,14 +140,13 @@ export class CreateIssueComponent implements OnInit {
   updateIssue() {
     this.spinner.show();
     const body = {
-      id_status: this.issueForm.value.id_status,
-
-      id_section: this.issueForm.value.id_section,
-      id_type: this.issueForm.value.id_type,
+      status_id: this.issueForm.value.id_status,
+      section_id: this.issueForm.value.id_section,
+      type_id: this.issueForm.value.id_type,
       issue: this.issueForm.value.issue,
       id: this.idIssue,
     };
-    this.apiService.postService(ApiRequest.updateIssue, body).subscribe({
+    this.apiService.putService(ApiRequest.getIssues, body).subscribe({
       next: () => {
         this.spinner.hide();
         this.alertSV.alertBasic(

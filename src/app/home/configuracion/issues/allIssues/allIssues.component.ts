@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AlertService } from 'src/app/shared/services/alert.service';
-import { UtilService } from 'src/app/shared/services/util.service';
 import { ApiService } from 'src/app/shared/services/ApiService';
 import { ApiRequest, FormatDataTableGlobal } from 'src/app/shared/constants';
 import { HttpClient } from '@angular/common/http';
@@ -18,7 +17,7 @@ import { Router } from '@angular/router';
 export class AllIssuesComponent implements OnInit {
   @ViewChild(DataTableDirective)
   dtElement!: DataTableDirective;
-  dtTrigger: Subject<any> = new Subject<any>();
+  dtTrigger: Subject<object> = new Subject<object>();
   dtOptions: DataTables.Settings = {};
   private apiService!: ApiService;
   issues = [];
@@ -30,7 +29,6 @@ export class AllIssuesComponent implements OnInit {
   constructor(
     private titleService: Title,
     private spinner: NgxSpinnerService,
-    private uS: UtilService,
     private router: Router,
     private alertSV: AlertService,
     private http: HttpClient
@@ -64,9 +62,9 @@ export class AllIssuesComponent implements OnInit {
           this.router.navigate(['/login']);
           return;
         }
-        this.status = resp.statuses;
-        this.type = resp.types;
-        this.section = resp.sections;
+        this.status = resp.data.status;
+        this.type = resp.data.type;
+        this.section = resp.data.section;
       },
       error: (error) => {
         if (error.status === 401 || error.status === 403) {
@@ -82,16 +80,14 @@ export class AllIssuesComponent implements OnInit {
 
   private getIssues() {
     this.apiService
-      .postService(ApiRequest.getIssues, {
-        status: this.statusSelected,
-      })
+      .getService(ApiRequest.getIssues + `?type=${this.statusSelected}`)
       .subscribe({
         next: (resp) => {
           if (resp.status === 401 || resp.status === 403) {
             this.router.navigate(['/login']);
             return;
           }
-          this.issues = resp.result;
+          this.issues = resp.data;
           this.dtTrigger.next(this.dtOptions);
 
           this.spinner.hide();
@@ -112,35 +108,12 @@ export class AllIssuesComponent implements OnInit {
     this.statusSelected = (<HTMLInputElement>(
       document.getElementById('statusSelect')
     )).value;
-    this.apiService
-      .postService(ApiRequest.getIssues, {
-        status: this.statusSelected,
-      })
-      .subscribe({
-        next: (resp) => {
-          if (resp.status === 401 || resp.status === 403) {
-            this.router.navigate(['/login']);
-            return;
-          }
-          this.issues = resp.result;
-          //destroy table
-          this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-            // Destroy the table first
-            dtInstance.destroy();
-          });
-          this.dtTrigger.next(this.dtOptions);
-
-          this.spinner.hide();
-        },
-        error: (error) => {
-          if (error.status === 401 || error.status === 403) {
-            this.router.navigate(['/login']);
-            return;
-          }
-          this.spinner.hide();
-          this.alertSV.alertBasic('Error', error.error.msg, 'error');
-        },
-      });
+    //destroy table
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      // Destroy the table first
+      dtInstance.destroy();
+    });
+    this.getIssues();
   }
 
   rerender(): void {
