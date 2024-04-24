@@ -30,18 +30,68 @@
 
       <div class="card-body">
         <div class="row">
-          <a [routerLink]="['create']" class="btn btn-primary">Agregar issue</a>
-          <select
-            id="statusSelect"
-            class="form-control"
-            style="width: 100px; margin-left: 25px"
-            (change)="changeStatus()"
-          >
-            <option value="all">Todos</option>
-            <option value="pending" selected>Pendientes</option>
-          </select>
+          <div class="col-9">
+            <div class="row">
+              <a [routerLink]="['create']" class="btn btn-primary"
+                >Agregar issue</a
+              >
+
+              <select
+                id="statusSelect"
+                class="form-control"
+                style="width: 100px; margin-left: 25px"
+                (change)="changeStatus()"
+              >
+                <option value="all">Todos</option>
+                <option value="pending" selected>Pendientes</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="mb-3">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Buscar"
+                [(ngModel)]="searchTerm"
+                (keyup)="search()"
+              />
+            </div>
+          </div>
+          <div class="col-1 me-3">
+            <button
+              class="btn btn-primary"
+              [disabled]="!searchTerm"
+              (click)="search()"
+            >
+              Buscar
+            </button>
+          </div>
         </div>
+
+        <!-- Properties Table -->
         <table
+          #propertiesTable
+          datatable
+          [dtOptions]="dtOptions"
+          class="row-border hover"
+          [dtTrigger]="dtTrigger"
+          id="properties-table"
+        >
+          <thead>
+            <tr>
+              <th class="fw-bold fs-14">Id</th>
+              <th class="fw-bold fs-14">issue</th>
+              <th class="fw-bold fs-14">Seccion</th>
+              <th class="fw-bold fs-14">Tipo</th>
+              <th class="fw-bold fs-14">Status</th>
+              <th class="fw-bold fs-14">Creado</th>
+              <th class="fw-bold fs-14">Editado</th>
+              <th class="fw-bold fs-14">Acciones</th>
+            </tr>
+          </thead>
+        </table>
+        <!-- <table
           datatable
           [dtOptions]="dtOptions"
           [dtTrigger]="dtTrigger"
@@ -83,7 +133,7 @@
               </td>
             </tr>
           </tbody>
-        </table>
+        </table> -->
       </div>
     </div>
     <div class="card">

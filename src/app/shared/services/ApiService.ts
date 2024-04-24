@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -70,6 +70,20 @@ export class ApiService {
     this.httpHeaders['Authorization'] = `Bearer ${token}`;
     this.httpHeaders['Access-Control-Allow-Methods'] = 'POST';
     const info = this.http.get(infoUrl, {
+      headers: this.httpHeaders,
+    });
+
+    return info;
+  }
+  getServiceWithParams(infoUrl: string, params: any): Observable<any> {
+    const token = localStorage.getItem('token') || '';
+
+    this.httpHeaders['token'] = token;
+    // add bearer token
+    this.httpHeaders['Authorization'] = `Bearer ${token}`;
+    this.httpHeaders['Access-Control-Allow-Methods'] = 'POST';
+    const info = this.http.get(infoUrl, {
+      params: params,
       headers: this.httpHeaders,
     });
 

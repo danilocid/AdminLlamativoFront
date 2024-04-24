@@ -12,7 +12,7 @@ import { CreateIssueComponent } from './issues/createIssue/createIssue.component
   imports: [
     CommonModule,
     ConfigRoutingModule,
-    DataTablesModule.forRoot(),
+    DataTablesModule,
     FormsModule,
     ReactiveFormsModule,
   ],

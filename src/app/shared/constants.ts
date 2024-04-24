@@ -1,4 +1,5 @@
 import { environment } from 'src/environments/environment';
+import { Injectable } from '@angular/core';
 export const ApiRequest = {
   postLogin: environment.urlBackend + 'users-login',
   getUsers: environment.urlBackend + '/users',
@@ -70,13 +71,14 @@ export const ApiRequest = {
   updateCompra: environment.urlBackend + 'compras-UpdateCompra',
   importFileCompra: environment.urlBackend + 'compras-ImportFile',
 };
-export function FormatDataTableGlobal(): any {
+export function FormatDataTableGlobal() {
   return {
     pagingType: 'full_numbers',
     pageLength: 10,
     order: [0, 'desc'],
     dom: 'Bfrtip',
     //search: false,
+
     language: {
       search: 'Buscar:',
       searchPlaceholder: 'Buscar',
@@ -94,6 +96,38 @@ export function FormatDataTableGlobal(): any {
         'Mostrando desde _START_ al _END_ de _TOTAL_ elementos (filtrado de 0 elementos en total)',
       emptyTable: 'No hay datos disponibles',
       infoEmpty: 'No hay registros',
+    },
+  };
+}
+@Injectable({
+  providedIn: 'root',
+})
+export class TableSettings {
+  public getGlobalDataTableFormat(): DataTables.Settings {
+    return this.globalDataTableFormatNoSearch;
+  }
+  private globalDataTableFormatNoSearch: DataTables.Settings = {
+    pagingType: 'simple_numbers',
+    pageLength: 10,
+    order: [],
+    destroy: true,
+    dom: 'Brtp',
+    searching: true,
+    info: true,
+
+    language: {
+      paginate: {
+        first: '<<',
+        previous: '<',
+        next: '>',
+        last: '>>',
+      },
+      search: '',
+      searchPlaceholder: 'Buscar',
+      zeroRecords: 'No se encontraron resultados',
+      emptyTable: 'No hay datos disponibles',
+      loadingRecords: 'Cargando registros...',
+      info: 'Mostrando desde _START_ al _END_ de _TOTAL_ elementos',
     },
   };
 }
