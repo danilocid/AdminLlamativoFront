@@ -106,6 +106,17 @@
             <p>Reportes</p>
           </a>
         </li>
+        <li class="nav-item">
+          <a
+            [routerLink]="['hydrocontrol']"
+            [routerLinkActive]="['active']"
+            [class.active]="isActive('hydrocontrol')"
+            class="nav-link"
+          >
+            <i class="fas fa-chart-line nav-icon"></i>
+            <p>HydroControl</p>
+          </a>
+        </li>
       </ul>
     </nav>
     <!-- /.sidebar-menu -->

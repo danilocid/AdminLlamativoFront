@@ -22,13 +22,10 @@ export const ApiRequest = {
 
   //issues
   getIssues: environment.urlBackendHeroku + 'issues',
-  getIssuesById: environment.urlBackend + 'issues-GetById',
   reportIssue: environment.urlBackendHeroku + 'issues/report',
   secctionsIssue: environment.urlBackendHeroku + 'issues/sections',
   statusIssue: environment.urlBackendHeroku + 'issues/statuses',
   typeIssue: environment.urlBackendHeroku + 'issues/types',
-  createIssue: environment.urlBackend + 'issues-Create',
-  updateIssue: environment.urlBackend + 'issues-Update',
 
   //entities
   getEntities: environment.urlBackend + 'entities-GetAll',

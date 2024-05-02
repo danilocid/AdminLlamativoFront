@@ -1,0 +1,147 @@
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">HydroControl</h1>
+      </div>
+      <!-- /.col -->
+
+      <!-- /.col -->
+    </div>
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <p>Tiempo para recargar {{ minutes }}:{{ seconds }}</p>
+      </div>
+      <!-- /.col -->
+
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</div>
+<section class="content">
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">grafico</h4>
+        <div class="card-tools">
+          <button
+            type="button"
+            class="btn btn-tool"
+            data-card-widget="collapse"
+          >
+            <i class="fas fa-minus"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <canvas id="MyChart">{{ chart }}</canvas>
+      </div>
+    </div>
+    <div class="card collapsed-card">
+      <div class="card-header">
+        <h4 class="card-title">Datos</h4>
+        <div class="card-tools">
+          <button
+            type="button"
+            class="btn btn-tool"
+            data-card-widget="collapse"
+          >
+            <i class="fas fa-plus"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <table
+          datatable
+          [dtOptions]="dtOptions"
+          [dtTrigger]="dtTrigger"
+          class="row-border hover"
+          aria-label="Tabla"
+        >
+          <thead>
+            <tr>
+              <th colspan="2">Hora</th>
+              <th rowspan="2">N°</th>
+              <th rowspan="2">Agua</th>
+              <th colspan="2">Ambiente</th>
+              <th colspan="2">Interior</th>
+              <th colspan="2">Reles</th>
+            </tr>
+            <tr>
+              <th>Dia</th>
+              <th>Hora</th>
+              <th>T</th>
+              <th>H</th>
+              <th>T</th>
+              <th>H</th>
+              <th>Luz</th>
+              <th>Bomba</th>
+              <th>TimeStamp</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let item of data">
+              <td>
+                {{ dayOfWeekAsString(item.timeStamp.day) }}
+              </td>
+
+              <td>{{ item.timeStamp.time }}</td>
+              <td *ngIf="item.timeStamp.count !== undefined">
+                {{ item.timeStamp.count }}
+              </td>
+              <td *ngIf="item.timeStamp.count === undefined">-</td>
+              <td
+                *ngIf="item.agua !== undefined"
+                [attr.data-order]="item.agua.temperatura"
+              >
+                {{ item.agua.temperatura | number : "1.0-1" }} °C
+              </td>
+              <td *ngIf="item.agua === undefined">N/A °C</td>
+              <td *ngIf="item.exterior === undefined">N/A °C</td>
+              <td
+                *ngIf="item.exterior !== undefined"
+                [attr.data-order]="item.exterior.temperatura"
+              >
+                {{ item.exterior.temperatura | number : "1.0-1" }} °C
+              </td>
+              <td *ngIf="item.exterior === undefined">N/A %</td>
+              <td *ngIf="item.exterior !== undefined">
+                {{ item.exterior.humedad | number : "1.0-1" }} %
+              </td>
+              <td *ngIf="item.interior === undefined">N/A °C</td>
+              <td
+                *ngIf="item.interior !== undefined"
+                [attr.data-order]="item.interior.temperatura"
+              >
+                {{ item.interior.temperatura | number : "1.0-1" }} °C
+              </td>
+              <td *ngIf="item.interior === undefined">N/A %</td>
+              <td *ngIf="item.interior !== undefined">
+                {{ item.interior.humedad | number : "1.0-1" }} %
+              </td>
+              <td *ngIf="item.reles === undefined">N/A</td>
+              <td *ngIf="item.reles !== undefined">
+                <span *ngIf="item.reles.luz === 'true'">ON</span>
+                <span *ngIf="item.reles.luz === 'false'">OFF</span>
+              </td>
+
+              <td *ngIf="item.reles !== undefined">
+                <span *ngIf="item.reles.bomba === 'true'">ON</span>
+                <span *ngIf="item.reles.bomba === 'false'">OFF</span>
+              </td>
+              <td *ngIf="item.reles === undefined">N/A</td>
+              <td *ngIf="item.timeStamp.date !== undefined">
+                {{ item.timeStamp.date }}
+              </td>
+              <td *ngIf="item.timeStamp.date === undefined">N/A</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>

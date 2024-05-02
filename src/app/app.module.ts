@@ -13,6 +13,7 @@ import { registerLocaleData } from '@angular/common';
 import { SidebarComponent } from './home/partials/sidebar/sidebar.component';
 import { NavbarComponent } from './home/partials/navbar/navbar.component';
 import { FooterComponent } from './home/partials/footer/footer.component';
+import { FIREBASE_OPTIONS } from '@angular/fire/compat';
 registerLocaleData(localeEs, 'es');
 
 @NgModule({
@@ -34,7 +35,17 @@ registerLocaleData(localeEs, 'es');
     ReactiveFormsModule,
     DataTablesModule,
   ],
-  providers: [{ provide: LOCALE_ID, useValue: 'es' }],
+  providers: [
+    { provide: LOCALE_ID, useValue: 'es' },
+    {
+      provide: FIREBASE_OPTIONS,
+      useValue: {
+        apiKey: 'AIzaSyA4dIwysL-YcE148L9xoRxGV6iHTM5S8i4',
+        authDomain: 'hydrocontrol-f6486.firebaseapp.com',
+        databaseURL: 'https://hydrocontrol-f6486-default-rtdb.firebaseio.com/',
+      },
+    },
+  ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

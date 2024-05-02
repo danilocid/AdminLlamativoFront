@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { HydrocontrolComponent } from './hydrocontrol/hydrocontrol.component';
 
 const routes: Routes = [
   {
@@ -45,6 +46,10 @@ const routes: Routes = [
     path: 'reportes',
     loadChildren: () =>
       import('./reportes/reportes.module').then((m) => m.ReportesModule),
+  },
+  {
+    path: 'hydrocontrol',
+    component: HydrocontrolComponent,
   },
   {
     // captura cualquier ruta que no este definida

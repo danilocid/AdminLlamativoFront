@@ -70,15 +70,16 @@ export class CreateIssueComponent implements OnInit {
       // habilitar campos
       this.issueForm.controls['id_status'].enable();
       this.apiService
-        .postService(ApiRequest.getIssuesById, { id: this.idIssue })
+        .getService(ApiRequest.getIssues + '/' + this.idIssue)
         .subscribe({
           next: (resp) => {
+            console.log(resp.data);
             this.issueForm.setValue({
-              id: resp.result[0].id,
-              id_status: resp.result[0].id_status,
-              id_section: resp.result[0].id_section,
-              id_type: resp.result[0].id_type,
-              issue: resp.result[0].issue,
+              id: resp.data.id,
+              id_status: resp.data.issueStatus.id,
+              id_section: resp.data.issueSection.id,
+              id_type: resp.data.issueType.id,
+              issue: resp.data.issue,
             });
             this.spinner.hide();
           },

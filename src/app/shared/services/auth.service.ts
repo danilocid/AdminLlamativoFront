@@ -11,7 +11,6 @@ import { ApiService } from './ApiService';
   providedIn: 'root',
 })
 export class AuthService {
-  [x: string]: any;
   private _user: AuthResponse | undefined;
 
   get user() {
@@ -37,7 +36,7 @@ export class AuthService {
     }
   }
 
-  login(user: any, password: any) {
+  login(user: string, password: string) {
     return this.http
       .post<AuthResponse>(ApiRequest.postLogin, { user, password })
       .pipe(

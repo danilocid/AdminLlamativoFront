@@ -1,4 +1,5 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
