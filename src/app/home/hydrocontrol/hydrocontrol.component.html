@@ -40,6 +40,90 @@
         <canvas id="MyChart">{{ chart }}</canvas>
       </div>
     </div>
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">Datos</h4>
+        <div class="card-tools">
+          <button
+            type="button"
+            class="btn btn-tool"
+            data-card-widget="collapse"
+          >
+            <i class="fas fa-minus"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-lg-2 col-md-4 col-xl-2">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>{{ maxTempA | number : "1.0-1" }}°C</h3>
+                <h4>{{ timeMaxTempA }}</h4>
+
+                <p>temperatura maxima del agua</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-4 col-xl-2">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>{{ minTempA | number : "1.0-1" }}°C</h3>
+                <h4>{{ timeMinTempA }}</h4>
+
+                <p>temperatura minima del agua</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-4 col-xl-2">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>{{ maxTempE | number : "1.0-1" }}°C</h3>
+                <h4>{{ timeMaxTempE }}</h4>
+
+                <p>temperatura maxima del ambiente</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-4 col-xl-2">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>{{ minTempE | number : "1.0-1" }}°C</h3>
+                <h4>{{ timeMinTempE }}</h4>
+
+                <p>temperatura minima del ambiente</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-4 col-xl-2">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>{{ maxTempI | number : "1.0-1" }}°C</h3>
+                <h4>{{ timeMaxTempI }}</h4>
+
+                <p>temperatura maxima del interior</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-4 col-xl-2">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>{{ minTempI | number : "1.0-1" }}°C</h3>
+                <h4>{{ timeMinTempI }}</h4>
+
+                <p>temperatura minima del interior</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="card collapsed-card">
       <div class="card-header">
         <h4 class="card-title">Datos</h4>

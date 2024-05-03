@@ -48,6 +48,19 @@ export class HydrocontrolComponent implements OnInit {
   actualTime = 0;
   minutes = 0;
   seconds = 0;
+  maxTempA = 0;
+  timeMaxTempA = '';
+  minTempA = 100;
+  timeMinTempA = '';
+  maxTempE = 0;
+  timeMaxTempE = '';
+  minTempE = 100;
+  timeMinTempE = '';
+  maxTempI = 0;
+  timeMaxTempI = '';
+  minTempI = 100;
+  timeMinTempI = '';
+
   ngOnInit() {
     this.spinner.show();
     this.dtOptions = {
@@ -131,7 +144,13 @@ export class HydrocontrolComponent implements OnInit {
     //the order is from the newest to the oldest
     const tmpData: Hydrocontrol[] = [];
     this.data.forEach((element) => {
-      if (element.timeStamp.timeStamp != undefined) {
+      if (
+        element.timeStamp.timeStamp != undefined &&
+        element.agua != undefined &&
+        element.exterior != undefined &&
+        element.interior != undefined &&
+        element.agua.temperatura < 60
+      ) {
         //console.log(element.timeStamp.timeStamp);
         //convert the timeStamp to a Date object, whith the format: day-month-year hour:minutes:seconds
         const date = new Date(element.timeStamp.timeStamp);
@@ -149,6 +168,33 @@ export class HydrocontrolComponent implements OnInit {
         //console.log(dateString);
         element.timeStamp.date = dateString;
         element.timeStamp.dateString = date;
+        // get max and min temperature of the water
+        if (element.agua.temperatura > this.maxTempA) {
+          this.maxTempA = element.agua.temperatura;
+          this.timeMaxTempA = element.timeStamp.date;
+        }
+        if (element.agua.temperatura < this.minTempA) {
+          this.minTempA = element.agua.temperatura;
+          this.timeMinTempA = element.timeStamp.date;
+        }
+        // get max and min temperature of the exterior
+        if (element.exterior.temperatura > this.maxTempE) {
+          this.maxTempE = element.exterior.temperatura;
+          this.timeMaxTempE = element.timeStamp.date;
+        }
+        if (element.exterior.temperatura < this.minTempE) {
+          this.minTempE = element.exterior.temperatura;
+          this.timeMinTempE = element.timeStamp.date;
+        }
+        // get max and min temperature of the interior
+        if (element.interior.temperatura > this.maxTempI) {
+          this.maxTempI = element.interior.temperatura;
+          this.timeMaxTempI = element.timeStamp.date;
+        }
+        if (element.interior.temperatura < this.minTempI) {
+          this.minTempI = element.interior.temperatura;
+          this.timeMinTempI = element.timeStamp.date;
+        }
         tmpData.push(element);
       }
     });
@@ -208,7 +254,7 @@ export class HydrocontrolComponent implements OnInit {
               hInterior.push(element.interior.humedad);
               par = 2;
             } else {
-              if (par == 12) {
+              if (par == 13) {
                 par = 1;
               } else {
                 par = par + 1;
