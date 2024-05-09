@@ -37,8 +37,8 @@ export const ApiRequest = {
   getComunasByIdRegion:
     environment.urlBackend + 'utils-getAllComunasByRegionId',
   getRegiones: environment.urlBackend + 'utils-getAllRegions',
-  getTipoDocumento: environment.urlBackend + 'utils-getAllTipoDocumento',
-  getMedioPago: environment.urlBackend + 'utils-getAllMedioPago',
+  getTipoDocumento: environment.urlBackendHeroku + 'common/document-types',
+  getMedioPago: environment.urlBackendHeroku + 'common/payment-methods',
 
   //sales
   createSale: environment.urlBackend + 'sales-addSale',
