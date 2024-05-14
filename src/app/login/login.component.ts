@@ -50,15 +50,11 @@ export class LoginComponent implements OnInit {
     this.authSV.login(user, password).subscribe(
       (resp) => {
         this.spinner.hide();
-        if (resp.ok) {
+        if (resp.serverResponseCode === 200) {
           this.navigate('/home');
         } else {
           this.spinner.hide();
-          this.alertSV.alertBasic(
-            'No hemos podido completar la solicitud',
-            resp.message,
-            'error'
-          );
+          this.alertSV.alertBasic('Error', resp.serverResponseMessage, 'error');
           this.navigate('/');
         }
       },

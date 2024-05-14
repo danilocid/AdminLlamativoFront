@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { tap, catchError } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { ApiRequest } from 'src/app/shared/constants';
 import { AuthResponse } from '../models/user.model';
@@ -41,10 +41,9 @@ export class AuthService {
       .post<AuthResponse>(ApiRequest.postLogin, { user, password })
       .pipe(
         tap((resp) => {
-          if (resp.ok == true) {
-            localStorage.setItem('token', resp.token);
+          if (resp.serverResponseCode === 200) {
+            localStorage.setItem('token', resp.data);
           }
-          catchError((err) => of(err));
         })
       );
   }
