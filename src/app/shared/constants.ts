@@ -5,12 +5,12 @@ export const ApiRequest = {
   getUsers: environment.urlBackend + '/users',
   //articulos
   getArticulos: environment.urlBackend + 'products-GetAll',
-  getArticulosConStock: environment.urlBackend + '/products-GetAllWhitStock',
+  //getArticulosConStock: environment.urlBackend + '/products-GetAllWhitStock',
   getArticulosById: environment.urlBackend + 'products-Get',
   getMovimientosArticulosById: environment.urlBackend + 'products-GetMovements',
   updateArticulo: environment.urlBackend + 'products-Update',
   createArticulo: environment.urlBackend + 'products-Create',
-  getLastCount: environment.urlBackend + '/products-GetLastCount',
+  //getLastCount: environment.urlBackend + '/products-GetLastCount',
 
   //movimientos
   getMovimientos: environment.urlBackend + 'products-GetMovementsTypes',
@@ -28,15 +28,13 @@ export const ApiRequest = {
   typeIssue: environment.urlBackendHeroku + 'issues/types',
 
   //entities
-  getEntities: environment.urlBackend + 'entities-GetAll',
+  getEntities: environment.urlBackendHeroku + 'entities',
   updateEntity: environment.urlBackend + 'entities-Update',
   createEntity: environment.urlBackend + 'entities-Create',
-  getEntityByRut: environment.urlBackend + 'entities-GetEntityByRut',
 
   //utils
-  getComunasByIdRegion:
-    environment.urlBackend + 'utils-getAllComunasByRegionId',
-  getRegiones: environment.urlBackend + 'utils-getAllRegions',
+  getComunasByIdRegion: environment.urlBackendHeroku + 'entities/communes/',
+  getRegiones: environment.urlBackendHeroku + 'entities/regions',
   getTipoDocumento: environment.urlBackendHeroku + 'common/document-types',
   getMedioPago: environment.urlBackendHeroku + 'common/payment-methods',
 
@@ -95,6 +93,12 @@ export function FormatDataTableGlobal() {
       infoEmpty: 'No hay registros',
     },
   };
+}
+
+export interface ServerResponse {
+  serverResponseCode: number;
+  data: unknown;
+  serverResponseMessage: string;
 }
 @Injectable({
   providedIn: 'root',

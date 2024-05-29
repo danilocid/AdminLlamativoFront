@@ -1,3 +1,5 @@
+import { Commune } from './commun.model';
+
 export interface Entidad {
   rut: string;
   nombre: string;
@@ -5,9 +7,6 @@ export interface Entidad {
   direccion: string;
   telefono: string;
   mail: string;
-  region: string;
-  id_region: number;
-  comuna: string;
-  id_comuna: number;
+  comuna: Commune;
   tipo: number;
 }

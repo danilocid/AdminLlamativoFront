@@ -88,12 +88,11 @@ export class ReporteMensualComponent implements OnInit {
             value: totalMoney,
             isMoney: true,
           });
-          //console.log(this.data);
-          //this.spinner.hide();
+
           this.getCompras();
         },
         error: (error: any) => {
-          console.log(error);
+          console.warn(error);
           this.alertSV.alertBasic('Error', error.error.msg, 'error');
           this.spinner.hide();
         },
@@ -209,31 +208,11 @@ export class ReporteMensualComponent implements OnInit {
               isMoney: element.isMoney,
             });
           });
-          /* if (!this.haveData) {
-            this.getReportDataTypes();
-          } */
-          this.spinner.hide();
-        },
-        error: (error: any) => {
-          console.log(error);
-          this.alertSV.alertBasic('Error', error.error.msg, 'error');
-          this.spinner.hide();
-        },
-      });
-  }
 
-  getReportDataTypes() {
-    this.apiService = new ApiService(this.http);
-    this.apiService
-      .postService(ApiRequest.getTipoDatosReportes, {
-        activo: true,
-      })
-      .subscribe({
-        next: (result: any) => {
-          console.table(result.result);
+          this.spinner.hide();
         },
         error: (error: any) => {
-          console.log(error);
+          console.warn(error);
           this.alertSV.alertBasic('Error', error.error.msg, 'error');
           this.spinner.hide();
         },

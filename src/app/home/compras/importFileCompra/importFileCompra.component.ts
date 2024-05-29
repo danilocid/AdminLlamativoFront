@@ -71,7 +71,7 @@ export class ImportFileCompraComponent implements OnInit {
               );
             }
 
-            console.log(error);
+            console.warn(error);
           },
         });
     }

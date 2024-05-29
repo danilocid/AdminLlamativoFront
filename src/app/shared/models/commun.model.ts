@@ -1,4 +1,6 @@
+import { Region } from './region.model';
 export interface Commune {
   id: number;
-  comuns: string;
+  comuna: string;
+  region: Region;
 }

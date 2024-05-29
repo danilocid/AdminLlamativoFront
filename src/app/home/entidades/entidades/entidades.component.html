@@ -21,9 +21,31 @@
 
       <div class="card-body">
         <div class="row">
-          <a [routerLink]="['create']" class="btn btn-primary"
-            >Agregar entidad</a
-          >
+          <div class="col-9">
+            <a [routerLink]="['create']" class="btn btn-primary"
+              >Agregar entidad</a
+            >
+          </div>
+          <div class="col-2">
+            <div class="mb-3">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Buscar"
+                [(ngModel)]="searchTerm"
+                (keyup)="search()"
+              />
+            </div>
+          </div>
+          <div class="col-1 me-3">
+            <button
+              class="btn btn-primary"
+              [disabled]="!searchTerm"
+              (click)="search()"
+            >
+              Buscar
+            </button>
+          </div>
         </div>
         <table
           datatable
@@ -32,7 +54,7 @@
           class="row-border hover"
           aria-label="Clientes"
         >
-          <thead class="table-light">
+          <thead>
             <tr>
               <th>RUT</th>
               <th>Nombre</th>
@@ -46,15 +68,15 @@
               <th>Acciones</th>
             </tr>
           </thead>
-          <tbody>
+          <!-- <tbody>
             <tr *ngFor="let item of entidades">
               <td>{{ item.rut }}</td>
               <td>{{ item.nombre }}</td>
               <td>{{ item.giro }}</td>
               <td>{{ item.direccion }}</td>
-              <td>{{ item.comuna }}</td>
+              <td>{{ item.comuna.comuna }}</td>
               <td>
-                {{ item.region }}
+                {{ item.comuna.region.region }}
               </td>
               <td>
                 {{ item.telefono }}
@@ -84,7 +106,7 @@
                 </a>
               </td>
             </tr>
-          </tbody>
+          </tbody> -->
         </table>
       </div>
     </div>

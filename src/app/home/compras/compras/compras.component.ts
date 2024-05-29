@@ -116,8 +116,6 @@ export class ComprasComponent implements OnInit {
             'Ok',
             'success',
             () => {
-              console.log('ok');
-
               this.compras = [];
               this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
                 dtInstance.destroy();
@@ -128,6 +126,7 @@ export class ComprasComponent implements OnInit {
         },
         error: (err) => {
           this.spinner.hide();
+          console.warn(err);
           this.alertSV.alertBasic('Error', err.error.msg, 'error');
         },
       });

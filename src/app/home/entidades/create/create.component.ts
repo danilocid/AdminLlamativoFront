@@ -1,14 +1,16 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ApiRequest } from 'src/app/shared/constants';
+import { ApiRequest, ServerResponse } from 'src/app/shared/constants';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { ApiService } from 'src/app/shared/services/ApiService';
 import { Entidad } from 'src/app/shared/models/entidad.model';
 import { validarRut } from 'src/app/shared/utils/validaRut';
+import { Region } from 'src/app/shared/models/region.model';
+import { Commune } from 'src/app/shared/models/commun.model';
 
 @Component({
   selector: 'app-create',
@@ -21,8 +23,8 @@ export class CreateComponent implements OnInit {
   rutCliente = '';
   cliente: Entidad = {} as Entidad;
   title = '';
-  regions: any[] = [];
-  comunas: any[] = [];
+  regions: Region[] = [];
+  comunas: Commune[] = [];
   constructor(
     private titleService: Title,
     private router: Router,
@@ -66,32 +68,61 @@ export class CreateComponent implements OnInit {
   }
   getRegions() {
     this.apiService.getService(ApiRequest.getRegiones).subscribe({
-      next: (response: any) => {
-        this.regions = response.data;
-        console.log(this.rutCliente);
+      next: (response: ServerResponse) => {
+        this.regions = response.data as Region[];
         if (this.rutCliente == null) {
           this.spinner.hide;
         }
       },
-      error: (error: any) => {
+      error: (error: ServerResponse) => {
         this.spinner.hide();
-        this.alertSV.alertBasic('Error', error.error.message, 'error');
+        if (
+          error.serverResponseMessage != null ||
+          error.serverResponseMessage != '' ||
+          error.serverResponseMessage != undefined
+        ) {
+          this.alertSV.alertBasic(
+            'Error',
+            error.serverResponseMessage,
+            'error'
+          );
+        } else {
+          this.alertSV.alertBasic(
+            'Error',
+            'Error al cargar las regiones',
+            'error'
+          );
+        }
       },
     });
   }
   getComunas(idRegion: string) {
     this.apiService
-      .postService(ApiRequest.getComunasByIdRegion, {
-        regionid: idRegion,
-      })
+      .getService(ApiRequest.getComunasByIdRegion + idRegion)
       .subscribe({
-        next: (response: any) => {
-          this.comunas = response.data;
+        next: (response: ServerResponse) => {
+          this.comunas = response.data as Commune[];
           this.spinner.hide();
         },
-        error: (error: any) => {
+        error: (error: ServerResponse) => {
           this.spinner.hide();
-          this.alertSV.alertBasic('Error', error.error, 'error');
+          if (
+            error.serverResponseMessage != null ||
+            error.serverResponseMessage != '' ||
+            error.serverResponseMessage != undefined
+          ) {
+            this.alertSV.alertBasic(
+              'Error',
+              error.serverResponseMessage,
+              'error'
+            );
+          } else {
+            this.alertSV.alertBasic(
+              'Error',
+              'Error al cargar las regiones',
+              'error'
+            );
+          }
         },
       });
     this.spinner.hide();
@@ -101,25 +132,23 @@ export class CreateComponent implements OnInit {
     //remove validation from rut
     this.clientForm.get('rut')?.clearValidators();
     this.apiService
-      .postService(ApiRequest.getEntityByRut, {
-        rut: this.rutCliente,
-      })
+      .getService(ApiRequest.getEntities + '/' + this.rutCliente)
       .subscribe({
         next: (response: any) => {
-          this.cliente = response.data;
+          this.cliente = response.data as Entidad;
           this.clientForm.patchValue({
             rut: this.cliente.rut,
             nombre: this.cliente.nombre,
             direccion: this.cliente.direccion,
-            comuna: this.cliente.id_comuna.toString(),
-            region: this.cliente.id_region.toString(),
+            comuna: this.cliente.comuna.id.toString(),
+            region: this.cliente.comuna.region.id.toString(),
             mail: this.cliente.mail,
             telefono: this.cliente.telefono,
             giro: this.cliente.giro,
             tipo: this.cliente.tipo,
           });
           //set the rut to readonly
-          this.getComunas(this.cliente.id_region.toString());
+          this.getComunas(this.cliente.comuna.region.id.toString());
         },
         error: (error: any) => {
           this.spinner.hide();
@@ -149,7 +178,6 @@ export class CreateComponent implements OnInit {
         control.markAsTouched();
       });
     }
-    console.log(this.clientForm.value);
     this.spinner.show();
     if (this.rutCliente == '' || this.rutCliente == null) {
       //reescribe el rut para que sea valido
@@ -161,28 +189,28 @@ export class CreateComponent implements OnInit {
         nombre: this.clientForm.get('nombre')?.value,
         giro: this.clientForm.get('giro')?.value,
         direccion: this.clientForm.get('direccion')?.value,
-        comuna: +this.clientForm.get('comuna')?.value,
-        region: +this.clientForm.get('region')?.value,
+        id_comuna: +this.clientForm.get('comuna')?.value,
         mail: this.clientForm.get('mail')?.value,
-        telefono: this.clientForm.get('telefono')?.value.toString(),
+        telefono: +this.clientForm.get('telefono')?.value.toString(),
         tipo: this.clientForm.get('tipo')?.value,
       };
       //se crea el cliente
-      this.apiService.postService(ApiRequest.createEntity, body).subscribe({
-        next: (response: any) => {
+      this.apiService.postService(ApiRequest.getEntities, body).subscribe({
+        next: () => {
           this.spinner.hide();
-          if (response.status == 401) {
-            this.router.navigate(['/login']);
-            return;
-          }
+
           this.spinner.hide();
           this.alertSV.alertBasic('Exito', 'Cliente creado', 'success');
           this.router.navigate(['/clientes']);
         },
-        error: (error: any) => {
+        error: (error: ServerResponse) => {
           this.spinner.hide();
-          console.log(error.message);
-          this.alertSV.alertBasic('Error', error.error.error, 'error');
+          console.warn(error);
+          this.alertSV.alertBasic(
+            'Error',
+            error.serverResponseMessage,
+            'error'
+          );
         },
       });
     } else {
@@ -196,26 +224,26 @@ export class CreateComponent implements OnInit {
         nombre: this.clientForm.get('nombre')?.value,
         giro: this.clientForm.get('giro')?.value,
         direccion: this.clientForm.get('direccion')?.value,
-        comuna: +this.clientForm.get('comuna')?.value,
-        region: +this.clientForm.get('region')?.value,
+        id_comuna: +this.clientForm.get('comuna')?.value,
         mail: this.clientForm.get('mail')?.value,
-        telefono: this.clientForm.get('telefono')?.value.toString(),
+        telefono: +this.clientForm.get('telefono')?.value.toString(),
         tipo: this.clientForm.get('tipo')?.value,
       };
-      this.apiService.postService(ApiRequest.updateEntity, body).subscribe({
-        next: (response: any) => {
+      this.apiService.patchService(ApiRequest.getEntities, body).subscribe({
+        next: () => {
           this.spinner.hide();
-          if (response.status == 401) {
-            this.router.navigate(['/login']);
-            return;
-          }
+
           this.spinner.hide();
           this.alertSV.alertBasic('Exito', 'Cliente editado', 'success');
         },
-        error: (error: any) => {
+        error: (error: HttpErrorResponse) => {
           this.spinner.hide();
-          console.log(error.error);
-          this.alertSV.alertBasic('Error', error.error.error, 'error');
+          console.warn(error.error);
+          this.alertSV.alertBasic(
+            'Error',
+            error.error.serverResponseMessage,
+            'error'
+          );
         },
       });
     }

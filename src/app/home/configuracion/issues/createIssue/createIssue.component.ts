@@ -73,7 +73,6 @@ export class CreateIssueComponent implements OnInit {
         .getService(ApiRequest.getIssues + '/' + this.idIssue)
         .subscribe({
           next: (resp) => {
-            console.log(resp.data);
             this.issueForm.setValue({
               id: resp.data.id,
               id_status: resp.data.issueStatus.id,

@@ -94,7 +94,6 @@ export class ProductoComponent implements OnInit {
           quantity: quantity,
         };
         this.productChange.emit(productCart);
-        console.log(productCart);
       }
     }
     this.productForm.controls['quantity'].setValue(1);

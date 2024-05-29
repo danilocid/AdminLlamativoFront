@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ApiRequest, FormatDataTableGlobal } from 'src/app/shared/constants';
 import { ApiService } from 'src/app/shared/services/ApiService';
@@ -25,7 +24,6 @@ export class TipoDatosRepotesComponent implements OnInit {
   constructor(
     private titleService: Title,
     private spinner: NgxSpinnerService,
-    private router: Router,
     private alertSV: AlertService,
     private http: HttpClient
   ) {
@@ -57,7 +55,7 @@ export class TipoDatosRepotesComponent implements OnInit {
         //console.table(result.result);
       },
       error: (error: any) => {
-        console.log(error);
+        console.warn(error);
         this.alertSV.alertBasic('Error', error.error.msg, 'error');
         this.spinner.hide();
       },

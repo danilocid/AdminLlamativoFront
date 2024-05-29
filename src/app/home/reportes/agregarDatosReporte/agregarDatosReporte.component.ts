@@ -61,7 +61,6 @@ export class AgregarDatosReporteComponent implements OnInit {
     Object.values(this.tipoDatoForm.controls).forEach((control) => {
       control.markAsTouched();
     });
-    console.log(this.tipoDatoForm.value);
     //create report data body
     // transformar el objeto a un array de objetos, con id y valor
     const data = [];
@@ -79,7 +78,6 @@ export class AgregarDatosReporteComponent implements OnInit {
       this.apiService = new ApiService(this.http);
       this.apiService.postService(ApiRequest.createReportData, body).subscribe({
         next: (result: any) => {
-          console.log(result);
           this.spinner.hide();
           this.as.alertBasic('Exito', result.msg, 'success');
           setTimeout(() => {
@@ -87,7 +85,7 @@ export class AgregarDatosReporteComponent implements OnInit {
           }, 3000);
         },
         error: (error: any) => {
-          console.log(error);
+          console.warn(error);
           this.as.alertBasic('Error', error.error.msg, 'error');
           this.spinner.hide();
         },
@@ -129,7 +127,7 @@ export class AgregarDatosReporteComponent implements OnInit {
           }
         },
         error: (error: any) => {
-          console.log(error);
+          console.warn(error);
           this.as.alertBasic('Error', error.error.msg, 'error');
           this.spinner.hide();
         },

@@ -59,7 +59,6 @@ export class TipoDeDatosFormComponent implements OnInit, OnChanges {
   }
   submit() {
     this.tipoDatoForm.markAllAsTouched();
-    console.log(this.tipoDatoForm.value);
     if (this.tipoDatoForm.invalid) {
       return;
     }
@@ -78,7 +77,7 @@ export class TipoDeDatosFormComponent implements OnInit, OnChanges {
             this.cerrarModal();
           },
           error: (error: any) => {
-            console.log(error);
+            console.warn(error);
             this.as.alertBasic('Error', error.error.msg, 'error');
             this.spinner.hide();
           },
@@ -93,7 +92,7 @@ export class TipoDeDatosFormComponent implements OnInit, OnChanges {
             this.cerrarModal();
           },
           error: (error: any) => {
-            console.log(error);
+            console.warn(error);
             this.as.alertBasic('Error', error.error.msg, 'error');
             this.spinner.hide();
           },

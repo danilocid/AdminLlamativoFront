@@ -45,7 +45,6 @@ export class FinalizaVentaComponent implements OnInit {
 
     this.apiService.getService(ApiRequest.getEntities + '?t=c').subscribe({
       next: (resp) => {
-        console.log(resp);
         this.clients = resp.data;
         this.spinner.hide();
       },
@@ -61,7 +60,6 @@ export class FinalizaVentaComponent implements OnInit {
           this.router.navigate(['/login']);
           return;
         }
-        console.log(resp);
         this.documentTypes = resp.data;
         this.spinner.hide();
       },
@@ -80,7 +78,6 @@ export class FinalizaVentaComponent implements OnInit {
           this.router.navigate(['/login']);
           return;
         }
-        console.log(resp);
         this.medioDePago = resp.data;
         this.spinner.hide();
       },
