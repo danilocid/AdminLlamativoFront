@@ -10,18 +10,18 @@ import {
   LineElement,
   PointElement,
   LinearScale,
-  Title,
   CategoryScale,
 } from 'chart.js';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subject } from 'rxjs';
 import { Hydrocontrol } from 'src/app/shared/models/hydrocontrol.model';
+import { Title } from '@angular/platform-browser';
+
 Chart.register(
   LineController,
   LineElement,
   PointElement,
   LinearScale,
-  Title,
   CategoryScale
 );
 @Component({
@@ -29,13 +29,14 @@ Chart.register(
   templateUrl: './hydrocontrol.component.html',
   styleUrls: ['./hydrocontrol.component.css'],
 })
-
-//
 export class HydrocontrolComponent implements OnInit {
   constructor(
+    private titleService: Title,
     private db: AngularFireDatabase,
     private spinner: NgxSpinnerService
-  ) {}
+  ) {
+    this.titleService.setTitle('Hydrocontrol');
+  }
   public chart: Chart;
   @ViewChild(DataTableDirective)
   dtElement!: DataTableDirective;

@@ -6,6 +6,7 @@ import { ApiService } from 'src/app/shared/services/ApiService';
 import { ApiRequest } from 'src/app/shared/constants';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AlertService } from 'src/app/shared/services/alert.service';
+import { Subject, debounceTime } from 'rxjs';
 @Component({
   selector: 'app-producto',
   templateUrl: './producto.component.html',
@@ -18,35 +19,49 @@ export class ProductoComponent implements OnInit {
   productsCart: ProductCart[] = [];
   @Output() productChange = new EventEmitter<ProductCart>();
   @Input() type = 'venta';
-  params = '?stock=true';
+  params = {};
+  stock = false;
+  searchTerm: Subject<string> = new Subject<string>();
+  productTmp: ProductCart;
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
     private spinner: NgxSpinnerService,
     private alertSV: AlertService
-  ) {}
+  ) {
+    this.initializeSearch();
+  }
 
   ngOnInit() {
     this.productForm = this.fb.group({
-      id: ['Buscar producto', Validators.required],
+      // eslint-disable-next-line no-sparse-arrays
+      id: [, Validators.required],
       quantity: [1, Validators.required],
       price: [0, Validators.required],
     });
-    if (this.type != 'venta') {
-      this.params = '';
+    if (this.type === 'venta') {
+      this.stock = true;
     }
-    this.getProducts();
+    this.params = this.params + '&all=true';
+    this.getProducts('');
   }
-
-  getProducts() {
+  initializeSearch() {
+    this.searchTerm.pipe(debounceTime(500)).subscribe((term) => {
+      this.getProducts(term);
+    });
+  }
+  getProducts(term: string) {
     this.spinner.show();
     this.apiService = new ApiService(this.http);
-
+    this.params = {
+      stock: this.stock,
+      param: term ? term : '',
+    };
     this.apiService
-      .getService(ApiRequest.getArticulos + this.params)
+      .getServiceWithParams(ApiRequest.getArticulos, this.params)
       .subscribe({
         next: (resp) => {
-          this.products = resp.result;
+          this.products = resp.data;
           this.spinner.hide();
         },
         error: (error) => {
@@ -55,16 +70,16 @@ export class ProductoComponent implements OnInit {
         },
       });
   }
+  onSearch(term: string): void {
+    this.searchTerm.next(term);
+  }
 
   addProduct() {
-    const product = this.products.find(
-      (p) => p.id.toString() === this.productForm.value.id.toString()
-    );
     if (this.type === 'venta') {
-      if (product) {
+      if (this.productTmp) {
         let quantity = this.productForm.value.quantity;
-        if (quantity > product.stock) {
-          quantity = product.stock;
+        if (quantity > this.productTmp.stock) {
+          quantity = this.productTmp.stock;
         }
         //get the price with tax, from the form, and split it on two variables, netSale and taxSale (taxSale = 19% of price)
         const price = this.productForm.value.price;
@@ -72,7 +87,7 @@ export class ProductoComponent implements OnInit {
         const netSale = price - taxSale;
 
         const productCart = {
-          ...product,
+          ...this.productTmp,
           venta_neto: netSale,
           venta_imp: taxSale,
           quantity: quantity,
@@ -80,7 +95,7 @@ export class ProductoComponent implements OnInit {
         this.productChange.emit(productCart);
       }
     } else {
-      if (product) {
+      if (this.productTmp) {
         const quantity = this.productForm.value.quantity;
         //get the price with tax, from the form, and split it on two variables, netSale and taxSale (taxSale = 19% of price)
         const price = this.productForm.value.price;
@@ -88,7 +103,7 @@ export class ProductoComponent implements OnInit {
         const netCost = price - taxCost;
 
         const productCart = {
-          ...product,
+          ...this.productTmp,
           costo_neto: netCost,
           costo_imp: taxCost,
           quantity: quantity,
@@ -101,18 +116,21 @@ export class ProductoComponent implements OnInit {
     this.productForm.controls['price'].setValue(0);
   }
   onChangeProduct() {
-    const product = this.products.find(
-      (p) =>
-        p.id.toString() === this.productForm.controls['id'].value.toString()
-    );
-    if (product) {
+    this.productTmp = {
+      ...this.products.find(
+        (product) => product.id === this.productForm.value.id
+      ),
+      quantity: this.productForm.value.quantity,
+    };
+
+    if (this.productTmp) {
       if (this.type === 'venta') {
         this.productForm.controls['price'].setValue(
-          product.venta_imp + product.venta_neto
+          this.productTmp.venta_imp + this.productTmp.venta_neto
         );
       } else {
         this.productForm.controls['price'].setValue(
-          product.costo_imp + product.costo_neto
+          this.productTmp.costo_imp + this.productTmp.costo_neto
         );
       }
     }

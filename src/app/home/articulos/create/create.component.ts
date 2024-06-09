@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
@@ -46,8 +46,8 @@ export class CreateComponent implements OnInit {
     this.apiService = new ApiService(this.http);
     this.productForm = this.fb.group({
       internalCode: ['', [Validators.required]],
-      barCode: ['', [Validators.required]],
       description: ['', [Validators.required]],
+      barCode: [],
       netCost: ['', [Validators.required]],
       taxCost: ['', [Validators.required]],
       costo_total: ['', [Validators.required]],
@@ -69,16 +69,10 @@ export class CreateComponent implements OnInit {
 
   getProduct() {
     this.apiService
-      .postService(ApiRequest.getArticulosById, {
-        id: this.idProducto,
-      })
+      .getService(ApiRequest.getArticulos + '/' + this.idProducto)
       .subscribe({
         next: (resp) => {
-          if (resp.status == 401) {
-            this.router.navigate(['/login']);
-            return;
-          }
-          this.producto = resp.result[0];
+          this.producto = resp.data;
           this.productForm.patchValue({
             internalCode: this.producto.cod_interno,
             barCode: this.producto.cod_barras,
@@ -90,10 +84,17 @@ export class CreateComponent implements OnInit {
             taxSale: this.producto.venta_imp,
             venta_total: this.producto.venta_imp + this.producto.venta_neto,
             stockMin: this.producto.stock_critico,
-            active: this.producto.activo,
-            publicado: this.producto.publicado,
-            enlace_ml: this.producto.enlace_ml,
+            enlace_ml: this.producto.enlace_ml ? this.producto.enlace_ml : '',
           });
+          //if the product is not active, then set active to 0
+          if (!this.producto.activo) {
+            this.productForm.controls['active'].setValue('0');
+          }
+
+          //if the product is published, then set publicado to 1
+          if (this.producto.publicado) {
+            this.productForm.controls['publicado'].setValue('1');
+          }
           this.spinner.hide();
         },
         error: () => {
@@ -120,7 +121,6 @@ export class CreateComponent implements OnInit {
   createProduct() {
     this.spinner.show();
     const product = {
-      id: this.idProducto,
       cod_interno: this.productForm.controls['internalCode'].value,
       cod_barras: this.productForm.controls['barCode'].value,
       descripcion: this.productForm.controls['description'].value,
@@ -129,29 +129,41 @@ export class CreateComponent implements OnInit {
       venta_neto: this.productForm.controls['netSale'].value,
       venta_imp: this.productForm.controls['taxSale'].value,
       stock_critico: this.productForm.controls['stockMin'].value,
-      activo: this.productForm.controls['active'].value,
-      publicado: this.productForm.controls['publicado'].value,
+      publicado:
+        this.productForm.controls['publicado'].value === '1' ? true : false,
       enlace_ml: this.productForm.controls['enlace_ml'].value,
     };
 
+    //
+
     //if barCode is empty, then delete it
-    if (product.cod_barras == '') {
+    if (product.cod_barras == '' || product.cod_barras == null) {
       delete product.cod_barras;
     }
-    this.apiService.postService(ApiRequest.createArticulo, product).subscribe({
-      next: (resp) => {
-        if (resp.status == 401) {
-          this.router.navigate(['/login']);
-          return;
-        }
-        this.spinner.hide();
-        this.alertSV.alertBasic('Exito', 'Articulo creado', 'success');
 
-        this.router.navigate(['/articulos']);
+    //if enlace_ml is empty, then delete it
+    if (product.enlace_ml == '' || product.enlace_ml == null) {
+      delete product.enlace_ml;
+    }
+    this.apiService.postService(ApiRequest.getArticulos, product).subscribe({
+      next: (resp) => {
+        if (resp.serverResponseCode == 200 || resp.serverResponseCode == 201) {
+          this.spinner.hide();
+          this.alertSV.alertBasic('Exito', 'Articulo creado', 'success');
+
+          this.router.navigate(['/articulos']);
+        } else {
+          this.spinner.hide();
+          this.alertSV.alertBasic('Error', resp.serverResponseMessage, 'error');
+        }
       },
-      error: (err) => {
+      error: (err: HttpErrorResponse) => {
         this.spinner.hide();
-        this.alertSV.alertBasic('Error', err.error.message, 'error');
+        this.alertSV.alertBasic(
+          'Error',
+          err.error.serverResponseMessage,
+          'error'
+        );
       },
     });
   }
@@ -165,7 +177,7 @@ export class CreateComponent implements OnInit {
       () => {
         this.spinner.show();
         const product = {
-          id: this.idProducto,
+          id: +this.idProducto,
           cod_interno: this.productForm.controls['internalCode'].value,
           cod_barras: this.productForm.controls['barCode'].value,
           descripcion: this.productForm.controls['description'].value,
@@ -174,31 +186,45 @@ export class CreateComponent implements OnInit {
           venta_neto: this.productForm.controls['netSale'].value,
           venta_imp: this.productForm.controls['taxSale'].value,
           stock_critico: this.productForm.controls['stockMin'].value,
-          activo: this.productForm.controls['active'].value,
-          publicado: this.productForm.controls['publicado'].value,
+          activo:
+            this.productForm.controls['active'].value === '1' ? true : false,
+          publicado:
+            this.productForm.controls['publicado'].value === '1' ? true : false,
           enlace_ml: this.productForm.controls['enlace_ml'].value,
         };
-        this.apiService
-          .patchService(ApiRequest.updateArticulo, product)
-          .subscribe({
-            next: (resp) => {
-              if (resp.status == 401) {
-                this.router.navigate(['/login']);
-                return;
-              }
+
+        //if enlace_ml is empty, then delete it
+        if (product.enlace_ml == '' || product.enlace_ml == null) {
+          delete product.enlace_ml;
+        }
+        this.apiService.putService(ApiRequest.getArticulos, product).subscribe({
+          next: (resp) => {
+            if (
+              resp.serverResponseCode == 200 ||
+              resp.serverResponseCode == 201
+            ) {
               this.spinner.hide();
               this.alertSV.alertBasic(
                 'Exito',
                 'Articulo editado correctamente',
                 'success'
               );
+
               this.router.navigate(['/articulos']);
-            },
-            error: (err) => {
+            } else {
               this.spinner.hide();
-              this.alertSV.alertBasic('Error', err.error.message, 'error');
-            },
-          });
+              this.alertSV.alertBasic(
+                'Error',
+                resp.serverResponseMessage,
+                'error'
+              );
+            }
+          },
+          error: (err) => {
+            this.spinner.hide();
+            this.alertSV.alertBasic('Error', err.error.message, 'error');
+          },
+        });
       }
     );
   }

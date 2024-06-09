@@ -4,9 +4,8 @@ export const ApiRequest = {
   postLogin: environment.urlBackendHeroku + 'auth/login',
   getUsers: environment.urlBackend + '/users',
   //articulos
-  getArticulos: environment.urlBackend + 'products-GetAll',
-  //getArticulosConStock: environment.urlBackend + '/products-GetAllWhitStock',
-  getArticulosById: environment.urlBackend + 'products-Get',
+  getArticulos: environment.urlBackendHeroku + 'products',
+
   getMovimientosArticulosById: environment.urlBackend + 'products-GetMovements',
   updateArticulo: environment.urlBackend + 'products-Update',
   createArticulo: environment.urlBackend + 'products-Create',

@@ -46,10 +46,10 @@ export class VerArticulosComponent implements OnInit, OnDestroy {
   private getProductData() {
     this.apiService = new ApiService(this.http);
     this.apiService
-      .postService(ApiRequest.getArticulosById, { id: this.idProducto })
+      .getService(ApiRequest.getArticulos + '/' + this.idProducto)
       .subscribe({
         next: (resp) => {
-          this.producto = resp.result[0];
+          this.producto = resp.data;
           this.getProductMovements();
         },
         error: (error) => {

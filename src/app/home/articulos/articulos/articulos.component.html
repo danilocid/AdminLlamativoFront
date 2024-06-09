@@ -20,32 +20,57 @@
       </div>
 
       <div class="card-body">
-        <a [routerLink]="['create']" class="btn btn-primary"
-          >Agregar articulo</a
-        >
-        <br />
-
         <div class="row">
-          <div class="form-group">
-            <label for="search">Activos</label>
-            <input
-              type="checkbox"
-              name=""
-              id=""
-              [checked]="active"
-              (change)="changeActive()"
-            />
-          </div>
+          <div class="col-9">
+            <div class="row">
+              <a [routerLink]="['create']" class="btn btn-primary"
+                >Agregar articulo</a
+              >
 
-          <div class="form-group">
-            <label for="search">Con stock</label>
-            <input
-              type="checkbox"
-              name=""
-              id=""
-              [checked]="stock"
-              (change)="changeStock()"
-            />
+              <div class="ml-3">
+                <label for="search">Activos</label>
+                <input
+                  type="checkbox"
+                  name=""
+                  id=""
+                  class="ml-1"
+                  [checked]="active"
+                  (change)="changeActive()"
+                />
+              </div>
+
+              <div class="ml-3">
+                <label for="search">Con stock</label>
+                <input
+                  type="checkbox"
+                  name=""
+                  class="ml-1"
+                  id=""
+                  [checked]="stock"
+                  (change)="changeStock()"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="col-2">
+            <div>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Buscar"
+                [(ngModel)]="searchTerm"
+                (keyup)="search()"
+              />
+            </div>
+          </div>
+          <div class="col-1 me-3">
+            <button
+              class="btn btn-primary"
+              [disabled]="!searchTerm"
+              (click)="search()"
+            >
+              Buscar
+            </button>
           </div>
         </div>
         <table
@@ -57,18 +82,19 @@
         >
           <thead class="table-light">
             <tr>
-              <th>Id</th>
+              <th [width]="25">Id</th>
               <th>Interno</th>
               <th>Barra</th>
               <th>Descripcion</th>
-              <th>Stock</th>
-              <th>Costo</th>
-              <th>PVP</th>
-              <th>Activo</th>
-              <th>Publicado</th>
-              <th>Acciones</th>
+              <th [width]="25">Stock</th>
+              <th [width]="25">Costo</th>
+              <th [width]="25">PVP</th>
+              <th [width]="25">Activo</th>
+              <th [width]="25">Publicado</th>
+              <th [width]="25">Acciones</th>
             </tr>
           </thead>
+          <!-- 
           <tbody>
             <tr *ngFor="let item of products">
               <td>{{ item.id }}</td>
@@ -119,7 +145,7 @@
                 </a>
               </td>
             </tr>
-          </tbody>
+          </tbody> -->
         </table>
       </div>
     </div>

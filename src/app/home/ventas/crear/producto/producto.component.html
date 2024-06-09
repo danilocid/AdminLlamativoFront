@@ -2,7 +2,7 @@
   <div class="card-header">
     <h4 class="card-title">Productos</h4>
     <div class="card-tools">
-      <button type="button" class="btn btn-tool" (click)="getProducts()">
+      <button type="button" class="btn btn-tool" (click)="getProducts('')">
         <i class="fas fa-sync-alt"></i>
       </button>
     </div>
@@ -14,14 +14,22 @@
           formControlName="id"
           id=""
           name=""
+          bindValue="id"
+          placeholder="Seleccione un producto"
+          [items]="products"
           (change)="onChangeProduct()"
+          (search)="onSearch($event.term)"
+          [searchable]="true"
+          [typeahead]="searchTerm"
           required
         >
-          <option value="" selected disabled>Seleccione</option>
-          <ng-option *ngFor="let item of products" value="{{ item.id }}">
-            {{ item.descripcion }} - {{ item.cod_barras }} -
-            {{ item.cod_interno }}
-          </ng-option>
+          <ng-template ng-label-tmp let-item="item">
+            {{ item.descripcion }} {{ item.cod_interno }} {{ item.cod_barras }}
+          </ng-template>
+          <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+            {{ item.descripcion }} {{ item.cod_interno }} -
+            {{ item.cod_barras }}
+          </ng-template>
         </ng-select>
       </div>
       <div class="form-group">
