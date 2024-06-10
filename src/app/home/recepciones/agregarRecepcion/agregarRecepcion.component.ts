@@ -64,7 +64,7 @@ export class AgregarRecepcionComponent {
   calcTotal() {
     this.total = 0;
     this.productsCart.forEach((p) => {
-      this.total += (p.costo_neto + p.costo_neto) * p.quantity;
+      this.total += (p.costo_neto + p.costo_imp) * p.quantity;
     });
   }
 

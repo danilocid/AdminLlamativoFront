@@ -10,6 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Product } from 'src/app/shared/models/product.model';
 import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
+import { PdfGeneratorService } from './pdf-generator.service';
 
 @Component({
   selector: 'app-ver-articulos',
@@ -31,7 +32,8 @@ export class VerArticulosComponent implements OnInit, OnDestroy {
     private uS: UtilService,
     private alertSV: AlertService,
     private http: HttpClient,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private pdfGeneratorService: PdfGeneratorService
   ) {
     this.titleService.setTitle('Articulos - Ver');
     this.spinner.show();
@@ -41,6 +43,22 @@ export class VerArticulosComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.dtOptions = FormatDataTableGlobal();
     this.getProductData();
+  }
+
+  printLabel() {
+    const startColumn = 2; // Segunda columna
+    const startRow = 3; // Tercera fila
+    const quantity = this.producto.stock; // Cantidad de etiquetas a imprimir
+    const productName = this.producto.descripcion; // Nombre del producto
+    const barcodeText = this.producto.cod_barras; // Código de barras
+
+    this.pdfGeneratorService.generateLabelPdf(
+      startColumn,
+      startRow,
+      15,
+      productName,
+      barcodeText
+    );
   }
 
   private getProductData() {

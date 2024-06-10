@@ -27,8 +27,8 @@
                 <th>Cantidad</th>
                 <th>Neto</th>
                 <th>IVA</th>
+                <th>Unitario</th>
                 <th>Total</th>
-                <th>Subtotal</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -36,11 +36,16 @@
               <tr *ngFor="let item of productsCart">
                 <td>{{ item.descripcion }}</td>
                 <td>{{ item.quantity }}</td>
-                <td>{{ item.costo_neto }}</td>
-                <td>{{ item.costo_imp }}</td>
-                <td>{{ item.costo_neto + item.costo_imp }}</td>
+                <td>{{ item.costo_neto | number : "1.0-0" }}</td>
+                <td>{{ item.costo_imp | number : "1.0-0" }}</td>
                 <td>
-                  {{ item.quantity * (item.costo_neto + item.costo_imp) }}
+                  {{ item.costo_neto + item.costo_imp | number : "1.0-0" }}
+                </td>
+                <td>
+                  {{
+                    item.quantity * (item.costo_neto + item.costo_imp)
+                      | number : "1.0-0"
+                  }}
                 </td>
                 <td>
                   <button
@@ -67,7 +72,7 @@
                 <input
                   type="number"
                   class="form-control"
-                  value="{{ total }}"
+                  value="{{ total | number : '1.0-0' }}"
                   disabled
                 />
               </div>
