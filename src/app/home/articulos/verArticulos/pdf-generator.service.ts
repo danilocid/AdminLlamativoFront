@@ -8,7 +8,26 @@ import JsBarcode from 'jsbarcode';
   providedIn: 'root',
 })
 export class PdfGeneratorService {
-  generateLabelPdf(
+  getBase64ImageFromURL(url: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        const reader = new FileReader();
+        reader.onloadend = function () {
+          resolve(reader.result as string);
+        };
+        reader.readAsDataURL(xhr.response);
+      };
+      xhr.onerror = function () {
+        reject(new Error('Failed to load image'));
+      };
+      xhr.open('GET', url);
+      xhr.responseType = 'blob';
+      xhr.send();
+    });
+  }
+
+  async generateLabelPdf(
     startColumn: number,
     startRow: number,
     quantity: number,
@@ -21,7 +40,10 @@ export class PdfGeneratorService {
     const labels = Array(16).fill({ text: '', barcode: '' }); // Inicializa todas las etiquetas vacías
     let currentColumn = startColumn - 1;
     let currentRow = startRow - 1;
-
+    // Obtener la imagen en base64
+    const logoBase64 = await this.getBase64ImageFromURL(
+      'assets/img/logo_sin_fondo.png'
+    );
     for (let i = 0; i < quantity; i++) {
       if (currentColumn >= 4) {
         currentColumn = 0;
@@ -32,7 +54,7 @@ export class PdfGeneratorService {
       }
       // Generar el código de barras en base64
       const canvas = document.createElement('canvas');
-      JsBarcode(canvas, barcodeText, { format: 'CODE128' });
+      JsBarcode(canvas, barcodeText, { format: 'CODE128', height: 90 });
       const barcodeImage = canvas.toDataURL('image/png');
 
       labels[currentRow * 4 + currentColumn] = {
@@ -42,6 +64,7 @@ export class PdfGeneratorService {
 
       currentColumn++;
     }
+    // add a image to the pdf, the image is in .png format, the path is relative to the assets directory /assets/images/logo_sin_fondo.png
 
     const body = [];
     for (let r = 0; r < 4; r++) {
@@ -52,16 +75,21 @@ export class PdfGeneratorService {
           row.push({
             stack: [
               {
+                image: logoBase64,
+                width: 150,
+                alignment: 'center',
+                margin: [0, 5, 0, 0], // Ajustar el margen según sea necesario
+              },
+              {
                 text: label.text,
                 alignment: 'center',
-                margin: [0, 10, 0, 5], // Ajustar el margen según sea necesario
+                margin: [0, 0, 0, 5], // Ajustar el margen según sea necesario
               },
               {
                 image: label.barcode,
                 width: labelWidth - 20,
-                height: 80,
                 alignment: 'center',
-                margin: [0, 10, 0, 0], // Ajustar el margen según sea necesario
+                margin: [0, 0, 0, 0], // Ajustar el margen según sea necesario
               },
             ],
             width: labelWidth,
