@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { AuthService } from './auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -34,6 +35,20 @@ export class ApiService {
     const info = this.http.post(infoUrl, json, {
       headers: this.httpHeaders,
     });
+    info.subscribe({
+      next: (resp: any) => {
+        if (resp.error) {
+          if (resp.error.serverResponseCode === 401) {
+            AuthService.prototype.logout();
+          }
+        }
+      },
+      error: (error) => {
+        if (error.error.serverResponseCode === 401) {
+          AuthService.prototype.logout();
+        }
+      },
+    });
     return info;
   }
 
@@ -46,6 +61,20 @@ export class ApiService {
     this.httpHeaders['Access-Control-Allow-Methods'] = 'POST';
     const info = this.http.patch(infoUrl, json, {
       headers: this.httpHeaders,
+    });
+    info.subscribe({
+      next: (resp: any) => {
+        if (resp.error) {
+          if (resp.error.serverResponseCode === 401) {
+            AuthService.prototype.logout();
+          }
+        }
+      },
+      error: (error) => {
+        if (error.error.serverResponseCode === 401) {
+          AuthService.prototype.logout();
+        }
+      },
     });
     return info;
   }
@@ -60,6 +89,20 @@ export class ApiService {
     const info = this.http.put(infoUrl, json, {
       headers: this.httpHeaders,
     });
+    info.subscribe({
+      next: (resp: any) => {
+        if (resp.error) {
+          if (resp.error.serverResponseCode === 401) {
+            AuthService.prototype.logout();
+          }
+        }
+      },
+      error: (error) => {
+        if (error.error.serverResponseCode === 401) {
+          AuthService.prototype.logout();
+        }
+      },
+    });
     return info;
   }
 
@@ -73,7 +116,20 @@ export class ApiService {
     const info = this.http.get(infoUrl, {
       headers: this.httpHeaders,
     });
-
+    info.subscribe({
+      next: (resp: any) => {
+        if (resp.error) {
+          if (resp.error.serverResponseCode === 401) {
+            AuthService.prototype.logout();
+          }
+        }
+      },
+      error: (error) => {
+        if (error.error.serverResponseCode === 401) {
+          AuthService.prototype.logout();
+        }
+      },
+    });
     return info;
   }
   getServiceWithParams(infoUrl: string, params: any): Observable<any> {
@@ -87,7 +143,20 @@ export class ApiService {
       params: params,
       headers: this.httpHeaders,
     });
-
+    info.subscribe({
+      next: (resp: any) => {
+        if (resp.error) {
+          if (resp.error.serverResponseCode === 401) {
+            AuthService.prototype.logout();
+          }
+        }
+      },
+      error: (error) => {
+        if (error.error.serverResponseCode === 401) {
+          AuthService.prototype.logout();
+        }
+      },
+    });
     return info;
   }
 }

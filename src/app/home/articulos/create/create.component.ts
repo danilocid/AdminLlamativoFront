@@ -99,6 +99,11 @@ export class CreateComponent implements OnInit {
         },
         error: () => {
           this.spinner.hide();
+          this.alertSV.alertBasic(
+            'Error',
+            'No se pudo obtener la informacion del articulo',
+            'error'
+          );
         },
       });
   }
