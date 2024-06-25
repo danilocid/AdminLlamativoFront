@@ -3,7 +3,6 @@ import { Title } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
 import { ApiService } from 'src/app/shared/services/ApiService';
 import { ApiRequest } from 'src/app/shared/constants';
-import { AuthService } from 'src/app/shared/services/auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,11 +18,7 @@ export class DashboardComponent implements OnInit {
   };
   private apiService!: ApiService;
 
-  constructor(
-    private titleService: Title,
-    private http: HttpClient,
-    private as: AuthService
-  ) {
+  constructor(private titleService: Title, private http: HttpClient) {
     this.titleService.setTitle('Dashboard');
   }
   ngOnInit() {
@@ -34,13 +29,7 @@ export class DashboardComponent implements OnInit {
     this.apiService = new ApiService(this.http);
     this.apiService.getService(ApiRequest.dashboardReport).subscribe({
       next: (resp) => {
-        this.dasboardReport = resp;
-      },
-      error: (err) => {
-        if (err.status == 401 || err.status == 403) {
-          //logout
-          this.as.logout();
-        }
+        this.dasboardReport = resp.data;
       },
     });
   }

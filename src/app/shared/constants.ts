@@ -7,9 +7,6 @@ export const ApiRequest = {
   getArticulos: environment.urlBackendHeroku + 'products',
 
   getMovimientosArticulosById: environment.urlBackend + 'products-GetMovements',
-  updateArticulo: environment.urlBackend + 'products-Update',
-  createArticulo: environment.urlBackend + 'products-Create',
-  //getLastCount: environment.urlBackend + '/products-GetLastCount',
 
   //movimientos
   getMovimientos: environment.urlBackend + 'products-GetMovementsTypes',
@@ -28,8 +25,6 @@ export const ApiRequest = {
 
   //entities
   getEntities: environment.urlBackendHeroku + 'entities',
-  updateEntity: environment.urlBackend + 'entities-Update',
-  createEntity: environment.urlBackend + 'entities-Create',
 
   //utils
   getComunasByIdRegion: environment.urlBackendHeroku + 'entities/communes/',
@@ -43,7 +38,7 @@ export const ApiRequest = {
   getSaleById: environment.urlBackend + 'sales-getSaleById',
 
   //reports
-  dashboardReport: environment.urlBackend + 'products-GetResume',
+  dashboardReport: environment.urlBackendHeroku + 'products/inventory',
   getReporteMensual: environment.urlBackend + 'reports-MonthlySales',
   getTipoDatosReportes: environment.urlBackend + 'reports-GetReportDataTypes',
   createTipoDatoReporte:

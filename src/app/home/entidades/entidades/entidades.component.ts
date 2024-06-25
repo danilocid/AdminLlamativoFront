@@ -1,13 +1,11 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { AlertService } from 'src/app/shared/services/alert.service';
 import { ApiService } from 'src/app/shared/services/ApiService';
 import { ApiRequest, TableSettings } from 'src/app/shared/constants';
 import { HttpClient } from '@angular/common/http';
 import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
-import { Router } from '@angular/router';
 import { Entidad } from 'src/app/shared/models/entidad.model';
 @Component({
   selector: 'app-entidades',
@@ -26,8 +24,6 @@ export class EntidadesComponent implements OnInit, AfterViewInit {
   constructor(
     private titleService: Title,
     private spinner: NgxSpinnerService,
-    private router: Router,
-    private alertSV: AlertService,
     private http: HttpClient,
     private tableOptions: TableSettings
   ) {
@@ -36,9 +32,6 @@ export class EntidadesComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    /*  this.dtOptions = FormatDataTableGlobal();
-    this.dtOptions.order = [[1, 'asc']];
-    this.apiService = new ApiService(this.http); */
     this.getAll();
   }
   ngAfterViewInit(): void {

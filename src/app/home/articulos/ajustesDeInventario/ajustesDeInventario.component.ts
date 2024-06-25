@@ -2,15 +2,12 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AlertService } from 'src/app/shared/services/alert.service';
-import { UtilService } from 'src/app/shared/services/util.service';
 import { ApiService } from 'src/app/shared/services/ApiService';
 import { ApiRequest, FormatDataTableGlobal } from 'src/app/shared/constants';
 import { HttpClient } from '@angular/common/http';
 import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
-
 import { Inventory } from '../../../shared/models/inventory.model';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-ajustes-de-inventario',
@@ -29,8 +26,6 @@ export class AjustesDeInventarioComponent implements OnInit, OnDestroy {
   constructor(
     private titleService: Title,
     private spinner: NgxSpinnerService,
-    private uS: UtilService,
-    private router: Router,
     private alertSV: AlertService,
     private http: HttpClient
   ) {
@@ -48,19 +43,11 @@ export class AjustesDeInventarioComponent implements OnInit, OnDestroy {
     this.apiService = new ApiService(this.http);
     this.apiService.getService(ApiRequest.getAllInventory).subscribe({
       next: (resp) => {
-        if (resp.status === 401 || resp.status === 403) {
-          this.router.navigate(['/login']);
-          return;
-        }
         this.inventories = resp.result;
         this.dtTrigger.next(this.dtOptions);
         this.spinner.hide();
       },
       error: (error) => {
-        if (error.status === 401 || error.status === 403) {
-          this.router.navigate(['/login']);
-          return;
-        }
         this.spinner.hide();
         this.alertSV.alertBasic('Error', error.error.msg, 'error');
       },

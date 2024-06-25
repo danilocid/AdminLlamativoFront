@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AlertService } from 'src/app/shared/services/alert.service';
-import { UtilService } from 'src/app/shared/services/util.service';
 import { ApiService } from 'src/app/shared/services/ApiService';
 import { ApiRequest, FormatDataTableGlobal } from 'src/app/shared/constants';
 import { HttpClient } from '@angular/common/http';
@@ -42,7 +41,6 @@ export class VerInventarioComponent implements OnInit, OnDestroy {
   constructor(
     private titleService: Title,
     private spinner: NgxSpinnerService,
-    private uS: UtilService,
     private alertSV: AlertService,
     private http: HttpClient,
     private route: ActivatedRoute,
