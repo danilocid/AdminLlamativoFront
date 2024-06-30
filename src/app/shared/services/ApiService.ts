@@ -35,7 +35,7 @@ export class ApiService {
     const info = this.http.post(infoUrl, json, {
       headers: this.httpHeaders,
     });
-    info.subscribe({
+    /*  info.subscribe({
       next: (resp: any) => {
         if (resp.error) {
           if (resp.error.serverResponseCode === 401) {
@@ -48,7 +48,7 @@ export class ApiService {
           AuthService.prototype.logout();
         }
       },
-    });
+    }); */
     return info;
   }
 
@@ -62,7 +62,7 @@ export class ApiService {
     const info = this.http.patch(infoUrl, json, {
       headers: this.httpHeaders,
     });
-    info.subscribe({
+    /* info.subscribe({
       next: (resp: any) => {
         if (resp.error) {
           if (resp.error.serverResponseCode === 401) {
@@ -75,7 +75,7 @@ export class ApiService {
           AuthService.prototype.logout();
         }
       },
-    });
+    }); */
     return info;
   }
 
@@ -89,7 +89,7 @@ export class ApiService {
     const info = this.http.put(infoUrl, json, {
       headers: this.httpHeaders,
     });
-    info.subscribe({
+    /*  info.subscribe({
       next: (resp: any) => {
         if (resp.error) {
           if (resp.error.serverResponseCode === 401) {
@@ -102,7 +102,7 @@ export class ApiService {
           AuthService.prototype.logout();
         }
       },
-    });
+    }); */
     return info;
   }
 
@@ -116,7 +116,7 @@ export class ApiService {
     const info = this.http.get(infoUrl, {
       headers: this.httpHeaders,
     });
-    info.subscribe({
+    /* info.subscribe({
       next: (resp: any) => {
         if (resp.error) {
           if (resp.error.serverResponseCode === 401) {
@@ -129,7 +129,7 @@ export class ApiService {
           AuthService.prototype.logout();
         }
       },
-    });
+    }); */
     return info;
   }
   getServiceWithParams(infoUrl: string, params: any): Observable<any> {
@@ -143,7 +143,7 @@ export class ApiService {
       params: params,
       headers: this.httpHeaders,
     });
-    info.subscribe({
+    /* info.subscribe({
       next: (resp: any) => {
         if (resp.error) {
           if (resp.error.serverResponseCode === 401) {
@@ -156,7 +156,7 @@ export class ApiService {
           AuthService.prototype.logout();
         }
       },
-    });
+    }); */
     return info;
   }
 }
