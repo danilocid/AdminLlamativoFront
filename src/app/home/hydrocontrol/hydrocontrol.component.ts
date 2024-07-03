@@ -67,7 +67,10 @@ export class HydrocontrolComponent implements OnInit {
     this.dtOptions = {
       pagingType: 'full_numbers',
       pageLength: 15,
-      order: [[10, 'desc']],
+      order: [
+        [10, 'desc'],
+        [11, 'off'],
+      ],
       dom: 'Bfrtip',
       language: {
         search: 'Buscar:',
@@ -140,18 +143,22 @@ export class HydrocontrolComponent implements OnInit {
     }
   }
 
-  orderData() {
+  async orderData() {
     //order data by timeStamp -> day (is a numeric value from 0 to 6, this is the number of the day, from monday to sunday) and hora (is a numeric value from 0 to 23) and then by minutos (is a numeric value from 0 to 59)
     //the order is from the newest to the oldest
     const tmpData: Hydrocontrol[] = [];
-    this.data.forEach((element) => {
+    const idToDelete = [];
+    let last = 0;
+    await this.data.forEach((element) => {
       if (
         element.timeStamp.timeStamp != undefined &&
+        element.timeStamp.count != undefined &&
         element.agua != undefined &&
         element.exterior != undefined &&
         element.interior != undefined &&
         element.agua.temperatura < 60
       ) {
+        last = element.timeStamp.count;
         //console.log(element.timeStamp.timeStamp);
         //convert the timeStamp to a Date object, whith the format: day-month-year hour:minutes:seconds
         const date = new Date(element.timeStamp.timeStamp);
@@ -170,37 +177,48 @@ export class HydrocontrolComponent implements OnInit {
         element.timeStamp.date = dateString;
         element.timeStamp.dateString = date;
         // get max and min temperature of the water
-        if (element.agua.temperatura > this.maxTempA) {
+        if (element.agua.temperatura >= this.maxTempA) {
           this.maxTempA = element.agua.temperatura;
           this.timeMaxTempA = element.timeStamp.date;
         }
-        if (element.agua.temperatura < this.minTempA) {
+        if (element.agua.temperatura <= this.minTempA) {
           this.minTempA = element.agua.temperatura;
           this.timeMinTempA = element.timeStamp.date;
         }
         // get max and min temperature of the exterior
-        if (element.exterior.temperatura > this.maxTempE) {
+        if (element.exterior.temperatura >= this.maxTempE) {
           this.maxTempE = element.exterior.temperatura;
           this.timeMaxTempE = element.timeStamp.date;
         }
-        if (element.exterior.temperatura < this.minTempE) {
+        if (element.exterior.temperatura <= this.minTempE) {
           this.minTempE = element.exterior.temperatura;
           this.timeMinTempE = element.timeStamp.date;
         }
         // get max and min temperature of the interior
-        if (element.interior.temperatura > this.maxTempI) {
+        if (element.interior.temperatura >= this.maxTempI) {
           this.maxTempI = element.interior.temperatura;
           this.timeMaxTempI = element.timeStamp.date;
         }
-        if (element.interior.temperatura < this.minTempI) {
+        if (element.interior.temperatura <= this.minTempI) {
           this.minTempI = element.interior.temperatura;
           this.timeMinTempI = element.timeStamp.date;
         }
         tmpData.push(element);
+      } else {
+        /* console.log('Elemento no válido');
+        console.log(element);
+        console.log('ID a borrar: ' + element.timeStamp.count);
+        console.log('ID anterior: ' + last); */
+        idToDelete.push(element.timeStamp.count);
       }
     });
     this.data = tmpData;
-
+    /*     console.log(idToDelete);
+     */ idToDelete.forEach((element) => {
+      if (element != undefined) {
+        this.deleteData(element);
+      }
+    });
     //order the data by date from the newest to the oldest
     this.data.sort(function (a, b) {
       return b.timeStamp.dateString - a.timeStamp.dateString;
@@ -337,5 +355,13 @@ export class HydrocontrolComponent implements OnInit {
         },
       },
     });
+  }
+
+  deleteData(id: number) {
+    try {
+      this.db.list('data').remove(id.toString());
+    } catch (error) {
+      console.error('There was an error!', error);
+    }
   }
 }

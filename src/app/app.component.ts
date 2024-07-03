@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { AuthService } from './shared/services/auth.service';
+import { jwtDecode } from 'jwt-decode';
 
 @Component({
   selector: 'app-root',
@@ -31,7 +32,16 @@ export class AppComponent implements OnInit {
         }
       }
     });
-
+    const token = localStorage.getItem('token');
+    // decode token
+    if (token) {
+      const tokenDecode = jwtDecode(token);
+      // check if token is expired
+      if (tokenDecode.exp < Date.now() / 1000) {
+        this.as.logout();
+      }
+      //this.as.authVerification
+    }
     //this.as.authVerificationCheck();
   }
 }

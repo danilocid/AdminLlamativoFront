@@ -22,7 +22,7 @@
 </div>
 <section class="content">
   <div class="container-fluid">
-    <div class="card">
+    <div class="card collapsed-card">
       <div class="card-header">
         <h4 class="card-title">grafico</h4>
         <div class="card-tools">
@@ -40,7 +40,7 @@
         <canvas id="MyChart">{{ chart }}</canvas>
       </div>
     </div>
-    <div class="card">
+    <div class="card collapsed-card">
       <div class="card-header">
         <h4 class="card-title">Datos</h4>
         <div class="card-tools">
@@ -124,7 +124,7 @@
         </div>
       </div>
     </div>
-    <div class="card collapsed-card">
+    <div class="card">
       <div class="card-header">
         <h4 class="card-title">Datos</h4>
         <div class="card-tools">
@@ -153,6 +153,8 @@
               <th colspan="2">Ambiente</th>
               <th colspan="2">Interior</th>
               <th colspan="2">Reles</th>
+              <th rowspan="2">TimeStamp</th>
+              <th rowspan="2"><i class="fas fa-trash pointer"></i></th>
             </tr>
             <tr>
               <th>Dia</th>
@@ -163,7 +165,6 @@
               <th>H</th>
               <th>Luz</th>
               <th>Bomba</th>
-              <th>TimeStamp</th>
             </tr>
           </thead>
 
@@ -222,6 +223,14 @@
                 {{ item.timeStamp.date }}
               </td>
               <td *ngIf="item.timeStamp.date === undefined">N/A</td>
+              <td>
+                <a
+                  (click)="deleteData(item.timeStamp.count)"
+                  class="me-1 text-warning pointer"
+                >
+                  <i class="fas fa-trash pointer"></i>
+                </a>
+              </td>
             </tr>
           </tbody>
         </table>
