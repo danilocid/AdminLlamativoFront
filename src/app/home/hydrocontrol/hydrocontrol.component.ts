@@ -89,7 +89,7 @@ export class HydrocontrolComponent implements OnInit {
     this.hydroData = this.db.list('data');
     this.getData();
     this.reload();
-    this.reloadv2();
+    //this.reloadv2();
   }
 
   private getData() {
@@ -151,14 +151,19 @@ export class HydrocontrolComponent implements OnInit {
     let last = 0;
     await this.data.forEach((element) => {
       if (
+        element.timeStamp != undefined &&
         element.timeStamp.timeStamp != undefined &&
         element.timeStamp.count != undefined &&
+        element.timeStamp.hora != undefined &&
+        element.timeStamp.minutos != undefined &&
+        element.timeStamp.day != undefined &&
         element.agua != undefined &&
         element.exterior != undefined &&
         element.interior != undefined &&
         element.agua.temperatura < 60
       ) {
         last = element.timeStamp.count;
+        //console.log(last, element.timeStamp.day);
         //console.log(element.timeStamp.timeStamp);
         //convert the timeStamp to a Date object, whith the format: day-month-year hour:minutes:seconds
         const date = new Date(element.timeStamp.timeStamp);
@@ -205,20 +210,21 @@ export class HydrocontrolComponent implements OnInit {
         }
         tmpData.push(element);
       } else {
-        /* console.log('Elemento no válido');
+        console.log('Elemento no válido');
         console.log(element);
-        console.log('ID a borrar: ' + element.timeStamp.count);
-        console.log('ID anterior: ' + last); */
+        //console.log('ID a borrar: ' + element.timeStamp.count);
+        console.log('ID anterior: ' + last);
         idToDelete.push(element.timeStamp.count);
       }
     });
     this.data = tmpData;
     /*     console.log(idToDelete);
-     */ idToDelete.forEach((element) => {
+     */
+    /*  idToDelete.forEach((element) => {
       if (element != undefined) {
         this.deleteData(element);
       }
-    });
+    }); */
     //order the data by date from the newest to the oldest
     this.data.sort(function (a, b) {
       return b.timeStamp.dateString - a.timeStamp.dateString;
