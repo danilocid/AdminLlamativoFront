@@ -6,10 +6,11 @@ export const ApiRequest = {
   //articulos
   getArticulos: environment.urlBackendHeroku + 'products',
 
-  getMovimientosArticulosById: environment.urlBackend + 'products-GetMovements',
+  getMovimientosArticulosById:
+    environment.urlBackendHeroku + 'products-movements/',
 
   //movimientos
-  getMovimientos: environment.urlBackend + 'products-GetMovementsTypes',
+  getMovimientos: environment.urlBackendHeroku + 'products-movements/types',
 
   //inventario
   saveInventory: environment.urlBackend + 'products-SaveMovement',

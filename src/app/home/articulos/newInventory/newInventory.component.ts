@@ -89,7 +89,7 @@ export class NewInventoryComponent implements OnInit, OnDestroy {
           this.router.navigate(['/login']);
           return;
         }
-        this.movementTypes = resp.result;
+        this.movementTypes = resp.data;
         this.spinner.hide();
       },
       error: (error) => {

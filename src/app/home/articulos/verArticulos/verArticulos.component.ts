@@ -27,6 +27,8 @@ export class VerArticulosComponent implements OnInit, OnDestroy {
   producto: Product = {} as Product;
   movimientos: any[] = [];
   labelForm: FormGroup;
+  date = new Date();
+
   constructor(
     private titleService: Title,
     private spinner: NgxSpinnerService,
@@ -43,7 +45,10 @@ export class VerArticulosComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.dtOptions = FormatDataTableGlobal();
-    this.getProductData();
+    //order the table by date, desc, column 3
+    this.dtOptions.order = [[3, 'desc']];
+    //this.getProductData();
+    this.getProductMovements();
     this.labelForm = this.fb.group({
       quantity: [1],
       labelColumn: [1],
@@ -85,19 +90,22 @@ export class VerArticulosComponent implements OnInit, OnDestroy {
   private getProductMovements() {
     this.apiService = new ApiService(this.http);
     this.apiService
-      .postService(ApiRequest.getMovimientosArticulosById, {
-        id: this.idProducto,
-      })
+      .getService(ApiRequest.getMovimientosArticulosById + this.idProducto)
       .subscribe({
         next: (resp) => {
-          this.movimientos = resp.movements;
+          this.movimientos = resp.data.movements;
+          this.producto = resp.data.product;
           this.dtTrigger.next(this.dtOptions);
 
           this.spinner.hide();
         },
         error: (error) => {
           this.spinner.hide();
-          this.alertSV.alertBasic('Error', error.error.msg, 'error');
+          this.alertSV.alertBasic(
+            'Error',
+            error.error.serverResponseMessage,
+            'error'
+          );
         },
       });
   }
@@ -114,5 +122,15 @@ export class VerArticulosComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     // Do not forget to unsubscribe the event
     this.dtTrigger.unsubscribe();
+  }
+
+  movementLink(movement: any) {
+    if (movement.movimiento.tipo_movimiento === 'Venta') {
+      return '/ventas/ver/' + movement.id_movimiento;
+    } else if (movement.movimiento.tipo_movimiento === 'Recepcion') {
+      return '/recepciones/ver/' + movement.id_movimiento;
+    } else {
+      return '#';
+    }
   }
 }
