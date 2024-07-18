@@ -89,7 +89,7 @@ export class HydrocontrolComponent implements OnInit {
     this.hydroData = this.db.list('data');
     this.getData();
     this.reload();
-    //this.reloadv2();
+    this.reloadv2();
   }
 
   private getData() {

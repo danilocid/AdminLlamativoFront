@@ -93,10 +93,14 @@ export class FinalizaVentaComponent implements OnInit {
   }
 
   generarVenta() {
+    this.spinner.show();
+
     if (this.clientForm.value.id_cliente === 'Buscar cliente') {
+      this.spinner.hide();
       this.alertSV.alertBasic('Aviso', 'Debe seleccionar un cliente', 'info');
       return;
     } else if (this.clientForm.value.id_medio_pago === 'Medio de pago') {
+      this.spinner.hide();
       this.alertSV.alertBasic(
         'Aviso',
         'Debe seleccionar un medio de pago',
@@ -104,6 +108,7 @@ export class FinalizaVentaComponent implements OnInit {
       );
       return;
     } else if (this.clientForm.value.id_tipo_documento === 'Tipo documento') {
+      this.spinner.hide();
       this.alertSV.alertBasic(
         'Aviso',
         'Debe seleccionar un tipo de documento',
