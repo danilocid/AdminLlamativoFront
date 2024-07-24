@@ -1,3 +1,6 @@
+import { DocumentType } from './documentType.model';
+import { PaymentMethod } from './paymentMethod.model';
+import { Product } from './product.model';
 export interface Sale {
   id: number;
   monto_neto: number;
@@ -7,12 +10,12 @@ export interface Sale {
   documento: number;
   fecha: string;
   nombre: string;
-  tipo: string;
-  medio_de_pago: string;
+  tipo_documento: DocumentType;
+  medio_pago: PaymentMethod;
 }
 
 export interface SaleDetail {
-  articulo: number;
+  articulo: Product;
   cantidad: number;
   costo_neto: number;
   costo_imp: number;

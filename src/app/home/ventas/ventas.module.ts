@@ -13,11 +13,11 @@ import { VerVentaComponent } from './verVenta/verVenta.component';
 @NgModule({
   imports: [
     CommonModule,
+    VentasRoutingModule,
     DataTablesModule.forRoot(),
     FormsModule,
     ReactiveFormsModule,
     NgSelectModule,
-    VentasRoutingModule,
   ],
   declarations: [
     VentasComponent,

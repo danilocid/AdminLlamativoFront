@@ -24,9 +24,11 @@
             <p>ID: {{ idVenta }}</p>
           </div>
           <div class="col">
-            <p>Medio de pago: {{ venta.medio_de_pago }}</p>
+            <p>Medio de pago: {{ venta.medio_pago.medio_de_pago }}</p>
           </div>
-          <div class="col">{{ venta.tipo }}: {{ venta.documento }}</div>
+          <div class="col">
+            {{ venta.tipo_documento.tipo }}: {{ venta.documento }}
+          </div>
           <div class="col">
             <p>
               Fecha:
@@ -129,7 +131,7 @@
           <tbody>
             <tr *ngFor="let detalle of detalleVenta">
               <td>
-                {{ detalle.descripcion }}
+                {{ detalle.articulo.descripcion }}
               </td>
               <td>
                 {{ detalle.cantidad }}

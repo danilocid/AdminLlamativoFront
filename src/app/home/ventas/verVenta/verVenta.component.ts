@@ -13,25 +13,13 @@ import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-ver-venta',
   templateUrl: './verVenta.component.html',
-  styleUrls: ['./verVenta.component.css'],
 })
 export class VerVentaComponent implements OnInit {
   @ViewChild(DataTableDirective)
   dtElement!: DataTableDirective;
   dtTrigger: Subject<any> = new Subject<any>();
   dtOptions: DataTables.Settings = {};
-  venta: Sale = {
-    id: 0,
-    monto_neto: 0,
-    monto_imp: 0,
-    costo_neto: 0,
-    costo_imp: 0,
-    documento: 0,
-    fecha: '',
-    nombre: '',
-    tipo: '',
-    medio_de_pago: '',
-  };
+  venta: Sale;
 
   detalleVenta: SaleDetail[] = [];
   date = new Date();
@@ -50,19 +38,14 @@ export class VerVentaComponent implements OnInit {
   }
 
   ngOnInit() {
-    //console.log(this.idVenta);
     this.dtOptions = FormatDataTableGlobal();
     this.apiService = new ApiService(this.http);
     this.apiService
-      .postService(ApiRequest.getSaleById, { id: this.idVenta })
+      .getService(ApiRequest.getSales + '/' + this.idVenta)
       .subscribe({
         next: (resp) => {
-          //console.log(resp);
-          //console.table(resp.sale[0]);
-          this.venta = resp.sale[0];
-          //console.table(this.venta);
-          this.detalleVenta = resp.detail;
-          //console.table(this.detalleVenta);
+          this.venta = resp.data.sale;
+          this.detalleVenta = resp.data.details;
           this.dtTrigger.next(this.dtOptions);
           this.spinner.hide();
         },

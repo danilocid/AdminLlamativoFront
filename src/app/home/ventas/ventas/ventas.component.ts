@@ -1,21 +1,24 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
-import { FormatDataTableGlobal } from 'src/app/shared/constants';
+import { TableSettings, ApiRequest } from 'src/app/shared/constants';
 import { Sale } from 'src/app/shared/models/sale.model';
 import { ApiService } from 'src/app/shared/services/ApiService';
-import { ApiRequest } from 'src/app/shared/constants';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { AlertService } from 'src/app/shared/services/alert.service';
 import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-ventas',
   templateUrl: './ventas.component.html',
-  styleUrls: ['./ventas.component.css'],
 })
-export class VentasComponent implements OnInit {
+export class VentasComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(DataTableDirective)
   dtElement!: DataTableDirective;
   dtTrigger: Subject<any> = new Subject<any>();
@@ -27,60 +30,148 @@ export class VentasComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private spinner: NgxSpinnerService,
-    private alertSV: AlertService,
-    private titleService: Title
+    private titleService: Title,
+    private tableOptions: TableSettings
   ) {
     this.titleService.setTitle('Ventas');
-    this.spinner.show();
   }
 
-  ngOnInit(): void {
-    this.dtOptions = FormatDataTableGlobal();
-    this.apiService = new ApiService(this.http);
-    this.apiService.getService(ApiRequest.getSales).subscribe({
-      next: (resp) => {
-        this.ventas = resp.sales;
-        this.dtTrigger.next(this.dtOptions);
-        this.spinner.hide();
-      },
-      error: (error) => {
-        this.spinner.hide();
-        this.alertSV.alertBasic('Error', error.error.msg, 'error');
-      },
-    });
+  ngOnInit() {
+    this.getSales();
+  }
+  ngAfterViewInit(): void {
+    this.dtTrigger.next(null);
+  }
 
-    /* this.ventas = [
-      {
-        id: 1,
-        monto_neto: 1000,
-        monto_imp: 190,
-        tipo_documento: 'Factura',
-        n_documento: 1,
-        cliente: 'Juan Perez',
-        medio_pago: 'Efectivo',
-        fecha: '2018-01-01',
-        usuario: 'admin',
+  private getSales() {
+    this.apiService = new ApiService(this.http);
+    this.dtOptions = {
+      ...this.tableOptions.getGlobalDataTableFormat(),
+      serverSide: true,
+      order: [[0, 'DESC']],
+      processing: true,
+      ajax: (dataTablesParameters: any, callback: any) => {
+        this.apiService
+          .getServiceWithParams(ApiRequest.getSales, {
+            page: dataTablesParameters.start / dataTablesParameters.length + 1,
+
+            order:
+              dataTablesParameters.order.length > 0
+                ? dataTablesParameters.columns[
+                    dataTablesParameters.order[0].column
+                  ].data
+                : '',
+            sort:
+              dataTablesParameters.order.length > 0
+                ? dataTablesParameters.order[0].dir.toUpperCase()
+                : 'DESC',
+          })
+          .subscribe((response) => {
+            callback({
+              _TOTAL_: +response.count,
+              _START_: dataTablesParameters.start,
+              _END_: dataTablesParameters.start + dataTablesParameters.length,
+              data: response.data,
+              recordsTotal: +response.count,
+              recordsFiltered: +response.count,
+            });
+          });
+        this.spinner.hide();
       },
-      {
-        id: 2,
-        monto_neto: 2000,
-        monto_imp: 380,
-        tipo_documento: 'Factura',
-        n_documento: 2,
-        cliente: 'Maria Lopez',
-        medio_pago: 'Efectivo',
-        fecha: '2018-01-02',
-        usuario: 'admin',
-      },
-    ]; */
-    //this.dtTrigger.next(this.dtOptions);
+      columns: [
+        {
+          //id
+          data: 'id',
+          className: 'fs-12',
+          defaultContent: '',
+        },
+
+        {
+          //cliente
+          data: 'cliente.nombre',
+          className: 'fs-12',
+          defaultContent: '',
+        },
+        {
+          //Monto
+          data: null,
+          className: 'fs-12',
+          defaultContent: '',
+          orderable: false,
+          render: function (data: any, type: any, row: any) {
+            // suma de costo_imp y costo_neto
+            let costo = row.monto_neto + row.monto_imp;
+            // agregar signo de dolar y punto separador de miles
+            costo = costo.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+            return `$${costo}`;
+          },
+        },
+
+        {
+          //Documento
+          data: 'documento',
+          className: 'fs-12',
+          defaultContent: '',
+          orderable: true,
+          orderData: [3],
+          render: function (data: any, type: any, row: any) {
+            return `${row.tipo_documento.tipo} ${row.documento}`;
+          },
+        },
+        {
+          //medio de pago
+          data: 'medio_pago.medio_de_pago',
+          className: 'fs-12',
+          defaultContent: '',
+        },
+        {
+          //fecha
+          data: 'fecha',
+          className: 'fs-12',
+          defaultContent: '',
+          render: function (data: any) {
+            return new Date(data).toLocaleDateString('es-CL', {
+              year: 'numeric',
+              month: '2-digit',
+              day: '2-digit',
+              minute: '2-digit',
+              hour: '2-digit',
+            });
+          },
+        },
+
+        {
+          //actions
+          data: 'id',
+          className: 'fs-12',
+          defaultContent: '',
+          orderable: false,
+          render: function (data: number) {
+            return `
+            <a href="ventas/ver/${data}" class="me-1 text-warning pointer">
+              <i class="fas fa-eye
+              "></i>
+            </a>
+            
+           
+          `;
+          },
+        },
+      ],
+    };
+    this.rerender();
+  }
+
+  ngOnDestroy(): void {
+    // Do not forget to unsubscribe the event
+    this.dtTrigger.unsubscribe();
   }
   rerender(): void {
-    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      // Destroy the table first
-      dtInstance.destroy();
-      // Call the dtTrigger to rerender again
-      this.dtTrigger.next(null);
-    });
+    if (this.dtElement && this.dtElement.dtInstance) {
+      this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+        dtInstance.destroy();
+        this.dtTrigger.next(null);
+      });
+    }
   }
 }
