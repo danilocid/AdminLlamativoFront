@@ -86,10 +86,10 @@ export class HydrocontrolComponent implements OnInit {
         infoFiltered: '(filtrado de _MAX_ elementos en total)',
       },
     };
+    this.reloadv2();
     this.hydroData = this.db.list('data');
     this.getData();
-    this.reload();
-    this.reloadv2();
+    //this.reload();
   }
 
   private getData() {
@@ -106,13 +106,13 @@ export class HydrocontrolComponent implements OnInit {
       },
     });
   }
-  reload() {
+  /* reload() {
     //reload the window every 5 minutes
     const timeout = 300000;
     setTimeout(() => {
       window.location.reload();
     }, timeout);
-  }
+  } */
 
   reloadv2() {
     //reload the window every 5 minutes
@@ -143,13 +143,14 @@ export class HydrocontrolComponent implements OnInit {
     }
   }
 
-  async orderData() {
+  orderData() {
     //order data by timeStamp -> day (is a numeric value from 0 to 6, this is the number of the day, from monday to sunday) and hora (is a numeric value from 0 to 23) and then by minutos (is a numeric value from 0 to 59)
     //the order is from the newest to the oldest
     const tmpData: Hydrocontrol[] = [];
-    const idToDelete = [];
-    let last = 0;
-    await this.data.forEach((element) => {
+    const dataToDelete: number[] = [];
+    let badDataCount = 0;
+    for (let i = 0; i < this.data.length; i++) {
+      const element = this.data[i];
       if (
         element.timeStamp != undefined &&
         element.timeStamp.timeStamp != undefined &&
@@ -162,26 +163,14 @@ export class HydrocontrolComponent implements OnInit {
         element.interior != undefined &&
         element.agua.temperatura < 60
       ) {
-        last = element.timeStamp.count;
-        //console.log(last, element.timeStamp.day);
-        //console.log(element.timeStamp.timeStamp);
-        //convert the timeStamp to a Date object, whith the format: day-month-year hour:minutes:seconds
         const date = new Date(element.timeStamp.timeStamp);
-        //set the timezone to UTC-3
         date.setHours(date.getHours() - 4);
-
-        //console.log(date.toISOString());
-        //convert the date to a string, with the format: day-month-year hour:minutes:seconds
         let dateString = date.toISOString();
         dateString = dateString.replace('T', ' ');
-        //replace the 'Z' character with nothing
         dateString = dateString.replace('Z', '');
-        //replace the decimal part of the seconds with nothing
         dateString = dateString.replace(/\.\d+/, '');
-        //console.log(dateString);
         element.timeStamp.date = dateString;
         element.timeStamp.dateString = date;
-        // get max and min temperature of the water
         if (element.agua.temperatura >= this.maxTempA) {
           this.maxTempA = element.agua.temperatura;
           this.timeMaxTempA = element.timeStamp.date;
@@ -190,7 +179,6 @@ export class HydrocontrolComponent implements OnInit {
           this.minTempA = element.agua.temperatura;
           this.timeMinTempA = element.timeStamp.date;
         }
-        // get max and min temperature of the exterior
         if (element.exterior.temperatura >= this.maxTempE) {
           this.maxTempE = element.exterior.temperatura;
           this.timeMaxTempE = element.timeStamp.date;
@@ -199,7 +187,6 @@ export class HydrocontrolComponent implements OnInit {
           this.minTempE = element.exterior.temperatura;
           this.timeMinTempE = element.timeStamp.date;
         }
-        // get max and min temperature of the interior
         if (element.interior.temperatura >= this.maxTempI) {
           this.maxTempI = element.interior.temperatura;
           this.timeMaxTempI = element.timeStamp.date;
@@ -210,21 +197,14 @@ export class HydrocontrolComponent implements OnInit {
         }
         tmpData.push(element);
       } else {
-        console.log('Elemento no válido');
-        console.log(element);
-        //console.log('ID a borrar: ' + element.timeStamp.count);
-        console.log('ID anterior: ' + last);
-        idToDelete.push(element.timeStamp.count);
+        if (element.timeStamp.count != undefined) {
+          dataToDelete.push(element.timeStamp.count);
+        }
+        badDataCount++;
       }
-    });
+    }
     this.data = tmpData;
-    /*     console.log(idToDelete);
-     */
-    /*  idToDelete.forEach((element) => {
-      if (element != undefined) {
-        this.deleteData(element);
-      }
-    }); */
+
     //order the data by date from the newest to the oldest
     this.data.sort(function (a, b) {
       return b.timeStamp.dateString - a.timeStamp.dateString;
@@ -235,6 +215,15 @@ export class HydrocontrolComponent implements OnInit {
     //
     this.createChart();
     this.spinner.hide();
+    console.warn('Bad data count: ' + badDataCount);
+    try {
+      // delete only the first record of the bad data
+      console.warn('Deleting bad data!');
+      console.warn(dataToDelete[0]);
+      this.deleteData(dataToDelete[0]);
+    } catch (error) {
+      console.error('There was an error deleting the bad data!', error);
+    }
   }
 
   dayOfWeekAsString(dayIndex: number) {
