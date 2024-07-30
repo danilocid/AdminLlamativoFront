@@ -41,6 +41,19 @@ export class FinalizaVentaComponent implements OnInit {
       id_tipo_documento: ['Tipo documento', Validators.required],
       numero_documento: ['1', Validators.required],
     });
+    this.loadData();
+  }
+
+  changeDocumentType() {
+    const documentType = this.clientForm.value.id_tipo_documento;
+    const lastEmited = this.documentTypes.find(
+      (document) => document.id === +documentType
+    )?.lastEmited;
+    this.clientForm.controls['numero_documento'].setValue(lastEmited + 1);
+  }
+
+  loadData() {
+    this.spinner.show();
     this.apiService = new ApiService(this.http);
 
     this.apiService.getService(ApiRequest.getEntities + '?t=c').subscribe({
@@ -61,6 +74,14 @@ export class FinalizaVentaComponent implements OnInit {
           return;
         }
         this.documentTypes = resp.data;
+        // get the last emitted number for each document type from lastDocumentType on the response
+        this.documentTypes.forEach((documentType) => {
+          documentType.lastEmited =
+            resp.lastDocumentType.find(
+              (lastDocumentType) =>
+                lastDocumentType.documentType === documentType.id
+            )?.lastDocument || 0;
+        });
         this.spinner.hide();
       },
       error: (error) => {
@@ -130,25 +151,25 @@ export class FinalizaVentaComponent implements OnInit {
       const saleDetail = [];
       this.productsCart.forEach((element) => {
         saleDetail.push({
-          productId: element.id,
-          quantity: element.quantity,
-          net: element.venta_neto,
-          tax: element.venta_imp,
-          netCost: element.costo_neto,
-          taxCost: element.costo_imp,
+          articulo: element.id,
+          cantidad: element.quantity,
+          precio_neto: element.venta_neto,
+          precio_imp: element.venta_imp,
+          costo_neto: element.costo_neto,
+          costo_imp: element.costo_imp,
         });
       });
       this.apiService
-        .postService(ApiRequest.createSale, {
-          rut: this.clientForm.value.id_cliente,
-          paymentMethodId: this.clientForm.value.id_medio_pago,
-          documentTypeId: this.clientForm.value.id_tipo_documento,
-          documentNumber: this.clientForm.value.numero_documento,
-          saleDetails: saleDetail,
-          totalNet: monto_neto,
-          totalTax: monto_imp,
-          totalNetCost: costo_neto,
-          totalTaxCost: costo_imp,
+        .postService(ApiRequest.getSales, {
+          cliente: this.clientForm.value.id_cliente,
+          medio_pago: +this.clientForm.value.id_medio_pago,
+          tipo_documento: +this.clientForm.value.id_tipo_documento,
+          documento: +this.clientForm.value.numero_documento,
+          productos: saleDetail,
+          monto_neto,
+          monto_imp,
+          costo_neto,
+          costo_imp,
         })
         .subscribe({
           next: () => {

@@ -1,7 +1,13 @@
 <div class="card">
   <div class="card-header">
     <h4 class="card-title">Finalizar venta</h4>
+    <div class="card-tools">
+      <button type="button" class="btn btn-tool" (click)="loadData()">
+        <i class="fas fa-sync-alt"></i>
+      </button>
+    </div>
   </div>
+
   <div class="card-body">
     <form [formGroup]="clientForm" (submit)="generarVenta()" class="form">
       <div class="form-group">
@@ -21,7 +27,13 @@
         </ng-select>
       </div>
       <div class="form-group">
-        <ng-select formControlName="id_tipo_documento" id="" name="" required>
+        <ng-select
+          formControlName="id_tipo_documento"
+          id=""
+          name=""
+          required
+          (change)="changeDocumentType()"
+        >
           <option value="" selected disabled>Seleccione</option>
           <ng-option *ngFor="let item of documentTypes" value="{{ item.id }}">
             {{ item.tipo }}
