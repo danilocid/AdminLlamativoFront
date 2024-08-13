@@ -45,7 +45,7 @@
               style="width: 100px; margin-left: 25px"
               formControlName="year"
             >
-              <option value="2023" selected>2023</option>
+              <option value="2023">2023</option>
               <option value="2024">2024</option>
             </select>
             <div style="padding-left: 20px">
@@ -57,11 +57,6 @@
           <div style="padding-left: 20px">
             <button (click)="getDataFromApi()" class="btn btn-success">
               Obtener datos desde API <i class="fas fa-retweet"></i>
-            </button>
-          </div>
-          <div style="padding-left: 20px">
-            <button class="btn btn-success" (click)="importFile()">
-              Importar datos <i class="fas fa-upload"></i>
             </button>
           </div>
         </div>
@@ -88,8 +83,8 @@
           <tbody>
             <tr *ngFor="let item of compras">
               <td>{{ item.id }}</td>
-              <td>{{ item.nombre }} ({{ item.proveedor }})</td>
-              <td>{{ item.tipo }} - {{ item.documento }}</td>
+              <td>{{ item.proveedor.nombre }} ({{ item.proveedor.rut }})</td>
+              <td>{{ item.tipo_documento.tipo }} - {{ item.documento }}</td>
               <td [attr.data-order]="item.fecha_documento">
                 {{ item.fecha_documento | date : "dd/MM/yyyy" : "UTC +3" }}
               </td>
@@ -107,7 +102,7 @@
               </td>
 
               <td>
-                {{ item.tipo_compra_name }}
+                {{ item.tipo_compra.tipo_compra }}
               </td>
 
               <td>{{ item.observaciones }}</td>
@@ -125,4 +120,3 @@
   </div>
 </section>
 <app-editar-compra [show]="showModal" [compra]="compra"></app-editar-compra>
-<app-import-file-compra [show]="showModalImport"> </app-import-file-compra>

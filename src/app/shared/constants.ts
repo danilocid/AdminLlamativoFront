@@ -54,11 +54,10 @@ export const ApiRequest = {
   createRecepcion: environment.urlBackend + 'recepciones-Add',
 
   //compras
-  getComprasFromDb: environment.urlBackend + 'compras-GetAllFromDb',
-  getComprasFromApi: environment.urlBackend + 'compras-GetAllFromApi',
-  getComprasTipo: environment.urlBackend + 'compras-GetAllTypes',
-  updateCompra: environment.urlBackend + 'compras-UpdateCompra',
-  importFileCompra: environment.urlBackend + 'compras-ImportFile',
+  getComprasFromDb: environment.urlBackendHeroku + 'purchases',
+  getComprasFromApi: environment.urlBackendHeroku + 'purchases/api',
+  getComprasTipo: environment.urlBackendHeroku + 'purchases/types',
+  updateCompra: environment.urlBackendHeroku + 'purchases/edit',
 };
 export function FormatDataTableGlobal() {
   return {

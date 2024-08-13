@@ -14,7 +14,6 @@ import { FormatDataTableGlobal } from 'src/app/shared/services/util.service';
 @Component({
   selector: 'app-compras',
   templateUrl: './compras.component.html',
-  styleUrls: ['./compras.component.css'],
 })
 export class ComprasComponent implements OnInit {
   @ViewChild(DataTableDirective)
@@ -56,7 +55,7 @@ export class ComprasComponent implements OnInit {
   getCompras() {
     this.apiService = new ApiService(this.http);
     this.apiService
-      .postService(ApiRequest.getComprasFromDb, {
+      .getServiceWithParams(ApiRequest.getComprasFromDb, {
         month: this.month,
         year: this.year,
       })
@@ -65,11 +64,11 @@ export class ComprasComponent implements OnInit {
           if (resp.status === 401 || resp.status === 403) {
             this.router.navigateByUrl('/login');
           }
-          this.compras = resp.compras;
+          this.compras = resp.data;
           this.dtTrigger.next(this.dtOptions);
           this.spinner.hide();
           //console.log(this.compras);
-          this.compra = this.compras[0];
+          //this.compra = this.compras[0];
         },
         error: (err) => {
           this.spinner.hide();
@@ -100,7 +99,7 @@ export class ComprasComponent implements OnInit {
     this.month = +this.dateForm.get('month')?.value;
     this.year = +this.dateForm.get('year')?.value;
     this.apiService
-      .postService(ApiRequest.getComprasFromApi, {
+      .getServiceWithParams(ApiRequest.getComprasFromApi, {
         month: this.month,
         year: this.year,
       })
@@ -130,9 +129,5 @@ export class ComprasComponent implements OnInit {
           this.alertSV.alertBasic('Error', err.error.msg, 'error');
         },
       });
-  }
-
-  importFile() {
-    this.showModalImport = true;
   }
 }

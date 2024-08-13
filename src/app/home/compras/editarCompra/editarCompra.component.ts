@@ -9,7 +9,6 @@ import { AlertService } from 'src/app/shared/services/alert.service';
 @Component({
   selector: 'app-editar-compra',
   templateUrl: './editarCompra.component.html',
-  styleUrls: ['./editarCompra.component.css'],
 })
 export class EditarCompraComponent implements OnInit, OnChanges {
   @Input() show = false;
@@ -37,21 +36,23 @@ export class EditarCompraComponent implements OnInit, OnChanges {
       costo_total: ['', [Validators.required, Validators.min(0)]],
       observaciones: ['', [Validators.required, Validators.minLength(3)]],
     });
-    this.getTipoCompra();
+    //this.getTipoCompra();
   }
 
   ngOnChanges() {
     if (this.compra) {
+      this.spinner.show();
+      this.getTipoCompra();
       this.compraForm.patchValue({
-        tipo: this.compra.tipo_compra,
+        tipo: this.compra.tipo_compra.id,
         monto_total:
           this.compra.monto_imp_documento + this.compra.monto_neto_documento,
         costo_total:
           this.compra.costo_imp_documento + this.compra.costo_neto_documento,
         observaciones: this.compra.observaciones,
       });
-      this.proveedor = this.compra.nombre;
-      this.tipoDocumento = this.compra.tipo;
+      this.proveedor = this.compra.proveedor.nombre;
+      this.tipoDocumento = this.compra.tipo_documento.tipo;
       this.numeroDocumento = this.compra.documento;
     }
   }
@@ -60,8 +61,7 @@ export class EditarCompraComponent implements OnInit, OnChanges {
     this.apiService
       .getService(ApiRequest.getComprasTipo)
       .subscribe((res: any) => {
-        this.tiposCompra = res.tipos;
-        //console.log(this.tiposCompra);
+        this.tiposCompra = res.data;
         this.spinner.hide();
       });
   }
@@ -86,29 +86,30 @@ export class EditarCompraComponent implements OnInit, OnChanges {
       this.spinner.show();
       //console.log(this.compraForm.value);
       const compra = {
-        id: this.compra.id,
-        tipo: +this.compraForm.get('tipo')?.value,
-        monto_total: this.compraForm.get('monto_total')?.value,
-        costo_total: this.compraForm.get('costo_total')?.value,
-        observaciones: this.compraForm.get('observaciones')?.value,
+        TipoCompra: +this.compraForm.get('tipo')?.value,
+        CostoTotal: this.compraForm.get('costo_total')?.value,
+        Observaciones: this.compraForm.get('observaciones')?.value,
       };
       //console.log(compra);
 
       this.apiService = new ApiService(this.http);
       this.apiService
-        .postService(ApiRequest.updateCompra, compra)
-        .subscribe((res: any) => {
-          //console.log(res);
-          if (res.ok === true) {
+        .postService(ApiRequest.updateCompra + '/' + this.compra.id, compra)
+        .subscribe({
+          next: (resp) => {
+            if (resp.status === 401 || resp.status === 403) {
+              this.as.alertBasic('Error', 'No tienes permisos', 'error');
+            }
             this.spinner.hide();
-            this.as.alertBasic('Exito', res.msg, 'success');
+            this.as.alertBasic('Exito', 'Compra actualizada', 'success');
             setTimeout(() => {
               this.cerrarModal();
-            }, 2000);
-          } else {
+            }, 2500);
+          },
+          error: (err) => {
+            this.as.alertBasic('Error', err.error.msg, 'error');
             this.spinner.hide();
-            this.as.alertBasic('Error', res.msg, 'error');
-          }
+          },
         });
     }
   }

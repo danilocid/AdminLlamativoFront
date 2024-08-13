@@ -5,7 +5,6 @@ import { ComprasRoutingModule } from './compras-routing.module';
 import { DataTablesModule } from 'angular-datatables';
 import { ReactiveFormsModule } from '@angular/forms';
 import { EditarCompraComponent } from './editarCompra/editarCompra.component';
-import { ImportFileCompraComponent } from './importFileCompra/importFileCompra.component';
 
 @NgModule({
   imports: [
@@ -14,10 +13,6 @@ import { ImportFileCompraComponent } from './importFileCompra/importFileCompra.c
     ComprasRoutingModule,
     DataTablesModule.forRoot(),
   ],
-  declarations: [
-    ComprasComponent,
-    EditarCompraComponent,
-    ImportFileCompraComponent,
-  ],
+  declarations: [ComprasComponent, EditarCompraComponent],
 })
 export class ComprasModule {}
