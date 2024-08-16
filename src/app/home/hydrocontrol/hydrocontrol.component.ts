@@ -197,8 +197,12 @@ export class HydrocontrolComponent implements OnInit {
         }
         tmpData.push(element);
       } else {
-        if (element.timeStamp.count != undefined) {
-          dataToDelete.push(element.timeStamp.count);
+        try {
+          if (element.timeStamp.count != undefined) {
+            dataToDelete.push(element.timeStamp.count);
+          }
+        } catch (error) {
+          console.warn('There was an error!', error);
         }
         badDataCount++;
       }
