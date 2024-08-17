@@ -58,6 +58,10 @@ export const ApiRequest = {
   getComprasFromApi: environment.urlBackendHeroku + 'purchases/api',
   getComprasTipo: environment.urlBackendHeroku + 'purchases/types',
   updateCompra: environment.urlBackendHeroku + 'purchases/edit',
+
+  // notificaciones
+  getNotificaciones: environment.urlBackendHeroku + 'notifications',
+  markAsReaded: environment.urlBackendHeroku + 'notifications/readed',
 };
 export function FormatDataTableGlobal() {
   return {
