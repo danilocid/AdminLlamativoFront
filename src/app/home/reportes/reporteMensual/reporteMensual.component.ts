@@ -38,7 +38,8 @@ export class ReporteMensualComponent implements OnInit {
   }
   ngOnInit() {
     const date = new Date();
-    this.month = date.getMonth() + 1;
+    //this.month = date.getMonth();
+    this.month = 8;
     this.year = date.getFullYear();
     this.dateForm = this.fb.group({
       month: [this.month],
@@ -56,7 +57,13 @@ export class ReporteMensualComponent implements OnInit {
     this.spinner.show();
     this.apiService = new ApiService(this.http);
     this.apiService
-      .postService(ApiRequest.getReporteMensual, this.dateForm.value)
+      .getService(
+        ApiRequest.getReporteMensual +
+          '/' +
+          this.dateForm.value.month +
+          '/' +
+          this.dateForm.value.year
+      )
       .subscribe({
         next: (result: any) => {
           this.month = this.dateForm.controls['month'].value - 1;
@@ -64,16 +71,16 @@ export class ReporteMensualComponent implements OnInit {
           //console.log(result);
           let total = 0;
           let totalMoney = 0;
-          result.sales.forEach((element: any) => {
+          result.data.forEach((element: any) => {
             total += element.count;
             totalMoney += element.total;
             this.data.push({
-              title: 'Total ventas ' + element.tipo_documento.toLowerCase(),
+              title: 'Total ventas ' + element.name.toLowerCase(),
               value: element.count,
               isMoney: false,
             });
             this.data.push({
-              title: 'Total ventas ' + element.tipo_documento.toLowerCase(),
+              title: 'Total ventas ' + element.name.toLowerCase(),
               value: element.total,
               isMoney: true,
             });
@@ -102,7 +109,7 @@ export class ReporteMensualComponent implements OnInit {
   getCompras() {
     this.apiService = new ApiService(this.http);
     this.apiService
-      .postService(ApiRequest.getComprasFromDb, this.dateForm.value)
+      .getServiceWithParams(ApiRequest.getComprasFromDb, this.dateForm.value)
       .subscribe({
         next: (resp) => {
           if (resp.status === 401 || resp.status === 403) {
@@ -110,12 +117,12 @@ export class ReporteMensualComponent implements OnInit {
           }
 
           //  console.log(resp);
-          this.compras = resp.compras;
+          this.compras = resp.data;
           //get all tipo documentos from compras
           const tipoDocs = [];
           this.compras.forEach((element) => {
-            if (!tipoDocs.includes(element.tipo)) {
-              tipoDocs.push(element.tipo);
+            if (!tipoDocs.includes(element.tipo_documento.tipo)) {
+              tipoDocs.push(element.tipo_documento.tipo);
             }
           });
           //  console.log(tipoDocs);
@@ -125,7 +132,7 @@ export class ReporteMensualComponent implements OnInit {
             let total = 0;
             let montoTotal = 0;
             this.compras.forEach((compra) => {
-              if (compra.tipo == element) {
+              if (compra.tipo_documento.tipo == element) {
                 const costoTotal =
                   compra.costo_neto_documento + compra.costo_imp_documento;
                 if (costoTotal != 0) {
@@ -154,7 +161,7 @@ export class ReporteMensualComponent implements OnInit {
             let total = 0;
             let montoTotal = 0;
             this.compras.forEach((compra) => {
-              if (compra.tipo == element) {
+              if (compra.tipo_documento.tipo == element) {
                 const costoTotal =
                   compra.costo_neto_documento + compra.costo_imp_documento;
                 if (costoTotal == 0) {
@@ -191,21 +198,28 @@ export class ReporteMensualComponent implements OnInit {
   getReportData() {
     this.apiService = new ApiService(this.http);
     this.apiService
-      .postService(ApiRequest.getReportData, this.dateForm.value)
+      .getService(
+        ApiRequest.getReportData +
+          '/' +
+          this.dateForm.value.month +
+          '/' +
+          this.dateForm.value.year
+      )
       .subscribe({
         next: (result: any) => {
           //console.log(result.result);
-          if (result.result.length == 0) {
+          if (result.data.length == 0) {
             this.haveData = false;
           }
-          result.result.forEach((element: any) => {
+          result.data.forEach((element: any) => {
             //element.dato retorna el nombre del dato, modificar la primera letra en mayuscula
             this.haveData = true;
             this.data.push({
               title:
-                element.dato.charAt(0).toUpperCase() + element.dato.slice(1),
-              value: element.valor,
-              isMoney: element.isMoney,
+                element.reportDataType.dato.charAt(0).toUpperCase() +
+                element.reportDataType.dato.slice(1),
+              value: element.dato,
+              isMoney: element.reportDataType.isMoney == 1 ? true : false,
             });
           });
 
@@ -312,20 +326,20 @@ export class ReporteMensualComponent implements OnInit {
         );
         docsRecibidos.push([
           {
-            text: element.nombre + ' (' + element.proveedor + ')',
+            text: element.proveedor.nombre + ' (' + element.proveedor.rut + ')',
             style: 'table',
           },
 
           { text: fecha, style: 'table' },
           {
-            text: element.documento + ' (' + element.tipo_documento + ')',
+            text: element.documento + ' (' + element.tipo_documento.id + ')',
             style: 'table',
           },
 
           { text: monto, style: 'table' },
           { text: costo, style: 'table' },
 
-          { text: element.tipo_compra_name, style: 'table' },
+          { text: element.tipo_compra.tipo_compra, style: 'table' },
           { text: element.observaciones, style: 'table' },
         ]);
       });

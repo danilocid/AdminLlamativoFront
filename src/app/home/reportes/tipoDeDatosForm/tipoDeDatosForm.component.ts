@@ -66,15 +66,26 @@ export class TipoDeDatosFormComponent implements OnInit, OnChanges {
     this.apiService = new ApiService(this.http);
     //trim values from form
     this.tipoDatoForm.value.dato = this.tipoDatoForm.value.dato.trim();
+    const body = {
+      dato: this.tipoDatoForm.value.dato,
+      orden: +this.tipoDatoForm.value.orden,
+      isNumber: +this.tipoDatoForm.value.isNumber,
+      isMoney: +this.tipoDatoForm.value.isMoney,
+      activo: +this.tipoDatoForm.value.activo,
+    };
     if (this.idTipoDato != 0) {
-      this.tipoDatoForm.value.id = this.idTipoDato;
       this.apiService
-        .postService(ApiRequest.updateTipoDatoReporte, this.tipoDatoForm.value)
+        .patchService(
+          ApiRequest.getTipoDatosReportes + '/' + this.idTipoDato,
+          body
+        )
         .subscribe({
           next: (result: any) => {
             this.as.alertBasic('Exito', result.msg, 'success');
             this.spinner.hide();
-            this.cerrarModal();
+            setTimeout(() => {
+              this.cerrarModal();
+            }, 2000);
           },
           error: (error: any) => {
             console.warn(error);
@@ -84,16 +95,22 @@ export class TipoDeDatosFormComponent implements OnInit, OnChanges {
         });
     } else {
       this.apiService
-        .postService(ApiRequest.createTipoDatoReporte, this.tipoDatoForm.value)
+        .postService(ApiRequest.getTipoDatosReportes, body)
         .subscribe({
           next: (result: any) => {
             this.as.alertBasic('Exito', result.msg, 'success');
             this.spinner.hide();
-            this.cerrarModal();
+            setTimeout(() => {
+              this.cerrarModal();
+            }, 2000);
           },
           error: (error: any) => {
             console.warn(error);
-            this.as.alertBasic('Error', error.error.msg, 'error');
+            this.as.alertBasic(
+              'Error',
+              error.error.serverResponseMessage,
+              'error'
+            );
             this.spinner.hide();
           },
         });

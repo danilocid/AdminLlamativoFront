@@ -203,6 +203,8 @@ export class HydrocontrolComponent implements OnInit {
           }
         } catch (error) {
           console.warn('There was an error!', error);
+          console.warn(element);
+          console.warn(this.data[i - 1]);
         }
         badDataCount++;
       }

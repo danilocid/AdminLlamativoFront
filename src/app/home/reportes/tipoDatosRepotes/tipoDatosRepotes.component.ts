@@ -49,7 +49,7 @@ export class TipoDatosRepotesComponent implements OnInit {
     this.apiService = new ApiService(this.http);
     this.apiService.getService(ApiRequest.getTipoDatosReportes).subscribe({
       next: (result: any) => {
-        this.tiposDatos = result.result;
+        this.tiposDatos = result.data;
         this.dtTrigger.next(this.dtOptions);
         this.spinner.hide();
         //console.table(result.result);

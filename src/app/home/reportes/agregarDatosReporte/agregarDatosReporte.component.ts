@@ -71,12 +71,12 @@ export class AgregarDatosReporteComponent implements OnInit {
     const body = {
       mes: this.month + 1,
       año: this.year,
-      datos: data,
+      data: data,
     };
     if (this.tipoDatoForm.valid) {
       this.spinner.show();
       this.apiService = new ApiService(this.http);
-      this.apiService.postService(ApiRequest.createReportData, body).subscribe({
+      this.apiService.postService(ApiRequest.getReportData, body).subscribe({
         next: (result: any) => {
           this.spinner.hide();
           this.as.alertBasic('Exito', result.msg, 'success');
@@ -102,12 +102,12 @@ export class AgregarDatosReporteComponent implements OnInit {
   getReportDataTypes() {
     this.apiService = new ApiService(this.http);
     this.apiService
-      .postService(ApiRequest.getTipoDatosReportes, {
-        activo: true,
+      .getServiceWithParams(ApiRequest.getTipoDatosReportes, {
+        activo: 1,
       })
       .subscribe({
         next: (result: any) => {
-          this.results = result.result;
+          this.results = result.data;
           //console.table(this.results);
           if (this.results.length != 0) {
             this.results.forEach((element: any) => {

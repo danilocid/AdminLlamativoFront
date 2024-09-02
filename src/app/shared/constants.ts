@@ -39,13 +39,13 @@ export const ApiRequest = {
 
   //reports
   dashboardReport: environment.urlBackendHeroku + 'products/inventory',
-  getReporteMensual: environment.urlBackend + 'reports-MonthlySales',
-  getTipoDatosReportes: environment.urlBackend + 'reports-GetReportDataTypes',
+  getReporteMensual: environment.urlBackendHeroku + 'reports/monthly-sales',
+  getTipoDatosReportes: environment.urlBackendHeroku + 'reports/data-types',
   createTipoDatoReporte:
     environment.urlBackend + 'reports-CreateReportDataType',
   updateTipoDatoReporte:
     environment.urlBackend + 'reports-UpdateReportDataType',
-  getReportData: environment.urlBackend + 'reports-GetReportData',
+  getReportData: environment.urlBackendHeroku + 'reports/data',
   createReportData: environment.urlBackend + 'reports-CreateReportData',
 
   //recepciones

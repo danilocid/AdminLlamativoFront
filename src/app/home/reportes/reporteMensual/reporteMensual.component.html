@@ -99,8 +99,8 @@
           </thead>
           <tbody>
             <tr *ngFor="let item of compras">
-              <td>{{ item.nombre }} ({{ item.proveedor }})</td>
-              <td>(T{{ item.tipo_documento }}) - {{ item.documento }}</td>
+              <td>{{ item.proveedor.nombre }} ({{ item.proveedor.rut }})</td>
+              <td>(T{{ item.tipo_documento.id }}) - {{ item.documento }}</td>
               <td [attr.data-order]="item.fecha_documento">
                 {{ item.fecha_documento | date : "dd/MM/yyyy" : "UTC + 3" }}
               </td>

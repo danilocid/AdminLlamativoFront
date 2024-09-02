@@ -23,9 +23,9 @@ export class NavbarComponent implements OnInit {
     window.location.reload();
   }
 
-  async getNotifications() {
+  getNotifications() {
     this.apiService = new ApiService(this.http);
-    await this.apiService.getService(ApiRequest.getNotificaciones).subscribe({
+    this.apiService.getService(ApiRequest.getNotificaciones).subscribe({
       next: (resp) => {
         this.notifications = resp.data;
       },
