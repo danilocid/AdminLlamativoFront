@@ -39,7 +39,7 @@ export class ReporteMensualComponent implements OnInit {
   ngOnInit() {
     const date = new Date();
     //this.month = date.getMonth();
-    this.month = 8;
+    this.month = date.getMonth() + 1;
     this.year = date.getFullYear();
     this.dateForm = this.fb.group({
       month: [this.month],
