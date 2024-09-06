@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AllIssuesComponent } from './issues/allIssues/allIssues.component';
-import { CreateComponent } from './usuarios/create/create.component';
-import { UsuariosComponent } from './usuarios/usuarios/usuarios.component';
 import { CreateIssueComponent } from './issues/createIssue/createIssue.component';
 
 const routes: Routes = [
@@ -11,14 +9,7 @@ const routes: Routes = [
     redirectTo: '/home',
     pathMatch: 'full',
   },
-  {
-    path: 'usuarios',
-    component: UsuariosComponent,
-  },
-  {
-    path: 'usuarios/create',
-    component: CreateComponent,
-  },
+
   {
     path: 'issues',
     component: AllIssuesComponent,

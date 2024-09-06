@@ -2,7 +2,6 @@ import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
 export const ApiRequest = {
   postLogin: environment.urlBackendHeroku + 'auth/login',
-  getUsers: environment.urlBackend + '/users',
   //articulos
   getArticulos: environment.urlBackendHeroku + 'products',
 
@@ -34,19 +33,14 @@ export const ApiRequest = {
   getMedioPago: environment.urlBackendHeroku + 'common/payment-methods',
 
   //sales
-  createSale: environment.urlBackend + 'sales-addSale',
   getSales: environment.urlBackendHeroku + 'sales',
 
   //reports
   dashboardReport: environment.urlBackendHeroku + 'products/inventory',
   getReporteMensual: environment.urlBackendHeroku + 'reports/monthly-sales',
   getTipoDatosReportes: environment.urlBackendHeroku + 'reports/data-types',
-  createTipoDatoReporte:
-    environment.urlBackend + 'reports-CreateReportDataType',
-  updateTipoDatoReporte:
-    environment.urlBackend + 'reports-UpdateReportDataType',
+
   getReportData: environment.urlBackendHeroku + 'reports/data',
-  createReportData: environment.urlBackend + 'reports-CreateReportData',
 
   //recepciones
   getRecepciones: environment.urlBackend + 'recepciones-GetAll',
@@ -111,8 +105,6 @@ export class TableSettings {
     destroy: true,
     dom: 'Brtp',
     searching: true,
-    info: true,
-
     language: {
       paginate: {
         first: '<<',
