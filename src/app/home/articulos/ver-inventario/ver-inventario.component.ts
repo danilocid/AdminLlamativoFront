@@ -55,7 +55,7 @@ export class VerInventarioComponent implements OnInit, OnDestroy {
     this.dtOptions = FormatDataTableGlobal();
     this.apiService = new ApiService(this.http);
     this.apiService
-      .postService(ApiRequest.getInventoryById, { id: this.idInventario })
+      .getService(ApiRequest.getAllInventory + '/' + this.idInventario)
       .subscribe({
         next: (resp) => {
           if (resp.status) {
@@ -66,8 +66,8 @@ export class VerInventarioComponent implements OnInit, OnDestroy {
               this.router.navigate(['/articulos/ajustes']);
             }, 3000);
           }
-          this.movimiento = resp.movimiento[0];
-          this.articulos = resp.productos;
+          this.movimiento = resp.data;
+          this.articulos = resp.inventoryDetails;
           this.dtTrigger.next(this.dtOptions);
 
           this.spinner.hide();

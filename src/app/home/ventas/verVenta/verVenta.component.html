@@ -39,54 +39,43 @@
         <div class="row justify-content-center align-items-center g-2">
           <div class="col">
             <p>
-              Total neto:
-              {{
-                venta.monto_neto | currency : "CLP" : "symbol-narrow" : "1.0-0"
-              }}
+              Total neto: $
+              {{ venta.monto_neto | number }}
             </p>
           </div>
           <div class="col">
-            Total I.V.A.:
-            {{ venta.monto_imp | currency : "CLP" : "symbol-narrow" : "1.0-0" }}
+            Total I.V.A.: $
+            {{ venta.monto_imp | number }}
           </div>
           <div class="col">
-            Total:
-            {{
-              venta.monto_neto + venta.monto_imp
-                | currency : "CLP" : "symbol-narrow" : "1.0-0"
-            }}
+            Total: $
+            {{ venta.monto_neto + venta.monto_imp | number }}
           </div>
         </div>
         <div class="row justify-content-center align-items-center g-2">
           <div class="col">
             <p>
-              Costo neto:
-              {{
-                venta.costo_neto | currency : "CLP" : "symbol-narrow" : "1.0-0"
-              }}
+              Costo neto: $
+              {{ venta.costo_neto | number }}
             </p>
           </div>
           <div class="col">
-            Costo I.V.A.:
-            {{ venta.costo_imp | currency : "CLP" : "symbol-narrow" : "1.0-0" }}
+            Costo I.V.A.: $
+            {{ venta.costo_imp | number }}
           </div>
           <div class="col">
-            Total costo:
-            {{
-              venta.costo_neto + venta.costo_imp
-                | currency : "CLP" : "symbol-narrow" : "1.0-0"
-            }}
+            Total costo: $
+            {{ venta.costo_neto + venta.costo_imp | number }}
           </div>
         </div>
         <div class="row justify-content-center align-items-center g-2">
           <div class="col">
             <p>
-              Ganancia:
+              Ganancia: $
               {{
                 venta.monto_neto +
                   venta.monto_imp -
-                  (venta.costo_imp + venta.costo_neto)
-                  | currency : "CLP" : "symbol-narrow" : "1.0-0"
+                  (venta.costo_imp + venta.costo_neto) | number
               }}
             </p>
           </div>
@@ -101,11 +90,8 @@
             }}
           </div>
           <div class="col">
-            Total costo:
-            {{
-              venta.costo_neto + venta.costo_imp
-                | currency : "CLP" : "symbol-narrow" : "1.0-0"
-            }}
+            Total costo: $
+            {{ venta.costo_neto + venta.costo_imp | number }}
           </div>
         </div>
       </div>
@@ -136,48 +122,18 @@
               <td>
                 {{ detalle.cantidad }}
               </td>
+              <td>${{ detalle.precio_neto | number }}</td>
+              <td>${{ detalle.precio_imp | number }}</td>
+              <td>${{ detalle.precio_neto + detalle.precio_imp | number }}</td>
+              <td>${{ detalle.costo_neto | number }}</td>
+              <td>${{ detalle.costo_imp | number }}</td>
+              <td>${{ detalle.costo_neto + detalle.costo_imp | number }}</td>
               <td>
-                {{
-                  detalle.precio_neto
-                    | currency : "CLP" : "symbol-narrow" : "1.0-0"
-                }}
-              </td>
-              <td>
-                {{
-                  detalle.precio_imp
-                    | currency : "CLP" : "symbol-narrow" : "1.0-0"
-                }}
-              </td>
-              <td>
-                {{
-                  detalle.precio_neto + detalle.precio_imp
-                    | currency : "CLP" : "symbol-narrow" : "1.0-0"
-                }}
-              </td>
-              <td>
-                {{
-                  detalle.costo_neto
-                    | currency : "CLP" : "symbol-narrow" : "1.0-0"
-                }}
-              </td>
-              <td>
-                {{
-                  detalle.costo_imp
-                    | currency : "CLP" : "symbol-narrow" : "1.0-0"
-                }}
-              </td>
-              <td>
-                {{
-                  detalle.costo_neto + detalle.costo_imp
-                    | currency : "CLP" : "symbol-narrow" : "1.0-0"
-                }}
-              </td>
-              <td>
+                $
                 {{
                   detalle.precio_neto +
                     detalle.precio_imp -
-                    (detalle.costo_neto + detalle.costo_imp)
-                    | currency : "CLP" : "symbol-narrow" : "1.0-0"
+                    (detalle.costo_neto + detalle.costo_imp) | number
                 }}
               </td>
               <td>

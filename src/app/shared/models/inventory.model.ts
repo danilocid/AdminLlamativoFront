@@ -1,3 +1,5 @@
+import { Product } from './product.model';
+
 export interface Inventory {
   id: number;
   costo_neto: number;
@@ -21,6 +23,5 @@ export interface InventoryDetail {
   costo_imp: number;
   entradas: number;
   salidas: number;
-  cod_interno: string;
-  descripcion: string;
+  producto: Product;
 }

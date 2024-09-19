@@ -13,7 +13,7 @@ export const ApiRequest = {
 
   //inventario
   saveInventory: environment.urlBackend + 'products-SaveMovement',
-  getAllInventory: environment.urlBackend + 'products-GetAllMovements',
+  getAllInventory: environment.urlBackendHeroku + 'inventories',
   getInventoryById: environment.urlBackend + 'products-GetMovementDetail',
 
   //issues

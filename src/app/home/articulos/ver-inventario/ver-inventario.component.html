@@ -24,25 +24,15 @@
           <div class="col" *ngIf="movimiento !== undefined">
             <p>Id: {{ movimiento.id }}</p>
 
+            <p>Costo Neto: ${{ movimiento.costo_neto | number }}</p>
             <p>
-              Costo Neto:
-              {{
-                movimiento.costo_neto
-                  | currency : "CLP" : "symbol-narrow" : "1.0-0"
-              }}
+              Costo Imp: $
+              {{ movimiento.costo_imp | number : "1.0-0" }}
             </p>
             <p>
-              Costo Imp:
+              Costo Total: $
               {{
-                movimiento.costo_imp
-                  | currency : "CLP" : "symbol-narrow" : "1.0-0"
-              }}
-            </p>
-            <p>
-              Costo Total:
-              {{
-                movimiento.costo_neto + movimiento.costo_imp
-                  | currency : "CLP" : "symbol-narrow" : "1.0-0"
+                movimiento.costo_neto + movimiento.costo_imp | number : "1.0-0"
               }}
             </p>
           </div>
@@ -82,15 +72,14 @@
           </thead>
           <tbody>
             <tr *ngFor="let item of articulos">
-              <td>{{ item.cod_interno }}</td>
-              <td>{{ item.descripcion }}</td>
+              <td>{{ item.producto.cod_interno }}</td>
+              <td>{{ item.producto.descripcion }}</td>
               <td>{{ item.entradas }}</td>
               <td>{{ item.salidas }}</td>
               <td>
-                {{
+                ${{
                   (item.costo_neto + item.costo_imp) *
-                    (item.entradas + item.salidas)
-                    | currency : "CLP" : "symbol-narrow" : "1.0-0"
+                    (item.entradas + item.salidas) | number : "1.0-0"
                 }}
               </td>
             </tr>
