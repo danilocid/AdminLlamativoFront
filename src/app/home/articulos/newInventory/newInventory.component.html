@@ -34,16 +34,29 @@
                     <label for="name">Producto</label>
                     <ng-select
                       formControlName="id"
-                      placeholder="Seleccione Producto"
+                      id=""
+                      name=""
+                      bindValue="id"
+                      placeholder="Seleccione un producto"
+                      [items]="products"
+                      (search)="onSearch($event.term)"
+                      (change)="onChangeProduct()"
+                      [searchable]="true"
+                      [typeahead]="searchTerm"
+                      required
                     >
-                      <option value="" selected disabled>Seleccione</option>
-                      <ng-option
-                        *ngFor="let item of products"
-                        value="{{ item.id }}"
+                      <ng-template ng-label-tmp let-item="item">
+                        {{ item.descripcion }} {{ item.cod_interno }}
+                        {{ item.cod_barras }}
+                      </ng-template>
+                      <ng-template
+                        ng-option-tmp
+                        let-item="item"
+                        let-search="searchTerm"
                       >
-                        {{ item.descripcion }} - {{ item.cod_barras }} -
-                        {{ item.cod_interno }}
-                      </ng-option>
+                        {{ item.descripcion }} {{ item.cod_interno }} -
+                        {{ item.cod_barras }}
+                      </ng-template>
                     </ng-select>
                   </div>
                   <div class="form-group">
