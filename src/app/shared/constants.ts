@@ -12,9 +12,7 @@ export const ApiRequest = {
   getMovimientos: environment.urlBackendHeroku + 'products-movements/types',
 
   //inventario
-  saveInventory: environment.urlBackend + 'products-SaveMovement',
   getAllInventory: environment.urlBackendHeroku + 'inventories',
-  getInventoryById: environment.urlBackend + 'products-GetMovementDetail',
 
   //issues
   getIssues: environment.urlBackendHeroku + 'issues',
@@ -43,7 +41,7 @@ export const ApiRequest = {
   getReportData: environment.urlBackendHeroku + 'reports/data',
 
   //recepciones
-  getRecepciones: environment.urlBackend + 'recepciones-GetAll',
+  getRecepciones: environment.urlBackendHeroku + 'receptions',
   getOneRecepcion: environment.urlBackend + 'recepciones-GetOne',
   createRecepcion: environment.urlBackend + 'recepciones-Add',
 

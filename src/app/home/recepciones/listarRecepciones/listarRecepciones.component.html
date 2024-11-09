@@ -20,9 +20,33 @@
       </div>
 
       <div class="card-body">
-        <a [routerLink]="['agregar']" class="btn btn-primary"
-          >Agregar recepcion</a
-        >
+        <div class="row">
+          <div class="col-9">
+            <a [routerLink]="['agregar']" class="btn btn-primary"
+              >Agregar recepcion</a
+            >
+          </div>
+          <div class="col-2">
+            <div class="mb-3">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Buscar"
+                [(ngModel)]="searchTerm"
+                (keyup)="search()"
+              />
+            </div>
+          </div>
+          <div class="col-1 me-3">
+            <button
+              class="btn btn-primary"
+              [disabled]="!searchTerm"
+              (click)="search()"
+            >
+              Buscar
+            </button>
+          </div>
+        </div>
         <br />
 
         <table
@@ -32,7 +56,7 @@
           class="row-border hover"
           aria-label="Tabla"
         >
-          <thead class="table-light">
+          <thead>
             <tr>
               <th>Id</th>
               <th>Proveedor</th>
@@ -43,30 +67,6 @@
               <th>Ver</th>
             </tr>
           </thead>
-          <tbody>
-            <tr *ngFor="let item of recepciones">
-              <td>{{ item.id }}</td>
-              <td>{{ item.proveedor }} - {{ item.nombre }}</td>
-              <td>{{ item.tipo }} - {{ item.documento }}</td>
-              <td>{{ item.unidades }}</td>
-              <td [attr.data-order]="item.costo_neto + item.costo_imp">
-                {{
-                  item.costo_neto + item.costo_imp
-                    | currency : "CLP" : "symbol-narrow" : "1.0-0"
-                }}
-              </td>
-              <td>{{ item.fecha | date : "dd/MM/yyyy" }}</td>
-
-              <td>
-                <a
-                  routerLink="ver/{{ item.id }}"
-                  class="me-1 text-warning pointer"
-                >
-                  <i class="fas fa-eye"></i>
-                </a>
-              </td>
-            </tr>
-          </tbody>
         </table>
       </div>
     </div>

@@ -77,8 +77,8 @@
               </div>
             </div>
           </div>
-          <div class="col-lg-2 col-md-4 col-xl-2">
-            <!-- small box -->
+          <!-- <div class="col-lg-2 col-md-4 col-xl-2">
+
             <div class="small-box bg-info">
               <div class="inner">
                 <h3>{{ maxTempE | number : "1.0-1" }}°C</h3>
@@ -87,9 +87,9 @@
                 <p>T° max del ambiente</p>
               </div>
             </div>
-          </div>
+          </div> 
           <div class="col-lg-2 col-md-4 col-xl-2">
-            <!-- small box -->
+            
             <div class="small-box bg-info">
               <div class="inner">
                 <h3>{{ minTempE | number : "1.0-1" }}°C</h3>
@@ -98,7 +98,7 @@
                 <p>T° min del ambiente</p>
               </div>
             </div>
-          </div>
+          </div>-->
           <div class="col-lg-2 col-md-4 col-xl-2">
             <!-- small box -->
             <div class="small-box bg-primary">
@@ -150,21 +150,21 @@
               <th colspan="2">Hora</th>
               <th rowspan="2">N°</th>
               <th rowspan="2">Agua</th>
-              <th colspan="2">Ambiente</th>
+
               <th colspan="2">Interior</th>
-              <th colspan="2">Reles</th>
+              <!--               <th colspan="2">Reles</th>
+ -->
+              <th rowspan="2">Bomba</th>
               <th rowspan="2">TimeStamp</th>
               <th rowspan="2"><i class="fas fa-trash pointer"></i></th>
             </tr>
             <tr>
               <th>Dia</th>
               <th>Hora</th>
+
               <th>T</th>
               <th>H</th>
-              <th>T</th>
-              <th>H</th>
-              <th>Luz</th>
-              <th>Bomba</th>
+              <!-- <th>Luz</th> -->
             </tr>
           </thead>
 
@@ -186,17 +186,7 @@
                 {{ item.agua.temperatura | number : "1.0-1" }} °C
               </td>
               <td *ngIf="item.agua === undefined">N/A °C</td>
-              <td *ngIf="item.exterior === undefined">N/A °C</td>
-              <td
-                *ngIf="item.exterior !== undefined"
-                [attr.data-order]="item.exterior.temperatura"
-              >
-                {{ item.exterior.temperatura | number : "1.0-1" }} °C
-              </td>
-              <td *ngIf="item.exterior === undefined">N/A %</td>
-              <td *ngIf="item.exterior !== undefined">
-                {{ item.exterior.humedad | number : "1.0-1" }} %
-              </td>
+
               <td *ngIf="item.interior === undefined">N/A °C</td>
               <td
                 *ngIf="item.interior !== undefined"
@@ -208,11 +198,11 @@
               <td *ngIf="item.interior !== undefined">
                 {{ item.interior.humedad | number : "1.0-1" }} %
               </td>
-              <td *ngIf="item.reles === undefined">N/A</td>
+              <!--  <td *ngIf="item.reles === undefined">N/A</td>
               <td *ngIf="item.reles !== undefined">
                 <span *ngIf="item.reles.luz === 'true'">ON</span>
-                <span *ngIf="item.reles.luz === 'false'">OFF</span>
-              </td>
+                <span *ngIf="item.reles.luz === 'false'">OFF</span> 
+              </td> -->
 
               <td *ngIf="item.reles !== undefined">
                 <span *ngIf="item.reles.bomba === 'true'">ON</span>

@@ -99,8 +99,8 @@ export class ProductoComponent implements OnInit {
         const quantity = this.productForm.value.quantity;
         //get the price with tax, from the form, and split it on two variables, netSale and taxSale (taxSale = 19% of price)
         const price = this.productForm.value.price;
-        const taxCost = price * 0.19;
-        const netCost = price - taxCost;
+        const netCost = price / 1.19;
+        const taxCost = price - netCost;
 
         const productCart = {
           ...this.productTmp,

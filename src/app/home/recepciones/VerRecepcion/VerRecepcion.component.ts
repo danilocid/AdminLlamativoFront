@@ -6,6 +6,10 @@ import { DataTableDirective } from 'angular-datatables';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subject } from 'rxjs';
 import { ApiRequest, FormatDataTableGlobal } from 'src/app/shared/constants';
+import {
+  Reception,
+  ReceptionProduct,
+} from 'src/app/shared/models/receptions.model';
 import { ApiService } from 'src/app/shared/services/ApiService';
 import { AlertService } from 'src/app/shared/services/alert.service';
 
@@ -21,8 +25,37 @@ export class VerRecepcionComponent implements OnInit {
   dtOptions: DataTables.Settings = {};
   idRecepcion = '';
   private apiService!: ApiService;
-  dataRecepcion: any = {};
-  productsRecepcion: any[] = [];
+  dataRecepcion: Reception = {
+    id: 0,
+    costo_neto: 0,
+    costo_imp: 0,
+    unidades: 0,
+    documento: '',
+    proveedor: {
+      nombre: '',
+      rut: '',
+      direccion: '',
+      telefono: '',
+      mail: '',
+      comuna: {
+        id: 0,
+        region: {
+          id: 0,
+          region: '',
+        },
+        comuna: '',
+      },
+      giro: '',
+      tipo: 1,
+    },
+    fecha: new Date(),
+    tipo_documento: {
+      id: 0,
+
+      tipo: '',
+    },
+  };
+  productsRecepcion: ReceptionProduct[] = [];
 
   constructor(
     private titleService: Title,
@@ -44,11 +77,12 @@ export class VerRecepcionComponent implements OnInit {
   getRecepcionData() {
     this.apiService = new ApiService(this.http);
     this.apiService
-      .postService(ApiRequest.getOneRecepcion, { id: this.idRecepcion })
+      .getService(ApiRequest.getRecepciones + '/' + this.idRecepcion)
       .subscribe({
         next: (resp) => {
-          this.dataRecepcion = resp.recepcion;
-          this.productsRecepcion = resp.articles;
+          this.dataRecepcion = resp.reception;
+          this.productsRecepcion = resp.details;
+          console.log(this.productsRecepcion);
           this.dtTrigger.next(this.dtOptions);
           this.spinner.hide();
         },

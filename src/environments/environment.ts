@@ -6,9 +6,9 @@ export const environment = {
   production: false,
   urlBackend: 'http://127.0.0.1:5001/llamativo-admin/us-central1/',
   //urlBackend: 'https://us-central1-llamativo-admin.cloudfunctions.net/',
-  //urlBackendHeroku:
-  // 'https://llamativo-admin-backend-6b023e3c403e.herokuapp.com/',
-  urlBackendHeroku: 'http://localhost:3000/',
+  urlBackendHeroku:
+    'https://llamativo-admin-backend-6b023e3c403e.herokuapp.com/',
+  //urlBackendHeroku: 'http://localhost:3000/',
 };
 
 /*

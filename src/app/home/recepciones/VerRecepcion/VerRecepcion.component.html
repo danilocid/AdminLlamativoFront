@@ -53,12 +53,12 @@
             </p>
             <p>
               Proveedor:
-              {{ dataRecepcion.nombre | titlecase }} ({{
-                dataRecepcion.proveedor
+              {{ dataRecepcion.proveedor.nombre | titlecase }} ({{
+                dataRecepcion.proveedor.rut
               }})
             </p>
             <p>
-              Documento: {{ dataRecepcion.tipo | titlecase }} -
+              Documento: {{ dataRecepcion.tipo_documento.tipo | titlecase }} -
               {{ dataRecepcion.documento }}
             </p>
           </div>
@@ -90,8 +90,8 @@
           </thead>
           <tbody>
             <tr *ngFor="let item of productsRecepcion">
-              <td>{{ item.cod_interno }}</td>
-              <td>{{ item.descripcion }}</td>
+              <td>{{ item.producto.cod_interno }}</td>
+              <td>{{ item.producto.descripcion }}</td>
               <td>{{ item.unidades }}</td>
               <td>
                 {{

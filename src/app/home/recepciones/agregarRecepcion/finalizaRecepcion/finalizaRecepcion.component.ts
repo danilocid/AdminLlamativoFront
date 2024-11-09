@@ -116,41 +116,43 @@ export class FinalizaRecepcionComponent implements OnInit {
       let totalUnits = 0;
       //calculo de montos
       this.productsCart.forEach((element) => {
-        costo_neto += element.costo_neto * element.quantity;
-        costo_imp += element.costo_imp * element.quantity;
+        costo_neto += Math.round(element.costo_neto) * element.quantity;
+        costo_imp += Math.round(element.costo_imp) * element.quantity;
         totalUnits += element.quantity;
       });
       const saleDetail = [];
       this.productsCart.forEach((element) => {
         saleDetail.push({
-          productId: element.id,
-          quantity: element.quantity,
-          netCost: element.costo_neto,
-          taxCost: element.costo_imp,
+          id: element.id,
+          unidades: element.quantity,
+          costo_neto: Math.round(element.costo_neto),
+          costo_imp: Math.round(element.costo_imp),
         });
       });
       this.apiService
-        .postService(ApiRequest.createRecepcion, {
+        .postService(ApiRequest.getRecepciones, {
           rut: this.clientForm.value.id_cliente,
-          paymentMethodId: +this.clientForm.value.id_medio_pago,
-          documentTypeId: +this.clientForm.value.id_tipo_documento,
-          documentNumber: +this.clientForm.value.numero_documento,
-          saleDetails: saleDetail,
-          totalNetCost: costo_neto,
-          totalTaxCost: costo_imp,
-          totalUnits: totalUnits,
+          medioDePagoId: +this.clientForm.value.id_medio_pago,
+          tipoDocumento: +this.clientForm.value.id_tipo_documento,
+          documento: +this.clientForm.value.numero_documento,
+          products: saleDetail,
+          totalCostoNeto: costo_neto,
+          totalCostoImp: costo_imp,
+          totalUnidades: totalUnits,
         })
         .subscribe({
-          next: () => {
+          next: (response) => {
+            console.log(response);
             this.spinner.hide();
             this.alertSV.alertBasic(
               'Aviso',
               'Recepcion generada correctamente',
               'success'
             );
-            this.router.navigate(['/recepciones']);
+            //this.router.navigate(['/recepciones']);
           },
           error: (error) => {
+            console.log(error);
             this.spinner.hide();
             this.alertSV.alertBasic(
               'Error al generar la recepcion',

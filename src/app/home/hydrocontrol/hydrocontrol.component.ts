@@ -53,10 +53,10 @@ export class HydrocontrolComponent implements OnInit {
   timeMaxTempA = '';
   minTempA = 100;
   timeMinTempA = '';
-  maxTempE = 0;
+  /* maxTempE = 0;
   timeMaxTempE = '';
   minTempE = 100;
-  timeMinTempE = '';
+  timeMinTempE = ''; */
   maxTempI = 0;
   timeMaxTempI = '';
   minTempI = 100;
@@ -68,8 +68,8 @@ export class HydrocontrolComponent implements OnInit {
       pagingType: 'full_numbers',
       pageLength: 15,
       order: [
-        [10, 'desc'],
-        [11, 'off'],
+        [7, 'desc'],
+        [8, 'off'],
       ],
       dom: 'Bfrtip',
       language: {
@@ -159,7 +159,6 @@ export class HydrocontrolComponent implements OnInit {
         element.timeStamp.minutos != undefined &&
         element.timeStamp.day != undefined &&
         element.agua != undefined &&
-        element.exterior != undefined &&
         element.interior != undefined &&
         element.agua.temperatura < 60
       ) {
@@ -179,14 +178,14 @@ export class HydrocontrolComponent implements OnInit {
           this.minTempA = element.agua.temperatura;
           this.timeMinTempA = element.timeStamp.date;
         }
-        if (element.exterior.temperatura >= this.maxTempE) {
+        /*  if (element.exterior.temperatura >= this.maxTempE) {
           this.maxTempE = element.exterior.temperatura;
           this.timeMaxTempE = element.timeStamp.date;
-        }
-        if (element.exterior.temperatura <= this.minTempE) {
+        } */
+        /* if (element.exterior.temperatura <= this.minTempE) {
           this.minTempE = element.exterior.temperatura;
           this.timeMinTempE = element.timeStamp.date;
-        }
+        } */
         if (element.interior.temperatura >= this.maxTempI) {
           this.maxTempI = element.interior.temperatura;
           this.timeMaxTempI = element.timeStamp.date;
@@ -224,9 +223,11 @@ export class HydrocontrolComponent implements OnInit {
     console.warn('Bad data count: ' + badDataCount);
     try {
       // delete only the first record of the bad data
-      console.warn('Deleting bad data!');
-      console.warn(dataToDelete[0]);
-      this.deleteData(dataToDelete[0]);
+      if (badDataCount !== 0) {
+        console.warn('Deleting bad data!');
+        console.warn(dataToDelete[0]);
+        this.deleteData(dataToDelete[0]);
+      }
     } catch (error) {
       console.error('There was an error deleting the bad data!', error);
     }
@@ -246,8 +247,8 @@ export class HydrocontrolComponent implements OnInit {
   createChart() {
     const labels: string[] = [];
     const tAgua: number[] = [];
-    const tAmbiente: number[] = [];
-    const hAmbiente: number[] = [];
+    /*  const tAmbiente: number[] = [];
+    const hAmbiente: number[] = []; */
     const tInterior: number[] = [];
     const hInterior: number[] = [];
     let par = 1;
@@ -268,8 +269,8 @@ export class HydrocontrolComponent implements OnInit {
                 element.timeStamp.hora + ':' + element.timeStamp.minutos
               );
               tAgua.push(element.agua.temperatura);
-              tAmbiente.push(element.exterior.temperatura);
-              hAmbiente.push(element.exterior.humedad);
+              // tAmbiente.push(element.exterior.temperatura);
+              //hAmbiente.push(element.exterior.humedad);
               tInterior.push(element.interior.temperatura);
               hInterior.push(element.interior.humedad);
               par = 2;
@@ -299,13 +300,13 @@ export class HydrocontrolComponent implements OnInit {
             /*             yAxisID: 'y',
              */
           },
-          {
-            /*             label: 'T° Ambiente',
-             */ data: tAmbiente,
-            backgroundColor: 'blue',
+          // {
+          /*             label: 'T° Ambiente',
+            // data: tAmbiente,
+            //backgroundColor: 'blue',
             /*             yAxisID: 'y',
              */
-          },
+          //},
           /* {
             label: 'H° Ambiente',
             data: hAmbiente,
