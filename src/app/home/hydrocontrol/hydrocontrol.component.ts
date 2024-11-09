@@ -11,6 +11,7 @@ import {
   PointElement,
   LinearScale,
   CategoryScale,
+  registerables,
 } from 'chart.js';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subject } from 'rxjs';
@@ -36,6 +37,7 @@ export class HydrocontrolComponent implements OnInit {
     private spinner: NgxSpinnerService
   ) {
     this.titleService.setTitle('Hydrocontrol');
+    Chart.register(...registerables);
   }
   public chart: Chart;
   @ViewChild(DataTableDirective)
@@ -223,7 +225,7 @@ export class HydrocontrolComponent implements OnInit {
     console.warn('Bad data count: ' + badDataCount);
     try {
       // delete only the first record of the bad data
-      if (badDataCount !== 0) {
+      if (badDataCount !== 0 && dataToDelete.length !== 0) {
         console.warn('Deleting bad data!');
         console.warn(dataToDelete[0]);
         this.deleteData(dataToDelete[0]);
@@ -257,11 +259,7 @@ export class HydrocontrolComponent implements OnInit {
       //if element.timeStamp.timeStamp is not undefined, print it
 
       if (labels.length < 60) {
-        if (
-          element.agua != undefined &&
-          element.exterior != undefined &&
-          element.interior != undefined
-        ) {
+        if (element.agua != undefined && element.interior != undefined) {
           //si element.agua.temperatura es menor a 60, se agrega al grafico
           if (element.agua.temperatura < 60 && element.agua.temperatura > 0) {
             if (par == 1) {
@@ -271,8 +269,10 @@ export class HydrocontrolComponent implements OnInit {
               tAgua.push(element.agua.temperatura);
               // tAmbiente.push(element.exterior.temperatura);
               //hAmbiente.push(element.exterior.humedad);
-              tInterior.push(element.interior.temperatura);
-              hInterior.push(element.interior.humedad);
+              tInterior.push(
+                parseFloat(element.interior.temperatura.toFixed(2))
+              );
+              hInterior.push(parseFloat(element.interior.humedad.toFixed(2)));
               par = 2;
             } else {
               if (par == 13) {
@@ -294,11 +294,10 @@ export class HydrocontrolComponent implements OnInit {
         labels: labels,
         datasets: [
           {
-            /* label: 'T° Agua', */
+            label: 'T° Agua',
             data: tAgua,
             backgroundColor: 'red',
-            /*             yAxisID: 'y',
-             */
+            // yAxisID: 'y',
           },
           // {
           /*             label: 'T° Ambiente',
@@ -314,8 +313,8 @@ export class HydrocontrolComponent implements OnInit {
             yAxisID: 'z',
           }, */
           {
-            /*             label: 'T° Interior',
-             */ data: tInterior,
+            label: 'T° Interior',
+            data: tInterior,
             backgroundColor: 'yellow',
             /* yAxisID: 'y', */
           },
@@ -331,13 +330,26 @@ export class HydrocontrolComponent implements OnInit {
       options: {
         aspectRatio: 2,
         responsive: true,
+        plugins: {
+          tooltip: {
+            enabled: true,
+            callbacks: {
+              label: function (context: any) {
+                let label = context.dataset.label || '';
+                if (label) {
+                  label += ': ';
+                }
+                if (context.parsed.y !== null) {
+                  label += context.parsed.y + '°C';
+                }
+                return label;
+              },
+            },
+          },
+        },
         scales: {
           y: {
-            ticks: {
-              color: 'red',
-              stepSize: 0.2,
-            },
-            beginAtZero: false,
+            beginAtZero: true,
             /* position: 'top',
             title: {
               display: true,
