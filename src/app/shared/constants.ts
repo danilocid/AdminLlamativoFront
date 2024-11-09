@@ -14,13 +14,6 @@ export const ApiRequest = {
   //inventario
   getAllInventory: environment.urlBackendHeroku + 'inventories',
 
-  //issues
-  getIssues: environment.urlBackendHeroku + 'issues',
-  reportIssue: environment.urlBackendHeroku + 'issues/report',
-  secctionsIssue: environment.urlBackendHeroku + 'issues/sections',
-  statusIssue: environment.urlBackendHeroku + 'issues/statuses',
-  typeIssue: environment.urlBackendHeroku + 'issues/types',
-
   //entities
   getEntities: environment.urlBackendHeroku + 'entities',
 

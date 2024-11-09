@@ -252,7 +252,6 @@ export class HydrocontrolComponent implements OnInit {
     /*  const tAmbiente: number[] = [];
     const hAmbiente: number[] = []; */
     const tInterior: number[] = [];
-    const hInterior: number[] = [];
     let par = 1;
 
     this.data.forEach((element) => {
@@ -266,13 +265,12 @@ export class HydrocontrolComponent implements OnInit {
               labels.push(
                 element.timeStamp.hora + ':' + element.timeStamp.minutos
               );
-              tAgua.push(element.agua.temperatura);
+              tAgua.push(parseFloat(element.agua.temperatura.toFixed(1)));
               // tAmbiente.push(element.exterior.temperatura);
               //hAmbiente.push(element.exterior.humedad);
               tInterior.push(
-                parseFloat(element.interior.temperatura.toFixed(2))
+                parseFloat(element.interior.temperatura.toFixed(1))
               );
-              hInterior.push(parseFloat(element.interior.humedad.toFixed(2)));
               par = 2;
             } else {
               if (par == 13) {
@@ -349,7 +347,7 @@ export class HydrocontrolComponent implements OnInit {
         },
         scales: {
           y: {
-            beginAtZero: true,
+            type: 'linear',
             /* position: 'top',
             title: {
               display: true,
