@@ -82,7 +82,6 @@ export class VerRecepcionComponent implements OnInit {
         next: (resp) => {
           this.dataRecepcion = resp.reception;
           this.productsRecepcion = resp.details;
-          console.log(this.productsRecepcion);
           this.dtTrigger.next(this.dtOptions);
           this.spinner.hide();
         },

@@ -35,8 +35,6 @@ export const ApiRequest = {
 
   //recepciones
   getRecepciones: environment.urlBackendHeroku + 'receptions',
-  getOneRecepcion: environment.urlBackend + 'recepciones-GetOne',
-  createRecepcion: environment.urlBackend + 'recepciones-Add',
 
   //compras
   getComprasFromDb: environment.urlBackendHeroku + 'purchases',

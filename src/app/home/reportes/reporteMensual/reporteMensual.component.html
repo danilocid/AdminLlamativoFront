@@ -45,8 +45,9 @@
               style="width: 100px; margin-left: 25px"
               formControlName="year"
             >
-              <option value="2023" selected>2023</option>
-              <option value="2024">2024</option>
+              <option value="{{ year }}" *ngFor="let year of yearList">
+                {{ year }}
+              </option>
             </select>
             <div style="padding-left: 20px">
               <button type="submit" class="btn btn-success">
@@ -71,6 +72,28 @@
             </button>
           </div>
         </div>
+      </div>
+    </div>
+    <div class="card" *ngIf="salesData">
+      <div class="card-body">
+        <table class="row-border hover table" aria-label="Tabla">
+          <thead class="table-light">
+            <tr>
+              <td>Documento</td>
+              <td>Mes</td>
+              <td>Mes Anterior</td>
+              <td>Año anterior</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of salesData">
+              <td>{{ item.name }}</td>
+              <td>{{ item.currentMonth | number }}</td>
+              <td>{{ item.previousMonth | number }}</td>
+              <td>{{ item.previousYear | number }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
     <div class="card" *ngIf="data.length !== 0">

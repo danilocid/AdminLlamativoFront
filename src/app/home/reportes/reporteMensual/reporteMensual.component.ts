@@ -25,7 +25,8 @@ export class ReporteMensualComponent implements OnInit {
   haveData = false;
   private apiService!: ApiService;
   showAddForm = false;
-
+  salesData: any;
+  yearList = [];
   constructor(
     private titleService: Title,
     private spinner: NgxSpinnerService,
@@ -40,7 +41,12 @@ export class ReporteMensualComponent implements OnInit {
     const date = new Date();
     //this.month = date.getMonth();
     this.month = date.getMonth() + 1;
+
     this.year = date.getFullYear();
+    //add years to list, from 2023 to this year
+    for (let i = 2023; i <= this.year; i++) {
+      this.yearList.push(i);
+    }
     this.dateForm = this.fb.group({
       month: [this.month],
       year: [this.year],
@@ -71,17 +77,19 @@ export class ReporteMensualComponent implements OnInit {
           //console.log(result);
           let total = 0;
           let totalMoney = 0;
-          result.data.forEach((element: any) => {
-            total += element.count;
-            totalMoney += element.total;
+          console.log(result.data.sales[0]);
+          this.salesData = result.data.sales;
+          result.data.sales.forEach((element: any) => {
+            total += element.currentMonthCount;
+            totalMoney += element.currentMonth;
             this.data.push({
               title: 'Total ventas ' + element.name.toLowerCase(),
-              value: element.count,
+              value: element.currentMonthCount,
               isMoney: false,
             });
             this.data.push({
               title: 'Total ventas ' + element.name.toLowerCase(),
-              value: element.total,
+              value: element.currentMonth,
               isMoney: true,
             });
           });
