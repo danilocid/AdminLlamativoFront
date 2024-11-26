@@ -72,21 +72,6 @@ export class VerArticulosComponent implements OnInit, OnDestroy {
     );
   }
 
-  private getProductData() {
-    this.apiService = new ApiService(this.http);
-    this.apiService
-      .getService(ApiRequest.getArticulos + '/' + this.idProducto)
-      .subscribe({
-        next: (resp) => {
-          this.producto = resp.data;
-          this.getProductMovements();
-        },
-        error: (error) => {
-          this.spinner.hide();
-          this.alertSV.alertBasic('Error', error.error.msg, 'error');
-        },
-      });
-  }
   private getProductMovements() {
     this.apiService = new ApiService(this.http);
     this.apiService

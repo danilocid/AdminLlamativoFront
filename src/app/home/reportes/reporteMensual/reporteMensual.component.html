@@ -75,28 +75,69 @@
       </div>
     </div>
     <div class="card" *ngIf="salesData">
+      <div class="card-header">
+        <h4 class="card-title">Ventas</h4>
+      </div>
       <div class="card-body">
         <table class="row-border hover table" aria-label="Tabla">
-          <thead class="table-light">
+          <thead>
             <tr>
-              <td>Documento</td>
-              <td>Mes</td>
-              <td>Mes Anterior</td>
-              <td>Año anterior</td>
+              <th
+                rowspan="2"
+                class="text-center table-valign-middle"
+                style="vertical-align: middle"
+              >
+                Documento
+              </th>
+              <th colspan="2" class="text-center">Mes Actual</th>
+              <th colspan="2" class="text-center">Mes Anterior</th>
+              <th colspan="2" class="text-center">Año anterior</th>
+            </tr>
+            <tr>
+              <th>Cantidad</th>
+              <th>Monto</th>
+              <th>Cantidad</th>
+              <th>Monto</th>
+              <th>Cantidad</th>
+              <th>Monto</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let item of salesData">
+            @for(item of salesData; track item) {
+            <tr>
               <td>{{ item.name }}</td>
-              <td>{{ item.currentMonth | number }}</td>
-              <td>{{ item.previousMonth | number }}</td>
-              <td>{{ item.previousYear | number }}</td>
+              <td>{{ item.currentMonthCount | number }}</td>
+              <td>${{ item.currentMonth | number }}</td>
+
+              <td>{{ item.previousMonthCount | number }}</td>
+              <td>
+                ${{ item.previousMonth | number }} ({{
+                  calculatePercentageVariation(
+                    item.currentMonth,
+                    item.previousMonth
+                  )
+                }}%)
+              </td>
+
+              <td>{{ item.previousYearCount | number }}</td>
+              <td>
+                ${{ item.previousYear | number }} ({{
+                  calculatePercentageVariation(
+                    item.currentMonth,
+                    item.previousYear
+                  )
+                }}%)
+              </td>
             </tr>
+            }
           </tbody>
         </table>
       </div>
     </div>
     <div class="card" *ngIf="data.length !== 0">
+      <div class="card-header">
+        <h4 class="card-title">Datos</h4>
+      </div>
       <div class="card-body">
         <p *ngFor="let item of data">
           {{ item.title }}:
@@ -107,6 +148,9 @@
       </div>
     </div>
     <div class="card" *ngIf="compras.length !== 0">
+      <div class="card-header">
+        <h4 class="card-title">Compras</h4>
+      </div>
       <div class="card-body">
         <table class="row-border hover table" aria-label="Tabla">
           <thead class="table-light">
@@ -141,7 +185,7 @@
               </td>
 
               <td>
-                {{ item.tipo_compra_name }}
+                {{ item.tipo_compra.tipo_compra }}
               </td>
 
               <td>{{ item.observaciones }}</td>

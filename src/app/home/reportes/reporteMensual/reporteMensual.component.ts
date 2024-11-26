@@ -8,8 +8,6 @@ import { ApiRequest } from 'src/app/shared/constants';
 import { ApiService } from 'src/app/shared/services/ApiService';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
   selector: 'app-reporte-mensual',
@@ -39,8 +37,8 @@ export class ReporteMensualComponent implements OnInit {
   }
   ngOnInit() {
     const date = new Date();
-    //this.month = date.getMonth();
-    this.month = date.getMonth() + 1;
+    this.month = date.getMonth();
+    //this.month = date.getMonth() + 1;
 
     this.year = date.getFullYear();
     //add years to list, from 2023 to this year
@@ -57,7 +55,6 @@ export class ReporteMensualComponent implements OnInit {
   }
 
   submit() {
-    this.data = [];
     this.compras = [];
     //console.log(this.dateForm.value);
     this.spinner.show();
@@ -75,34 +72,8 @@ export class ReporteMensualComponent implements OnInit {
           this.month = this.dateForm.controls['month'].value - 1;
           this.year = this.dateForm.controls['year'].value;
           //console.log(result);
-          let total = 0;
-          let totalMoney = 0;
-          console.log(result.data.sales[0]);
+
           this.salesData = result.data.sales;
-          result.data.sales.forEach((element: any) => {
-            total += element.currentMonthCount;
-            totalMoney += element.currentMonth;
-            this.data.push({
-              title: 'Total ventas ' + element.name.toLowerCase(),
-              value: element.currentMonthCount,
-              isMoney: false,
-            });
-            this.data.push({
-              title: 'Total ventas ' + element.name.toLowerCase(),
-              value: element.currentMonth,
-              isMoney: true,
-            });
-          });
-          this.data.push({
-            title: 'Total ventas',
-            value: total,
-            isMoney: false,
-          });
-          this.data.push({
-            title: 'Total ventas',
-            value: totalMoney,
-            isMoney: true,
-          });
 
           this.getCompras();
         },
@@ -136,63 +107,8 @@ export class ReporteMensualComponent implements OnInit {
           //  console.log(tipoDocs);
 
           //get total compras for each tipo documento
-          tipoDocs.forEach((element) => {
-            let total = 0;
-            let montoTotal = 0;
-            this.compras.forEach((compra) => {
-              if (compra.tipo_documento.tipo == element) {
-                const costoTotal =
-                  compra.costo_neto_documento + compra.costo_imp_documento;
-                if (costoTotal != 0) {
-                  total++;
-                  montoTotal += costoTotal;
-                }
-              }
-            });
-            if (montoTotal != 0) {
-              this.data.push({
-                title: 'Total ' + element.toLowerCase() + 's con costo',
-                value: total,
-                isMoney: false,
-              });
-
-              this.data.push({
-                title: 'Total monto ' + element.toLowerCase(),
-                value: montoTotal,
-                isMoney: true,
-              });
-            }
-          });
 
           //get total compras for each tipo documento (sin costo)
-          tipoDocs.forEach((element) => {
-            let total = 0;
-            let montoTotal = 0;
-            this.compras.forEach((compra) => {
-              if (compra.tipo_documento.tipo == element) {
-                const costoTotal =
-                  compra.costo_neto_documento + compra.costo_imp_documento;
-                if (costoTotal == 0) {
-                  total++;
-                  montoTotal +=
-                    compra.monto_neto_documento + compra.monto_imp_documento;
-                }
-              }
-            });
-            if (montoTotal != 0) {
-              this.data.push({
-                title: 'Total ' + element.toLowerCase() + 's sin costo',
-                value: total,
-                isMoney: false,
-              });
-
-              this.data.push({
-                title: 'Total monto ' + element.toLowerCase(),
-                value: montoTotal,
-                isMoney: true,
-              });
-            }
-          });
 
           this.getReportData();
         },
@@ -204,6 +120,7 @@ export class ReporteMensualComponent implements OnInit {
   }
 
   getReportData() {
+    this.data = [];
     this.apiService = new ApiService(this.http);
     this.apiService
       .getService(
@@ -293,20 +210,18 @@ export class ReporteMensualComponent implements OnInit {
     const header =
       'Reporte mensual ' +
       monthName +
-      '-' +
+      ' - ' +
       this.dateForm.controls['year'].value;
     const docsRecibidos = [];
     //header for docs recibidos (emisor, fecha, documento, neto, iva, total, tipo, observaciones)
     docsRecibidos.push([
-      { text: 'Emisor', style: 'table' },
-      { text: 'Fecha', style: 'table' },
-      { text: 'Documento', style: 'table' },
-
-      { text: 'Monto', style: 'table' },
-      { text: 'Costo', style: 'table' },
-
-      { text: 'Tipo', style: 'table' },
-      { text: 'Observaciones', style: 'table' },
+      { text: 'Emisor', style: 'tableHeader' },
+      { text: 'Fecha', style: 'tableHeader' },
+      { text: 'Documento', style: 'tableHeader' },
+      { text: 'Monto', style: 'tableHeader' },
+      { text: 'Costo', style: 'tableHeader' },
+      { text: 'Tipo', style: 'tableHeader' },
+      { text: 'Observaciones', style: 'tableHeader' },
     ]);
     //body for docs recibidos
     //dummy data
@@ -335,39 +250,209 @@ export class ReporteMensualComponent implements OnInit {
         docsRecibidos.push([
           {
             text: element.proveedor.nombre + ' (' + element.proveedor.rut + ')',
-            style: 'table',
+            style: 'tableStyle',
           },
 
-          { text: fecha, style: 'table' },
+          { text: fecha, style: 'tableStyle' },
           {
             text: element.documento + ' (' + element.tipo_documento.id + ')',
-            style: 'table',
+            style: 'tableStyle',
           },
 
-          { text: monto, style: 'table' },
-          { text: costo, style: 'table' },
+          { text: monto, style: 'tableStyle' },
+          { text: costo, style: 'tableStyle' },
 
-          { text: element.tipo_compra.tipo_compra, style: 'table' },
-          { text: element.observaciones, style: 'table' },
+          { text: element.tipo_compra.tipo_compra, style: 'tableStyle' },
+          { text: element.observaciones, style: 'tableStyle' },
         ]);
       });
     }
+
+    //body for docs emitidos
+    //dummy data
+    const docsEmitidos = [];
+
+    docsEmitidos.push([
+      { text: 'Documento', style: 'tableHeader', rowSpan: 2 },
+      { text: 'Mes actual', style: 'tableHeader', colSpan: 2 },
+      {},
+      { text: 'Mes anterior', style: 'tableHeader', colSpan: 3 },
+      {},
+      {},
+      { text: 'Año anterior', style: 'tableHeader', colSpan: 3 },
+      {},
+      {},
+    ]);
+    docsEmitidos.push([
+      {},
+      { text: 'Cantidad', style: 'tableHeader' },
+      { text: 'Monto', style: 'tableHeader' },
+      { text: 'Cantidad', style: 'tableHeader' },
+      { text: 'Monto', style: 'tableHeader' },
+      { text: 'Diferencia', style: 'tableHeader' },
+      { text: 'Cantidad', style: 'tableHeader' },
+      { text: 'Monto', style: 'tableHeader' },
+      { text: 'Diferencia', style: 'tableHeader' },
+    ]);
+
+    //get total docs emitidos for each tipo documento
+    let totalSalesCurrentMonth = 0;
+    let totalSalesCurrentMonthCount = 0;
+    let totalSalesPreviousMonth = 0;
+    let totalSalesPreviousMonthCount = 0;
+    let totalSalesPreviousYear = 0;
+    let totalSalesPreviousYearCount = 0;
+
+    this.salesData.forEach((element) => {
+      //format money
+      const formatter = new Intl.NumberFormat('es-CL', {
+        style: 'currency',
+        currency: 'CLP',
+      });
+      const monto = formatter.format(element.currentMonth);
+      const montoAnterior = formatter.format(element.previousMonth);
+      const montoAnioAnterior = formatter.format(element.previousYear);
+      totalSalesCurrentMonth += element.currentMonth;
+      totalSalesCurrentMonthCount += element.currentMonthCount;
+      totalSalesPreviousMonth += element.previousMonth;
+      totalSalesPreviousMonthCount += element.previousMonthCount;
+      totalSalesPreviousYear += element.previousYear;
+      totalSalesPreviousYearCount += element.previousYearCount;
+      docsEmitidos.push([
+        {
+          text: element.name,
+          style: 'tableStyle',
+        },
+        { text: element.currentMonthCount, style: 'tableStyle' },
+        { text: monto, style: 'tableStyle' },
+        { text: element.previousMonthCount, style: 'tableStyle' },
+        { text: montoAnterior, style: 'tableStyle' },
+        {
+          text:
+            this.calculatePercentageVariation(
+              element.currentMonth,
+              element.previousMonth
+            ) + '%',
+          style:
+            this.calculatePercentageVariation(
+              element.currentMonth,
+              element.previousMonth
+            ) >= 0
+              ? 'tableStyleGreen'
+              : 'tableStyleRed',
+        },
+        { text: element.previousYearCount, style: 'tableStyle' },
+        { text: montoAnioAnterior, style: 'tableStyle' },
+        {
+          text:
+            this.calculatePercentageVariation(
+              element.currentMonth,
+              element.previousYear
+            ) + '%',
+          style:
+            this.calculatePercentageVariation(
+              element.currentMonth,
+              element.previousYear
+            ) >= 0
+              ? 'tableStyleGreen'
+              : 'tableStyleRed',
+        },
+      ]);
+    });
+
+    docsEmitidos.push([
+      {
+        text: 'Total',
+        style: 'tableStyle',
+      },
+      { text: totalSalesCurrentMonthCount, style: 'tableStyle' },
+      {
+        text: new Intl.NumberFormat('es-CL', {
+          style: 'currency',
+          currency: 'CLP',
+        }).format(totalSalesCurrentMonth),
+        style: 'tableStyle',
+      },
+      { text: totalSalesPreviousMonthCount, style: 'tableStyle' },
+      {
+        text: new Intl.NumberFormat('es-CL', {
+          style: 'currency',
+          currency: 'CLP',
+        }).format(totalSalesPreviousMonth),
+        style: 'tableStyle',
+      },
+      {
+        text:
+          this.calculatePercentageVariation(
+            totalSalesCurrentMonth,
+            totalSalesPreviousMonth
+          ) + '%',
+        style:
+          this.calculatePercentageVariation(
+            totalSalesCurrentMonth,
+            totalSalesPreviousMonth
+          ) >= 0
+            ? 'tableStyleGreen'
+            : 'tableStyleRed',
+      },
+      { text: totalSalesPreviousYearCount, style: 'tableStyle' },
+      {
+        text: new Intl.NumberFormat('es-CL', {
+          style: 'currency',
+          currency: 'CLP',
+        }).format(totalSalesPreviousYear),
+        style: 'tableStyle',
+      },
+      {
+        text:
+          this.calculatePercentageVariation(
+            totalSalesCurrentMonth,
+            totalSalesPreviousYear
+          ) + '%',
+        style:
+          this.calculatePercentageVariation(
+            totalSalesCurrentMonth,
+            totalSalesPreviousYear
+          ) >= 0
+            ? 'tableStyleGreen'
+            : 'tableStyleRed',
+      },
+    ]);
+
     const docDefinition = {
       content: [
         { text: header, style: 'header' },
         { table: { body: data, widths: ['auto', 'auto'] } },
+        { text: 'Documentos emitidos', style: 'docsRecib' },
+        {
+          table: {
+            body: docsEmitidos,
+            headerRows: 2,
+            widths: [
+              '*',
+              'auto',
+              'auto',
+              'auto',
+              'auto',
+              'auto',
+              'auto',
+              'auto',
+              'auto',
+            ],
+          },
+        },
         { text: 'Documentos recibidos', style: 'docsRecib' },
         {
           table: {
             body: docsRecibidos,
-            widths: [110, 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+            widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
           },
         },
       ],
       footer: {
         text:
           'Reporte mensual ' +
-          this.month +
+          (this.month + 1) +
           '-' +
           this.year +
           ' (Generado por llamativoAdmin ' +
@@ -390,18 +475,59 @@ export class ReporteMensualComponent implements OnInit {
         table: {
           margin: [0, 1, 0, 1],
         },
+        tableHeader: {
+          fontSize: 13,
+          color: '#4a4848',
+        },
+        tableStyle: {
+          margin: [0, 5, 0, 5],
+          fontSize: 10,
+        },
+        tableStyleRed: {
+          margin: [0, 5, 0, 5],
+          fontSize: 10,
+          color: 'red',
+        },
+        tableStyleGreen: {
+          margin: [0, 5, 0, 5],
+          fontSize: 10,
+          color: 'green',
+        },
         dataStyle: {
           alignment: 'right',
+          font: 'Roboto',
           margin: [5, 1, 0, 1],
         },
       },
       pageSize: 'LETTER',
     };
-
+    pdfMake.setFonts({
+      Roboto: {
+        normal:
+          'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/fonts/Roboto/Roboto-Regular.ttf',
+        bold: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/fonts/Roboto/Roboto-Medium.ttf',
+        italics:
+          'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/fonts/Roboto/Roboto-Italic.ttf',
+        bolditalics:
+          'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/fonts/Roboto/Roboto-MediumItalic.ttf',
+      },
+    });
     pdfMake.createPdf(docDefinition).open();
   }
 
   showForm() {
     this.showAddForm = !this.showAddForm;
+  }
+
+  calculatePercentageVariation(
+    currentMonth: number,
+    previousMonthOrYear: number
+  ): number {
+    if (previousMonthOrYear === 0) {
+      return 0; // Retorna 0 si no se puede calcular
+    }
+    const variation =
+      ((currentMonth - previousMonthOrYear) / previousMonthOrYear) * 100;
+    return parseFloat(variation.toFixed(2)); // Limita a dos decimales
   }
 }
