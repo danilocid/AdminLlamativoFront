@@ -37,9 +37,7 @@ export class ReporteMensualComponent implements OnInit {
   }
   ngOnInit() {
     const date = new Date();
-    this.month = date.getMonth();
-    //this.month = date.getMonth() + 1;
-
+    this.month = date.getMonth() + 1;
     this.year = date.getFullYear();
     //add years to list, from 2023 to this year
     for (let i = 2023; i <= this.year; i++) {
