@@ -40,5 +40,6 @@ Thumbs.db
 /.firebase/
 #sonarqube
 /.scannerwork
-sonar-project.properties
+
 .firebase/*
+sonar-project.properties
