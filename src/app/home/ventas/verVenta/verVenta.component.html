@@ -118,6 +118,15 @@
             <tr *ngFor="let detalle of detalleVenta">
               <td>
                 {{ detalle.articulo.descripcion }}
+                <a
+                  routerLink="/articulos/ver/{{ detalle.articulo.id }}"
+                  class="me-1 text-success pointer"
+                  data-toggle="tooltip"
+                  data-placement="right"
+                  title="Ver articulo"
+                >
+                  <i class="fas fa-eye"></i>
+                </a>
               </td>
               <td>
                 {{ detalle.cantidad }}

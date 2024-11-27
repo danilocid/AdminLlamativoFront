@@ -39,32 +39,6 @@
               <th>Acciones</th>
             </tr>
           </thead>
-          <!-- <tbody>
-            <tr *ngFor="let item of ventas">
-              <td>{{ item.id }}</td>
-              <td>{{ item.nombre }}</td>
-              <td>
-                {{
-                  item.monto_neto + item.monto_imp
-                    | currency : "CLP" : "symbol-narrow" : "1.0-0"
-                }}
-              </td>
-              <td>{{ item.tipo }}: {{ item.documento }}</td>
-              <td>{{ item.medio_de_pago }}</td>
-              <td [attr.data-order]="item.fecha">
-                {{ item.fecha | date : "dd/MM/yyyy HH:mm" : "UTC" }}
-              </td>
-
-              <td>
-                <a
-                  routerLink="ver/{{ item.id }}"
-                  class="me-1 text-warning pointer"
-                >
-                  <i class="fas fa-eye"></i>
-                </a>
-              </td>
-            </tr>
-          </tbody> -->
         </table>
       </div>
     </div>
