@@ -26,13 +26,13 @@ export class CreateComponent implements OnInit {
   regions: Region[] = [];
   comunas: Commune[] = [];
   constructor(
-    private titleService: Title,
-    private router: Router,
-    private spinner: NgxSpinnerService,
-    private fb: FormBuilder,
-    private http: HttpClient,
-    private route: ActivatedRoute,
-    private alertSV: AlertService
+    readonly titleService: Title,
+    readonly router: Router,
+    readonly spinner: NgxSpinnerService,
+    readonly fb: FormBuilder,
+    readonly http: HttpClient,
+    readonly route: ActivatedRoute,
+    readonly alertSV: AlertService
   ) {
     this.spinner.show();
     this.rutCliente = this.route.snapshot.paramMap.get('id');

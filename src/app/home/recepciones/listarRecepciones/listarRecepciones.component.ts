@@ -24,11 +24,10 @@ export class ListarRecepcionesComponent implements OnInit, AfterViewInit {
   searchTerm;
 
   constructor(
-    private spinner: NgxSpinnerService,
-    private tableOptions: TableSettings,
-
-    private http: HttpClient,
-    private titleService: Title
+    readonly spinner: NgxSpinnerService,
+    readonly tableOptions: TableSettings,
+    readonly http: HttpClient,
+    readonly titleService: Title
   ) {
     this.titleService.setTitle('Recepciones');
   }

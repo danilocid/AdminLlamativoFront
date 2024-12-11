@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AuthGuard  {
-  constructor(private authSV: AuthService, private router: Router) {}
+export class AuthGuard {
+  constructor(readonly authSV: AuthService) {}
   canActivate(): Observable<boolean> | Promise<boolean> | boolean {
     return this.hasToken();
   }

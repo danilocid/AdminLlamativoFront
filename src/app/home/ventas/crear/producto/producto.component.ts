@@ -24,10 +24,10 @@ export class ProductoComponent implements OnInit {
   searchTerm: Subject<string> = new Subject<string>();
   productTmp: ProductCart;
   constructor(
-    private fb: FormBuilder,
-    private http: HttpClient,
-    private spinner: NgxSpinnerService,
-    private alertSV: AlertService
+    readonly fb: FormBuilder,
+    readonly http: HttpClient,
+    readonly spinner: NgxSpinnerService,
+    readonly alertSV: AlertService
   ) {
     this.initializeSearch();
   }

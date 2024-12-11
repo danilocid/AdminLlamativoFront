@@ -26,11 +26,11 @@ export class FinalizaVentaComponent implements OnInit {
   @Input() productsCart: ProductCart[] = [];
 
   constructor(
-    private fb: FormBuilder,
-    private http: HttpClient,
-    private spinner: NgxSpinnerService,
-    private alertSV: AlertService,
-    private router: Router
+    readonly fb: FormBuilder,
+    readonly http: HttpClient,
+    readonly spinner: NgxSpinnerService,
+    readonly alertSV: AlertService,
+    readonly router: Router
   ) {}
 
   ngOnInit() {

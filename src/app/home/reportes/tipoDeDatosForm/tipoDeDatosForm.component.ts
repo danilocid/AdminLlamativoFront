@@ -19,10 +19,10 @@ export class TipoDeDatosFormComponent implements OnInit, OnChanges {
   private apiService!: ApiService;
 
   constructor(
-    private fb: FormBuilder,
-    private http: HttpClient,
-    private spinner: NgxSpinnerService,
-    private as: AlertService
+    readonly fb: FormBuilder,
+    readonly http: HttpClient,
+    readonly spinner: NgxSpinnerService,
+    readonly as: AlertService
   ) {}
 
   ngOnInit() {

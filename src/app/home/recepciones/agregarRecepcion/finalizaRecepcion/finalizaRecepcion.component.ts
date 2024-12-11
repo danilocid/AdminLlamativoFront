@@ -26,11 +26,11 @@ export class FinalizaRecepcionComponent implements OnInit {
   @Input() productsCart: ProductCart[] = [];
 
   constructor(
-    private fb: FormBuilder,
-    private http: HttpClient,
-    private spinner: NgxSpinnerService,
-    private alertSV: AlertService,
-    private router: Router
+    readonly fb: FormBuilder,
+    readonly http: HttpClient,
+    readonly spinner: NgxSpinnerService,
+    readonly alertSV: AlertService,
+    readonly router: Router
   ) {}
 
   ngOnInit() {
@@ -141,8 +141,7 @@ export class FinalizaRecepcionComponent implements OnInit {
           totalUnidades: totalUnits,
         })
         .subscribe({
-          next: (response) => {
-            console.log(response);
+          next: () => {
             this.spinner.hide();
             this.alertSV.alertBasic(
               'Aviso',
@@ -152,7 +151,6 @@ export class FinalizaRecepcionComponent implements OnInit {
             //this.router.navigate(['/recepciones']);
           },
           error: (error) => {
-            console.log(error);
             this.spinner.hide();
             this.alertSV.alertBasic(
               'Error al generar la recepcion',

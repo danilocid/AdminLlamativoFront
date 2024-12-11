@@ -26,12 +26,12 @@ export class ReporteMensualComponent implements OnInit {
   salesData: any;
   yearList = [];
   constructor(
-    private titleService: Title,
-    private spinner: NgxSpinnerService,
-    private router: Router,
-    private alertSV: AlertService,
-    private fb: FormBuilder,
-    private http: HttpClient
+    readonly titleService: Title,
+    readonly spinner: NgxSpinnerService,
+    readonly router: Router,
+    readonly alertSV: AlertService,
+    readonly fb: FormBuilder,
+    readonly http: HttpClient
   ) {
     this.titleService.setTitle('Reporte mensual');
   }

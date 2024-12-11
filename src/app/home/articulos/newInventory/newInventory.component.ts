@@ -49,12 +49,12 @@ export class NewInventoryComponent implements OnInit, OnDestroy, AfterViewInit {
   searchTerm: Subject<string> = new Subject<string>();
 
   constructor(
-    private titleService: Title,
-    private spinner: NgxSpinnerService,
-    private router: Router,
-    private alertSV: AlertService,
-    private http: HttpClient,
-    private fb: FormBuilder
+    readonly titleService: Title,
+    readonly spinner: NgxSpinnerService,
+    readonly router: Router,
+    readonly alertSV: AlertService,
+    readonly http: HttpClient,
+    readonly fb: FormBuilder
   ) {
     this.titleService.setTitle('Articulos');
     this.spinner.show();

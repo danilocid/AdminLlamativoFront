@@ -32,10 +32,10 @@ export class ArticulosComponent implements OnInit, OnDestroy, AfterViewInit {
   searchTerm;
 
   constructor(
-    private titleService: Title,
-    private spinner: NgxSpinnerService,
-    private http: HttpClient,
-    private tableOptions: TableSettings
+    readonly titleService: Title,
+    readonly spinner: NgxSpinnerService,
+    readonly http: HttpClient,
+    readonly tableOptions: TableSettings
   ) {
     this.titleService.setTitle('Articulos');
     this.spinner.show();

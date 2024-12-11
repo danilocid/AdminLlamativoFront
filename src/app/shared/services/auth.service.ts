@@ -5,7 +5,6 @@ import { Observable, of } from 'rxjs';
 import { ApiRequest } from 'src/app/shared/constants';
 import { AuthResponse } from '../models/user.model';
 import { UtilService } from './util.service';
-import { ApiService } from './ApiService';
 
 @Injectable({
   providedIn: 'root',
@@ -16,8 +15,7 @@ export class AuthService {
   get user() {
     return { ...this._user };
   }
-  private apiService!: ApiService;
-  constructor(private http: HttpClient, private utSV: UtilService) {}
+  constructor(readonly http: HttpClient, readonly utSV: UtilService) {}
 
   async authVerification(): Promise<Observable<boolean>> {
     if (!localStorage.getItem('token') || '') {

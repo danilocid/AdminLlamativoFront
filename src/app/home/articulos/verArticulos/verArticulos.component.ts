@@ -30,13 +30,13 @@ export class VerArticulosComponent implements OnInit, OnDestroy {
   date = new Date();
 
   constructor(
-    private titleService: Title,
-    private spinner: NgxSpinnerService,
-    private alertSV: AlertService,
-    private http: HttpClient,
-    private route: ActivatedRoute,
-    private pdfGeneratorService: PdfGeneratorService,
-    private fb: FormBuilder
+    readonly titleService: Title,
+    readonly spinner: NgxSpinnerService,
+    readonly alertSV: AlertService,
+    readonly http: HttpClient,
+    readonly route: ActivatedRoute,
+    readonly pdfGeneratorService: PdfGeneratorService,
+    readonly fb: FormBuilder
   ) {
     this.titleService.setTitle('Articulos - Ver');
     this.spinner.show();

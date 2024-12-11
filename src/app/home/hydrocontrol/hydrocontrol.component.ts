@@ -32,9 +32,9 @@ Chart.register(
 })
 export class HydrocontrolComponent implements OnInit {
   constructor(
-    private titleService: Title,
-    private db: AngularFireDatabase,
-    private spinner: NgxSpinnerService
+    readonly titleService: Title,
+    readonly db: AngularFireDatabase,
+    readonly spinner: NgxSpinnerService
   ) {
     this.titleService.setTitle('Hydrocontrol');
     Chart.register(...registerables);

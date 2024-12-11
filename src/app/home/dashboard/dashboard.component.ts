@@ -18,7 +18,7 @@ export class DashboardComponent implements OnInit {
   };
   private apiService!: ApiService;
 
-  constructor(private titleService: Title, private http: HttpClient) {
+  constructor(readonly titleService: Title, readonly http: HttpClient) {
     this.titleService.setTitle('Dashboard');
   }
   ngOnInit() {

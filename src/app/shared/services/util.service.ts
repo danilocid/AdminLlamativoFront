@@ -7,12 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class UtilService {
-  private readonly unauthorized = {
-    status: 401,
-    error: 'Unauthorized',
-  };
-
-  constructor(private router: Router) {}
+  constructor(readonly router: Router) {}
 
   /**
    * Navega a una Ruta Especifica dentro del proyecto

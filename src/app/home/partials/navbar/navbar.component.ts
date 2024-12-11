@@ -10,8 +10,9 @@ import { Notification } from 'src/app/shared/models/notification.model';
   styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent implements OnInit {
-  constructor(private http: HttpClient) {}
-  private apiService!: ApiService;
+  constructor(readonly http: HttpClient) {}
+
+  apiService = new ApiService(this.http);
   notifications: Notification[] = [];
   ngOnInit() {
     this.getNotifications();
@@ -24,7 +25,6 @@ export class NavbarComponent implements OnInit {
   }
 
   getNotifications() {
-    this.apiService = new ApiService(this.http);
     this.apiService.getService(ApiRequest.getNotificaciones).subscribe({
       next: (resp) => {
         this.notifications = resp.data;

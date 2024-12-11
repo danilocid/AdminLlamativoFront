@@ -1,10 +1,6 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { Product, ProductCart } from 'src/app/shared/models/product.model';
-import { Router } from '@angular/router';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { AlertService } from 'src/app/shared/services/alert.service';
 
 @Component({
@@ -13,20 +9,12 @@ import { AlertService } from 'src/app/shared/services/alert.service';
   styleUrls: ['./crear.component.css'],
 })
 export class CrearComponent implements OnInit {
-  productForm: FormGroup;
   products: Product[] = [];
   productsCart: ProductCart[] = [];
   sidePanel = 'Productos';
   total = 0;
 
-  constructor(
-    private fb: FormBuilder,
-    private titleService: Title,
-    private http: HttpClient,
-    private router: Router,
-    private spinner: NgxSpinnerService,
-    private alertSV: AlertService
-  ) {
+  constructor(readonly titleService: Title, readonly alertSV: AlertService) {
     this.titleService.setTitle('Agregar venta');
   }
 

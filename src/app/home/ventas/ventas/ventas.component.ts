@@ -28,10 +28,10 @@ export class VentasComponent implements OnInit, OnDestroy, AfterViewInit {
   private apiService!: ApiService;
 
   constructor(
-    private http: HttpClient,
-    private spinner: NgxSpinnerService,
-    private titleService: Title,
-    private tableOptions: TableSettings
+    readonly http: HttpClient,
+    readonly spinner: NgxSpinnerService,
+    readonly titleService: Title,
+    readonly tableOptions: TableSettings
   ) {
     this.titleService.setTitle('Ventas');
   }
@@ -43,7 +43,7 @@ export class VentasComponent implements OnInit, OnDestroy, AfterViewInit {
     this.dtTrigger.next(null);
   }
 
-  private getSales() {
+  getSales() {
     this.apiService = new ApiService(this.http);
     this.dtOptions = {
       ...this.tableOptions.getGlobalDataTableFormat(),

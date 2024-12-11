@@ -58,11 +58,11 @@ export class VerRecepcionComponent implements OnInit {
   productsRecepcion: ReceptionProduct[] = [];
 
   constructor(
-    private titleService: Title,
-    private spinner: NgxSpinnerService,
-    private alertSV: AlertService,
-    private http: HttpClient,
-    private route: ActivatedRoute
+    readonly titleService: Title,
+    readonly spinner: NgxSpinnerService,
+    readonly alertSV: AlertService,
+    readonly http: HttpClient,
+    readonly route: ActivatedRoute
   ) {
     this.titleService.setTitle('Recepciones - Ver');
     this.spinner.show();

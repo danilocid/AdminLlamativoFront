@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent {
-  constructor(private router: Router) {}
+  constructor(readonly router: Router) {}
 
   public isActive(base: string): boolean {
     return this.router.url.includes(`/${base}`);

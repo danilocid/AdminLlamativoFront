@@ -23,14 +23,14 @@ export class VerVentaComponent implements OnInit {
 
   detalleVenta: SaleDetail[] = [];
   date = new Date();
-  private apiService!: ApiService;
   idVenta: any;
   constructor(
-    private http: HttpClient,
-    private spinner: NgxSpinnerService,
-    private alertSV: AlertService,
-    private titleService: Title,
-    private route: ActivatedRoute
+    readonly http: HttpClient,
+    readonly spinner: NgxSpinnerService,
+    readonly alertSV: AlertService,
+    readonly titleService: Title,
+    readonly route: ActivatedRoute,
+    readonly api: ApiService
   ) {
     this.titleService.setTitle('Ver venta');
     this.spinner.show();
@@ -39,20 +39,18 @@ export class VerVentaComponent implements OnInit {
 
   ngOnInit() {
     this.dtOptions = FormatDataTableGlobal();
-    this.apiService = new ApiService(this.http);
-    this.apiService
-      .getService(ApiRequest.getSales + '/' + this.idVenta)
-      .subscribe({
-        next: (resp) => {
-          this.venta = resp.data.sale;
-          this.detalleVenta = resp.data.details;
-          this.dtTrigger.next(this.dtOptions);
-          this.spinner.hide();
-        },
-        error: (error) => {
-          this.spinner.hide();
-          this.alertSV.alertBasic('Error', error.error.msg, 'error');
-        },
-      });
+
+    this.api.getService(ApiRequest.getSales + '/' + this.idVenta).subscribe({
+      next: (resp) => {
+        this.venta = resp.data.sale;
+        this.detalleVenta = resp.data.details;
+        this.dtTrigger.next(this.dtOptions);
+        this.spinner.hide();
+      },
+      error: (error) => {
+        this.spinner.hide();
+        this.alertSV.alertBasic('Error', error.error.msg, 'error');
+      },
+    });
   }
 }

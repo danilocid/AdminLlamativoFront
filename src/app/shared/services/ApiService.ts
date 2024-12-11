@@ -22,7 +22,7 @@ export class ApiService {
 
   //add token to header
 
-  constructor(private http: HttpClient) {}
+  constructor(readonly http: HttpClient) {}
 
   postService(infoUrl: string, json: object): Observable<any> {
     const token = localStorage.getItem('token') || '';

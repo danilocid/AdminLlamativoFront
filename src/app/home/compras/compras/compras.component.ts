@@ -29,12 +29,12 @@ export class ComprasComponent implements OnInit {
   showModal = false;
   showModalImport = false;
   constructor(
-    private titleService: Title,
-    private spinner: NgxSpinnerService,
-    private router: Router,
-    private alertSV: AlertService,
-    private fb: FormBuilder,
-    private http: HttpClient
+    readonly titleService: Title,
+    readonly spinner: NgxSpinnerService,
+    readonly router: Router,
+    readonly alertSV: AlertService,
+    readonly fb: FormBuilder,
+    readonly http: HttpClient
   ) {
     this.titleService.setTitle('Compras');
   }

@@ -22,10 +22,10 @@ export class TipoDatosRepotesComponent implements OnInit {
   showModal = false;
   tipoDato: any;
   constructor(
-    private titleService: Title,
-    private spinner: NgxSpinnerService,
-    private alertSV: AlertService,
-    private http: HttpClient
+    readonly titleService: Title,
+    readonly spinner: NgxSpinnerService,
+    readonly alertSV: AlertService,
+    readonly http: HttpClient
   ) {
     this.titleService.setTitle('Tipos de datos reportes');
   }

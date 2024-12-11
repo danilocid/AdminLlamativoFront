@@ -39,12 +39,12 @@ export class VerInventarioComponent implements OnInit, OnDestroy {
   articulos: InventoryDetail[] = [];
   date = new Date();
   constructor(
-    private titleService: Title,
-    private spinner: NgxSpinnerService,
-    private alertSV: AlertService,
-    private http: HttpClient,
-    private route: ActivatedRoute,
-    private router: Router
+    readonly titleService: Title,
+    readonly spinner: NgxSpinnerService,
+    readonly alertSV: AlertService,
+    readonly http: HttpClient,
+    readonly route: ActivatedRoute,
+    readonly router: Router
   ) {
     this.titleService.setTitle('Invetario - Ver');
     this.spinner.show();

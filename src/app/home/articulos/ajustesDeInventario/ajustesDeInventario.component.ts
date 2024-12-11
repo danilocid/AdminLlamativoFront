@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { AlertService } from 'src/app/shared/services/alert.service';
 import { ApiService } from 'src/app/shared/services/ApiService';
 import { ApiRequest, TableSettings } from 'src/app/shared/constants';
 import { HttpClient } from '@angular/common/http';
@@ -32,11 +31,10 @@ export class AjustesDeInventarioComponent
   date = new Date();
 
   constructor(
-    private titleService: Title,
-    private spinner: NgxSpinnerService,
-    private alertSV: AlertService,
-    private http: HttpClient,
-    private tableOptions: TableSettings
+    readonly titleService: Title,
+    readonly spinner: NgxSpinnerService,
+    readonly http: HttpClient,
+    readonly tableOptions: TableSettings
   ) {
     this.titleService.setTitle('Ajustes de Inventario');
   }
@@ -132,7 +130,7 @@ export class AjustesDeInventarioComponent
           className: 'fs-12',
           defaultContent: '',
           orderable: false,
-          render: function (data: any, type: any, row: any) {
+          render: function (row: any) {
             // suma de costo_imp y costo_neto
             let costo = row.costo_imp + row.costo_neto;
             // agregar signo de dolar y punto separador de miles

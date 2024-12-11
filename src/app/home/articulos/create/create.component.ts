@@ -21,13 +21,13 @@ export class CreateComponent implements OnInit {
   producto: Product = {} as Product;
   title = '';
   constructor(
-    private titleService: Title,
-    private router: Router,
-    private spinner: NgxSpinnerService,
-    private fb: FormBuilder,
-    private http: HttpClient,
-    private route: ActivatedRoute,
-    private alertSV: AlertService
+    readonly titleService: Title,
+    readonly router: Router,
+    readonly spinner: NgxSpinnerService,
+    readonly fb: FormBuilder,
+    readonly http: HttpClient,
+    readonly route: ActivatedRoute,
+    readonly alertSV: AlertService
   ) {
     this.spinner.show();
     this.idProducto = this.route.snapshot.paramMap.get('id');

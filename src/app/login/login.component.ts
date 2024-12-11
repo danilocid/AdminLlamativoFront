@@ -14,12 +14,12 @@ import { AlertService } from '../shared/services/alert.service';
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   constructor(
-    private spinner: NgxSpinnerService,
-    private titleService: Title,
-    private fb: FormBuilder,
-    private authSV: AuthService,
-    private uS: UtilService,
-    private alertSV: AlertService
+    readonly spinner: NgxSpinnerService,
+    readonly titleService: Title,
+    readonly fb: FormBuilder,
+    readonly authSV: AuthService,
+    readonly uS: UtilService,
+    readonly alertSV: AlertService
   ) {
     this.titleService.setTitle('Login');
     this.buildForm();
