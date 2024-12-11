@@ -11,17 +11,7 @@ import { jwtDecode } from 'jwt-decode';
 export class AppComponent implements OnInit {
   isLogin = false;
   title = 'front';
-  constructor(readonly router: Router, readonly as: AuthService) {
-    router.events.forEach((event) => {
-      if (event instanceof NavigationEnd) {
-        if (event.url.toString().includes('/login')) {
-          this.isLogin = true;
-        } else {
-          this.isLogin = false;
-        }
-      }
-    });
-  }
+  constructor(readonly router: Router, readonly as: AuthService) {}
   ngOnInit() {
     this.router.events.forEach((event) => {
       if (event instanceof NavigationEnd) {
