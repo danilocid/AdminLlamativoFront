@@ -47,6 +47,7 @@
             Total I.V.A.: $
             {{ venta.monto_imp | number }}
           </div>
+
           <div class="col">
             Total: $
             {{ venta.monto_neto + venta.monto_imp | number }}
@@ -69,13 +70,18 @@
           </div>
         </div>
         <div class="row justify-content-center align-items-center g-2">
+          <div class="col" *ngIf="venta.extraCosts.length > 0">
+            Total costo extra: $
+            {{ getTotalExtraCosts() | number }}
+          </div>
           <div class="col">
             <p>
               Ganancia: $
               {{
                 venta.monto_neto +
                   venta.monto_imp -
-                  (venta.costo_imp + venta.costo_neto) | number
+                  (venta.costo_imp + venta.costo_neto + getTotalExtraCosts())
+                  | number
               }}
             </p>
           </div>
@@ -84,15 +90,21 @@
             {{
               ((venta.monto_neto +
                 venta.monto_imp -
-                (venta.costo_neto + venta.costo_imp)) /
+                (venta.costo_neto + venta.costo_imp + getTotalExtraCosts())) /
                 (venta.monto_neto + venta.monto_imp)) *
                 100 | number : "1.0-2"
             }}
           </div>
+        </div>
+        <div
+          class="row justify-content-center align-items-center g-2"
+          *ngIf="venta.extraCosts.length > 0"
+        >
+          @for (item of venta.extraCosts; track $index) {
           <div class="col">
-            Total costo: $
-            {{ venta.costo_neto + venta.costo_imp | number }}
+            {{ item.costo_extra.name }}: ${{ item.monto | number }}
           </div>
+          }
         </div>
       </div>
     </div>

@@ -25,6 +25,7 @@ export const ApiRequest = {
 
   //sales
   getSales: environment.urlBackendHeroku + 'sales',
+  getExtraCosts: environment.urlBackendHeroku + 'sales/extra-costs',
 
   //reports
   dashboardReport: environment.urlBackendHeroku + 'products/inventory',

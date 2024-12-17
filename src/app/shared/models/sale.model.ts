@@ -1,6 +1,7 @@
 import { DocumentType } from './documentType.model';
 import { PaymentMethod } from './paymentMethod.model';
 import { Product } from './product.model';
+import { SaleExtraCost } from './sale-extra-cost.model';
 export interface Sale {
   id: number;
   monto_neto: number;
@@ -12,6 +13,7 @@ export interface Sale {
   nombre: string;
   tipo_documento: DocumentType;
   medio_pago: PaymentMethod;
+  extraCosts: SaleExtraCost[];
 }
 
 export interface SaleDetail {

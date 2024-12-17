@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { ApiService } from 'src/app/shared/services/ApiService';
 import { ApiRequest } from 'src/app/shared/constants';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -25,7 +24,6 @@ export class VerVentaComponent implements OnInit {
   date = new Date();
   idVenta: any;
   constructor(
-    readonly http: HttpClient,
     readonly spinner: NgxSpinnerService,
     readonly alertSV: AlertService,
     readonly titleService: Title,
@@ -43,6 +41,7 @@ export class VerVentaComponent implements OnInit {
     this.api.getService(ApiRequest.getSales + '/' + this.idVenta).subscribe({
       next: (resp) => {
         this.venta = resp.data.sale;
+        this.venta.extraCosts = resp.data.extraCosts;
         this.detalleVenta = resp.data.details;
         this.dtTrigger.next(this.dtOptions);
         this.spinner.hide();
@@ -52,5 +51,11 @@ export class VerVentaComponent implements OnInit {
         this.alertSV.alertBasic('Error', error.error.msg, 'error');
       },
     });
+  }
+
+  getTotalExtraCosts() {
+    return this.venta.extraCosts.reduce((acc, extraCost) => {
+      return acc + extraCost.monto;
+    }, 0);
   }
 }

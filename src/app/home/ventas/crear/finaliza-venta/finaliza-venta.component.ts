@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 import { ProductCart } from 'src/app/shared/models/product.model';
 import { DocumentType } from 'src/app/shared/models/documentType.model';
 import { PaymentMethod } from 'src/app/shared/models/paymentMethod.model';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ExtraSalesCostModalComponent } from '../extra-sales-cost-modal/extra-sales-cost-modal.component';
 
 @Component({
   selector: 'app-finaliza-venta',
@@ -22,7 +24,7 @@ export class FinalizaVentaComponent implements OnInit {
   clients: Entidad[] = [];
   documentTypes: DocumentType[] = [];
   medioDePago: PaymentMethod[] = [];
-
+  extraCosts: any[] = [];
   @Input() productsCart: ProductCart[] = [];
 
   constructor(
@@ -30,7 +32,8 @@ export class FinalizaVentaComponent implements OnInit {
     readonly http: HttpClient,
     readonly spinner: NgxSpinnerService,
     readonly alertSV: AlertService,
-    readonly router: Router
+    readonly router: Router,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit() {
@@ -149,6 +152,13 @@ export class FinalizaVentaComponent implements OnInit {
         costo_imp += element.costo_imp * element.quantity;
       });
       const saleDetail = [];
+      const extraCosts = this.extraCosts.map((extraCost) => {
+        return {
+          id: extraCost.id,
+
+          value: extraCost.value,
+        };
+      });
       this.productsCart.forEach((element) => {
         saleDetail.push({
           articulo: element.id,
@@ -170,6 +180,7 @@ export class FinalizaVentaComponent implements OnInit {
           monto_imp,
           costo_neto,
           costo_imp,
+          extraCosts,
         })
         .subscribe({
           next: () => {
@@ -192,5 +203,30 @@ export class FinalizaVentaComponent implements OnInit {
         });
     }
     //this.spinner.show();
+  }
+
+  showExtraSalesCostModal() {
+    const modalRef = this.modalService.open(ExtraSalesCostModalComponent, {
+      size: 'md',
+      animation: true,
+      backdrop: false,
+      keyboard: false,
+      centered: true,
+    });
+
+    modalRef.result.then(
+      (result) => {
+        if (result) {
+          try {
+            this.extraCosts = result;
+          } catch (error) {
+            // console.error(error);
+          }
+        }
+      },
+      () => {
+        window.location.reload();
+      }
+    );
   }
 }

@@ -50,18 +50,34 @@
           required
         />
       </div>
-      <div class="row justify-cont">
-        <!-- Total -->
-
-        <!-- Save and cancel buttons -->
-
-        <!-- Pay button -->
-        <div class="col">
-          <button class="btn btn-outline-primary" type="submit">
-            Generar venta <i class="far fa-check-circle"></i>
-          </button>
-        </div>
-      </div>
     </form>
+    <div class="justify-cont" *ngIf="extraCosts.length !== 0">
+      <div><label for="">Costos extra</label></div>
+      <ul>
+        @for (item of extraCosts; track $index) {
+        <li>{{ item.name }}: ${{ item.value | number }}</li>
+        }
+      </ul>
+    </div>
+    <div class="row justify-cont">
+      <!-- Total -->
+
+      <!-- Save and cancel buttons -->
+
+      <!-- Pay button -->
+      <div class="col">
+        <button
+          class="btn btn-outline-success"
+          (click)="showExtraSalesCostModal()"
+        >
+          Agregar costos extra <i class="fas fa-plus-circle"></i>
+        </button>
+      </div>
+      <div class="col">
+        <button class="btn btn-outline-primary" (click)="generarVenta()">
+          Generar venta <i class="far fa-check-circle"></i>
+        </button>
+      </div>
+    </div>
   </div>
 </div>
