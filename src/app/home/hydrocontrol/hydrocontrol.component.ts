@@ -55,10 +55,6 @@ export class HydrocontrolComponent implements OnInit {
   timeMaxTempA = '';
   minTempA = 100;
   timeMinTempA = '';
-  /* maxTempE = 0;
-  timeMaxTempE = '';
-  minTempE = 100;
-  timeMinTempE = ''; */
   maxTempI = 0;
   timeMaxTempI = '';
   minTempI = 100;
@@ -91,7 +87,6 @@ export class HydrocontrolComponent implements OnInit {
     this.reloadv2();
     this.hydroData = this.db.list('data');
     this.getData();
-    //this.reload();
   }
 
   private getData() {
@@ -108,13 +103,6 @@ export class HydrocontrolComponent implements OnInit {
       },
     });
   }
-  /* reload() {
-    //reload the window every 5 minutes
-    const timeout = 300000;
-    setTimeout(() => {
-      window.location.reload();
-    }, timeout);
-  } */
 
   reloadv2() {
     //reload the window every 5 minutes
@@ -122,21 +110,14 @@ export class HydrocontrolComponent implements OnInit {
     if (this.actualTime * 1000 < this.realoadTime) {
       // if the actual time is less than the reload time, wait 1 second and then call the function again
       setTimeout(() => {
-        /*       console.log('Reload');
-         */ this.actualTime = this.actualTime + 1;
+        this.actualTime = this.actualTime + 1;
         // print the time in minutes and seconds left to reload the page
         this.minutes = Math.floor(
           (this.realoadTime - this.actualTime * 1000) / 60000
         );
         this.seconds =
           ((this.realoadTime - this.actualTime * 1000) % 60000) / 1000;
-        /*  console.log(
-           'Time left to reload: ' +
-             this.minutes +
-             ' minutes and ' +
-             this.seconds +
-             ' seconds'
-         ); */
+
         this.reloadv2();
       }, 1000);
     } else {
@@ -180,14 +161,7 @@ export class HydrocontrolComponent implements OnInit {
           this.minTempA = element.agua.temperatura;
           this.timeMinTempA = element.timeStamp.date;
         }
-        /*  if (element.exterior.temperatura >= this.maxTempE) {
-          this.maxTempE = element.exterior.temperatura;
-          this.timeMaxTempE = element.timeStamp.date;
-        } */
-        /* if (element.exterior.temperatura <= this.minTempE) {
-          this.minTempE = element.exterior.temperatura;
-          this.timeMinTempE = element.timeStamp.date;
-        } */
+
         if (element.interior.temperatura >= this.maxTempI) {
           this.maxTempI = element.interior.temperatura;
           this.timeMaxTempI = element.timeStamp.date;
@@ -216,13 +190,13 @@ export class HydrocontrolComponent implements OnInit {
     this.data.sort(function (a, b) {
       return b.timeStamp.dateString - a.timeStamp.dateString;
     });
-
-    //console.log(this.data);
+    this.firstAndLastData();
     this.dtTrigger.next(this.dtOptions);
     //
     this.createChart();
     this.spinner.hide();
     console.warn('Bad data count: ' + badDataCount);
+    console.warn('Data to delete: ' + dataToDelete.length);
     try {
       // delete only the first record of the bad data
       if (badDataCount !== 0 && dataToDelete.length !== 0) {
@@ -233,6 +207,20 @@ export class HydrocontrolComponent implements OnInit {
     } catch (error) {
       console.error('There was an error deleting the bad data!', error);
     }
+  }
+
+  firstAndLastData() {
+    //print the first and last data
+
+    const diff =
+      this.data[0].timeStamp.count -
+      this.data[this.data.length - 1].timeStamp.count;
+
+    if (diff !== -1) {
+      console.warn('Data difference: ' + diff);
+      console.warn('Data is missing!');
+    }
+    this.deleteData(this.data[this.data.length - 1].timeStamp.count);
   }
 
   dayOfWeekAsString(dayIndex: number) {
@@ -249,8 +237,7 @@ export class HydrocontrolComponent implements OnInit {
   createChart() {
     const labels: string[] = [];
     const tAgua: number[] = [];
-    /*  const tAmbiente: number[] = [];
-    const hAmbiente: number[] = []; */
+
     const tInterior: number[] = [];
     let par = 1;
 
@@ -266,8 +253,7 @@ export class HydrocontrolComponent implements OnInit {
                 element.timeStamp.hora + ':' + element.timeStamp.minutos
               );
               tAgua.push(parseFloat(element.agua.temperatura.toFixed(1)));
-              // tAmbiente.push(element.exterior.temperatura);
-              //hAmbiente.push(element.exterior.humedad);
+
               tInterior.push(
                 parseFloat(element.interior.temperatura.toFixed(1))
               );
@@ -295,34 +281,13 @@ export class HydrocontrolComponent implements OnInit {
             label: 'T° Agua',
             data: tAgua,
             backgroundColor: 'red',
-            // yAxisID: 'y',
           },
-          // {
-          /*             label: 'T° Ambiente',
-            // data: tAmbiente,
-            //backgroundColor: 'blue',
-            /*             yAxisID: 'y',
-             */
-          //},
-          /* {
-            label: 'H° Ambiente',
-            data: hAmbiente,
-            backgroundColor: 'green',
-            yAxisID: 'z',
-          }, */
+
           {
             label: 'T° Interior',
             data: tInterior,
             backgroundColor: 'yellow',
-            /* yAxisID: 'y', */
           },
-          /* {
-            label: 'H° Interior',
-            data: hInterior,
-            backgroundColor: 'orange',
-            yAxisID: 'z',
-            hoverBackgroundColor: 'red',
-          }, */
         ],
       },
       options: {
@@ -348,22 +313,7 @@ export class HydrocontrolComponent implements OnInit {
         scales: {
           y: {
             type: 'linear',
-            /* position: 'top',
-            title: {
-              display: true,
-              text: 'Temperatura (°C)',
-              color: 'red',
-            }, */
           },
-          /* z: {
-            beginAtZero: false,
-            position: 'left',
-            title: {
-              display: true,
-              text: 'Humedad (%)',
-              color: 'green',
-            },
-          }, */
         },
       },
     });
