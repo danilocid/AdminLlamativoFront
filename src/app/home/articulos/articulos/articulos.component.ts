@@ -17,7 +17,7 @@ import { Product } from '../../../shared/models/product.model';
 @Component({
   selector: 'app-articulos',
   templateUrl: './articulos.component.html',
-  styleUrls: [],
+  styleUrls: ['./articulos.component.css'],
 })
 export class ArticulosComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(DataTableDirective)
@@ -38,7 +38,6 @@ export class ArticulosComponent implements OnInit, OnDestroy, AfterViewInit {
     readonly tableOptions: TableSettings
   ) {
     this.titleService.setTitle('Articulos');
-    this.spinner.show();
   }
 
   ngOnInit() {
@@ -87,7 +86,6 @@ export class ArticulosComponent implements OnInit, OnDestroy, AfterViewInit {
               recordsFiltered: +response.count,
             });
           });
-        this.spinner.hide();
       },
       columns: [
         {
@@ -196,7 +194,8 @@ export class ArticulosComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   rerender(): void {
-    if (this.dtElement && this.dtElement.dtInstance) {
+    this.spinner.hide();
+    if (this.dtElement?.dtInstance) {
       this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
         dtInstance.destroy();
         this.dtTrigger.next(null);

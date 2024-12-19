@@ -162,7 +162,7 @@ export class AjustesDeInventarioComponent
   }
 
   rerender(): void {
-    if (this.dtElement && this.dtElement.dtInstance) {
+    if (this.dtElement?.dtInstance) {
       this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
         dtInstance.destroy();
         this.dtTrigger.next(null);
