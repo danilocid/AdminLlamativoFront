@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import {
   AngularFireDatabase,
   AngularFireList,
@@ -30,7 +30,7 @@ Chart.register(
   templateUrl: './hydrocontrol.component.html',
   styleUrls: ['./hydrocontrol.component.css'],
 })
-export class HydrocontrolComponent implements OnInit {
+export class HydrocontrolComponent implements OnInit, AfterViewInit {
   constructor(
     readonly titleService: Title,
     readonly db: AngularFireDatabase,
@@ -49,7 +49,7 @@ export class HydrocontrolComponent implements OnInit {
   data: Hydrocontrol[] = []; // Specify the type as 'any[]'
   realoadTime = 300000;
   actualTime = 0;
-  minutes = 0;
+  minutes = 5;
   seconds = 0;
   maxTempA = 0;
   timeMaxTempA = '';
@@ -75,8 +75,8 @@ export class HydrocontrolComponent implements OnInit {
         searchPlaceholder: 'Buscar',
         paginate: {
           first: '<<',
-          previous: '<<',
-          next: '>>',
+          previous: '<',
+          next: '>',
           last: '>>',
         },
         zeroRecords: 'No se encontraron registros',
@@ -84,7 +84,7 @@ export class HydrocontrolComponent implements OnInit {
         infoFiltered: '(filtrado de _MAX_ elementos en total)',
       },
     };
-    this.reloadv2();
+
     this.hydroData = this.db.list('data');
     this.getData();
   }
@@ -117,7 +117,9 @@ export class HydrocontrolComponent implements OnInit {
         );
         this.seconds =
           ((this.realoadTime - this.actualTime * 1000) % 60000) / 1000;
-
+        this.titleService.setTitle(
+          'Hydrocontrol ' + this.minutes + ':' + this.seconds
+        );
         this.reloadv2();
       }, 1000);
     } else {
@@ -134,6 +136,7 @@ export class HydrocontrolComponent implements OnInit {
     let badDataCount = 0;
     for (let i = 0; i < this.data.length; i++) {
       const element = this.data[i];
+
       if (
         element.timeStamp != undefined &&
         element.timeStamp.timeStamp != undefined &&
@@ -145,41 +148,57 @@ export class HydrocontrolComponent implements OnInit {
         element.interior != undefined &&
         element.agua.temperatura < 60
       ) {
-        const date = new Date(element.timeStamp.timeStamp);
-        date.setHours(date.getHours() - 4);
-        let dateString = date.toISOString();
-        dateString = dateString.replace('T', ' ');
-        dateString = dateString.replace('Z', '');
-        dateString = dateString.replace(/\.\d+/, '');
-        element.timeStamp.date = dateString;
-        element.timeStamp.dateString = date;
-        if (element.agua.temperatura >= this.maxTempA) {
-          this.maxTempA = element.agua.temperatura;
-          this.timeMaxTempA = element.timeStamp.date;
-        }
-        if (element.agua.temperatura <= this.minTempA) {
-          this.minTempA = element.agua.temperatura;
-          this.timeMinTempA = element.timeStamp.date;
-        }
+        if (element.agua.temperatura < 0) {
+          try {
+            if (element.timeStamp.count != undefined) {
+              dataToDelete.push(element.timeStamp.count);
+            }
+          } catch (error) {
+            /* console.warn('There was an error!');
+            console.warn(element);
+            console.warn(this.data[i - 1]); */
+          }
+          badDataCount++;
+        } else {
+          const date = new Date(element.timeStamp.timeStamp);
+          date.setHours(date.getHours() - 4);
+          let dateString = date.toISOString();
+          dateString = dateString.replace('T', ' ');
+          dateString = dateString.replace('Z', '');
+          dateString = dateString.replace(/\.\d+/, '');
+          element.timeStamp.date = dateString;
+          element.timeStamp.dateString = date;
+          if (element.agua.temperatura >= this.maxTempA) {
+            this.maxTempA = element.agua.temperatura;
+            this.timeMaxTempA = element.timeStamp.date;
+          }
+          if (element.agua.temperatura <= this.minTempA) {
+            this.minTempA = element.agua.temperatura;
+            this.timeMinTempA = element.timeStamp.date;
+          }
 
-        if (element.interior.temperatura >= this.maxTempI) {
-          this.maxTempI = element.interior.temperatura;
-          this.timeMaxTempI = element.timeStamp.date;
+          if (element.interior.temperatura >= this.maxTempI) {
+            this.maxTempI = element.interior.temperatura;
+            this.timeMaxTempI = element.timeStamp.date;
+          }
+          if (element.interior.temperatura <= this.minTempI) {
+            this.minTempI = element.interior.temperatura;
+            this.timeMinTempI = element.timeStamp.date;
+          }
+          tmpData.push(element);
         }
-        if (element.interior.temperatura <= this.minTempI) {
-          this.minTempI = element.interior.temperatura;
-          this.timeMinTempI = element.timeStamp.date;
-        }
-        tmpData.push(element);
       } else {
+        /*  console.warn('Bad data!');
+        console.warn(element);
+        console.warn(this.data[i - 1].timeStamp.count, 'prev'); */
         try {
           if (element.timeStamp.count != undefined) {
             dataToDelete.push(element.timeStamp.count);
           }
         } catch (error) {
-          console.warn('There was an error!', error);
+          /* console.warn('There was an error!');
           console.warn(element);
-          console.warn(this.data[i - 1]);
+          console.warn(this.data[i - 1]); */
         }
         badDataCount++;
       }
@@ -317,6 +336,13 @@ export class HydrocontrolComponent implements OnInit {
         },
       },
     });
+  }
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      console.warn('Reloading page in 5 minutes');
+      this.reloadv2();
+    }, 10000);
   }
 
   deleteData(id: number) {
