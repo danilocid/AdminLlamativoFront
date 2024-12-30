@@ -72,6 +72,46 @@
               }}
             </p>
           </div>
+          <div class="col">
+            <p *ngIf="producto.publicado">
+              Publicado
+              <a
+                href="{{ producto.enlace_ml }}"
+                target="_blank"
+                class="me-1 text-success pointer"
+              >
+                <i class="fas fa-eye p-1"></i>
+              </a>
+            </p>
+            <p *ngIf="!producto.publicado">No publicado</p>
+            <p>
+              Id ML:
+              {{ producto.id_ml ? producto.id_ml : "Sin Id MercadoLibre" }}
+            </p>
+            <p>
+              Variante ML:
+              {{
+                producto.id_variante_ml
+                  ? producto.id_variante_ml
+                  : "Sin variante MercadoLibre"
+              }}
+            </p>
+            <p *ngIf="producto.publicado_ps">
+              Publicado Prestashop
+              <a
+                href="{{ producto.enlace_ps }}"
+                target="_blank"
+                class="me-1 text-success pointer"
+              >
+                <i class="fas fa-eye p-1"></i>
+              </a>
+            </p>
+            <p *ngIf="!producto.publicado_ps">No publicado Prestashop</p>
+            <p>
+              Id PS:
+              {{ producto.id_ps ? producto.id_ps : "Sin Id Prestashop" }}
+            </p>
+          </div>
         </div>
       </div>
     </div>

@@ -44,6 +44,7 @@ export class VerArticulosComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    //FIXME: create a component for the modal to generate labels
     this.dtOptions = FormatDataTableGlobal();
     //order the table by date, desc, column 3
     this.dtOptions.order = [[3, 'desc']];
@@ -81,7 +82,6 @@ export class VerArticulosComponent implements OnInit, OnDestroy {
           this.movimientos = resp.data.movements;
           this.producto = resp.data.product;
           this.dtTrigger.next(this.dtOptions);
-
           this.spinner.hide();
         },
         error: (error) => {
@@ -114,6 +114,8 @@ export class VerArticulosComponent implements OnInit, OnDestroy {
       return '/ventas/ver/' + movement.id_movimiento;
     } else if (movement.movimiento.tipo_movimiento === 'Recepcion') {
       return '/recepciones/ver/' + movement.id_movimiento;
+    } else if (movement.movimiento.tipo_movimiento === 'Ajuste de inventario') {
+      return '/articulos/ajustes/ver/' + movement.id_movimiento;
     } else {
       return '#';
     }

@@ -14,6 +14,11 @@ export interface Product {
   updated_at: Date;
   publicado: boolean;
   enlace_ml: string;
+  id_ml: string;
+  id_variante_ml: string;
+  publicado_ps: boolean;
+  enlace_ps: string;
+  id_ps: string;
 }
 
 export interface ProductCart {
