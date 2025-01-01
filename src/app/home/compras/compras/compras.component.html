@@ -45,8 +45,9 @@
               style="width: 100px; margin-left: 25px"
               formControlName="year"
             >
-              <option value="2023">2023</option>
-              <option value="2024">2024</option>
+              <option value="{{ year }}" *ngFor="let year of yearList">
+                {{ year }}
+              </option>
             </select>
             <div style="padding-left: 20px">
               <button type="submit" class="btn btn-success">

@@ -58,6 +58,11 @@ export class CreateComponent implements OnInit {
       active: ['1', [Validators.required]],
       publicado: ['0', [Validators.required]],
       enlace_ml: [],
+      id_ml: [],
+      id_variante_ml: [],
+      publicado_ps: ['0', [Validators.required]],
+      enlace_ps: [],
+      id_ps: [],
     });
 
     if (this.idProducto != null) {
@@ -85,6 +90,12 @@ export class CreateComponent implements OnInit {
             venta_total: this.producto.venta_imp + this.producto.venta_neto,
             stockMin: this.producto.stock_critico,
             enlace_ml: this.producto.enlace_ml ? this.producto.enlace_ml : '',
+            id_ml: this.producto.id_ml ? this.producto.id_ml : '',
+            id_variante_ml: this.producto.id_variante_ml
+              ? this.producto.id_variante_ml
+              : '',
+            enlace_ps: this.producto.enlace_ps ? this.producto.enlace_ps : '',
+            id_ps: this.producto.id_ps ? this.producto.id_ps : '',
           });
           //if the product is not active, then set active to 0
           if (!this.producto.activo) {
@@ -94,6 +105,10 @@ export class CreateComponent implements OnInit {
           //if the product is published, then set publicado to 1
           if (this.producto.publicado) {
             this.productForm.controls['publicado'].setValue('1');
+          }
+          //if the product is published in prestaShop, then set publicado_ps to 1
+          if (this.producto.publicado_ps) {
+            this.productForm.controls['publicado_ps'].setValue('1');
           }
           this.spinner.hide();
         },
@@ -137,6 +152,12 @@ export class CreateComponent implements OnInit {
       publicado:
         this.productForm.controls['publicado'].value === '1' ? true : false,
       enlace_ml: this.productForm.controls['enlace_ml'].value,
+      id_ml: this.productForm.controls['id_ml'].value,
+      id_variante_ml: this.productForm.controls['id_variante_ml'].value,
+      publicado_ps:
+        this.productForm.controls['publicado_ps'].value === '1' ? true : false,
+      enlace_ps: this.productForm.controls['enlace_ps'].value,
+      id_ps: this.productForm.controls['id_ps'].value,
     };
 
     //
@@ -150,6 +171,26 @@ export class CreateComponent implements OnInit {
     if (product.enlace_ml == '' || product.enlace_ml == null) {
       delete product.enlace_ml;
     }
+    //if enlace_ps is empty, then delete it
+    if (product.enlace_ps == '' || product.enlace_ps == null) {
+      delete product.enlace_ps;
+    }
+
+    //if id_ml is empty, then delete it
+    if (product.id_ml == '' || product.id_ml == null) {
+      delete product.id_ml;
+    }
+
+    //if id_variante_ml is empty, then delete it
+    if (product.id_variante_ml == '' || product.id_variante_ml == null) {
+      delete product.id_variante_ml;
+    }
+
+    //if id_ps is empty, then delete it
+    if (product.id_ps == '' || product.id_ps == null) {
+      delete product.id_ps;
+    }
+
     this.apiService.postService(ApiRequest.getArticulos, product).subscribe({
       next: (resp) => {
         if (resp.serverResponseCode == 200 || resp.serverResponseCode == 201) {
@@ -196,12 +237,40 @@ export class CreateComponent implements OnInit {
           publicado:
             this.productForm.controls['publicado'].value === '1' ? true : false,
           enlace_ml: this.productForm.controls['enlace_ml'].value,
+          id_ml: this.productForm.controls['id_ml'].value,
+          id_variante_ml: this.productForm.controls['id_variante_ml'].value,
+          publicado_ps:
+            this.productForm.controls['publicado_ps'].value === '1'
+              ? true
+              : false,
+          enlace_ps: this.productForm.controls['enlace_ps'].value,
+          id_ps: this.productForm.controls['id_ps'].value,
         };
 
         //if enlace_ml is empty, then delete it
         if (product.enlace_ml == '' || product.enlace_ml == null) {
           delete product.enlace_ml;
         }
+        //if enlace_ps is empty, then delete it
+        if (product.enlace_ps == '' || product.enlace_ps == null) {
+          delete product.enlace_ps;
+        }
+
+        //if id_ml is empty, then delete it
+        if (product.id_ml == '' || product.id_ml == null) {
+          delete product.id_ml;
+        }
+
+        //if id_variante_ml is empty, then delete it
+        if (product.id_variante_ml == '' || product.id_variante_ml == null) {
+          delete product.id_variante_ml;
+        }
+
+        //if id_ps is empty, then delete it
+        if (product.id_ps == '' || product.id_ps == null) {
+          delete product.id_ps;
+        }
+
         this.apiService.putService(ApiRequest.getArticulos, product).subscribe({
           next: (resp) => {
             if (

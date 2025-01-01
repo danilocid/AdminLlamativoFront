@@ -205,7 +205,7 @@
             </select>
           </div>
           <div class="form-group col-lg-2 col-sm-6">
-            <label for="name">Publicado</label>
+            <label for="name">Publicado MercadoLibre</label>
             <select
               formControlName="publicado"
               [ngClass]="isValidField('publicado') ? 'is-invalid' : ''"
@@ -232,6 +232,87 @@
             />
             <div *ngIf="isValidField('enlace_ml')" class="invalid-feedback">
               Ingresa enlace de la publicacion
+            </div>
+          </div>
+          <div class="form-group col-lg-2 col-sm-6">
+            <label for="name">Id MercadoLibre</label>
+            <input
+              formControlName="id_ml"
+              [ngClass]="isValidField('id_ml') ? 'is-invalid' : ''"
+              type="text"
+              class="form-control"
+              id="id_ml"
+              min="1"
+              name="id_ml"
+              placeholder="Id MercadoLibre"
+            />
+            <div *ngIf="isValidField('id_ml')" class="invalid-feedback">
+              Ingresa id de la publicacion
+            </div>
+          </div>
+          <div class="form-group col-lg-2 col-sm-6">
+            <label for="name">Variante MercadoLibre</label>
+            <input
+              formControlName="id_variante_ml"
+              [ngClass]="isValidField('id_variante_ml') ? 'is-invalid' : ''"
+              type="text"
+              class="form-control"
+              id="id_variante_ml"
+              min="1"
+              name="id_variante_ml"
+              placeholder="Variante MercadoLibre"
+            />
+            <div
+              *ngIf="isValidField('id_variante_ml')"
+              class="invalid-feedback"
+            >
+              Ingresa variante de la publicacion
+            </div>
+          </div>
+          <div class="form-group col-lg-2 col-sm-6">
+            <label for="name">Publicado Prestashop</label>
+            <select
+              formControlName="publicado_ps"
+              [ngClass]="isValidField('publicado_ps') ? 'is-invalid' : ''"
+              class="form-control"
+              id="publicado_ps"
+              name="publicado_ps"
+              required
+            >
+              <option value="1">Si</option>
+              <option value="0">No</option>
+            </select>
+          </div>
+          <div class="form-group col-lg-2 col-sm-6">
+            <label for="name">Enlace Prestashop</label>
+            <input
+              formControlName="enlace_ps"
+              [ngClass]="isValidField('enlace_ps') ? 'is-invalid' : ''"
+              type="text"
+              class="form-control"
+              id="enlace_ps"
+              min="1"
+              name="enlace_ps"
+              placeholder="Enlace Prestashop"
+            />
+            <div *ngIf="isValidField('enlace_ps')" class="invalid-feedback">
+              Ingresa enlace de la publicacion
+            </div>
+          </div>
+          <div class="form-group col-lg-2 col-sm-6">
+            <label for="name">Id Prestashop</label>
+            <input
+              formControlName="id_ps"
+              [ngClass]="isValidField('id_ps') ? 'is-invalid' : ''"
+              type="text"
+              class="form-control"
+              id="id_ps"
+              min="1"
+              name="id_ps"
+              placeholder="Id Prestashop"
+            />
+            <div *ngIf="isValidField('id_ps')" class="invalid-feedback">
+              Ingresa id de la publicacion
             </div>
           </div>
           <div class="form-group col-lg-4">

@@ -69,8 +69,8 @@ export class AgregarDatosReporteComponent implements OnInit {
     }
 
     const body = {
-      mes: this.month + 1,
-      año: this.year,
+      mes: +this.month + 1,
+      año: +this.year,
       data: data,
     };
     if (this.tipoDatoForm.valid) {

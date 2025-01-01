@@ -24,6 +24,7 @@ export class ComprasComponent implements OnInit {
   compra: any;
   month: any;
   year: any;
+  yearList = [];
   dateForm: FormGroup;
   private apiService!: ApiService;
   showModal = false;
@@ -46,6 +47,9 @@ export class ComprasComponent implements OnInit {
     this.month = date.getMonth() + 1;
     this.year = date.getFullYear();
     this.dtOptions = FormatDataTableGlobal();
+    for (let i = 2023; i <= this.year; i++) {
+      this.yearList.push(i);
+    }
     this.dateForm = this.fb.group({
       month: [this.month],
       year: [this.year],
