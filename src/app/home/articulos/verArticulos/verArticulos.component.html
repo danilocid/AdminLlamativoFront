@@ -20,14 +20,27 @@
       </div>
 
       <div class="card-body">
-        <button
-          class="btn btn-primary"
-          data-toggle="modal"
-          data-target="#labelModal"
-          role="button"
-        >
-          Generar etiqueta
-        </button>
+        <div class="row g-2">
+          <div>
+            <button
+              class="btn btn-primary"
+              data-toggle="modal"
+              data-target="#labelModal"
+              role="button"
+            >
+              Generar etiqueta <i class="fas fa-barcode"></i>
+            </button>
+          </div>
+          <div style="padding-left: 20px">
+            <button
+              class="btn btn-success"
+              routerLink="/articulos/editar/{{ producto.id }}"
+            >
+              Editar articulo <i class="fas fa-edit"></i>
+            </button>
+          </div>
+        </div>
+
         <br />
         <br />
         <div class="row">
