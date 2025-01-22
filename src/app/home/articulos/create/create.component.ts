@@ -29,10 +29,7 @@ export class CreateComponent implements OnInit {
     readonly route: ActivatedRoute,
     readonly alertSV: AlertService
   ) {
-    this.spinner.show();
     this.idProducto = this.route.snapshot.paramMap.get('id');
-    //if idProducto is not null, then the title should be "Editar Articulo"
-
     if (this.idProducto != null) {
       this.titleService.setTitle('Editar Articulo');
       this.title = 'Editar Articulo';
@@ -43,6 +40,7 @@ export class CreateComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.spinner.show();
     this.apiService = new ApiService(this.http);
     this.productForm = this.fb.group({
       internalCode: ['', [Validators.required]],
@@ -149,13 +147,11 @@ export class CreateComponent implements OnInit {
       venta_neto: this.productForm.controls['netSale'].value,
       venta_imp: this.productForm.controls['taxSale'].value,
       stock_critico: this.productForm.controls['stockMin'].value,
-      publicado:
-        this.productForm.controls['publicado'].value === '1' ? true : false,
+      publicado: this.productForm.controls['publicado'].value === '1',
       enlace_ml: this.productForm.controls['enlace_ml'].value,
       id_ml: this.productForm.controls['id_ml'].value,
       id_variante_ml: this.productForm.controls['id_variante_ml'].value,
-      publicado_ps:
-        this.productForm.controls['publicado_ps'].value === '1' ? true : false,
+      publicado_ps: this.productForm.controls['publicado_ps'].value === '1',
       enlace_ps: this.productForm.controls['enlace_ps'].value,
       id_ps: this.productForm.controls['id_ps'].value,
     };
@@ -232,17 +228,12 @@ export class CreateComponent implements OnInit {
           venta_neto: this.productForm.controls['netSale'].value,
           venta_imp: this.productForm.controls['taxSale'].value,
           stock_critico: this.productForm.controls['stockMin'].value,
-          activo:
-            this.productForm.controls['active'].value === '1' ? true : false,
-          publicado:
-            this.productForm.controls['publicado'].value === '1' ? true : false,
+          activo: this.productForm.controls['active'].value === '1',
+          publicado: this.productForm.controls['publicado'].value === '1',
           enlace_ml: this.productForm.controls['enlace_ml'].value,
           id_ml: this.productForm.controls['id_ml'].value,
           id_variante_ml: this.productForm.controls['id_variante_ml'].value,
-          publicado_ps:
-            this.productForm.controls['publicado_ps'].value === '1'
-              ? true
-              : false,
+          publicado_ps: this.productForm.controls['publicado_ps'].value === '1',
           enlace_ps: this.productForm.controls['enlace_ps'].value,
           id_ps: this.productForm.controls['id_ps'].value,
         };
