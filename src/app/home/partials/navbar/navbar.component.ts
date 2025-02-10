@@ -14,6 +14,7 @@ export class NavbarComponent implements OnInit {
 
   apiService = new ApiService(this.http);
   notifications: Notification[] = [];
+  unReadedNotifications: number = 0;
   ngOnInit() {
     this.getNotifications();
   }
@@ -28,6 +29,9 @@ export class NavbarComponent implements OnInit {
     this.apiService.getService(ApiRequest.getNotificaciones).subscribe({
       next: (resp) => {
         this.notifications = resp.data;
+        this.unReadedNotifications = this.notifications.filter(
+          (x) => !x.readed
+        ).length;
       },
     });
   }

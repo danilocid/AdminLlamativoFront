@@ -4,4 +4,5 @@ export interface Notification {
   description: string;
   readed: boolean;
   createdAt: Date;
+  url: string;
 }

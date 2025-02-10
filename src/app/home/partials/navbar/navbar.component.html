@@ -18,17 +18,20 @@
       <a class="nav-link" data-toggle="dropdown" href="#">
         <i class="far fa-bell"></i>
         <span class="badge badge-warning navbar-badge">{{
-          notifications.length
+          unReadedNotifications
         }}</span>
       </a>
       <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
         <ng-container *ngFor="let notification of notifications">
           <a
-            href="#"
             class="dropdown-item"
-            (click)="markAsReaded(notification)"
+            [routerLink]="notification.url !== 'null' ? notification.url : '#'"
           >
-            <i class="fas fa-envelope mr-2" *ngIf="!notification.readed"></i>
+            <i
+              class="fas fa-envelope mr-2"
+              *ngIf="!notification.readed"
+              (click)="markAsReaded(notification)"
+            ></i>
             <i
               class="fas fa-envelope-open mr-2"
               *ngIf="notification.readed"

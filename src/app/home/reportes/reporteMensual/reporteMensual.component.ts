@@ -43,6 +43,9 @@ export class ReporteMensualComponent implements OnInit {
     for (let i = 2023; i <= this.year; i++) {
       this.yearList.push(i);
     }
+    //FIXME: remove this, only for testing
+    this.month = 8;
+    this.year = 2023;
     this.dateForm = this.fb.group({
       month: [this.month],
       year: [this.year],
@@ -417,36 +420,49 @@ export class ReporteMensualComponent implements OnInit {
       },
     ]);
 
+    const content = [];
+    content.push({ text: header, style: 'header' });
+
+    //insert data table, if there is data
+    if (data.length != 0) {
+      content.push({ table: { body: data, widths: ['auto', 'auto'] } });
+    }
+
+    //insert docs emitidos table, if there is data
+    if (docsEmitidos.length != 0) {
+      content.push({ text: 'Documentos emitidos', style: 'docsRecib' });
+      content.push({
+        table: {
+          body: docsEmitidos,
+          headerRows: 2,
+          widths: [
+            '*',
+            'auto',
+            'auto',
+            'auto',
+            'auto',
+            'auto',
+            'auto',
+            'auto',
+            'auto',
+          ],
+        },
+      });
+    }
+
+    //insert docs recibidos table, if there is data
+    if (docsRecibidos.length != 1) {
+      content.push({ text: 'Documentos recibidos', style: 'docsRecib' });
+      content.push({
+        table: {
+          body: docsRecibidos,
+          widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+        },
+      });
+    }
+
     const docDefinition = {
-      content: [
-        { text: header, style: 'header' },
-        { table: { body: data, widths: ['auto', 'auto'] } },
-        { text: 'Documentos emitidos', style: 'docsRecib' },
-        {
-          table: {
-            body: docsEmitidos,
-            headerRows: 2,
-            widths: [
-              '*',
-              'auto',
-              'auto',
-              'auto',
-              'auto',
-              'auto',
-              'auto',
-              'auto',
-              'auto',
-            ],
-          },
-        },
-        { text: 'Documentos recibidos', style: 'docsRecib' },
-        {
-          table: {
-            body: docsRecibidos,
-            widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
-          },
-        },
-      ],
+      content: content,
       footer: {
         text:
           'Reporte mensual ' +
@@ -499,6 +515,7 @@ export class ReporteMensualComponent implements OnInit {
       },
       pageSize: 'LETTER',
     };
+
     pdfMake.setFonts({
       Roboto: {
         normal:
