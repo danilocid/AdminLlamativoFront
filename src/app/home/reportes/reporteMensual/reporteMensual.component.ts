@@ -43,9 +43,9 @@ export class ReporteMensualComponent implements OnInit {
     for (let i = 2023; i <= this.year; i++) {
       this.yearList.push(i);
     }
-    //FIXME: remove this, only for testing
+    /* //FIXME: remove this, only for testing
     this.month = 8;
-    this.year = 2023;
+    this.year = 2023; */
     this.dateForm = this.fb.group({
       month: [this.month],
       year: [this.year],
