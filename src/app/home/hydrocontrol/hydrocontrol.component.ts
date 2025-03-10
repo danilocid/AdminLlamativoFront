@@ -168,23 +168,7 @@ export class HydrocontrolComponent implements OnInit, AfterViewInit {
           dateString = dateString.replace(/\.\d+/, '');
           element.timeStamp.date = dateString;
           element.timeStamp.dateString = date;
-          if (element.agua.temperatura >= this.maxTempA) {
-            this.maxTempA = element.agua.temperatura;
-            this.timeMaxTempA = element.timeStamp.date;
-          }
-          if (element.agua.temperatura <= this.minTempA) {
-            this.minTempA = element.agua.temperatura;
-            this.timeMinTempA = element.timeStamp.date;
-          }
 
-          if (element.interior.temperatura >= this.maxTempI) {
-            this.maxTempI = element.interior.temperatura;
-            this.timeMaxTempI = element.timeStamp.date;
-          }
-          if (element.interior.temperatura <= this.minTempI) {
-            this.minTempI = element.interior.temperatura;
-            this.timeMinTempI = element.timeStamp.date;
-          }
           tmpData.push(element);
         }
       } else {
@@ -209,6 +193,25 @@ export class HydrocontrolComponent implements OnInit, AfterViewInit {
     this.data.sort(function (a, b) {
       return b.timeStamp.dateString - a.timeStamp.dateString;
     });
+    this.data.forEach((element) => {
+      if (element.agua.temperatura >= this.maxTempA) {
+        this.maxTempA = element.agua.temperatura;
+        this.timeMaxTempA = element.timeStamp.date;
+      }
+      if (element.agua.temperatura <= this.minTempA) {
+        this.minTempA = element.agua.temperatura;
+        this.timeMinTempA = element.timeStamp.date;
+      }
+
+      if (element.interior.temperatura >= this.maxTempI) {
+        this.maxTempI = element.interior.temperatura;
+        this.timeMaxTempI = element.timeStamp.date;
+      }
+      if (element.interior.temperatura <= this.minTempI) {
+        this.minTempI = element.interior.temperatura;
+        this.timeMinTempI = element.timeStamp.date;
+      }
+    });
     this.firstAndLastData();
     this.dtTrigger.next(this.dtOptions);
     //
@@ -216,6 +219,7 @@ export class HydrocontrolComponent implements OnInit, AfterViewInit {
     this.spinner.hide();
     console.warn('Bad data count: ' + badDataCount);
     console.warn('Data to delete: ' + dataToDelete.length);
+
     try {
       // delete only the first record of the bad data
       if (badDataCount !== 0 && dataToDelete.length !== 0) {
