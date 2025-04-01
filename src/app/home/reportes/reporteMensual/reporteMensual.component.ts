@@ -218,18 +218,19 @@ export class ReporteMensualComponent implements OnInit {
     const docsRecibidos = [];
 
     //header for docs recibidos (emisor, fecha, documento, neto, iva, total, tipo, observaciones)
-    docsRecibidos.push([
-      { text: 'Emisor', style: 'tableHeaderSmall' },
-      { text: 'Fecha', style: 'tableHeaderSmall' },
-      { text: 'Doc', style: 'tableHeaderSmall' },
-      { text: 'Monto', style: 'tableHeaderSmall' },
-      { text: 'Costo', style: 'tableHeaderSmall' },
-      { text: 'Tipo', style: 'tableHeaderSmall' },
-      { text: 'Obs.', style: 'tableHeaderSmall' },
-    ]);
+
     //body for docs recibidos
     //dummy data
     if (this.compras.length != 0) {
+      docsRecibidos.push([
+        { text: 'Emisor', style: 'tableHeaderSmall' },
+        { text: 'Fecha', style: 'tableHeaderSmall' },
+        { text: 'Doc', style: 'tableHeaderSmall' },
+        { text: 'Monto', style: 'tableHeaderSmall' },
+        { text: 'Costo', style: 'tableHeaderSmall' },
+        { text: 'Tipo', style: 'tableHeaderSmall' },
+        { text: 'Obs.', style: 'tableHeaderSmall' },
+      ]);
       this.compras.forEach((element) => {
         //format date to dd/mm/yyyy
         const date = new Date(element.fecha_documento);
@@ -423,14 +424,6 @@ export class ReporteMensualComponent implements OnInit {
       },
     ]);
 
-    const content = [];
-    content.push({ text: header, style: 'header' });
-
-    //insert data table, if there is data
-    if (data.length != 0) {
-      content.push({ table: { body: data, widths: ['auto', 'auto'] } });
-    }
-
     const comprasTable = [];
     comprasTable.push([
       { text: 'Mes actual', colSpan: 3, style: 'tableHeader' },
@@ -472,59 +465,64 @@ export class ReporteMensualComponent implements OnInit {
     ]);
 
     //insert docs emitidos table, if there is data
+    const content2 = [];
+    content2.push({ text: header, style: 'header' });
+    if (data.length != 0) {
+      content2.push({ table: { body: data, widths: ['auto', 'auto'] } });
+    }
+
+    if (docsEmitidos.length != 0) {
+      content2.push({
+        text: 'Documentos Emitidos',
+        style: 'sectionHeader',
+      });
+      content2.push({
+        table: {
+          body: docsEmitidos,
+          headerRows: 2,
+          widths: [
+            '*',
+            'auto',
+            'auto',
+            'auto',
+            'auto',
+            'auto',
+            'auto',
+            'auto',
+            'auto',
+          ],
+        },
+        layout: 'lightHorizontalLines',
+        margin: [0, 10, 0, 10],
+      });
+    }
+
+    if (docsRecibidos.length != 0) {
+      content2.push({
+        text: 'Documentos Recibidos',
+        style: 'sectionHeader',
+      });
+      content2.push({
+        table: {
+          body: comprasTable,
+          headerRows: 2,
+        },
+        layout: 'lightHorizontalLines',
+        margin: [0, 10, 0, 10],
+      });
+
+      content2.push({
+        table: {
+          body: docsRecibidos,
+          widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+        },
+        layout: 'lightHorizontalLines',
+        margin: [0, 10, 0, 10],
+      });
+    }
 
     const docDefinition = {
-      content: [
-        { text: header, style: 'header' },
-        data.length !== 0 && {
-          table: { body: data, widths: ['auto', 'auto'] },
-          margin: [0, 10, 0, 10],
-          layout: 'noBorders',
-        },
-        docsEmitidos.length !== 0 && {
-          text: 'Documentos Emitidos',
-          style: 'sectionHeader',
-        },
-        docsEmitidos.length !== 0 && {
-          table: {
-            body: docsEmitidos,
-            headerRows: 2,
-            widths: [
-              '*',
-              'auto',
-              'auto',
-              'auto',
-              'auto',
-              'auto',
-              'auto',
-              'auto',
-              'auto',
-            ],
-          },
-          layout: 'lightHorizontalLines',
-          margin: [0, 10, 0, 10],
-        },
-        docsRecibidos.length !== 1 && {
-          text: 'Documentos Recibidos',
-          style: 'sectionHeader',
-        },
-        docsRecibidos.length !== 1 && {
-          table: {
-            body: comprasTable,
-            headerRows: 2,
-          },
-          layout: 'lightHorizontalLines',
-          margin: [0, 10, 0, 10],
-        },
-        docsRecibidos.length !== 1 && {
-          table: {
-            body: docsRecibidos,
-            widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
-          },
-          layout: 'lightHorizontalLines',
-          margin: [0, 10, 0, 10],
-        },
-      ],
+      content: content2,
       footer: {
         text: `Reporte mensual ${this.month + 1}-${
           this.year
