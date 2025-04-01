@@ -153,6 +153,54 @@
       </div>
       <div class="card-body">
         <table class="row-border hover table" aria-label="Tabla">
+          <thead>
+            <tr>
+              <th colspan="3">Mes actual</th>
+              <th colspan="3">Mes anterior</th>
+            </tr>
+            <tr>
+              <th>Cantidad</th>
+              <th>Monto</th>
+              <th>Costo</th>
+              <th>Cantidad</th>
+              <th>Monto</th>
+              <th>Costo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{ currentMonthCount | number }}</td>
+              <td>${{ currentMonthTotal | number }}</td>
+              <td>${{ currentMonthTotalCost | number }}</td>
+              <td>
+                {{ previousMonthCount | number }} ({{
+                  calculatePercentageVariation(
+                    currentMonthTotal,
+                    previousMonthTotal
+                  )
+                }}%)
+              </td>
+              <td>
+                ${{ previousMonthTotal | number }} ({{
+                  calculatePercentageVariation(
+                    currentMonthTotal,
+                    previousMonthTotal
+                  )
+                }}%)
+              </td>
+              <td>
+                ${{ previousMonthTotalCost | number }} ({{
+                  calculatePercentageVariation(
+                    currentMonthTotalCost,
+                    previousMonthTotalCost
+                  )
+                }}%)
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <br />
+        <table class="row-border hover table" aria-label="Tabla">
           <thead class="table-light">
             <tr>
               <th>Proveedor</th>

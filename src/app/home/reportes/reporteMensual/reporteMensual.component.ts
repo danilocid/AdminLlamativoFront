@@ -25,6 +25,14 @@ export class ReporteMensualComponent implements OnInit {
   showAddForm = false;
   salesData: any;
   yearList = [];
+
+  currentMonthCount = 0;
+  currentMonthTotal = 0;
+  currentMonthTotalCost = 0;
+
+  previousMonthCount = 0;
+  previousMonthTotal = 0;
+  previousMonthTotalCost = 0;
   constructor(
     readonly titleService: Title,
     readonly spinner: NgxSpinnerService,
@@ -43,9 +51,9 @@ export class ReporteMensualComponent implements OnInit {
     for (let i = 2023; i <= this.year; i++) {
       this.yearList.push(i);
     }
-    /* //FIXME: remove this, only for testing
-    this.month = 8;
-    this.year = 2023; */
+    //FIXME: remove this, only for testing
+    this.month = 2;
+    this.year = 2025;
     this.dateForm = this.fb.group({
       month: [this.month],
       year: [this.year],
@@ -89,7 +97,7 @@ export class ReporteMensualComponent implements OnInit {
   getCompras() {
     this.apiService = new ApiService(this.http);
     this.apiService
-      .getServiceWithParams(ApiRequest.getComprasFromDb, this.dateForm.value)
+      .getServiceWithParams(ApiRequest.getComprasReporte, this.dateForm.value)
       .subscribe({
         next: (resp) => {
           if (resp.status === 401 || resp.status === 403) {
@@ -97,19 +105,14 @@ export class ReporteMensualComponent implements OnInit {
           }
 
           //  console.log(resp);
-          this.compras = resp.data;
-          //get all tipo documentos from compras
-          const tipoDocs = [];
-          this.compras.forEach((element) => {
-            if (!tipoDocs.includes(element.tipo_documento.tipo)) {
-              tipoDocs.push(element.tipo_documento.tipo);
-            }
-          });
-          //  console.log(tipoDocs);
-
-          //get total compras for each tipo documento
-
-          //get total compras for each tipo documento (sin costo)
+          this.compras = resp.data.purchases;
+          this.currentMonthCount = resp.data.totals.currentMonth.count;
+          this.currentMonthTotal = resp.data.totals.currentMonth.total;
+          this.currentMonthTotalCost = resp.data.totals.currentMonth.totalCost;
+          this.previousMonthCount = resp.data.totals.previousMonth.count;
+          this.previousMonthTotal = resp.data.totals.previousMonth.total;
+          this.previousMonthTotalCost =
+            resp.data.totals.previousMonth.totalCost;
 
           this.getReportData();
         },
@@ -121,7 +124,6 @@ export class ReporteMensualComponent implements OnInit {
   }
 
   getReportData() {
-    this.data = [];
     this.apiService = new ApiService(this.http);
     this.apiService
       .getService(
@@ -214,15 +216,16 @@ export class ReporteMensualComponent implements OnInit {
       ' - ' +
       this.dateForm.controls['year'].value;
     const docsRecibidos = [];
+
     //header for docs recibidos (emisor, fecha, documento, neto, iva, total, tipo, observaciones)
     docsRecibidos.push([
-      { text: 'Emisor', style: 'tableHeader' },
-      { text: 'Fecha', style: 'tableHeader' },
-      { text: 'Documento', style: 'tableHeader' },
-      { text: 'Monto', style: 'tableHeader' },
-      { text: 'Costo', style: 'tableHeader' },
-      { text: 'Tipo', style: 'tableHeader' },
-      { text: 'Observaciones', style: 'tableHeader' },
+      { text: 'Emisor', style: 'tableHeaderSmall' },
+      { text: 'Fecha', style: 'tableHeaderSmall' },
+      { text: 'Doc', style: 'tableHeaderSmall' },
+      { text: 'Monto', style: 'tableHeaderSmall' },
+      { text: 'Costo', style: 'tableHeaderSmall' },
+      { text: 'Tipo', style: 'tableHeaderSmall' },
+      { text: 'Obs.', style: 'tableHeaderSmall' },
     ]);
     //body for docs recibidos
     //dummy data
@@ -251,20 +254,20 @@ export class ReporteMensualComponent implements OnInit {
         docsRecibidos.push([
           {
             text: element.proveedor.nombre + ' (' + element.proveedor.rut + ')',
-            style: 'tableStyle',
+            style: 'tableStyleSmall',
           },
 
-          { text: fecha, style: 'tableStyle' },
+          { text: fecha, style: 'tableStyleSmall' },
           {
             text: element.documento + ' (' + element.tipo_documento.id + ')',
-            style: 'tableStyle',
+            style: 'tableStyleSmall',
           },
 
-          { text: monto, style: 'tableStyle' },
-          { text: costo, style: 'tableStyle' },
+          { text: monto, style: 'tableStyleSmall' },
+          { text: costo, style: 'tableStyleSmall' },
 
-          { text: element.tipo_compra.tipo_compra, style: 'tableStyle' },
-          { text: element.observaciones, style: 'tableStyle' },
+          { text: element.tipo_compra.tipo_compra, style: 'tableStyleSmall' },
+          { text: element.observaciones, style: 'tableStyleSmall' },
         ]);
       });
     }
@@ -274,7 +277,7 @@ export class ReporteMensualComponent implements OnInit {
     const docsEmitidos = [];
 
     docsEmitidos.push([
-      { text: 'Documento', style: 'tableHeader', rowSpan: 2 },
+      { text: 'Documento', style: 'tableHeaderSmall', rowSpan: 2 },
       { text: 'Mes actual', style: 'tableHeader', colSpan: 2 },
       {},
       { text: 'Mes anterior', style: 'tableHeader', colSpan: 3 },
@@ -286,14 +289,14 @@ export class ReporteMensualComponent implements OnInit {
     ]);
     docsEmitidos.push([
       {},
-      { text: 'Cantidad', style: 'tableHeader' },
-      { text: 'Monto', style: 'tableHeader' },
-      { text: 'Cantidad', style: 'tableHeader' },
-      { text: 'Monto', style: 'tableHeader' },
-      { text: 'Diferencia', style: 'tableHeader' },
-      { text: 'Cantidad', style: 'tableHeader' },
-      { text: 'Monto', style: 'tableHeader' },
-      { text: 'Diferencia', style: 'tableHeader' },
+      { text: 'Cantidad', style: 'tableHeaderSmall' },
+      { text: 'Monto', style: 'tableHeaderSmall' },
+      { text: 'Cantidad', style: 'tableHeaderSmall' },
+      { text: 'Monto', style: 'tableHeaderSmall' },
+      { text: '% Dif.', style: 'tableHeaderSmall' },
+      { text: 'Cantidad', style: 'tableHeaderSmall' },
+      { text: 'Monto', style: 'tableHeaderSmall' },
+      { text: '% Dif', style: 'tableHeaderSmall' },
     ]);
 
     //get total docs emitidos for each tipo documento
@@ -428,92 +431,159 @@ export class ReporteMensualComponent implements OnInit {
       content.push({ table: { body: data, widths: ['auto', 'auto'] } });
     }
 
-    //insert docs emitidos table, if there is data
-    if (docsEmitidos.length != 0) {
-      content.push({ text: 'Documentos emitidos', style: 'docsRecib' });
-      content.push({
-        table: {
-          body: docsEmitidos,
-          headerRows: 2,
-          widths: [
-            '*',
-            'auto',
-            'auto',
-            'auto',
-            'auto',
-            'auto',
-            'auto',
-            'auto',
-            'auto',
-          ],
-        },
-      });
-    }
+    const comprasTable = [];
+    comprasTable.push([
+      { text: 'Mes actual', colSpan: 3, style: 'tableHeader' },
+      {},
+      {},
+      { text: 'Mes anterior', colSpan: 3, style: 'tableHeader' },
+      {},
+      {},
+    ]);
+    comprasTable.push([
+      { text: 'Cantidad', style: 'tableHeaderSmall' },
+      { text: 'Monto', style: 'tableHeaderSmall' },
+      { text: 'Costo', style: 'tableHeaderSmall' },
+      { text: 'Cantidad', style: 'tableHeaderSmall' },
+      { text: 'Monto', style: 'tableHeaderSmall' },
+      { text: 'Costo', style: 'tableHeaderSmall' },
+    ]);
 
-    //insert docs recibidos table, if there is data
-    if (docsRecibidos.length != 1) {
-      content.push({ text: 'Documentos recibidos', style: 'docsRecib' });
-      content.push({
-        table: {
-          body: docsRecibidos,
-          widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
-        },
-      });
-    }
+    const formatter = new Intl.NumberFormat('es-CL', {
+      style: 'currency',
+      currency: 'CLP',
+    });
+
+    const currentMonthTotal = formatter.format(this.currentMonthTotal);
+    const currentMonthTotalCost = formatter.format(this.currentMonthTotalCost);
+
+    const previousMonthTotal = formatter.format(this.previousMonthTotal);
+    const previousMonthTotalCost = formatter.format(
+      this.previousMonthTotalCost
+    );
+
+    comprasTable.push([
+      { text: this.currentMonthCount, style: 'tableStyle' },
+      { text: currentMonthTotal, style: 'tableStyle' },
+      { text: currentMonthTotalCost, style: 'tableStyle' },
+      { text: this.previousMonthCount, style: 'tableStyle' },
+      { text: previousMonthTotal, style: 'tableStyle' },
+      { text: previousMonthTotalCost, style: 'tableStyle' },
+    ]);
+
+    //insert docs emitidos table, if there is data
 
     const docDefinition = {
-      content: content,
+      content: [
+        { text: header, style: 'header' },
+        data.length !== 0 && {
+          table: { body: data, widths: ['auto', 'auto'] },
+          margin: [0, 10, 0, 10],
+          layout: 'noBorders',
+        },
+        docsEmitidos.length !== 0 && {
+          text: 'Documentos Emitidos',
+          style: 'sectionHeader',
+        },
+        docsEmitidos.length !== 0 && {
+          table: {
+            body: docsEmitidos,
+            headerRows: 2,
+            widths: [
+              '*',
+              'auto',
+              'auto',
+              'auto',
+              'auto',
+              'auto',
+              'auto',
+              'auto',
+              'auto',
+            ],
+          },
+          layout: 'lightHorizontalLines',
+          margin: [0, 10, 0, 10],
+        },
+        docsRecibidos.length !== 1 && {
+          text: 'Documentos Recibidos',
+          style: 'sectionHeader',
+        },
+        docsRecibidos.length !== 1 && {
+          table: {
+            body: comprasTable,
+            headerRows: 2,
+          },
+          layout: 'lightHorizontalLines',
+          margin: [0, 10, 0, 10],
+        },
+        docsRecibidos.length !== 1 && {
+          table: {
+            body: docsRecibidos,
+            widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+          },
+          layout: 'lightHorizontalLines',
+          margin: [0, 10, 0, 10],
+        },
+      ],
       footer: {
-        text:
-          'Reporte mensual ' +
-          (this.month + 1) +
-          '-' +
-          this.year +
-          ' (Generado por llamativoAdmin ' +
-          todayDate +
-          ')',
+        text: `Reporte mensual ${this.month + 1}-${
+          this.year
+        } (Generado por llamativoAdmin ${todayDate})`,
         alignment: 'center',
         fontSize: 8,
+        margin: [0, 10, 0, 0],
       },
       styles: {
         header: {
-          fontSize: 18,
-          margin: [0, 0, 0, 10],
+          fontSize: 20,
+          bold: true,
           alignment: 'center',
+          margin: [0, 0, 0, 20],
         },
-        docsRecib: {
-          fontSize: 18,
-          margin: [0, 10, 0, 10],
-          alignment: 'left',
-        },
-        table: {
-          margin: [0, 1, 0, 1],
+        sectionHeader: {
+          fontSize: 16,
+          bold: true,
+          color: '#0077b6',
+          margin: [0, 10, 0, 5],
         },
         tableHeader: {
           fontSize: 13,
-          color: '#4a4848',
+          bold: true,
+          fillColor: '#f2f2f2',
+          color: '#333',
+        },
+        tableHeaderSmall: {
+          fontSize: 10,
+          bold: true,
+          fillColor: '#f2f2f2',
+          color: '#333',
         },
         tableStyle: {
-          margin: [0, 5, 0, 5],
           fontSize: 10,
+          margin: [0, 2, 5, 2],
         },
         tableStyleRed: {
-          margin: [0, 5, 0, 5],
           fontSize: 10,
           color: 'red',
+          margin: [0, 2, 5, 2],
         },
         tableStyleGreen: {
-          margin: [0, 5, 0, 5],
           fontSize: 10,
           color: 'green',
+          margin: [0, 2, 5, 2],
+        },
+        tableStyleSmall: {
+          fontSize: 9,
+          margin: [0, 2, 5, 2],
         },
         dataStyle: {
           alignment: 'right',
-          font: 'Roboto',
-          margin: [5, 1, 0, 1],
+          fontSize: 10,
+          margin: [5, 2, 0, 2],
         },
       },
       pageSize: 'LETTER',
+      pageMargins: [40, 10, 30, 60],
     };
 
     pdfMake.setFonts({

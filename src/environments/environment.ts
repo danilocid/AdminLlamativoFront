@@ -4,9 +4,9 @@
 
 export const environment = {
   production: false,
-  // urlBackend: 'http://127.0.0.1:5001/llamativo-admin/us-central1/',
-  urlBackend:
-    'https://llamativo-admin-backend-832653590074.us-central1.run.app/',
+  urlBackend: 'http://localhost:3000/',
+  //urlBackend:
+  // 'https://llamativo-admin-backend-832653590074.us-central1.run.app/',
 };
 
 /*
