@@ -161,7 +161,7 @@ export class HydrocontrolComponent implements OnInit, AfterViewInit {
           badDataCount++;
         } else {
           const date = new Date(element.timeStamp.timeStamp);
-          date.setHours(date.getHours() - 4);
+          date.setHours(date.getHours() - 3);
           let dateString = date.toISOString();
           dateString = dateString.replace('T', ' ');
           dateString = dateString.replace('Z', '');
