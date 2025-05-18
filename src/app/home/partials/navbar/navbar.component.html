@@ -27,16 +27,18 @@
             class="dropdown-item"
             [routerLink]="notification.url !== 'null' ? notification.url : '#'"
           >
-            <i
-              class="fas fa-envelope mr-2"
-              *ngIf="!notification.readed"
-              (click)="markAsReaded(notification)"
-            ></i>
-            <i
-              class="fas fa-envelope-open mr-2"
-              *ngIf="notification.readed"
-            ></i>
-            {{ notification.title }}
+            <p>
+              <i
+                class="fas fa-envelope mr-2"
+                *ngIf="!notification.readed"
+                (click)="markAsReaded(notification)"
+              ></i>
+              <i
+                class="fas fa-envelope-open mr-2"
+                *ngIf="notification.readed"
+              ></i>
+              {{ notification.title }}
+            </p>
             <p>{{ notification.description }}</p>
             <!-- Texto de la notificación -->
             <span class="float-right text-muted text-sm mb-2">
