@@ -137,6 +137,82 @@ export class PdfGeneratorService {
           'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-MediumItalic.ttf',
       },
     });
-    pdfMake.createPdf(docDefinition).open();
+    pdfMake.createPdf(docDefinition).download('etiquetas.pdf');
+  }
+
+  /**
+   * Genera un PDF donde cada etiqueta es una página de 5x3 cm,
+   * mostrando solo el nombre del producto y el código de barras.
+   * @param productName Nombre del producto a mostrar en la etiqueta
+   * @param barcodeText Código a mostrar en el código de barras
+   * @param quantity Número de etiquetas/páginas a generar
+   */
+  async generateSingleLabelPerPagePdf(
+    productName: string,
+    barcodeText: string,
+    quantity: number
+  ) {
+    const labelWidth = 5 * 28.3465; // 5 cm a puntos
+    const labelHeight = 3 * 28.3465; // 3 cm a puntos
+
+    const pages = [];
+
+    for (let i = 0; i < quantity; i++) {
+      // Generar el código de barras en base64
+      const canvas = document.createElement('canvas');
+      JsBarcode(canvas, barcodeText, {
+        format: 'CODE128',
+        height: 30,
+        width: 2,
+        fontSize: 12,
+        margin: 0,
+      });
+      const barcodeImage = canvas.toDataURL('image/png');
+
+      pages.push({
+        width: labelWidth,
+        height: labelHeight,
+        margin: [0, 0, 0, 0],
+        stack: [
+          {
+            text: productName,
+            alignment: 'center',
+            fontSize: 10,
+            margin: [1, 5, 1, 5],
+          },
+          {
+            image: barcodeImage,
+            width: labelWidth - 30,
+            height: 48,
+            alignment: 'center',
+          },
+        ],
+        // Agrega salto de página excepto en la última etiqueta
+        pageBreak: i < quantity - 1 ? 'after' : undefined,
+      });
+    }
+
+    const docDefinition = {
+      pageSize: { width: labelWidth, height: labelHeight },
+      pageMargins: [0, 0, 0, 0],
+      content: pages,
+      defaultStyle: {
+        font: 'Roboto',
+      },
+    };
+
+    pdfMake.setFonts({
+      Roboto: {
+        normal:
+          'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Regular.ttf',
+        bold: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Medium.ttf',
+        italics:
+          'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Italic.ttf',
+        bolditalics:
+          'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-MediumItalic.ttf',
+      },
+    });
+
+    pdfMake.createPdf(docDefinition).download('etiquetas.pdf');
   }
 }

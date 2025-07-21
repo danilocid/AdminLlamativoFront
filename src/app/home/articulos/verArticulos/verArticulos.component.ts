@@ -64,12 +64,18 @@ export class VerArticulosComponent implements OnInit, OnDestroy {
     const productName = this.producto.descripcion; // Nombre del producto
     const barcodeText = this.producto.cod_barras; // Código de barras
 
-    this.pdfGeneratorService.generateLabelPdf(
+    /* this.pdfGeneratorService.generateLabelPdf(
       startColumn,
       startRow,
       quantity,
       productName,
       barcodeText
+    ); */
+
+    this.pdfGeneratorService.generateSingleLabelPerPagePdf(
+      productName,
+      barcodeText,
+      quantity
     );
   }
 

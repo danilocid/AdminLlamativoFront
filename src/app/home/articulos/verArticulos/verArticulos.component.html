@@ -208,7 +208,7 @@
                 required
               />
             </div>
-            <div class="form-group">
+            <!-- <div class="form-group">
               <label for="name">Columna</label>
               <input
                 type="number"
@@ -229,11 +229,16 @@
                 max="4"
                 required
               />
-            </div>
+            </div> -->
           </form>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-primary" (click)="printLabel()">
+          <button
+            class="btn btn-primary"
+            (click)="printLabel()"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
             Generar
           </button>
         </div>
