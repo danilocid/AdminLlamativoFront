@@ -141,7 +141,7 @@ export class PdfGeneratorService {
   }
 
   /**
-   * Genera un PDF donde cada etiqueta es una página de 5x3 cm,
+   * Genera un PDF donde cada etiqueta es una página de 6x4 cm,
    * mostrando solo el nombre del producto y el código de barras.
    * @param productName Nombre del producto a mostrar en la etiqueta
    * @param barcodeText Código a mostrar en el código de barras
@@ -152,8 +152,8 @@ export class PdfGeneratorService {
     barcodeText: string,
     quantity: number
   ) {
-    const labelWidth = 5 * 28.3465; // 5 cm a puntos
-    const labelHeight = 3 * 28.3465; // 3 cm a puntos
+    const labelWidth = 6 * 28.3465; // 6 cm a puntos
+    const labelHeight = 4 * 28.3465; // 4 cm a puntos
 
     const pages = [];
 
@@ -162,7 +162,7 @@ export class PdfGeneratorService {
       const canvas = document.createElement('canvas');
       JsBarcode(canvas, barcodeText, {
         format: 'CODE128',
-        height: 30,
+        height: 40,
         width: 2,
         fontSize: 12,
         margin: 0,
@@ -177,13 +177,13 @@ export class PdfGeneratorService {
           {
             text: productName,
             alignment: 'center',
-            fontSize: 10,
-            margin: [1, 5, 1, 5],
+            fontSize: 12,
+            margin: [2, 8, 2, 8],
           },
           {
             image: barcodeImage,
-            width: labelWidth - 30,
-            height: 48,
+            width: labelWidth - 20,
+            height: 55,
             alignment: 'center',
           },
         ],
