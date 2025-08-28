@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule, LOCALE_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -16,37 +16,31 @@ import { FooterComponent } from './home/partials/footer/footer.component';
 import { FIREBASE_OPTIONS } from '@angular/fire/compat';
 registerLocaleData(localeEs, 'es');
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    LoginComponent,
-    SidebarComponent,
-    NavbarComponent,
-    FooterComponent,
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    NgxSpinnerModule,
-    BrowserAnimationsModule,
-    BrowserModule,
-    FormsModule,
-    ReactiveFormsModule,
-    DataTablesModule,
-  ],
-  providers: [
-    { provide: LOCALE_ID, useValue: 'es' },
-    {
-      provide: FIREBASE_OPTIONS,
-      useValue: {
-        apiKey: 'AIzaSyA4dIwysL-YcE148L9xoRxGV6iHTM5S8i4',
-        authDomain: 'hydrocontrol-f6486.firebaseapp.com',
-        databaseURL: 'https://hydrocontrol-f6486-default-rtdb.firebaseio.com/',
-      },
-    },
-  ],
-  bootstrap: [AppComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
-})
+@NgModule({ declarations: [
+        AppComponent,
+        LoginComponent,
+        SidebarComponent,
+        NavbarComponent,
+        FooterComponent,
+    ],
+    bootstrap: [AppComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA], imports: [BrowserModule,
+        AppRoutingModule,
+        NgxSpinnerModule,
+        BrowserAnimationsModule,
+        BrowserModule,
+        FormsModule,
+        ReactiveFormsModule,
+        DataTablesModule], providers: [
+        { provide: LOCALE_ID, useValue: 'es' },
+        {
+            provide: FIREBASE_OPTIONS,
+            useValue: {
+                apiKey: 'AIzaSyA4dIwysL-YcE148L9xoRxGV6iHTM5S8i4',
+                authDomain: 'hydrocontrol-f6486.firebaseapp.com',
+                databaseURL: 'https://hydrocontrol-f6486-default-rtdb.firebaseio.com/',
+            },
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AppModule {}
