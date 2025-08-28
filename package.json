@@ -7,10 +7,10 @@
     "start": "ng serve --ssl",
     "start:prod": "ng serve --configuration production --ssl",
     "start:dev": "ng serve --configuration development --ssl",
-    "build": "ng build",
+    "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration production",
     "test": "ng test",
-    "deploy": "npm version patch && ng build && firebase deploy",
+    "deploy": "npm version patch && ng build --configuration production && firebase deploy",
     "scanner": "sonar-scanner",
     "lint": "ng lint"
   },

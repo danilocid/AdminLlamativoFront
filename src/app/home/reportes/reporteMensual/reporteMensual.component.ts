@@ -7,7 +7,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ApiRequest } from 'src/app/shared/constants';
 import { ApiService } from 'src/app/shared/services/ApiService';
 import { AlertService } from 'src/app/shared/services/alert.service';
-import pdfMake from 'pdfmake/build/pdfmake';
+import * as pdfMake from 'pdfmake/build/pdfmake';
 
 @Component({
   selector: 'app-reporte-mensual',

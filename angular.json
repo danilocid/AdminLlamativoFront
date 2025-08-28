@@ -19,15 +19,24 @@
           "builder": "@angular-devkit/build-angular:application",
           "options": {
             "outputPath": {
-              "base": "dist/front"
+              "base": "dist/front",
+              "browser": ""
             },
             "index": "src/index.html",
             "polyfills": ["zone.js", "@angular/localize/init"],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
+            "allowedCommonJsDependencies": [
+              "pdfmake",
+              "sweetalert2",
+              "jsbarcode",
+              "jquery"
+            ],
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": [
               "src/styles.scss",
+              "src/assets/css/adminlte.css",
+              "src/assets/plugins/fontawesome-free/css/all.min.css",
               "node_modules/ngx-spinner/animations/pacman.css",
               "src/assets/plugins/overlayScrollbars/css/OverlayScrollbars.min.css",
               "node_modules/datatables.net-dt/css/jquery.dataTables.css",
@@ -47,16 +56,22 @@
           },
           "configurations": {
             "production": {
+              "optimization": {
+                "styles": {
+                  "minify": false,
+                  "inlineCritical": false
+                }
+              },
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
+                  "maximumWarning": "3mb",
+                  "maximumError": "6mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kb",
-                  "maximumError": "6kb"
+                  "maximumWarning": "6kb",
+                  "maximumError": "8kb"
                 }
               ],
               "fileReplacements": [

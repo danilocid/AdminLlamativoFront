@@ -6,10 +6,9 @@ import { Router } from '@angular/router';
 import { DataTableDirective } from 'angular-datatables';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subject } from 'rxjs';
-import { ApiRequest } from 'src/app/shared/constants';
+import { ApiRequest, FormatDataTableGlobal } from 'src/app/shared/constants';
 import { ApiService } from 'src/app/shared/services/ApiService';
 import { AlertService } from 'src/app/shared/services/alert.service';
-import { FormatDataTableGlobal } from 'src/app/shared/services/util.service';
 
 @Component({
   selector: 'app-compras',
