@@ -58,8 +58,6 @@ export class VerArticulosComponent implements OnInit, OnDestroy {
   }
 
   printLabel() {
-    const startColumn = this.labelForm.value.labelColumn;
-    const startRow = this.labelForm.value.labelRow;
     const quantity = this.labelForm.value.quantity; // Cantidad de etiquetas
     const productName = this.producto.descripcion; // Nombre del producto
     const barcodeText = this.producto.cod_barras; // Código de barras
