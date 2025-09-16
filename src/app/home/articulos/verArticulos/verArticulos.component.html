@@ -67,6 +67,12 @@
             <p>Descripcion: {{ producto.descripcion }}</p>
             <p *ngIf="producto.activo">Estado: activo</p>
             <p *ngIf="!producto.activo">Estado: inactivo</p>
+            <p *ngIf="producto.deprecado" class="text-warning">
+              ⚠️ Producto deprecado
+            </p>
+            <p *ngIf="!producto.deprecado" class="text-success">
+              ✅ Producto vigente
+            </p>
             <p>Stock: {{ producto.stock }}</p>
             <p>
               PVP Neto: $

@@ -29,6 +29,7 @@ export class ArticulosComponent implements OnInit, OnDestroy, AfterViewInit {
   date = new Date();
   active = false;
   stock = true;
+  includeDeprecated = false;
   searchTerm;
 
   constructor(
@@ -74,6 +75,7 @@ export class ArticulosComponent implements OnInit, OnDestroy, AfterViewInit {
                 : 'DESC',
             stock: this.stock,
             active: this.active,
+            includeDeprecated: this.includeDeprecated,
           })
           .subscribe((response) => {
             this.products = response.data;
@@ -159,6 +161,18 @@ export class ArticulosComponent implements OnInit, OnDestroy, AfterViewInit {
           },
         },
         {
+          //deprecado
+          data: 'deprecado',
+          className: 'fs-12',
+          defaultContent: '',
+          orderable: false,
+          render: function (data: boolean) {
+            return data
+              ? '<span class="badge badge-warning">⚠️ Deprecado</span>'
+              : '<span class="badge badge-success">✅ Vigente</span>';
+          },
+        },
+        {
           //publicado
           data: 'publicado',
           className: 'fs-12',
@@ -211,6 +225,11 @@ export class ArticulosComponent implements OnInit, OnDestroy, AfterViewInit {
   changeActive() {
     this.spinner.show();
     this.active = !this.active;
+    this.getProducts();
+  }
+  changeDeprecated() {
+    this.spinner.show();
+    this.includeDeprecated = !this.includeDeprecated;
     this.getProducts();
   }
   ngOnDestroy(): void {

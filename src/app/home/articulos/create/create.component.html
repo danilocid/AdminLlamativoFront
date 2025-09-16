@@ -205,6 +205,20 @@
             </select>
           </div>
           <div class="form-group col-lg-2 col-sm-6">
+            <label for="name">Deprecado</label>
+            <select
+              formControlName="deprecado"
+              [ngClass]="isValidField('deprecado') ? 'is-invalid' : ''"
+              class="form-control"
+              id="deprecado"
+              name="deprecado"
+              required
+            >
+              <option value="0">No</option>
+              <option value="1">Si</option>
+            </select>
+          </div>
+          <div class="form-group col-lg-2 col-sm-6">
             <label for="name">Publicado MercadoLibre</label>
             <select
               formControlName="publicado"

@@ -19,6 +19,7 @@ export interface Product {
   publicado_ps: boolean;
   enlace_ps: string;
   id_ps: string;
+  deprecado: boolean;
 }
 
 export interface ProductCart {
@@ -36,4 +37,5 @@ export interface ProductCart {
   created_at: Date;
   updated_at: Date;
   quantity: number;
+  deprecado: boolean;
 }

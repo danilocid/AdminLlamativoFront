@@ -61,6 +61,7 @@ export class CreateComponent implements OnInit {
       publicado_ps: ['0', [Validators.required]],
       enlace_ps: [],
       id_ps: [],
+      deprecado: ['0', [Validators.required]],
     });
 
     if (this.idProducto != null) {
@@ -108,6 +109,10 @@ export class CreateComponent implements OnInit {
           if (this.producto.publicado_ps) {
             this.productForm.controls['publicado_ps'].setValue('1');
           }
+          //if the product is deprecated, then set deprecado to 1
+          if (this.producto.deprecado) {
+            this.productForm.controls['deprecado'].setValue('1');
+          }
           this.spinner.hide();
         },
         error: () => {
@@ -154,6 +159,7 @@ export class CreateComponent implements OnInit {
       publicado_ps: this.productForm.controls['publicado_ps'].value === '1',
       enlace_ps: this.productForm.controls['enlace_ps'].value,
       id_ps: this.productForm.controls['id_ps'].value,
+      deprecado: this.productForm.controls['deprecado'].value === '1',
     };
 
     //
@@ -236,6 +242,7 @@ export class CreateComponent implements OnInit {
           publicado_ps: this.productForm.controls['publicado_ps'].value === '1',
           enlace_ps: this.productForm.controls['enlace_ps'].value,
           id_ps: this.productForm.controls['id_ps'].value,
+          deprecado: this.productForm.controls['deprecado'].value === '1',
         };
 
         //if enlace_ml is empty, then delete it
