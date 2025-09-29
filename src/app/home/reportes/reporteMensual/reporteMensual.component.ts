@@ -7,7 +7,14 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ApiRequest } from 'src/app/shared/constants';
 import { ApiService } from 'src/app/shared/services/ApiService';
 import { AlertService } from 'src/app/shared/services/alert.service';
+import {
+  MonthlyReportResponse,
+  SalesData,
+  SalesResponse,
+  ReportDataItem,
+} from 'src/app/shared/models/monthlyReport.model';
 import * as pdfMake from 'pdfmake/build/pdfmake';
+import packageJson from '../../../../../package.json';
 
 @Component({
   selector: 'app-reporte-mensual',
@@ -16,15 +23,17 @@ import * as pdfMake from 'pdfmake/build/pdfmake';
 })
 export class ReporteMensualComponent implements OnInit {
   dateForm: FormGroup;
-  month: any;
-  year: any;
-  data: { title: string; value: number; isMoney: boolean }[] = [];
+  month: number;
+  year: number;
+  data: ReportDataItem[] = [];
   compras: any[] = [];
   haveData = false;
   private apiService!: ApiService;
   showAddForm = false;
-  salesData: any;
-  yearList = [];
+  salesData: SalesData[] = [];
+  salesResponse: SalesResponse | null = null;
+  yearList: number[] = [];
+  version: string = packageJson.version;
 
   currentMonthCount = 0;
   currentMonthTotal = 0;
@@ -77,12 +86,12 @@ export class ReporteMensualComponent implements OnInit {
           this.dateForm.value.year
       )
       .subscribe({
-        next: (result: any) => {
+        next: (result: MonthlyReportResponse) => {
           this.month = this.dateForm.controls['month'].value - 1;
           this.year = this.dateForm.controls['year'].value;
-          //console.log(result);
 
           this.salesData = result.data.sales;
+          this.salesResponse = result.data;
 
           this.getCompras();
         },
@@ -467,121 +476,596 @@ export class ReporteMensualComponent implements OnInit {
     //insert docs emitidos table, if there is data
     const content2 = [];
     content2.push({ text: header, style: 'header' });
-    if (data.length != 0) {
-      content2.push({ table: { body: data, widths: ['auto', 'auto'] } });
+
+    // Crear sección con dos columnas: Resumen Financiero y Datos Adicionales
+    if (this.salesResponse || data.length > 0) {
+      const columnsContent = [];
+
+      // Columna izquierda: Resumen Financiero
+      if (this.salesResponse) {
+        const resumenFinancieroColumn = [];
+
+        resumenFinancieroColumn.push({
+          text: 'Resumen Financiero',
+          style: 'sectionHeader',
+        });
+
+        // Crear tabla de resumen financiero
+        const resumenFinanciero = [];
+        resumenFinanciero.push([
+          { text: '', style: 'tableHeaderSmall' },
+          { text: 'Mes Actual', style: 'tableHeaderSmall' },
+          { text: 'Mes Anterior', style: 'tableHeaderSmall' },
+          { text: 'Año Anterior', style: 'tableHeaderSmall' },
+        ]);
+
+        const formatter = new Intl.NumberFormat('es-CL', {
+          style: 'currency',
+          currency: 'CLP',
+        });
+
+        // Fila de documentos
+        resumenFinanciero.push([
+          { text: 'Documentos', style: 'tableStyle' },
+          { text: this.salesResponse.countCurrentMonth, style: 'tableStyle' },
+          { text: this.salesResponse.countPreviousMonth, style: 'tableStyle' },
+          { text: this.salesResponse.countPreviousYear, style: 'tableStyle' },
+        ]);
+
+        // Fila de ventas
+        resumenFinanciero.push([
+          { text: 'Ventas', style: 'tableStyle' },
+          {
+            text: formatter.format(this.salesResponse.totalCurrentMonth),
+            style: 'tableStyle',
+          },
+          {
+            text: formatter.format(this.salesResponse.totalPreviousMonth),
+            style: 'tableStyle',
+          },
+          {
+            text: formatter.format(this.salesResponse.totalPreviousYear),
+            style: 'tableStyle',
+          },
+        ]);
+
+        // Fila de costos
+        resumenFinanciero.push([
+          { text: 'Costo', style: 'tableStyle' },
+          {
+            text: formatter.format(
+              this.salesResponse.totalCurrentMonthCost || 0
+            ),
+            style: 'tableStyle',
+          },
+          {
+            text: formatter.format(
+              this.salesResponse.totalPreviousMonthCost || 0
+            ),
+            style: 'tableStyle',
+          },
+          {
+            text: formatter.format(
+              this.salesResponse.totalPreviousYearCost || 0
+            ),
+            style: 'tableStyle',
+          },
+        ]);
+
+        // Fila de costos extra
+        resumenFinanciero.push([
+          { text: 'Costo Extra', style: 'tableStyle' },
+          {
+            text: formatter.format(
+              this.salesResponse.totalCurrentMonthExtraCosts || 0
+            ),
+            style: 'tableStyle',
+          },
+          {
+            text: formatter.format(
+              this.salesResponse.totalPreviousMonthExtraCosts || 0
+            ),
+            style: 'tableStyle',
+          },
+          {
+            text: formatter.format(
+              this.salesResponse.totalPreviousYearExtraCosts || 0
+            ),
+            style: 'tableStyle',
+          },
+        ]);
+
+        // Fila de ganancia (si está disponible)
+        if (this.salesResponse.totalGrossCurrentMonth) {
+          resumenFinanciero.push([
+            { text: 'Ganancia', style: 'tableStyleGreen' },
+            {
+              text: formatter.format(this.salesResponse.totalGrossCurrentMonth),
+              style: 'tableStyleGreen',
+            },
+            {
+              text: this.salesResponse.totalGrossPreviousMonth
+                ? formatter.format(this.salesResponse.totalGrossPreviousMonth)
+                : '$0',
+              style: 'tableStyleGreen',
+            },
+            {
+              text: this.salesResponse.totalGrossPreviousYear
+                ? formatter.format(this.salesResponse.totalGrossPreviousYear)
+                : '$0',
+              style: 'tableStyleGreen',
+            },
+          ]);
+        }
+
+        resumenFinancieroColumn.push({
+          table: {
+            body: resumenFinanciero,
+            widths: ['*', 'auto', 'auto', 'auto'],
+          },
+          layout: {
+            fillColor: function (
+              rowIndex: number,
+              node: any,
+              columnIndex: number
+            ) {
+              if (rowIndex === 0) return '#3b82f6';
+              return rowIndex % 2 === 0 ? '#f8fafc' : '#ffffff';
+            },
+            hLineWidth: function (i: number, node: any) {
+              return i === 0 || i === node.table.body.length ? 2 : 1;
+            },
+            vLineWidth: function (i: number, node: any) {
+              return 0;
+            },
+            hLineColor: function (i: number, node: any) {
+              return i === 0 || i === node.table.body.length
+                ? '#1e40af'
+                : '#e2e8f0';
+            },
+            paddingLeft: function (i: number) {
+              return 8;
+            },
+            paddingRight: function (i: number) {
+              return 8;
+            },
+            paddingTop: function (i: number) {
+              return 6;
+            },
+            paddingBottom: function (i: number) {
+              return 6;
+            },
+          },
+          margin: [0, 8, 0, 0],
+        });
+
+        columnsContent.push({
+          width: '55%',
+          stack: resumenFinancieroColumn,
+        });
+      }
+
+      // Columna derecha: Datos Adicionales
+      if (data.length > 0) {
+        const datosAdicionalesColumn = [];
+
+        datosAdicionalesColumn.push({
+          text: 'Datos Adicionales',
+          style: 'sectionHeader',
+        });
+
+        datosAdicionalesColumn.push({
+          table: {
+            body: data,
+            widths: ['*', 'auto'],
+          },
+          layout: {
+            fillColor: function (
+              rowIndex: number,
+              node: any,
+              columnIndex: number
+            ) {
+              return rowIndex % 2 === 0 ? '#f8fafc' : '#ffffff';
+            },
+            hLineWidth: function (i: number, node: any) {
+              return i === 0 || i === node.table.body.length ? 2 : 1;
+            },
+            vLineWidth: function (i: number, node: any) {
+              return 0;
+            },
+            hLineColor: function (i: number, node: any) {
+              return i === 0 || i === node.table.body.length
+                ? '#1e40af'
+                : '#e2e8f0';
+            },
+            paddingLeft: function (i: number) {
+              return 8;
+            },
+            paddingRight: function (i: number) {
+              return 8;
+            },
+            paddingTop: function (i: number) {
+              return 5;
+            },
+            paddingBottom: function (i: number) {
+              return 5;
+            },
+          },
+          margin: [0, 8, 0, 0],
+        });
+
+        columnsContent.push({
+          width: '5%',
+          text: '', // Espacio separador
+        });
+
+        columnsContent.push({
+          width: '40%',
+          stack: datosAdicionalesColumn,
+        });
+      } else if (this.salesResponse) {
+        // Si no hay datos adicionales pero sí resumen financiero, agregar espacio vacío
+        columnsContent.push({
+          width: '45%',
+          text: '',
+        });
+      }
+
+      // Solo agregar si no hay datos adicionales pero sí resumen financiero
+      if (!this.salesResponse && data.length > 0) {
+        // Si solo hay datos adicionales, centrar la columna
+        const datosAdicionalesColumn = [];
+
+        datosAdicionalesColumn.push({
+          text: 'Datos Adicionales',
+          style: 'sectionHeader',
+        });
+
+        datosAdicionalesColumn.push({
+          table: {
+            body: data,
+            widths: ['*', 'auto'],
+          },
+          layout: 'lightHorizontalLines',
+          margin: [0, 5, 0, 0],
+        });
+
+        columnsContent.unshift({
+          width: '25%',
+          text: '',
+        });
+        columnsContent.push({
+          width: '5%',
+          text: '',
+        });
+        columnsContent.push({
+          width: '40%',
+          stack: datosAdicionalesColumn,
+        });
+        columnsContent.push({
+          width: '30%',
+          text: '',
+        });
+      }
+
+      // Agregar las columnas al contenido
+      content2.push({
+        columns: columnsContent,
+        margin: [0, 0, 0, 20],
+        unbreakable: false,
+      });
     }
 
     if (docsEmitidos.length != 0) {
       content2.push({
-        text: 'Documentos Emitidos',
-        style: 'sectionHeader',
-      });
-      content2.push({
-        table: {
-          body: docsEmitidos,
-          headerRows: 2,
-          widths: [
-            '*',
-            'auto',
-            'auto',
-            'auto',
-            'auto',
-            'auto',
-            'auto',
-            'auto',
-            'auto',
-          ],
-        },
-        layout: 'lightHorizontalLines',
-        margin: [0, 10, 0, 10],
+        stack: [
+          {
+            text: 'Documentos Emitidos',
+            style: 'sectionHeader',
+            margin: [0, 15, 0, 8],
+          },
+          {
+            table: {
+              body: docsEmitidos,
+              headerRows: 2,
+              widths: [
+                '*',
+                'auto',
+                'auto',
+                'auto',
+                'auto',
+                'auto',
+                'auto',
+                'auto',
+                'auto',
+              ],
+              keepWithHeaderRows: 2,
+            },
+            layout: {
+              fillColor: function (
+                rowIndex: number,
+                node: any,
+                columnIndex: number
+              ) {
+                if (rowIndex < 2) return '#3b82f6';
+                if (rowIndex === node.table.body.length - 1) return '#e0f2fe';
+                return rowIndex % 2 === 0 ? '#f8fafc' : '#ffffff';
+              },
+              hLineWidth: function (i: number, node: any) {
+                return i === 0 || i === 2 || i === node.table.body.length
+                  ? 2
+                  : 0.5;
+              },
+              vLineWidth: function (i: number, node: any) {
+                return 0;
+              },
+              hLineColor: function (i: number, node: any) {
+                return '#1e40af';
+              },
+              paddingLeft: function (i: number) {
+                return 6;
+              },
+              paddingRight: function (i: number) {
+                return 6;
+              },
+              paddingTop: function (i: number) {
+                return 4;
+              },
+              paddingBottom: function (i: number) {
+                return 4;
+              },
+            },
+            margin: [0, 0, 0, 15],
+          },
+        ],
+        unbreakable: true,
       });
     }
 
     if (docsRecibidos.length != 0) {
       content2.push({
-        text: 'Documentos Recibidos',
-        style: 'sectionHeader',
-      });
-      content2.push({
-        table: {
-          body: comprasTable,
-          headerRows: 2,
-        },
-        layout: 'lightHorizontalLines',
-        margin: [0, 10, 0, 10],
+        stack: [
+          {
+            text: 'Documentos Recibidos',
+            style: 'sectionHeader',
+            margin: [0, 15, 0, 8],
+          },
+          {
+            table: {
+              body: comprasTable,
+              headerRows: 2,
+              keepWithHeaderRows: 2,
+            },
+            layout: {
+              fillColor: function (
+                rowIndex: number,
+                node: any,
+                columnIndex: number
+              ) {
+                if (rowIndex < 2) return '#3b82f6';
+                return rowIndex % 2 === 0 ? '#f8fafc' : '#ffffff';
+              },
+              hLineWidth: function (i: number, node: any) {
+                return i === 0 || i === 2 || i === node.table.body.length
+                  ? 2
+                  : 0.5;
+              },
+              vLineWidth: function (i: number, node: any) {
+                return 0;
+              },
+              hLineColor: function (i: number, node: any) {
+                return '#1e40af';
+              },
+              paddingLeft: function (i: number) {
+                return 6;
+              },
+              paddingRight: function (i: number) {
+                return 6;
+              },
+              paddingTop: function (i: number) {
+                return 4;
+              },
+              paddingBottom: function (i: number) {
+                return 4;
+              },
+            },
+            margin: [0, 0, 0, 15],
+          },
+        ],
+        unbreakable: true,
       });
 
       content2.push({
         table: {
           body: docsRecibidos,
           widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+          headerRows: 1,
+          keepWithHeaderRows: 1,
         },
-        layout: 'lightHorizontalLines',
-        margin: [0, 10, 0, 10],
+        layout: {
+          fillColor: function (
+            rowIndex: number,
+            node: any,
+            columnIndex: number
+          ) {
+            if (rowIndex === 0) return '#3b82f6';
+            return rowIndex % 2 === 0 ? '#ffffff' : '#f8fafc';
+          },
+          hLineWidth: function (i: number, node: any) {
+            return i === 0 || i === 1 || i === node.table.body.length ? 2 : 0.5;
+          },
+          vLineWidth: function (i: number, node: any) {
+            return 0;
+          },
+          hLineColor: function (i: number, node: any) {
+            return '#1e40af';
+          },
+          paddingLeft: function (i: number) {
+            return 6;
+          },
+          paddingRight: function (i: number) {
+            return 6;
+          },
+          paddingTop: function (i: number) {
+            return 4;
+          },
+          paddingBottom: function (i: number) {
+            return 4;
+          },
+        },
+        margin: [0, 10, 0, 15],
+        unbreakable: true,
       });
     }
 
     const docDefinition = {
       content: content2,
-      footer: {
-        text: `Reporte mensual ${this.month + 1}-${
-          this.year
-        } (Generado por llamativoAdmin ${todayDate})`,
-        alignment: 'center',
-        fontSize: 8,
-        margin: [0, 10, 0, 0],
-      },
+      footer: function (currentPage: number, pageCount: number) {
+        return {
+          table: {
+            widths: ['*', 'auto'],
+            body: [
+              [
+                {
+                  text: `Reporte mensual ${this.month + 1}-${this.year}`,
+                  style: 'footerLeft',
+                  border: [false, false, false, false],
+                },
+                {
+                  text: `Página ${currentPage} de ${pageCount}`,
+                  style: 'footerRight',
+                  border: [false, false, false, false],
+                },
+              ],
+              [
+                {
+                  text: `Generado por llamativoAdmin v${this.version} el ${todayDate}`,
+                  style: 'footerSubtext',
+                  colSpan: 2,
+                  border: [false, false, false, false],
+                },
+                {},
+              ],
+            ],
+          },
+          layout: 'noBorders',
+          margin: [40, 10, 40, 10],
+        };
+      }.bind(this),
       styles: {
         header: {
-          fontSize: 20,
+          fontSize: 24,
           bold: true,
           alignment: 'center',
-          margin: [0, 0, 0, 20],
+          margin: [0, 0, 0, 30],
+          color: '#1e3a8a',
+          decoration: 'underline',
+          decorationColor: '#3b82f6',
         },
         sectionHeader: {
-          fontSize: 16,
+          fontSize: 18,
           bold: true,
-          color: '#0077b6',
-          margin: [0, 10, 0, 5],
+          color: '#1e40af',
+          margin: [0, 15, 0, 8],
+          /*  fillColor: '#f1f5f9',
+          background: '#f1f5f9', */
         },
         tableHeader: {
-          fontSize: 13,
+          fontSize: 12,
           bold: true,
-          fillColor: '#f2f2f2',
-          color: '#333',
+          fillColor: '#3b82f6',
+          color: '#ffffff',
+          alignment: 'center',
+          margin: [2, 4, 2, 4],
         },
         tableHeaderSmall: {
           fontSize: 10,
           bold: true,
-          fillColor: '#f2f2f2',
-          color: '#333',
+          fillColor: '#60a5fa',
+          color: '#ffffff',
+          alignment: 'center',
+          margin: [2, 3, 2, 3],
         },
         tableStyle: {
           fontSize: 10,
-          margin: [0, 2, 5, 2],
+          margin: [3, 3, 3, 3],
+          alignment: 'right',
+          color: '#374151',
         },
         tableStyleRed: {
           fontSize: 10,
-          color: 'red',
-          margin: [0, 2, 5, 2],
+          color: '#dc2626',
+          bold: true,
+          margin: [3, 3, 3, 3],
+          alignment: 'right',
         },
         tableStyleGreen: {
           fontSize: 10,
-          color: 'green',
-          margin: [0, 2, 5, 2],
+          color: '#16a34a',
+          bold: true,
+          margin: [3, 3, 3, 3],
+          alignment: 'right',
         },
         tableStyleSmall: {
           fontSize: 9,
-          margin: [0, 2, 5, 2],
+          margin: [2, 2, 2, 2],
+          color: '#4b5563',
         },
         dataStyle: {
           alignment: 'right',
-          fontSize: 10,
-          margin: [5, 2, 0, 2],
+          fontSize: 11,
+          margin: [5, 3, 5, 3],
+          color: '#374151',
+          bold: false,
+        },
+        table: {
+          fontSize: 11,
+          color: '#374151',
+          margin: [5, 3, 0, 3],
+        },
+        footerLeft: {
+          fontSize: 9,
+          color: '#4b5563',
+          alignment: 'left',
+        },
+        footerRight: {
+          fontSize: 9,
+          color: '#4b5563',
+          alignment: 'right',
+        },
+        footerSubtext: {
+          fontSize: 8,
+          color: '#6b7280',
+          alignment: 'center',
+          italics: true,
         },
       },
       pageSize: 'LETTER',
-      pageMargins: [40, 10, 30, 60],
+      pageMargins: [40, 40, 40, 80],
+      defaultStyle: {
+        font: 'Roboto',
+      },
+      pageBreakBefore: function (
+        currentNode: any,
+        followingNodesOnPage: any,
+        nodesOnNextPage: any,
+        previousNodesOnPage: any
+      ) {
+        // Solo forzar salto en casos muy específicos para evitar fragmentación crítica
+        return false; // Dejar que pdfMake maneje automáticamente los saltos
+      },
+      background: {
+        canvas: [
+          {
+            type: 'rect',
+            x: 0,
+            y: 0,
+            w: 612,
+            h: 792,
+            color: '#ffffff',
+          },
+        ],
+      },
     };
 
     pdfMake.setFonts({

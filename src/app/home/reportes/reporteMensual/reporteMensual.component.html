@@ -74,7 +74,7 @@
         </div>
       </div>
     </div>
-    <div class="card" *ngIf="salesData">
+    <div class="card" *ngIf="salesData && salesData.length > 0">
       <div class="card-header">
         <h4 class="card-title">Ventas</h4>
       </div>
@@ -90,50 +90,558 @@
                 Documento
               </th>
               <th colspan="2" class="text-center">Mes Actual</th>
-              <th colspan="2" class="text-center">Mes Anterior</th>
-              <th colspan="2" class="text-center">Año anterior</th>
+              <th colspan="3" class="text-center">Mes Anterior</th>
+              <th colspan="3" class="text-center">Año anterior</th>
             </tr>
             <tr>
               <th>Cantidad</th>
               <th>Monto</th>
               <th>Cantidad</th>
               <th>Monto</th>
+              <th>% Dif.</th>
               <th>Cantidad</th>
               <th>Monto</th>
+              <th>% Dif.</th>
             </tr>
           </thead>
           <tbody>
-            @for(item of salesData; track item) {
+            @for(item of salesData; track item.id) {
             <tr>
               <td>{{ item.name }}</td>
-              <td>{{ item.currentMonthCount | number }}</td>
-              <td>${{ item.currentMonth | number }}</td>
+              <td class="text-right">{{ item.currentMonthCount | number }}</td>
+              <td class="text-right">
+                ${{ item.currentMonth | number : "1.0-0" }}
+              </td>
 
-              <td>{{ item.previousMonthCount | number }}</td>
-              <td>
-                ${{ item.previousMonth | number }} ({{
+              <td class="text-right">{{ item.previousMonthCount | number }}</td>
+              <td class="text-right">
+                ${{ item.previousMonth | number : "1.0-0" }}
+              </td>
+              <td
+                class="text-right"
+                [ngClass]="{
+                  'text-success':
+                    calculatePercentageVariation(
+                      item.currentMonth,
+                      item.previousMonth
+                    ) >= 0,
+                  'text-danger':
+                    calculatePercentageVariation(
+                      item.currentMonth,
+                      item.previousMonth
+                    ) < 0
+                }"
+              >
+                {{
                   calculatePercentageVariation(
                     item.currentMonth,
                     item.previousMonth
                   )
-                }}%)
+                }}%
               </td>
 
-              <td>{{ item.previousYearCount | number }}</td>
-              <td>
-                ${{ item.previousYear | number }} ({{
+              <td class="text-right">{{ item.previousYearCount | number }}</td>
+              <td class="text-right">
+                ${{ item.previousYear | number : "1.0-0" }}
+              </td>
+              <td
+                class="text-right"
+                [ngClass]="{
+                  'text-success':
+                    calculatePercentageVariation(
+                      item.currentMonth,
+                      item.previousYear
+                    ) >= 0,
+                  'text-danger':
+                    calculatePercentageVariation(
+                      item.currentMonth,
+                      item.previousYear
+                    ) < 0
+                }"
+              >
+                {{
                   calculatePercentageVariation(
                     item.currentMonth,
                     item.previousYear
                   )
-                }}%)
+                }}%
               </td>
             </tr>
             }
+            <!-- Fila de totales -->
+            <tr class="table-info font-weight-bold" *ngIf="salesResponse">
+              <td><strong>TOTAL</strong></td>
+              <td class="text-right">
+                <strong>{{ salesResponse.countCurrentMonth | number }}</strong>
+              </td>
+              <td class="text-right">
+                <strong
+                  >${{
+                    salesResponse.totalCurrentMonth | number : "1.0-0"
+                  }}</strong
+                >
+              </td>
+              <td class="text-right">
+                <strong>{{ salesResponse.countPreviousMonth | number }}</strong>
+              </td>
+              <td class="text-right">
+                <strong
+                  >${{
+                    salesResponse.totalPreviousMonth | number : "1.0-0"
+                  }}</strong
+                >
+              </td>
+              <td
+                class="text-right"
+                [ngClass]="{
+                  'text-success':
+                    calculatePercentageVariation(
+                      salesResponse.totalCurrentMonth,
+                      salesResponse.totalPreviousMonth
+                    ) >= 0,
+                  'text-danger':
+                    calculatePercentageVariation(
+                      salesResponse.totalCurrentMonth,
+                      salesResponse.totalPreviousMonth
+                    ) < 0
+                }"
+              >
+                <strong
+                  >{{
+                    calculatePercentageVariation(
+                      salesResponse.totalCurrentMonth,
+                      salesResponse.totalPreviousMonth
+                    )
+                  }}%</strong
+                >
+              </td>
+              <td class="text-right">
+                <strong>{{ salesResponse.countPreviousYear | number }}</strong>
+              </td>
+              <td class="text-right">
+                <strong
+                  >${{
+                    salesResponse.totalPreviousYear | number : "1.0-0"
+                  }}</strong
+                >
+              </td>
+              <td
+                class="text-right"
+                [ngClass]="{
+                  'text-success':
+                    calculatePercentageVariation(
+                      salesResponse.totalCurrentMonth,
+                      salesResponse.totalPreviousYear
+                    ) >= 0,
+                  'text-danger':
+                    calculatePercentageVariation(
+                      salesResponse.totalCurrentMonth,
+                      salesResponse.totalPreviousYear
+                    ) < 0
+                }"
+              >
+                <strong
+                  >{{
+                    calculatePercentageVariation(
+                      salesResponse.totalCurrentMonth,
+                      salesResponse.totalPreviousYear
+                    )
+                  }}%</strong
+                >
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
     </div>
+    <!-- Resumen general -->
+    <div class="row" *ngIf="salesResponse">
+      <!-- Mes Actual -->
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+            <h5 class="card-title mb-0">
+              <i class="fas fa-calendar-alt mr-2"></i>Mes Actual
+            </h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-3">
+                <div class="description-block border-right">
+                  <span class="description-percentage text-primary">
+                    <i class="fas fa-file-invoice"></i>
+                  </span>
+                  <h5 class="description-header">
+                    {{ salesResponse.countCurrentMonth }}
+                  </h5>
+                  <span class="description-text">DOCS</span>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="description-block border-right">
+                  <span class="description-percentage text-success">
+                    <i class="fas fa-dollar-sign"></i>
+                  </span>
+                  <h5 class="description-header">
+                    ${{ salesResponse.totalCurrentMonth | number : "1.0-0" }}
+                  </h5>
+                  <span class="description-text">VENTAS</span>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="description-block border-right">
+                  <span class="description-percentage text-info">
+                    <i class="fas fa-shopping-cart"></i>
+                  </span>
+                  <h5 class="description-header">
+                    ${{
+                      salesResponse.totalCurrentMonthCost || 0
+                        | number : "1.0-0"
+                    }}
+                  </h5>
+                  <span class="description-text">COSTO</span>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="description-block">
+                  <span class="description-percentage text-warning">
+                    <i class="fas fa-coins"></i>
+                  </span>
+                  <h5 class="description-header">
+                    ${{
+                      salesResponse.totalCurrentMonthExtraCosts || 0
+                        | number : "1.0-0"
+                    }}
+                  </h5>
+                  <span class="description-text">C.EXTRA</span>
+                </div>
+              </div>
+            </div>
+            <div class="row mt-3" *ngIf="salesResponse.totalGrossCurrentMonth">
+              <div class="col-12">
+                <div class="text-center">
+                  <span class="badge badge-success badge-lg">
+                    <i class="fas fa-chart-line mr-1"></i>
+                    Ganancia: ${{
+                      salesResponse.totalGrossCurrentMonth | number : "1.0-0"
+                    }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comparación con Mes Anterior -->
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-header bg-warning text-white">
+            <h5 class="card-title mb-0">
+              <i class="fas fa-calendar-minus mr-2"></i>vs Mes Anterior
+            </h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-3">
+                <div class="description-block border-right">
+                  <span
+                    class="description-percentage"
+                    [ngClass]="{
+                      'text-success':
+                        salesResponse.countCurrentMonth >=
+                        salesResponse.countPreviousMonth,
+                      'text-danger':
+                        salesResponse.countCurrentMonth <
+                        salesResponse.countPreviousMonth
+                    }"
+                  >
+                    <i
+                      class="fas"
+                      [ngClass]="{
+                        'fa-arrow-up':
+                          salesResponse.countCurrentMonth >=
+                          salesResponse.countPreviousMonth,
+                        'fa-arrow-down':
+                          salesResponse.countCurrentMonth <
+                          salesResponse.countPreviousMonth
+                      }"
+                    ></i>
+                  </span>
+                  <h5 class="description-header">
+                    {{ salesResponse.countPreviousMonth }}
+                  </h5>
+                  <span class="description-text">DOCS</span>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="description-block border-right">
+                  <span
+                    class="description-percentage"
+                    [ngClass]="{
+                      'text-success':
+                        calculatePercentageVariation(
+                          salesResponse.totalCurrentMonth,
+                          salesResponse.totalPreviousMonth
+                        ) >= 0,
+                      'text-danger':
+                        calculatePercentageVariation(
+                          salesResponse.totalCurrentMonth,
+                          salesResponse.totalPreviousMonth
+                        ) < 0
+                    }"
+                  >
+                    {{
+                      calculatePercentageVariation(
+                        salesResponse.totalCurrentMonth,
+                        salesResponse.totalPreviousMonth
+                      )
+                    }}%
+                  </span>
+                  <h5 class="description-header">
+                    ${{ salesResponse.totalPreviousMonth | number : "1.0-0" }}
+                  </h5>
+                  <span class="description-text">VENTAS</span>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="description-block border-right">
+                  <span
+                    class="description-percentage"
+                    [ngClass]="{
+                      'text-success':
+                        calculatePercentageVariation(
+                          salesResponse.totalCurrentMonthCost || 0,
+                          salesResponse.totalPreviousMonthCost || 0
+                        ) >= 0,
+                      'text-danger':
+                        calculatePercentageVariation(
+                          salesResponse.totalCurrentMonthCost || 0,
+                          salesResponse.totalPreviousMonthCost || 0
+                        ) < 0
+                    }"
+                  >
+                    {{
+                      calculatePercentageVariation(
+                        salesResponse.totalCurrentMonthCost || 0,
+                        salesResponse.totalPreviousMonthCost || 0
+                      )
+                    }}%
+                  </span>
+                  <h5 class="description-header">
+                    ${{
+                      salesResponse.totalPreviousMonthCost || 0
+                        | number : "1.0-0"
+                    }}
+                  </h5>
+                  <span class="description-text">COSTO</span>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="description-block">
+                  <span
+                    class="description-percentage"
+                    [ngClass]="{
+                      'text-success':
+                        calculatePercentageVariation(
+                          salesResponse.totalCurrentMonthExtraCosts || 0,
+                          salesResponse.totalPreviousMonthExtraCosts || 0
+                        ) >= 0,
+                      'text-danger':
+                        calculatePercentageVariation(
+                          salesResponse.totalCurrentMonthExtraCosts || 0,
+                          salesResponse.totalPreviousMonthExtraCosts || 0
+                        ) < 0
+                    }"
+                  >
+                    {{
+                      calculatePercentageVariation(
+                        salesResponse.totalCurrentMonthExtraCosts || 0,
+                        salesResponse.totalPreviousMonthExtraCosts || 0
+                      )
+                    }}%
+                  </span>
+                  <h5 class="description-header">
+                    ${{
+                      salesResponse.totalPreviousMonthExtraCosts || 0
+                        | number : "1.0-0"
+                    }}
+                  </h5>
+                  <span class="description-text">C.EXTRA</span>
+                </div>
+              </div>
+            </div>
+            <div class="row mt-3" *ngIf="salesResponse.totalGrossPreviousMonth">
+              <div class="col-12">
+                <div class="text-center">
+                  <span class="badge badge-success badge-lg">
+                    <i class="fas fa-chart-line mr-1"></i>
+                    Ganancia: ${{
+                      salesResponse.totalGrossPreviousMonth | number : "1.0-0"
+                    }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comparación con Año Anterior -->
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-header bg-secondary text-white">
+            <h5 class="card-title mb-0">
+              <i class="fas fa-history mr-2"></i>vs Año Anterior
+            </h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-3">
+                <div class="description-block border-right">
+                  <span
+                    class="description-percentage"
+                    [ngClass]="{
+                      'text-success':
+                        salesResponse.countCurrentMonth >=
+                        salesResponse.countPreviousYear,
+                      'text-danger':
+                        salesResponse.countCurrentMonth <
+                        salesResponse.countPreviousYear
+                    }"
+                  >
+                    <i
+                      class="fas"
+                      [ngClass]="{
+                        'fa-arrow-up':
+                          salesResponse.countCurrentMonth >=
+                          salesResponse.countPreviousYear,
+                        'fa-arrow-down':
+                          salesResponse.countCurrentMonth <
+                          salesResponse.countPreviousYear
+                      }"
+                    ></i>
+                  </span>
+                  <h5 class="description-header">
+                    {{ salesResponse.countPreviousYear }}
+                  </h5>
+                  <span class="description-text">DOCS</span>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="description-block border-right">
+                  <span
+                    class="description-percentage"
+                    [ngClass]="{
+                      'text-success':
+                        calculatePercentageVariation(
+                          salesResponse.totalCurrentMonth,
+                          salesResponse.totalPreviousYear
+                        ) >= 0,
+                      'text-danger':
+                        calculatePercentageVariation(
+                          salesResponse.totalCurrentMonth,
+                          salesResponse.totalPreviousYear
+                        ) < 0
+                    }"
+                  >
+                    {{
+                      calculatePercentageVariation(
+                        salesResponse.totalCurrentMonth,
+                        salesResponse.totalPreviousYear
+                      )
+                    }}%
+                  </span>
+                  <h5 class="description-header">
+                    ${{ salesResponse.totalPreviousYear | number : "1.0-0" }}
+                  </h5>
+                  <span class="description-text">VENTAS</span>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="description-block border-right">
+                  <span
+                    class="description-percentage"
+                    [ngClass]="{
+                      'text-success':
+                        calculatePercentageVariation(
+                          salesResponse.totalCurrentMonthCost || 0,
+                          salesResponse.totalPreviousYearCost || 0
+                        ) >= 0,
+                      'text-danger':
+                        calculatePercentageVariation(
+                          salesResponse.totalCurrentMonthCost || 0,
+                          salesResponse.totalPreviousYearCost || 0
+                        ) < 0
+                    }"
+                  >
+                    {{
+                      calculatePercentageVariation(
+                        salesResponse.totalCurrentMonthCost || 0,
+                        salesResponse.totalPreviousYearCost || 0
+                      )
+                    }}%
+                  </span>
+                  <h5 class="description-header">
+                    ${{
+                      salesResponse.totalPreviousYearCost || 0
+                        | number : "1.0-0"
+                    }}
+                  </h5>
+                  <span class="description-text">COSTO</span>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="description-block">
+                  <span
+                    class="description-percentage"
+                    [ngClass]="{
+                      'text-success':
+                        calculatePercentageVariation(
+                          salesResponse.totalCurrentMonthExtraCosts || 0,
+                          salesResponse.totalPreviousYearExtraCosts || 0
+                        ) >= 0,
+                      'text-danger':
+                        calculatePercentageVariation(
+                          salesResponse.totalCurrentMonthExtraCosts || 0,
+                          salesResponse.totalPreviousYearExtraCosts || 0
+                        ) < 0
+                    }"
+                  >
+                    {{
+                      calculatePercentageVariation(
+                        salesResponse.totalCurrentMonthExtraCosts || 0,
+                        salesResponse.totalPreviousYearExtraCosts || 0
+                      )
+                    }}%
+                  </span>
+                  <h5 class="description-header">
+                    ${{
+                      salesResponse.totalPreviousYearExtraCosts || 0
+                        | number : "1.0-0"
+                    }}
+                  </h5>
+                  <span class="description-text">C.EXTRA</span>
+                </div>
+              </div>
+            </div>
+            <div class="row mt-3" *ngIf="salesResponse.totalGrossPreviousYear">
+              <div class="col-12">
+                <div class="text-center">
+                  <span class="badge badge-success badge-lg">
+                    <i class="fas fa-chart-line mr-1"></i>
+                    Ganancia: ${{
+                      salesResponse.totalGrossPreviousYear | number : "1.0-0"
+                    }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="card" *ngIf="data.length !== 0">
       <div class="card-header">
         <h4 class="card-title">Datos</h4>

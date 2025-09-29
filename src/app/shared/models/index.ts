@@ -8,6 +8,7 @@ export * from './notification.model';
 export * from './paymentMethod.model';
 export * from './product.model';
 export * from './productInventory.model';
+export * from './monthlyReport.model';
 export * from './receptions.model';
 export * from './region.model';
 export * from './sale-extra-cost.model';
