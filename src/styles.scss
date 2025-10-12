@@ -8,3 +8,37 @@
 .dataTables_wrapper .dataTables_paginate .paginate_button {
   padding: 0 !important;
 }
+
+/* Estilos para modal de alertas personalizado */
+.alert-modal-window {
+  z-index: 1055 !important;
+
+  /* Ocultar el backdrop de NgBootstrap ya que usamos uno personalizado */
+  & + .modal-backdrop {
+    display: none !important;
+  }
+
+  /* Deshabilitar animaciones de NgBootstrap */
+  * {
+    transition: none !important;
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}
+
+/* Asegurar que no haya conflictos con otros modales */
+.modal-open {
+  overflow: auto !important;
+}
+
+/* Forzar visibilidad del texto en modales de alerta */
+.alert-modal-window .modal-body {
+  color: #333 !important;
+
+  p,
+  div {
+    color: #333 !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+}

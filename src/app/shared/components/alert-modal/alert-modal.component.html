@@ -1,0 +1,63 @@
+<!-- Fondo personalizado -->
+<div class="custom-backdrop" (click)="cancel()"></div>
+
+<!-- Contenedor para centrado -->
+<div class="modal-container">
+  <!-- Contenido del modal -->
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header" [ngClass]="getBackgroundClass()">
+        <h4 class="modal-title text-white">
+          <i [class]="getIconClass()" style="margin-right: 10px"></i>
+          {{ data.title }}
+        </h4>
+        <button
+          type="button"
+          class="close text-white"
+          (click)="cancel()"
+          aria-label="Close"
+          style="
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+            line-height: 1;
+            color: #fff;
+            text-shadow: 0 1px 0 #fff;
+            opacity: 0.8;
+          "
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body bg-white">
+        <div
+          class="text-dark"
+          style="font-size: 16px; line-height: 1.5; color: #333"
+        >
+          {{ data.message }}
+        </div>
+      </div>
+
+      <div class="modal-footer bg-white">
+        <button
+          *ngIf="data.showCancel"
+          type="button"
+          class="btn btn-outline-secondary"
+          (click)="cancel()"
+        >
+          {{ data.cancelText || "Cancelar" }}
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="confirm()"
+          [ngClass]="getBackgroundClass()"
+        >
+          {{ data.confirmText || "Aceptar" }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -10,8 +10,8 @@
     "start:qa": "ng serve --configuration qa --ssl",
     "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration production",
-    "test": "ng test",
-    "deploy": "npm version patch && ng build --configuration production && firebase deploy",
+    "test": "set NODE_OPTIONS=--no-deprecation && ng test",
+    "deploy": "set NODE_OPTIONS=--no-deprecation && npm version patch && ng build --configuration production && firebase deploy",
     "scanner": "sonar-scanner",
     "lint": "ng lint"
   },

@@ -75,7 +75,11 @@ export class ComprasComponent implements OnInit {
         },
         error: (err) => {
           this.spinner.hide();
-          this.alertSV.alertBasic('Error', err.error.msg, 'error');
+          this.alertSV.alertBasic(
+            'Error',
+            err.error.msg || 'Error desconocido',
+            'error'
+          );
         },
       });
   }
@@ -114,7 +118,7 @@ export class ComprasComponent implements OnInit {
           this.spinner.hide();
           this.alertSV.alertVerification(
             'Compras',
-            resp.msg,
+            'Solicitud procesada correctamente.',
             'Ok',
             'success',
             () => {
@@ -129,7 +133,11 @@ export class ComprasComponent implements OnInit {
         error: (err) => {
           this.spinner.hide();
           console.warn(err);
-          this.alertSV.alertBasic('Error', err.error.msg, 'error');
+          this.alertSV.alertBasic(
+            'Error',
+            err.error.msg || 'Error desconocido',
+            'error'
+          );
         },
       });
   }

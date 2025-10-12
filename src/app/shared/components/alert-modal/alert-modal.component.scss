@@ -1,0 +1,173 @@
+/* Fondo personalizado para reemplazar el backdrop */
+.custom-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1040;
+  /* Animación suave para el fondo - puedes comentar esta línea si no quieres animación */
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Contenedor para centrado absoluto */
+.modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  pointer-events: none; /* Permite clicks en el backdrop */
+}
+
+/* Modal dialog centrado correctamente */
+.modal-dialog {
+  position: relative;
+  margin: 0;
+  width: 500px;
+  min-width: 400px;
+  max-width: 90vw;
+  pointer-events: auto; /* Restaura clicks en el modal */
+  /* Animación suave para el modal - puedes comentar esta línea si no quieres animación */
+  animation: slideIn 0.2s ease-out;
+}
+
+.modal-content {
+  border: none;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  background: white;
+  min-height: 200px;
+}
+
+.modal-header {
+  border-bottom: none;
+  position: relative;
+  padding: 1.5rem 2rem;
+  min-height: 70px;
+}
+
+.modal-body {
+  padding: 2rem;
+  background: white !important;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-body div {
+  margin-bottom: 0;
+  line-height: 1.5;
+  color: #333 !important;
+  font-size: 16px !important;
+  display: block;
+  text-align: center;
+  width: 100%;
+}
+
+.modal-footer {
+  border-top: 1px solid #dee2e6;
+  padding: 1.5rem 2rem;
+  background: white !important;
+  min-height: 70px;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.close {
+  position: absolute;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  z-index: 1051;
+  font-size: 1.8rem;
+}
+
+.close:hover {
+  opacity: 1 !important;
+}
+
+.modal-title {
+  width: 100%;
+  padding-right: 3rem;
+  font-weight: 600;
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+}
+
+/* Asegurar que los iconos se vean correctamente */
+i.fas {
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+}
+
+/* Responsivo para pantallas pequeñas */
+@media (max-width: 576px) {
+  .modal-dialog {
+    width: 95vw;
+    min-width: 300px;
+    max-width: none;
+  }
+
+  .modal-header,
+  .modal-body,
+  .modal-footer {
+    padding: 1rem;
+  }
+}
+
+/* Estilos para botones */
+.modal-footer .btn {
+  min-width: 100px;
+  padding: 0.5rem 1.5rem;
+  font-size: 1rem;
+}
+
+/* ANIMACIONES PERSONALIZADAS */
+/* Comenta estas animaciones si prefieres que no haya ninguna animación */
+
+/* Fade in para el fondo */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Slide in suave para el modal */
+@keyframes slideIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ALTERNATIVA: Sin animación (descomenta esto y comenta las animaciones de arriba) */
+/*
+.custom-backdrop {
+  animation: none !important;
+}
+
+.modal-dialog {
+  animation: none !important;
+}
+*/
