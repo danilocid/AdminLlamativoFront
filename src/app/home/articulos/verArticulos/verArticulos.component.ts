@@ -10,7 +10,8 @@ import { Product } from 'src/app/shared/models/product.model';
 import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
 import { PdfGeneratorService } from './pdf-generator.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { LabelModalComponent } from '../label-modal/label-modal.component';
 
 @Component({
   selector: 'app-ver-articulos',
@@ -26,7 +27,6 @@ export class VerArticulosComponent implements OnInit, OnDestroy {
   idProducto = '';
   producto: Product = {} as Product;
   movimientos: any[] = [];
-  labelForm: FormGroup;
   date = new Date();
 
   constructor(
@@ -36,7 +36,7 @@ export class VerArticulosComponent implements OnInit, OnDestroy {
     readonly http: HttpClient,
     readonly route: ActivatedRoute,
     readonly pdfGeneratorService: PdfGeneratorService,
-    readonly fb: FormBuilder
+    private modalService: NgbModal
   ) {
     this.titleService.setTitle('Articulos - Ver');
     this.spinner.show();
@@ -44,37 +44,69 @@ export class VerArticulosComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    //FIXME: create a component for the modal to generate labels
     this.dtOptions = FormatDataTableGlobal();
     //order the table by date, desc, column 3
     this.dtOptions.order = [[3, 'desc']];
-    //this.getProductData();
     this.getProductMovements();
-    this.labelForm = this.fb.group({
-      quantity: [1],
-      labelColumn: [1],
-      labelRow: [1],
-    });
   }
 
-  printLabel() {
-    const quantity = this.labelForm.value.quantity; // Cantidad de etiquetas
-    const productName = this.producto.descripcion; // Nombre del producto
-    const barcodeText = this.producto.cod_barras; // Código de barras
+  openLabelModal() {
+    console.log('🎯 Abriendo modal de etiquetas personalizado');
+    console.log('📦 Producto a enviar:', this.producto);
 
-    /* this.pdfGeneratorService.generateLabelPdf(
-      startColumn,
-      startRow,
-      quantity,
-      productName,
-      barcodeText
-    ); */
+    const modalRef = this.modalService.open(LabelModalComponent, {
+      centered: true,
+      backdrop: false,
+      keyboard: false,
+      size: 'md',
+      windowClass: 'custom-modal-window no-animation',
+    });
+    console.log('✅ Modal creado:', modalRef);
 
-    this.pdfGeneratorService.generateSingleLabelPerPagePdf(
-      productName,
-      barcodeText,
-      quantity
+    modalRef.componentInstance.producto = this.producto;
+
+    modalRef.result.then(
+      (result) => {
+        console.log('✅ Modal cerrado con resultado:', result);
+        if (result) {
+          this.generateLabel(result);
+        }
+      },
+      () => {
+        // Modal dismissed - no action needed
+      }
     );
+  }
+
+  async generateLabel(formData: any) {
+    const quantity = formData.quantity;
+    const productName = this.producto.descripcion;
+    const barcodeText = this.producto.cod_barras;
+
+    try {
+      console.log('� Generando etiquetas en PDF...');
+
+      // Generar PDF con las etiquetas
+      this.pdfGeneratorService.generateSingleLabelPerPagePdf(
+        productName,
+        barcodeText,
+        quantity
+      );
+
+      this.alertSV.alertBasic(
+        'Etiquetas generadas',
+        `Se generó un PDF con ${quantity} etiqueta(s) para ${productName}`,
+        'success'
+      );
+    } catch (error) {
+      console.error('❌ Error al generar etiquetas:', error);
+
+      this.alertSV.alertBasic(
+        'Error al generar etiquetas',
+        `Error: ${error.message || 'Error desconocido'}`,
+        'error'
+      );
+    }
   }
 
   private getProductMovements() {

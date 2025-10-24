@@ -59,6 +59,10 @@ export class HydrocontrolComponent implements OnInit, AfterViewInit {
   timeMaxTempI = '';
   minTempI = 100;
   timeMinTempI = '';
+  maxTempE = 0;
+  timeMaxTempE = '';
+  minTempE = 100;
+  timeMinTempE = '';
 
   ngOnInit() {
     this.spinner.show();
@@ -66,7 +70,7 @@ export class HydrocontrolComponent implements OnInit, AfterViewInit {
       pagingType: 'full_numbers',
       pageLength: 15,
       order: [
-        [7, 'desc'],
+        [1, 'desc'],
         [8, 'off'],
       ],
       dom: 'Bfrtip',
@@ -210,6 +214,18 @@ export class HydrocontrolComponent implements OnInit, AfterViewInit {
       if (element.interior.temperatura <= this.minTempI) {
         this.minTempI = element.interior.temperatura;
         this.timeMinTempI = element.timeStamp.date;
+      }
+
+      // Calcular temperaturas máximas y mínimas del exterior (ambiente)
+      if (element.exterior && element.exterior.temperatura !== undefined) {
+        if (element.exterior.temperatura >= this.maxTempE) {
+          this.maxTempE = element.exterior.temperatura;
+          this.timeMaxTempE = element.timeStamp.date;
+        }
+        if (element.exterior.temperatura <= this.minTempE) {
+          this.minTempE = element.exterior.temperatura;
+          this.timeMinTempE = element.timeStamp.date;
+        }
       }
     });
     this.firstAndLastData();

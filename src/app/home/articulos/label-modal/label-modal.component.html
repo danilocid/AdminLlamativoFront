@@ -1,0 +1,62 @@
+<!-- Backdrop personalizado -->
+<div class="custom-backdrop" (click)="cancel()"></div>
+
+<!-- Modal -->
+<div class="custom-modal">
+  <div class="modal-header">
+    <h5 class="modal-title">🏷️ Generar Etiquetas</h5>
+    <button type="button" class="btn-close" (click)="cancel()">×</button>
+  </div>
+
+  <div class="modal-body">
+    <p><strong>Producto:</strong> {{ producto?.descripcion }}</p>
+
+    <div class="alert alert-info" role="alert">
+      <i class="fas fa-file-pdf"></i>
+      <strong>Generación de etiquetas</strong>
+      <p class="mb-0">
+        Se generará un archivo PDF con las etiquetas para descargar.
+      </p>
+    </div>
+
+    <form [formGroup]="labelForm">
+      <div class="form-group">
+        <label for="quantity">Cantidad de etiquetas:</label>
+        <input
+          type="number"
+          id="quantity"
+          class="form-control"
+          formControlName="quantity"
+          min="1"
+          max="16"
+        />
+        <small class="form-text">Máximo 16 etiquetas por impresión</small>
+        <div
+          *ngIf="
+            labelForm.get('quantity')?.invalid &&
+            labelForm.get('quantity')?.touched
+          "
+          class="invalid-feedback"
+        >
+          La cantidad debe estar entre 1 y 16
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="cancel()">
+      <i class="fas fa-times"></i>
+      Cancelar
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="printLabel()"
+      [disabled]="labelForm.invalid"
+    >
+      <i class="fas fa-download"></i>
+      Descargar PDF
+    </button>
+  </div>
+</div>

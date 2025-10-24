@@ -77,8 +77,7 @@
               </div>
             </div>
           </div>
-          <!-- <div class="col-lg-2 col-md-4 col-xl-2">
-
+          <div class="col-lg-2 col-md-4 col-xl-2">
             <div class="small-box bg-info">
               <div class="inner">
                 <h3>{{ maxTempE | number : "1.0-1" }}°C</h3>
@@ -87,9 +86,8 @@
                 <p>T° max del ambiente</p>
               </div>
             </div>
-          </div> 
+          </div>
           <div class="col-lg-2 col-md-4 col-xl-2">
-            
             <div class="small-box bg-info">
               <div class="inner">
                 <h3>{{ minTempE | number : "1.0-1" }}°C</h3>
@@ -98,7 +96,7 @@
                 <p>T° min del ambiente</p>
               </div>
             </div>
-          </div>-->
+          </div>
           <div class="col-lg-2 col-md-4 col-xl-2">
             <!-- small box -->
             <div class="small-box bg-primary">
@@ -147,21 +145,22 @@
         >
           <thead>
             <tr>
-              <th colspan="2">Hora</th>
               <th rowspan="2">N°</th>
+              <th rowspan="2">TimeStamp</th>
               <th rowspan="2">Agua</th>
 
               <th colspan="2">Interior</th>
+              <th colspan="2">Exterior</th>
               <!--               <th colspan="2">Reles</th>
  -->
               <th rowspan="2">Bomba</th>
-              <th rowspan="2">TimeStamp</th>
+              <th rowspan="2">Ventilador</th>
+
               <th rowspan="2"><i class="fas fa-trash pointer"></i></th>
             </tr>
             <tr>
-              <th>Dia</th>
-              <th>Hora</th>
-
+              <th>T</th>
+              <th>H</th>
               <th>T</th>
               <th>H</th>
               <!-- <th>Luz</th> -->
@@ -170,15 +169,14 @@
 
           <tbody>
             <tr *ngFor="let item of data">
-              <td>
-                {{ dayOfWeekAsString(item.timeStamp.day) }}
-              </td>
-
-              <td>{{ item.timeStamp.time }}</td>
               <td *ngIf="item.timeStamp.count !== undefined">
                 {{ item.timeStamp.count }}
               </td>
               <td *ngIf="item.timeStamp.count === undefined">-</td>
+              <td *ngIf="item.timeStamp.date !== undefined">
+                {{ item.timeStamp.date }}
+              </td>
+              <td *ngIf="item.timeStamp.date === undefined">N/A</td>
               <td
                 *ngIf="item.agua !== undefined"
                 [attr.data-order]="item.agua.temperatura"
@@ -198,6 +196,17 @@
               <td *ngIf="item.interior !== undefined">
                 {{ item.interior.humedad | number : "1.0-1" }} %
               </td>
+              <td *ngIf="item.exterior === undefined">N/A °C</td>
+              <td
+                *ngIf="item.exterior !== undefined"
+                [attr.data-order]="item.exterior.temperatura"
+              >
+                {{ item.exterior.temperatura | number : "1.0-1" }} °C
+              </td>
+              <td *ngIf="item.exterior === undefined">N/A %</td>
+              <td *ngIf="item.exterior !== undefined">
+                {{ item.exterior.humedad | number : "1.0-1" }} %
+              </td>
               <!--  <td *ngIf="item.reles === undefined">N/A</td>
               <td *ngIf="item.reles !== undefined">
                 <span *ngIf="item.reles.luz === 'true'">ON</span>
@@ -209,10 +218,12 @@
                 <span *ngIf="item.reles.bomba === 'false'">OFF</span>
               </td>
               <td *ngIf="item.reles === undefined">N/A</td>
-              <td *ngIf="item.timeStamp.date !== undefined">
-                {{ item.timeStamp.date }}
+              <td *ngIf="item.reles !== undefined">
+                <span *ngIf="item.reles.ventilador === 'true'">ON</span>
+                <span *ngIf="item.reles.ventilador === 'false'">OFF</span>
+                <span *ngIf="item.reles.ventilador === undefined">-</span>
               </td>
-              <td *ngIf="item.timeStamp.date === undefined">N/A</td>
+              <td *ngIf="item.reles === undefined">N/A</td>
               <td>
                 <a
                   (click)="deleteData(item.timeStamp.count)"

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ArticulosRoutingModule } from './articulos-routing.module';
 import { DataTablesModule } from 'angular-datatables';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ArticulosComponent } from './articulos/articulos.component';
 import { CreateComponent } from './create/create.component';
 import { VerArticulosComponent } from './verArticulos/verArticulos.component';
@@ -10,6 +11,7 @@ import { AjustesDeInventarioComponent } from './ajustesDeInventario/ajustesDeInv
 import { NewInventoryComponent } from './newInventory/newInventory.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { VerInventarioComponent } from './ver-inventario/ver-inventario.component';
+import { LabelModalComponent } from './label-modal/label-modal.component';
 
 @NgModule({
   imports: [
@@ -19,6 +21,7 @@ import { VerInventarioComponent } from './ver-inventario/ver-inventario.componen
     FormsModule,
     ReactiveFormsModule,
     NgSelectModule,
+    NgbModule,
   ],
   declarations: [
     ArticulosComponent,
@@ -27,6 +30,7 @@ import { VerInventarioComponent } from './ver-inventario/ver-inventario.componen
     AjustesDeInventarioComponent,
     NewInventoryComponent,
     VerInventarioComponent,
+    LabelModalComponent,
   ],
   exports: [ArticulosComponent],
 })

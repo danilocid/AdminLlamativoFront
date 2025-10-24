@@ -31,6 +31,23 @@
   overflow: auto !important;
 }
 
+/* IMPORTANTE: Eliminar cualquier blur del body cuando se abren modales */
+body.modal-open {
+  filter: none !important;
+  backdrop-filter: none !important;
+}
+
+/* Asegurar que el contenido principal no tenga blur cuando hay modales abiertos */
+body.modal-open .wrapper,
+body.modal-open .content-wrapper,
+body.modal-open .main-sidebar,
+body.modal-open .content-header,
+body.modal-open .content,
+body.modal-open * {
+  filter: none !important;
+  backdrop-filter: none !important;
+}
+
 /* Forzar visibilidad del texto en modales de alerta */
 .alert-modal-window .modal-body {
   color: #333 !important;
@@ -41,4 +58,94 @@
     visibility: visible !important;
     opacity: 1 !important;
   }
+}
+
+/* Estilos específicos para modal de etiquetas */
+.label-modal-window {
+  z-index: 1050;
+  filter: none !important;
+  backdrop-filter: none !important;
+
+  /* Permitir animaciones normales para este modal */
+  * {
+    transition: initial !important;
+    animation-duration: initial !important;
+    animation-delay: initial !important;
+  }
+
+  .modal-dialog {
+    filter: none !important;
+    backdrop-filter: none !important;
+    transform: none !important;
+  }
+
+  .modal-content {
+    filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  /* Asegurar que TODOS los elementos del modal estén claros */
+  .modal-header,
+  .modal-body,
+  .modal-footer,
+  input,
+  button,
+  form,
+  div,
+  span,
+  i {
+    filter: none !important;
+    backdrop-filter: none !important;
+  }
+}
+
+.label-modal-backdrop {
+  /* Deshabilitamos el blur temporalmente para debug */
+  /* backdrop-filter: blur(5px) !important; */
+  background-color: rgba(0, 0, 0, 0.6) !important;
+  z-index: 1040;
+}
+
+/* GLOBAL: Forzar que ningún elemento tenga blur cuando hay modales */
+.modal-backdrop {
+  backdrop-filter: none !important;
+  filter: none !important;
+}
+
+/* Deshabilitar completamente backdrop-filter en toda la aplicación temporalmente */
+* {
+  backdrop-filter: none !important;
+}
+
+/* Modal sin backdrop para debug */
+.label-modal-window-no-backdrop {
+  z-index: 1050 !important;
+
+  .modal-dialog {
+    margin: 1.75rem auto !important;
+    max-width: 500px !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    border-radius: 0.5rem !important;
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.5) !important;
+  }
+
+  .modal-content {
+    background-color: white !important;
+    border: 2px solid #007bff !important;
+    border-radius: 0.5rem !important;
+  }
+}
+
+/* Modal personalizado SIN animaciones */
+.custom-modal-window.no-animation,
+.custom-modal-window.no-animation *,
+.custom-modal-window.no-animation *::before,
+.custom-modal-window.no-animation *::after {
+  animation: none !important;
+  animation-duration: 0s !important;
+  animation-delay: 0s !important;
+  transition: none !important;
+  transition-duration: 0s !important;
+  transition-delay: 0s !important;
+  transform: none !important;
 }

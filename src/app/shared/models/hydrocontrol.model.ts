@@ -25,5 +25,7 @@ export interface Hydrocontrol {
     bombaRele: number;
     luz: string;
     luzRele: number;
+    ventilador: string;
+    ventiladorRele: number;
   };
 }
