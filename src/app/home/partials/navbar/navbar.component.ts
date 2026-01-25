@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { ApiService } from 'src/app/shared/services/ApiService';
 import { ApiRequest } from 'src/app/shared/constants';
 import { Notification } from 'src/app/shared/models/notification.model';
@@ -10,7 +11,10 @@ import { Notification } from 'src/app/shared/models/notification.model';
   styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent implements OnInit {
-  constructor(readonly http: HttpClient) {}
+  constructor(
+    readonly http: HttpClient,
+    private router: Router,
+  ) {}
 
   apiService = new ApiService(this.http);
   notifications: Notification[] = [];
@@ -30,7 +34,7 @@ export class NavbarComponent implements OnInit {
       next: (resp) => {
         this.notifications = resp.data;
         this.unReadedNotifications = this.notifications.filter(
-          (x) => !x.readed
+          (x) => !x.readed,
         ).length;
       },
     });
@@ -44,5 +48,30 @@ export class NavbarComponent implements OnInit {
           this.getNotifications();
         },
       });
+  }
+
+  onNotificationClick(event: Event, notification: Notification) {
+    event.preventDefault();
+
+    // Marcar como leída si no lo está
+    if (!notification.readed) {
+      this.apiService
+        .postService(ApiRequest.markAsReaded + '/' + notification.id, {})
+        .subscribe({
+          next: () => {
+            // Navegar después de marcar como leída
+            this.navigateToUrl(notification.url);
+          },
+        });
+    } else {
+      // Si ya está leída, simplemente navegar
+      this.navigateToUrl(notification.url);
+    }
+  }
+
+  private navigateToUrl(url: string) {
+    if (url && url !== 'null') {
+      this.router.navigateByUrl(url);
+    }
   }
 }

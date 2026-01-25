@@ -22,15 +22,9 @@ export class AlertModalComponent implements OnInit {
     type: 'info',
   };
 
-  constructor(public activeModal: NgbActiveModal) {
-    // Log para debug - puedes remover esto en producción
-    console.log('AlertModalComponent initialized');
-  }
+  constructor(public activeModal: NgbActiveModal) {}
 
   ngOnInit() {
-    // Debug: mostrar datos recibidos
-    console.log('Modal data on init:', this.data);
-
     // Solo establecer valores por defecto si realmente no hay datos
     if (!this.data) {
       this.data = {
@@ -38,6 +32,9 @@ export class AlertModalComponent implements OnInit {
         message: 'Sin mensaje especificado',
         type: 'info',
       };
+    }
+    if (this.data.message === undefined) {
+      this.data.message = 'Error desconocido.';
     }
   }
 

@@ -138,32 +138,62 @@ export class HydrocontrolComponent implements OnInit, AfterViewInit {
     const tmpData: Hydrocontrol[] = [];
     const dataToDelete: number[] = [];
     let badDataCount = 0;
+
     for (let i = 0; i < this.data.length; i++) {
       const element = this.data[i];
+      let isValidData = true;
 
+      // Verificar si algún campo crítico es undefined
       if (
-        element.timeStamp != undefined &&
-        element.timeStamp.timeStamp != undefined &&
-        element.timeStamp.count != undefined &&
-        element.timeStamp.hora != undefined &&
-        element.timeStamp.minutos != undefined &&
-        element.timeStamp.day != undefined &&
-        element.agua != undefined &&
-        element.interior != undefined &&
-        element.agua.temperatura < 60
+        !element ||
+        !element.timeStamp ||
+        element.timeStamp.timeStamp === undefined ||
+        element.timeStamp.count === undefined ||
+        element.timeStamp.hora === undefined ||
+        element.timeStamp.minutos === undefined ||
+        element.timeStamp.day === undefined ||
+        !element.agua ||
+        element.agua.temperatura === undefined ||
+        !element.interior ||
+        !element.exterior ||
+        element.exterior.temperatura === undefined ||
+        element.agua.temperatura >= 60
       ) {
-        if (element.agua.temperatura < 0) {
-          try {
-            if (element.timeStamp.count != undefined) {
-              dataToDelete.push(element.timeStamp.count);
-            }
-          } catch (error) {
-            /* console.warn('There was an error!');
-            console.warn(element);
-            console.warn(this.data[i - 1]); */
-          }
-          badDataCount++;
+        // Datos inválidos o con campos undefined
+        isValidData = false;
+        badDataCount++;
+
+        // Intentar agregar a dataToDelete si tiene count
+        if (
+          element &&
+          element.timeStamp &&
+          element.timeStamp.count !== undefined
+        ) {
+          dataToDelete.push(element.timeStamp.count);
+          console.warn(
+            'Data marcada para eliminar (undefined detectado):',
+            element.timeStamp.count
+          );
         } else {
+          console.warn(
+            'Registro sin count, no se puede eliminar automáticamente:',
+            element
+          );
+        }
+      }
+
+      // Si los datos son válidos, verificar temperatura
+      if (isValidData) {
+        if (element.agua.temperatura < 0) {
+          // Temperatura negativa - datos inválidos
+          badDataCount++;
+          dataToDelete.push(element.timeStamp.count);
+          console.warn(
+            'Temperatura negativa detectada, marcada para eliminar:',
+            element.timeStamp.count
+          );
+        } else {
+          // Datos válidos - formatear fecha y agregar a tmpData
           const date = new Date(element.timeStamp.timeStamp);
           date.setHours(date.getHours() - 3);
           let dateString = date.toISOString();
@@ -175,20 +205,6 @@ export class HydrocontrolComponent implements OnInit, AfterViewInit {
 
           tmpData.push(element);
         }
-      } else {
-        /*  console.warn('Bad data!');
-        console.warn(element);
-        console.warn(this.data[i - 1].timeStamp.count, 'prev'); */
-        try {
-          if (element.timeStamp.count != undefined) {
-            dataToDelete.push(element.timeStamp.count);
-          }
-        } catch (error) {
-          /* console.warn('There was an error!');
-          console.warn(element);
-          console.warn(this.data[i - 1]); */
-        }
-        badDataCount++;
       }
     }
     this.data = tmpData;

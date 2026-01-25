@@ -47,6 +47,7 @@
             <label for="name">Codigo de barras</label>
             <input
               type="text"
+              [ngClass]="isValidField('barCode') ? 'is-invalid' : ''"
               class="form-control"
               id="barCode"
               name="barCode"
@@ -54,6 +55,9 @@
               placeholder="Codigo de barras"
               formControlName="barCode"
             />
+            <div *ngIf="isValidField('barCode')" class="invalid-feedback">
+              El código de barras no puede tener más de 13 caracteres
+            </div>
           </div>
 
           <div class="form-group col-lg-4">
@@ -97,6 +101,7 @@
               <input
                 formControlName="taxCost"
                 readonly
+                [ngClass]="isValidField('taxCost') ? 'is-invalid' : ''"
                 type="number"
                 class="form-control"
                 id="taxCost"
@@ -104,6 +109,9 @@
                 placeholder="Costo imp"
                 required
               />
+              <div *ngIf="isValidField('taxCost')" class="invalid-feedback">
+                El costo con impuesto es requerido
+              </div>
             </div>
             <div class="form-group col-lg-1 col-sm-4">
               <label for="name">Costo total</label>
@@ -147,6 +155,7 @@
               <input
                 formControlName="taxSale"
                 readonly
+                [ngClass]="isValidField('taxSale') ? 'is-invalid' : ''"
                 type="number"
                 class="form-control"
                 id="taxSale"
@@ -154,6 +163,9 @@
                 placeholder="Venta imp"
                 required
               />
+              <div *ngIf="isValidField('taxSale')" class="invalid-feedback">
+                La venta con impuesto es requerida
+              </div>
             </div>
             <div class="form-group col-lg-1 col-sm-4">
               <label for="name">Venta total</label>
@@ -203,6 +215,9 @@
               <option value="1">Si</option>
               <option value="0">No</option>
             </select>
+            <div *ngIf="isValidField('active')" class="invalid-feedback">
+              Selecciona si el producto está activo
+            </div>
           </div>
           <div class="form-group col-lg-2 col-sm-6">
             <label for="name">Deprecado</label>
@@ -217,6 +232,9 @@
               <option value="0">No</option>
               <option value="1">Si</option>
             </select>
+            <div *ngIf="isValidField('deprecado')" class="invalid-feedback">
+              Selecciona si el producto está deprecado
+            </div>
           </div>
           <div class="form-group col-lg-2 col-sm-6">
             <label for="name">Publicado MercadoLibre</label>
@@ -231,6 +249,9 @@
               <option value="1">Si</option>
               <option value="0">No</option>
             </select>
+            <div *ngIf="isValidField('publicado')" class="invalid-feedback">
+              Selecciona si está publicado en MercadoLibre
+            </div>
           </div>
           <div class="form-group col-lg-2 col-sm-6">
             <label for="name">Enlace MercadoLibre</label>
@@ -296,6 +317,9 @@
               <option value="1">Si</option>
               <option value="0">No</option>
             </select>
+            <div *ngIf="isValidField('publicado_ps')" class="invalid-feedback">
+              Selecciona si está publicado en Prestashop
+            </div>
           </div>
           <div class="form-group col-lg-2 col-sm-6">
             <label for="name">Enlace Prestashop</label>

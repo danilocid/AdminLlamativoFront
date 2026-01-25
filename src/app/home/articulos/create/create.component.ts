@@ -27,7 +27,7 @@ export class CreateComponent implements OnInit {
     readonly fb: FormBuilder,
     readonly http: HttpClient,
     readonly route: ActivatedRoute,
-    readonly alertSV: AlertService
+    readonly alertSV: AlertService,
   ) {
     this.idProducto = this.route.snapshot.paramMap.get('id');
     if (this.idProducto != null) {
@@ -45,7 +45,7 @@ export class CreateComponent implements OnInit {
     this.productForm = this.fb.group({
       internalCode: ['', [Validators.required]],
       description: ['', [Validators.required]],
-      barCode: [],
+      barCode: ['', [Validators.maxLength(13)]],
       netCost: ['', [Validators.required]],
       taxCost: ['', [Validators.required]],
       costo_total: ['', [Validators.required]],
@@ -120,7 +120,7 @@ export class CreateComponent implements OnInit {
           this.alertSV.alertBasic(
             'Error',
             'No se pudo obtener la informacion del articulo',
-            'error'
+            'error',
           );
         },
       });
@@ -131,7 +131,7 @@ export class CreateComponent implements OnInit {
       this.alertSV.alertBasic(
         'Error',
         'Todos los campos son obligatorios',
-        'warning'
+        'warning',
       );
       return;
     }
@@ -210,7 +210,7 @@ export class CreateComponent implements OnInit {
         this.alertSV.alertBasic(
           'Error',
           err.error.serverResponseMessage,
-          'error'
+          'error',
         );
       },
     });
@@ -279,7 +279,7 @@ export class CreateComponent implements OnInit {
               this.alertSV.alertBasic(
                 'Exito',
                 'Articulo editado correctamente',
-                'success'
+                'success',
               );
 
               this.router.navigate(['/articulos']);
@@ -288,7 +288,7 @@ export class CreateComponent implements OnInit {
               this.alertSV.alertBasic(
                 'Error',
                 resp.serverResponseMessage,
-                'error'
+                'error',
               );
             }
           },
@@ -297,7 +297,7 @@ export class CreateComponent implements OnInit {
             this.alertSV.alertBasic('Error', err.error.message, 'error');
           },
         });
-      }
+      },
     );
   }
 
@@ -313,7 +313,7 @@ export class CreateComponent implements OnInit {
     const costoImp = costoNeto * 1.19 - costoNeto;
     this.productForm.controls['taxCost'].setValue(Math.round(costoImp));
     this.productForm.controls['costo_total'].setValue(
-      Math.round(costoNeto * 1.19)
+      Math.round(costoNeto * 1.19),
     );
   }
   updateCostoNeto() {
@@ -322,7 +322,7 @@ export class CreateComponent implements OnInit {
       costoTotal - this.productForm.controls['costo_total'].value / 1.19;
     this.productForm.controls['taxCost'].setValue(Math.round(costoImp));
     this.productForm.controls['netCost'].setValue(
-      Math.round(costoTotal - costoImp)
+      Math.round(costoTotal - costoImp),
     );
   }
   updateVentaTotal() {
@@ -330,7 +330,7 @@ export class CreateComponent implements OnInit {
     const ventaImp = ventaNeto * 1.19 - ventaNeto;
     this.productForm.controls['taxSale'].setValue(Math.round(ventaImp));
     this.productForm.controls['venta_total'].setValue(
-      Math.round(ventaNeto * 1.19)
+      Math.round(ventaNeto * 1.19),
     );
   }
   updateVentaNeto() {
@@ -338,7 +338,7 @@ export class CreateComponent implements OnInit {
     const ventaImp = ventaTotal - ventaTotal / 1.19;
     this.productForm.controls['taxSale'].setValue(Math.round(ventaImp));
     this.productForm.controls['netSale'].setValue(
-      Math.round(ventaTotal - ventaImp)
+      Math.round(ventaTotal - ventaImp),
     );
   }
 }
