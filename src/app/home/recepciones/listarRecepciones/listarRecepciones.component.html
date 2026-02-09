@@ -4,13 +4,8 @@
       <div class="col-sm-6">
         <h1 class="m-0">Recepciones de mercaderia</h1>
       </div>
-      <!-- /.col -->
-
-      <!-- /.col -->
     </div>
-    <!-- /.row -->
   </div>
-  <!-- /.container-fluid -->
 </div>
 <section class="content">
   <div class="container-fluid">
@@ -20,54 +15,39 @@
       </div>
 
       <div class="card-body">
-        <div class="row">
+        <div class="row mb-3">
           <div class="col-9">
             <a [routerLink]="['agregar']" class="btn btn-primary"
               >Agregar recepcion</a
             >
           </div>
           <div class="col-2">
-            <div class="mb-3">
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Buscar"
-                [(ngModel)]="searchTerm"
-                (keyup)="search()"
-              />
-            </div>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Buscar"
+              [(ngModel)]="searchTerm"
+              (keyup.enter)="search()"
+            />
           </div>
-          <div class="col-1 me-3">
-            <button
-              class="btn btn-primary"
-              [disabled]="!searchTerm"
-              (click)="search()"
-            >
-              Buscar
-            </button>
+          <div class="col-1">
+            <button class="btn btn-primary" (click)="search()">Buscar</button>
           </div>
         </div>
-        <br />
 
-        <table
-          datatable
-          [dtOptions]="dtOptions"
-          [dtTrigger]="dtTrigger"
-          class="row-border hover"
-          aria-label="Tabla"
-        >
-          <thead>
-            <tr>
-              <th>Id</th>
-              <th>Proveedor</th>
-              <th>Documento</th>
-              <th>Unidades</th>
-              <th>Total</th>
-              <th>Fecha</th>
-              <th>Ver</th>
-            </tr>
-          </thead>
-        </table>
+        <app-simple-table
+          [data]="recepciones"
+          [columns]="columns"
+          [serverSide]="true"
+          [totalRecords]="totalRecords"
+          [loading]="loading"
+          [showSearch]="false"
+          [showViewButton]="true"
+          [showEditButton]="false"
+          [showDeleteButton]="false"
+          (dataRequest)="onDataRequest($event)"
+          (onView)="onView($event)"
+        ></app-simple-table>
       </div>
     </div>
   </div>

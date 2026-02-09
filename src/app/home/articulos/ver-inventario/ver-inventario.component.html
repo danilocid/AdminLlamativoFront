@@ -27,12 +27,12 @@
             <p>Costo Neto: ${{ movimiento.costo_neto | number }}</p>
             <p>
               Costo Imp: $
-              {{ movimiento.costo_imp | number : "1.0-0" }}
+              {{ movimiento.costo_imp | number: "1.0-0" }}
             </p>
             <p>
               Costo Total: $
               {{
-                movimiento.costo_neto + movimiento.costo_imp | number : "1.0-0"
+                movimiento.costo_neto + movimiento.costo_imp | number: "1.0-0"
               }}
             </p>
           </div>
@@ -40,7 +40,7 @@
             <p>observaciones: {{ movimiento.observaciones }}</p>
             <p>
               Fecha:
-              {{ movimiento.created_at || date | date : "dd/MM/yyyy HH:mm" }}
+              {{ movimiento.created_at || date | date: "dd/MM/yyyy HH:mm" }}
             </p>
             <p>Entradas {{ movimiento.entradas }}</p>
             <p>Salidas {{ movimiento.salidas }}</p>
@@ -54,37 +54,14 @@
       </div>
 
       <div class="card-body">
-        <table
-          datatable
-          [dtOptions]="dtOptions"
-          [dtTrigger]="dtTrigger"
-          class="row-border hover"
-          aria-label="Tabla"
-        >
-          <thead class="table-light">
-            <tr>
-              <th>Codigo</th>
-              <th>Articulo</th>
-              <th>IN</th>
-              <th>OUT</th>
-              <th>Costo total</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let item of articulos">
-              <td>{{ item.producto.cod_interno }}</td>
-              <td>{{ item.producto.descripcion }}</td>
-              <td>{{ item.entradas }}</td>
-              <td>{{ item.salidas }}</td>
-              <td>
-                ${{
-                  (item.costo_neto + item.costo_imp) *
-                    (item.entradas + item.salidas) | number : "1.0-0"
-                }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <app-simple-table
+          [data]="articulos"
+          [columns]="columns"
+          [pageSize]="10"
+          [showSearch]="true"
+          [showPagination]="true"
+          [emptyMessage]="'No hay artículos disponibles'"
+        ></app-simple-table>
       </div>
     </div>
   </div>

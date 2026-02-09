@@ -61,61 +61,21 @@
             </button>
           </div>
         </div>
-        <table
-          datatable
-          [dtOptions]="dtOptions"
-          [dtTrigger]="dtTrigger"
-          class="row-border hover"
-          aria-label="Tabla"
-        >
-          <thead class="table-light">
-            <tr>
-              <th>Id</th>
-              <th>Proveedor</th>
-              <th>Documento</th>
-              <th>Fecha</th>
-              <th>Monto</th>
-              <th>Costo</th>
-              <th>Tipo</th>
-              <th>Observaciones</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let item of compras">
-              <td>{{ item.id }}</td>
-              <td>{{ item.proveedor.nombre }} ({{ item.proveedor.rut }})</td>
-              <td>{{ item.tipo_documento.tipo }} - {{ item.documento }}</td>
-              <td [attr.data-order]="item.fecha_documento">
-                {{ item.fecha_documento | date : "dd/MM/yyyy" : "UTC +3" }}
-              </td>
-              <td>
-                ${{
-                  item.monto_neto_documento + item.monto_imp_documento
-                    | currency : "CLP" : "" : "1.0-0"
-                }}
-              </td>
-              <td>
-                ${{
-                  item.costo_neto_documento + item.costo_imp_documento
-                    | currency : "CLP" : "" : "1.0-0"
-                }}
-              </td>
-
-              <td>
-                {{ item.tipo_compra.tipo_compra }}
-              </td>
-
-              <td>{{ item.observaciones }}</td>
-
-              <td>
-                <a (click)="editCompra(item)" class="me-1 text-success pointer">
-                  <i class="fas fa-edit"></i>
-                </a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="mt-4">
+          <app-simple-table
+            [data]="compras"
+            [columns]="columns"
+            [pageSize]="10"
+            [showSearch]="true"
+            [showPagination]="true"
+            [showActions]="true"
+            [showViewButton]="false"
+            [showEditButton]="true"
+            [showDeleteButton]="false"
+            [emptyMessage]="'No hay compras en el período seleccionado'"
+            (onEdit)="editCompra($event)"
+          ></app-simple-table>
+        </div>
       </div>
     </div>
   </div>

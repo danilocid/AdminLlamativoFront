@@ -5,6 +5,13 @@ import { Observable, of } from 'rxjs';
 import { ApiRequest } from 'src/app/shared/constants';
 import { AuthResponse } from '../models/user.model';
 import { UtilService } from './util.service';
+import { jwtDecode } from 'jwt-decode';
+
+interface JwtPayload {
+  exp: number;
+  iat?: number;
+  [key: string]: unknown;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -15,20 +22,55 @@ export class AuthService {
   get user() {
     return { ...this._user };
   }
-  constructor(readonly http: HttpClient, readonly utSV: UtilService) {}
 
-  async authVerification(): Promise<Observable<boolean>> {
-    if (!localStorage.getItem('token') || '') {
-      this.utSV.navigateToPath('/login');
+  constructor(
+    readonly http: HttpClient,
+    readonly utSV: UtilService,
+  ) {}
 
-      return of(false);
-    } else {
-      return of(true);
+  /**
+   * Verifica si el token JWT ha expirado
+   * @param token - Token JWT a verificar
+   * @returns true si el token es válido y no ha expirado
+   */
+  isTokenValid(token: string | null): boolean {
+    if (!token) {
+      return false;
+    }
+
+    try {
+      const decoded = jwtDecode<JwtPayload>(token);
+      if (!decoded.exp) {
+        return false;
+      }
+
+      // exp está en segundos, Date.now() en milisegundos
+      const currentTime = Date.now() / 1000;
+      // Agregar margen de 60 segundos para evitar problemas de timing
+      return decoded.exp > currentTime + 60;
+    } catch {
+      return false;
     }
   }
+
+  async authVerification(): Promise<Observable<boolean>> {
+    const token = localStorage.getItem('token');
+
+    if (!this.isTokenValid(token)) {
+      this.clearStorage();
+      this.utSV.navigateToPath('/login');
+      return of(false);
+    }
+
+    return of(true);
+  }
+
   async authVerificationCheck() {
-    if (!localStorage.getItem('token')) {
-      //this.utSV.navigateToPath('/login');
+    const token = localStorage.getItem('token');
+
+    if (!this.isTokenValid(token)) {
+      // Token inválido o expirado, limpiar y quedarse en login
+      this.clearStorage();
     } else {
       this.utSV.navigateToPath('/');
     }
@@ -42,14 +84,18 @@ export class AuthService {
           if (resp.serverResponseCode === 200) {
             localStorage.setItem('token', resp.data);
           }
-        })
+        }),
       );
   }
 
-  logout() {
+  private clearStorage(): void {
     localStorage.removeItem('token');
     localStorage.clear();
     sessionStorage.clear();
-    window.location.reload();
+  }
+
+  logout() {
+    this.clearStorage();
+    this.utSV.navigateToPath('/login');
   }
 }

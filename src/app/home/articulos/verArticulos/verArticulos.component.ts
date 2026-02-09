@@ -1,42 +1,57 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { ApiService } from 'src/app/shared/services/ApiService';
-import { ApiRequest, FormatDataTableGlobal } from 'src/app/shared/constants';
-import { HttpClient } from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
+import { ApiRequest } from 'src/app/shared/constants';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Product } from 'src/app/shared/models/product.model';
-import { DataTableDirective } from 'angular-datatables';
-import { Subject } from 'rxjs';
 import { PdfGeneratorService } from './pdf-generator.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LabelModalComponent } from '../label-modal/label-modal.component';
+import { TableColumn } from 'src/app/shared/components/simple-table/simple-table.component';
 
 @Component({
   selector: 'app-ver-articulos',
   templateUrl: './verArticulos.component.html',
   styleUrls: [],
 })
-export class VerArticulosComponent implements OnInit, OnDestroy {
-  @ViewChild(DataTableDirective)
-  dtElement!: DataTableDirective;
-  dtTrigger: Subject<any> = new Subject<any>();
-  dtOptions: DataTables.Settings = {};
-  private apiService!: ApiService;
+export class VerArticulosComponent implements OnInit {
   idProducto = '';
   producto: Product = {} as Product;
   movimientos: any[] = [];
   date = new Date();
 
+  columns: TableColumn[] = [
+    { key: 'id', label: 'Id', sortable: true },
+    { key: 'movimiento.tipo_movimiento', label: 'Movimiento', sortable: true },
+    { key: 'cantidad', label: 'Cantidad', sortable: true, type: 'number' },
+    {
+      key: 'createdAt',
+      label: 'Fecha',
+      sortable: true,
+      type: 'date',
+      format: (value: any) =>
+        value
+          ? new Date(value).toLocaleDateString('es-CL') +
+            ' ' +
+            new Date(value).toLocaleTimeString('es-CL', {
+              hour: '2-digit',
+              minute: '2-digit',
+            })
+          : '',
+    },
+  ];
+
   constructor(
     readonly titleService: Title,
     readonly spinner: NgxSpinnerService,
     readonly alertSV: AlertService,
-    readonly http: HttpClient,
+    readonly api: ApiService,
     readonly route: ActivatedRoute,
+    readonly router: Router,
     readonly pdfGeneratorService: PdfGeneratorService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
   ) {
     this.titleService.setTitle('Articulos - Ver');
     this.spinner.show();
@@ -44,9 +59,6 @@ export class VerArticulosComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.dtOptions = FormatDataTableGlobal();
-    //order the table by date, desc, column 3
-    this.dtOptions.order = [[3, 'desc']];
     this.getProductMovements();
   }
 
@@ -74,7 +86,7 @@ export class VerArticulosComponent implements OnInit, OnDestroy {
       },
       () => {
         // Modal dismissed - no action needed
-      }
+      },
     );
   }
 
@@ -90,13 +102,13 @@ export class VerArticulosComponent implements OnInit, OnDestroy {
       this.pdfGeneratorService.generateSingleLabelPerPagePdf(
         productName,
         barcodeText,
-        quantity
+        quantity,
       );
 
       this.alertSV.alertBasic(
         'Etiquetas generadas',
         `Se generó un PDF con ${quantity} etiqueta(s) para ${productName}`,
-        'success'
+        'success',
       );
     } catch (error) {
       console.error('❌ Error al generar etiquetas:', error);
@@ -104,20 +116,18 @@ export class VerArticulosComponent implements OnInit, OnDestroy {
       this.alertSV.alertBasic(
         'Error al generar etiquetas',
         `Error: ${error.message || 'Error desconocido'}`,
-        'error'
+        'error',
       );
     }
   }
 
   private getProductMovements() {
-    this.apiService = new ApiService(this.http);
-    this.apiService
-      .getService(ApiRequest.getMovimientosArticulosById + this.idProducto)
+    this.api
+      .get(ApiRequest.getMovimientosArticulosById + this.idProducto)
       .subscribe({
         next: (resp) => {
           this.movimientos = resp.data.movements;
           this.producto = resp.data.product;
-          this.dtTrigger.next(this.dtOptions);
           this.spinner.hide();
         },
         error: (error) => {
@@ -125,24 +135,17 @@ export class VerArticulosComponent implements OnInit, OnDestroy {
           this.alertSV.alertBasic(
             'Error',
             error.error.serverResponseMessage,
-            'error'
+            'error',
           );
         },
       });
   }
 
-  rerender(): void {
-    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      // Destroy the table first
-      dtInstance.destroy();
-      // Call the dtTrigger to rerender again
-      this.dtTrigger.next(null);
-    });
-  }
-
-  ngOnDestroy(): void {
-    // Do not forget to unsubscribe the event
-    this.dtTrigger.unsubscribe();
+  onViewMovement(movement: any) {
+    const link = this.movementLink(movement);
+    if (link !== '#') {
+      window.open(link, '_blank');
+    }
   }
 
   movementLink(movement: any) {

@@ -1,29 +1,22 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { ApiService } from 'src/app/shared/services/ApiService';
-import { ApiRequest, FormatDataTableGlobal } from 'src/app/shared/constants';
-import { HttpClient } from '@angular/common/http';
+import { ApiRequest } from 'src/app/shared/constants';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DataTableDirective } from 'angular-datatables';
-import { Subject } from 'rxjs';
 import {
   Inventory,
   InventoryDetail,
 } from 'src/app/shared/models/inventory.model';
+import { TableColumn } from 'src/app/shared/components/simple-table/simple-table.component';
 
 @Component({
   selector: 'app-ver-inventario',
   templateUrl: './ver-inventario.component.html',
   styleUrls: [],
 })
-export class VerInventarioComponent implements OnInit, OnDestroy {
-  @ViewChild(DataTableDirective)
-  dtElement!: DataTableDirective;
-  dtTrigger: Subject<any> = new Subject<any>();
-  dtOptions: DataTables.Settings = {};
-  private apiService!: ApiService;
+export class VerInventarioComponent implements OnInit {
   idInventario = '';
   movimiento: Inventory = {
     id: 0,
@@ -38,38 +31,51 @@ export class VerInventarioComponent implements OnInit, OnDestroy {
   };
   articulos: InventoryDetail[] = [];
   date = new Date();
+
+  columns: TableColumn[] = [
+    { key: 'producto.cod_interno', label: 'Codigo', sortable: true },
+    { key: 'producto.descripcion', label: 'Articulo', sortable: true },
+    { key: 'entradas', label: 'IN', sortable: true, type: 'number' },
+    { key: 'salidas', label: 'OUT', sortable: true, type: 'number' },
+    {
+      key: 'costo_total',
+      label: 'Costo total',
+      sortable: true,
+      format: (value: any, row: InventoryDetail) =>
+        '$' +
+        new Intl.NumberFormat('es-CL', { maximumFractionDigits: 0 }).format(
+          (row.costo_neto + row.costo_imp) * (row.entradas + row.salidas),
+        ),
+    },
+  ];
+
   constructor(
     readonly titleService: Title,
     readonly spinner: NgxSpinnerService,
     readonly alertSV: AlertService,
-    readonly http: HttpClient,
+    readonly api: ApiService,
     readonly route: ActivatedRoute,
-    readonly router: Router
+    readonly router: Router,
   ) {
-    this.titleService.setTitle('Invetario - Ver');
+    this.titleService.setTitle('Inventario - Ver');
     this.spinner.show();
     this.idInventario = this.route.snapshot.paramMap.get('id');
   }
 
   ngOnInit(): void {
-    this.dtOptions = FormatDataTableGlobal();
-    this.apiService = new ApiService(this.http);
-    this.apiService
-      .getService(ApiRequest.getAllInventory + '/' + this.idInventario)
+    this.api
+      .get(ApiRequest.getAllInventory + '/' + this.idInventario)
       .subscribe({
         next: (resp) => {
           if (resp.status) {
             this.spinner.hide();
             this.alertSV.alertBasic('Error', resp.message, 'error');
-            //set time out of 3 seconds
             setTimeout(() => {
               this.router.navigate(['/articulos/ajustes']);
             }, 3000);
           }
           this.movimiento = resp.data;
           this.articulos = resp.inventoryDetails;
-          this.dtTrigger.next(this.dtOptions);
-
           this.spinner.hide();
         },
         error: (error) => {
@@ -77,10 +83,5 @@ export class VerInventarioComponent implements OnInit, OnDestroy {
           this.alertSV.alertBasic('Error', error.error.msg, 'error');
         },
       });
-  }
-
-  ngOnDestroy(): void {
-    // Do not forget to unsubscribe the event
-    this.dtTrigger.unsubscribe();
   }
 }

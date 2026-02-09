@@ -45,17 +45,17 @@
             <p>Barra: {{ producto.cod_barras }}</p>
             <p>
               Costo Neto: $
-              {{ producto.costo_neto | currency : "CLP" : "" : "1.0-0" }}
+              {{ producto.costo_neto | currency: "CLP" : "" : "1.0-0" }}
             </p>
             <p>
               Costo Imp: $
-              {{ producto.costo_imp | currency : "CLP" : "" : "1.0-0" }}
+              {{ producto.costo_imp | currency: "CLP" : "" : "1.0-0" }}
             </p>
             <p>
               Costo Total: $
               {{
                 producto.costo_neto + producto.costo_imp
-                  | currency : "CLP" : "" : "1.0-0"
+                  | currency: "CLP" : "" : "1.0-0"
               }}
             </p>
           </div>
@@ -72,17 +72,17 @@
             <p>Stock: {{ producto.stock }}</p>
             <p>
               PVP Neto: $
-              {{ producto.venta_neto | currency : "CLP" : "" : "1.0-0" }}
+              {{ producto.venta_neto | currency: "CLP" : "" : "1.0-0" }}
             </p>
             <p>
               PVP Imp: $
-              {{ producto.venta_imp | currency : "CLP" : "" : "1.0-0" }}
+              {{ producto.venta_imp | currency: "CLP" : "" : "1.0-0" }}
             </p>
             <p>
               PVP Total: $
               {{
                 producto.venta_neto + producto.venta_imp
-                  | currency : "CLP" : "" : "1.0-0"
+                  | currency: "CLP" : "" : "1.0-0"
               }}
             </p>
           </div>
@@ -135,43 +135,19 @@
       </div>
 
       <div class="card-body">
-        <table
-          datatable
-          [dtOptions]="dtOptions"
-          [dtTrigger]="dtTrigger"
-          class="row-border hover"
-          aria-label="Tabla"
-        >
-          <thead class="table-light">
-            <tr>
-              <th>Id</th>
-              <th>movimiento</th>
-              <th>Cantidad</th>
-              <th>Fecha</th>
-              <th>Ver</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let item of movimientos">
-              <td>{{ item.id }}</td>
-              <td>{{ item.movimiento.tipo_movimiento }}</td>
-              <td>{{ item.cantidad }}</td>
-              <td [attr.data-order]="item.createdAt">
-                {{ item.createdAt || date | date : "dd/MM/yyyy HH:mm" }}
-              </td>
-
-              <td>
-                <a
-                  [routerLink]="movementLink(item)"
-                  target="_blank"
-                  class="me-1 text-success pointer"
-                >
-                  <i class="fas fa-eye"></i>
-                </a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <app-simple-table
+          [data]="movimientos"
+          [columns]="columns"
+          [pageSize]="10"
+          [showSearch]="true"
+          [showPagination]="true"
+          [showActions]="true"
+          [showViewButton]="true"
+          [showEditButton]="false"
+          [showDeleteButton]="false"
+          [emptyMessage]="'No hay movimientos disponibles'"
+          (onView)="onViewMovement($event)"
+        ></app-simple-table>
       </div>
     </div>
   </div>

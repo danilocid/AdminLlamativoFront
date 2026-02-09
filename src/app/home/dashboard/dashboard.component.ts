@@ -27,7 +27,7 @@ export class DashboardComponent implements OnInit {
 
   getDashboardReport() {
     this.apiService = new ApiService(this.http);
-    this.apiService.getService(ApiRequest.dashboardReport).subscribe({
+    this.apiService.get(ApiRequest.dashboardReport).subscribe({
       next: (resp) => {
         this.dasboardReport = resp.data;
       },

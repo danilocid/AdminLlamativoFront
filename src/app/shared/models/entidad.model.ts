@@ -8,5 +8,5 @@ export interface Entidad {
   telefono: string;
   mail: string;
   comuna: Commune;
-  tipo: number;
+  tipo: string;
 }

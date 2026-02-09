@@ -111,52 +111,20 @@
             <div class="card card-info">
               <div class="card-header">Detalle movimiento</div>
               <div class="card-body">
-                <table
-                  datatable
-                  [dtOptions]="dtOptions"
-                  [dtTrigger]="dtTrigger"
-                  class="row-border hover"
-                  aria-label="Tabla"
-                >
-                  <thead class="table-light">
-                    <tr>
-                      <th>Id</th>
-                      <th>Descripcion</th>
-                      <th>Costo</th>
-                      <th>Entradas</th>
-                      <th>Salidas</th>
-                      <th>Eliminar</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let item of productsInventory">
-                      <td>{{ item.id }}</td>
-                      <td>{{ item.descripcion }}</td>
-
-                      <td>
-                        {{
-                          item.costo_neto + item.costo_imp
-                            | currency : "CLP" : "symbol-narrow" : "1.0-0"
-                        }}
-                      </td>
-                      <td>
-                        {{ item.entradas }}
-                      </td>
-                      <td>
-                        {{ item.salidas }}
-                      </td>
-
-                      <td>
-                        <button
-                          class="btn btn-danger"
-                          (click)="deleteCount(item.id)"
-                        >
-                          <i class="fas fa-trash"></i>
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+                <app-simple-table
+                  [data]="productsInventory"
+                  [columns]="columns"
+                  [pageSize]="10"
+                  [showSearch]="false"
+                  [showPagination]="true"
+                  [showPageSize]="false"
+                  [showActions]="true"
+                  [showViewButton]="false"
+                  [showEditButton]="false"
+                  [showDeleteButton]="true"
+                  [emptyMessage]="'No hay productos agregados'"
+                  (onDelete)="deleteCount($event.id)"
+                ></app-simple-table>
                 <br />
                 <button
                   class="btn btn-primary"

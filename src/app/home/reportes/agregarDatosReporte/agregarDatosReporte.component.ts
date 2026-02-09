@@ -76,7 +76,7 @@ export class AgregarDatosReporteComponent implements OnInit {
     if (this.tipoDatoForm.valid) {
       this.spinner.show();
       this.apiService = new ApiService(this.http);
-      this.apiService.postService(ApiRequest.getReportData, body).subscribe({
+      this.apiService.post(ApiRequest.getReportData, body).subscribe({
         next: (result: any) => {
           this.spinner.hide();
           this.as.alertBasic('Exito', result.msg, 'success');
@@ -102,7 +102,7 @@ export class AgregarDatosReporteComponent implements OnInit {
   getReportDataTypes() {
     this.apiService = new ApiService(this.http);
     this.apiService
-      .getServiceWithParams(ApiRequest.getTipoDatosReportes, {
+      .getWithParams(ApiRequest.getTipoDatosReportes, {
         activo: 1,
       })
       .subscribe({

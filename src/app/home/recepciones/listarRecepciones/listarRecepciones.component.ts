@@ -1,167 +1,113 @@
 import { HttpClient } from '@angular/common/http';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { DataTableDirective } from 'angular-datatables';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { Subject } from 'rxjs';
-import { ApiRequest, TableSettings } from 'src/app/shared/constants';
-import { Entidad } from 'src/app/shared/models/entidad.model';
+import { Router } from '@angular/router';
+import { ApiRequest } from 'src/app/shared/constants';
 import { Reception } from 'src/app/shared/models/receptions.model';
 import { ApiService } from 'src/app/shared/services/ApiService';
+import {
+  TableColumn,
+  DataRequestEvent,
+} from 'src/app/shared/components/simple-table/simple-table.component';
 
 @Component({
   selector: 'app-listar-recepciones',
   templateUrl: './listarRecepciones.component.html',
   styleUrls: ['./listarRecepciones.component.css'],
 })
-export class ListarRecepcionesComponent implements OnInit, AfterViewInit {
-  @ViewChild(DataTableDirective, { static: false })
+export class ListarRecepcionesComponent implements OnInit {
   recepciones: Reception[] = [];
-  dtElement!: DataTableDirective;
-  dtTrigger: Subject<any> = new Subject<any>();
-  dtOptions: DataTables.Settings = {};
+  totalRecords = 0;
+  loading = false;
+  searchTerm = '';
   private apiService!: ApiService;
-  searchTerm;
+
+  formatCurrency = (value: number) =>
+    '$' + value.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+
+  columns: TableColumn[] = [
+    { key: 'id', label: 'Id' },
+    {
+      key: 'proveedor',
+      label: 'Proveedor',
+      valueGetter: (row: Reception) =>
+        `${row.proveedor?.nombre || ''} (${row.proveedor?.rut || ''})`,
+    },
+    {
+      key: 'documento',
+      label: 'Documento',
+      valueGetter: (row: Reception) =>
+        `${row.documento} (${row.tipo_documento?.tipo || ''})`,
+    },
+    { key: 'unidades', label: 'Unidades' },
+    {
+      key: 'total',
+      label: 'Total',
+      sortable: false,
+      valueGetter: (row: Reception) =>
+        this.formatCurrency((row.costo_neto || 0) + (row.costo_imp || 0)),
+    },
+    {
+      key: 'fecha',
+      label: 'Fecha',
+      valueGetter: (row: Reception) =>
+        new Date(row.fecha).toLocaleDateString('es-CL', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          minute: '2-digit',
+          hour: '2-digit',
+        }),
+    },
+  ];
 
   constructor(
-    readonly spinner: NgxSpinnerService,
-    readonly tableOptions: TableSettings,
     readonly http: HttpClient,
-    readonly titleService: Title
+    readonly titleService: Title,
+    readonly router: Router,
   ) {
     this.titleService.setTitle('Recepciones');
   }
 
   ngOnInit() {
-    this.getRecepciones();
-  }
-  ngAfterViewInit(): void {
-    this.dtTrigger.next(null);
-  }
-  getRecepciones() {
     this.apiService = new ApiService(this.http);
-    this.spinner.show();
+  }
 
-    this.dtOptions = {
-      ...this.tableOptions.getGlobalDataTableFormat(),
-      serverSide: true,
-      order: [[0, 'asc']],
-      info: true,
-      processing: true,
-      ajax: (dataTablesParameters: any, callback: any) => {
-        this.apiService
-          .getServiceWithParams(ApiRequest.getRecepciones, {
-            page: dataTablesParameters.start / dataTablesParameters.length + 1,
-            param: this.searchTerm ? this.searchTerm : '',
-            order:
-              dataTablesParameters.order.length > 0
-                ? dataTablesParameters.columns[
-                    dataTablesParameters.order[0].column
-                  ].data
-                : '',
-            sort:
-              dataTablesParameters.order.length > 0
-                ? dataTablesParameters.order[0].dir
-                : '',
-          })
-          .subscribe((response) => {
-            this.recepciones = response.data;
-            callback({
-              _total_: response.total,
-              data: response.data,
-              recordsTotal: +response.total,
-              recordsFiltered: +response.total,
-            });
-          });
-        this.spinner.hide();
-      },
-      columns: [
-        {
-          //id
-          data: 'id',
-          className: 'fs-12',
-          defaultContent: '',
-        },
-        {
-          //nombre
-          data: 'proveedor',
-          className: 'fs-12',
-          defaultContent: '',
-          render: function (data: Entidad) {
-            return data.nombre + ' (' + data.rut + ')';
-          },
-        },
-        {
-          //giro
+  onDataRequest(event: DataRequestEvent): void {
+    this.loading = true;
 
-          className: 'fs-12',
-          defaultContent: '',
-          render: function (data: any, type: any, row: any) {
-            return row.documento + ' (' + row.tipo_documento.tipo + ')';
-          },
-        },
-        {
-          //direccion
-          data: 'unidades',
-          className: 'fs-12',
-          defaultContent: '',
-        },
-        {
-          //Comuna
-
-          className: 'fs-12',
-          defaultContent: '',
-          render: function (data: any, type: any, row: any) {
-            // suma de costo_imp y costo_neto
-            let costo = row.costo_neto + row.costo_imp;
-            // agregar signo de dolar y punto separador de miles
-            costo = costo.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
-            return `$${costo}`;
-          },
-        },
-        {
-          //fecha
-          data: 'fecha',
-          className: 'fs-12',
-          defaultContent: '',
-          render: function (data: any) {
-            return new Date(data).toLocaleDateString('es-CL', {
-              year: 'numeric',
-              month: '2-digit',
-              day: '2-digit',
-              minute: '2-digit',
-              hour: '2-digit',
-            });
-          },
-        },
-
-        {
-          //actions
-          data: 'id',
-          className: 'fs-12',
-          defaultContent: '',
-          orderable: false,
-          render: function (data: number) {
-            return `<a href="recepciones/ver/${data}" class="me-1 text-warning pointer">
-              <i class="fas fa-eye
-              "></i>
-            </a>`;
-          },
-        },
-      ],
+    const columnMap: Record<string, string> = {
+      id: 'id',
+      fecha: 'fecha',
     };
-    this.rerender();
+
+    const params: any = {
+      page: event.page,
+      param: this.searchTerm || '',
+      order: columnMap[event.sortColumn] || 'id',
+      sort: event.sortDirection || 'asc',
+    };
+
+    this.apiService
+      .getWithParams(ApiRequest.getRecepciones, params)
+      .subscribe((response) => {
+        this.recepciones = response.data;
+        this.totalRecords = +response.total;
+        this.loading = false;
+      });
   }
 
-  search() {
-    this.getRecepciones();
+  search(): void {
+    this.onDataRequest({
+      page: 1,
+      pageSize: 10,
+      sortColumn: 'id',
+      sortDirection: 'asc',
+      searchTerm: this.searchTerm,
+    });
   }
-  rerender(): void {
-    if (this.dtElement && this.dtElement.dtInstance) {
-      this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-        dtInstance.destroy();
-        this.dtTrigger.next(null);
-      });
-    }
+
+  onView(row: Reception): void {
+    this.router.navigate(['/recepciones/ver', row.id]);
   }
 }

@@ -1,9 +1,8 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import {
   AngularFireDatabase,
   AngularFireList,
 } from '@angular/fire/compat/database';
-import { DataTableDirective } from 'angular-datatables';
 import {
   Chart,
   LineController,
@@ -14,7 +13,6 @@ import {
   registerables,
 } from 'chart.js';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { Subject } from 'rxjs';
 import { Hydrocontrol } from 'src/app/shared/models/hydrocontrol.model';
 import { Title } from '@angular/platform-browser';
 
@@ -23,7 +21,7 @@ Chart.register(
   LineElement,
   PointElement,
   LinearScale,
-  CategoryScale
+  CategoryScale,
 );
 @Component({
   selector: 'app-hydrocontrol',
@@ -34,19 +32,23 @@ export class HydrocontrolComponent implements OnInit, AfterViewInit {
   constructor(
     readonly titleService: Title,
     readonly db: AngularFireDatabase,
-    readonly spinner: NgxSpinnerService
+    readonly spinner: NgxSpinnerService,
   ) {
     this.titleService.setTitle('Hydrocontrol');
     Chart.register(...registerables);
   }
   public chart: Chart;
-  @ViewChild(DataTableDirective)
-  dtElement!: DataTableDirective;
-  dtTrigger: Subject<any> = new Subject<any>();
-  dtOptions: DataTables.Settings = {};
   hydroData: AngularFireList<any> | undefined;
   isUpdated = false;
-  data: Hydrocontrol[] = []; // Specify the type as 'any[]'
+  data: Hydrocontrol[] = [];
+
+  // Paginación
+  currentPage = 1;
+  pageSize = 15;
+  searchTerm = '';
+  sortColumn = 'timeStamp.dateString';
+  sortDirection: 'asc' | 'desc' = 'desc';
+
   realoadTime = 300000;
   actualTime = 0;
   minutes = 5;
@@ -66,31 +68,49 @@ export class HydrocontrolComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.spinner.show();
-    this.dtOptions = {
-      pagingType: 'full_numbers',
-      pageLength: 15,
-      order: [
-        [1, 'desc'],
-        [8, 'off'],
-      ],
-      dom: 'Bfrtip',
-      language: {
-        search: 'Buscar:',
-        searchPlaceholder: 'Buscar',
-        paginate: {
-          first: '<<',
-          previous: '<',
-          next: '>',
-          last: '>>',
-        },
-        zeroRecords: 'No se encontraron registros',
-        info: 'Mostrando desde _START_ al _END_ de _TOTAL_ elementos',
-        infoFiltered: '(filtrado de _MAX_ elementos en total)',
-      },
-    };
-
     this.hydroData = this.db.list('data');
     this.getData();
+  }
+
+  get filteredData(): Hydrocontrol[] {
+    if (!this.searchTerm) return this.data;
+    const term = this.searchTerm.toLowerCase();
+    return this.data.filter(
+      (item) =>
+        item.timeStamp?.date?.toLowerCase().includes(term) ||
+        item.agua?.temperatura?.toString().includes(term),
+    );
+  }
+
+  get paginatedData(): Hydrocontrol[] {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.filteredData.slice(start, start + this.pageSize);
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.filteredData.length / this.pageSize);
+  }
+
+  get visiblePages(): number[] {
+    const pages: number[] = [];
+    const maxVisible = 5;
+    let start = Math.max(1, this.currentPage - Math.floor(maxVisible / 2));
+    const end = Math.min(this.totalPages, start + maxVisible - 1);
+    start = Math.max(1, end - maxVisible + 1);
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+    }
+  }
+
+  onSearch(): void {
+    this.currentPage = 1;
   }
 
   private getData() {
@@ -117,12 +137,12 @@ export class HydrocontrolComponent implements OnInit, AfterViewInit {
         this.actualTime = this.actualTime + 1;
         // print the time in minutes and seconds left to reload the page
         this.minutes = Math.floor(
-          (this.realoadTime - this.actualTime * 1000) / 60000
+          (this.realoadTime - this.actualTime * 1000) / 60000,
         );
         this.seconds =
           ((this.realoadTime - this.actualTime * 1000) % 60000) / 1000;
         this.titleService.setTitle(
-          'Hydrocontrol ' + this.minutes + ':' + this.seconds
+          'Hydrocontrol ' + this.minutes + ':' + this.seconds,
         );
         this.reloadv2();
       }, 1000);
@@ -172,12 +192,12 @@ export class HydrocontrolComponent implements OnInit, AfterViewInit {
           dataToDelete.push(element.timeStamp.count);
           console.warn(
             'Data marcada para eliminar (undefined detectado):',
-            element.timeStamp.count
+            element.timeStamp.count,
           );
         } else {
           console.warn(
             'Registro sin count, no se puede eliminar automáticamente:',
-            element
+            element,
           );
         }
       }
@@ -190,7 +210,7 @@ export class HydrocontrolComponent implements OnInit, AfterViewInit {
           dataToDelete.push(element.timeStamp.count);
           console.warn(
             'Temperatura negativa detectada, marcada para eliminar:',
-            element.timeStamp.count
+            element.timeStamp.count,
           );
         } else {
           // Datos válidos - formatear fecha y agregar a tmpData
@@ -245,8 +265,6 @@ export class HydrocontrolComponent implements OnInit, AfterViewInit {
       }
     });
     this.firstAndLastData();
-    this.dtTrigger.next(this.dtOptions);
-    //
     this.createChart();
     this.spinner.hide();
     console.warn('Bad data count: ' + badDataCount);
@@ -305,12 +323,12 @@ export class HydrocontrolComponent implements OnInit, AfterViewInit {
           if (element.agua.temperatura < 60 && element.agua.temperatura > 0) {
             if (par == 1) {
               labels.push(
-                element.timeStamp.hora + ':' + element.timeStamp.minutos
+                element.timeStamp.hora + ':' + element.timeStamp.minutos,
               );
               tAgua.push(parseFloat(element.agua.temperatura.toFixed(1)));
 
               tInterior.push(
-                parseFloat(element.interior.temperatura.toFixed(1))
+                parseFloat(element.interior.temperatura.toFixed(1)),
               );
               par = 2;
             } else {

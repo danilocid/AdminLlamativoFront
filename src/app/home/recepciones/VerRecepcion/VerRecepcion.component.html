@@ -28,28 +28,28 @@
               Costo Neto:
               {{
                 dataRecepcion.costo_neto
-                  | currency : "CLP" : "symbol-narrow" : "1.0-0"
+                  | currency: "CLP" : "symbol-narrow" : "1.0-0"
               }}
             </p>
             <p>
               Costo Imp:
               {{
                 dataRecepcion.costo_imp
-                  | currency : "CLP" : "symbol-narrow" : "1.0-0"
+                  | currency: "CLP" : "symbol-narrow" : "1.0-0"
               }}
             </p>
             <p>
               Costo Total:
               {{
                 dataRecepcion.costo_neto + dataRecepcion.costo_imp
-                  | currency : "CLP" : "symbol-narrow" : "1.0-0"
+                  | currency: "CLP" : "symbol-narrow" : "1.0-0"
               }}
             </p>
           </div>
           <div class="col">
             <p>
               Fecha:
-              {{ dataRecepcion.fecha | date : "dd/MM/yyyy" }}
+              {{ dataRecepcion.fecha | date: "dd/MM/yyyy" }}
             </p>
             <p>
               Proveedor:
@@ -73,35 +73,14 @@
       </div>
 
       <div class="card-body">
-        <table
-          datatable
-          [dtOptions]="dtOptions"
-          [dtTrigger]="dtTrigger"
-          class="row-border hover"
-          aria-label="Tabla"
-        >
-          <thead class="table-light">
-            <tr>
-              <th>Codigo interno</th>
-              <th>Descripcion</th>
-              <th>Cantidad</th>
-              <th>Costo total</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let item of productsRecepcion">
-              <td>{{ item.producto.cod_interno }}</td>
-              <td>{{ item.producto.descripcion }}</td>
-              <td>{{ item.unidades }}</td>
-              <td>
-                {{
-                  item.costo_neto + item.costo_imp
-                    | currency : "CLP" : "symbol-narrow" : "1.0-0"
-                }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <app-simple-table
+          [data]="productsRecepcion"
+          [columns]="columns"
+          [pageSize]="10"
+          [showSearch]="true"
+          [showPagination]="true"
+          [emptyMessage]="'No hay artículos en esta recepción'"
+        ></app-simple-table>
       </div>
     </div>
   </div>

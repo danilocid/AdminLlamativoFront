@@ -1,239 +1,150 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  OnDestroy,
-  AfterViewInit,
-} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { NgxSpinnerService } from 'ngx-spinner';
+import { Router } from '@angular/router';
 import { ApiService } from 'src/app/shared/services/ApiService';
-import { ApiRequest, TableSettings } from 'src/app/shared/constants';
+import { ApiRequest } from 'src/app/shared/constants';
 import { HttpClient } from '@angular/common/http';
-import { DataTableDirective } from 'angular-datatables';
-import { Subject } from 'rxjs';
 import { Product } from '../../../shared/models/product.model';
+import {
+  TableColumn,
+  DataRequestEvent,
+} from 'src/app/shared/components/simple-table/simple-table.component';
 
 @Component({
   selector: 'app-articulos',
   templateUrl: './articulos.component.html',
   styleUrls: ['./articulos.component.css'],
 })
-export class ArticulosComponent implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild(DataTableDirective)
-  dtElement!: DataTableDirective;
-  dtTrigger: Subject<any> = new Subject<any>();
-  dtOptions: DataTables.Settings = {};
-  private apiService!: ApiService;
+export class ArticulosComponent implements OnInit {
   products: Product[] = [];
-  date = new Date();
+  totalRecords = 0;
+  loading = false;
   active = false;
   stock = true;
   includeDeprecated = false;
-  searchTerm;
+  searchTerm = '';
+  private apiService!: ApiService;
+  private lastEvent: DataRequestEvent | null = null;
+
+  formatCurrency = (value: number) =>
+    '$' + value.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+
+  columns: TableColumn[] = [
+    { key: 'id', label: 'Id' },
+    { key: 'cod_interno', label: 'Interno' },
+    { key: 'cod_barras', label: 'Barra' },
+    { key: 'descripcion', label: 'Descripcion' },
+    { key: 'stock', label: 'Stock' },
+    {
+      key: 'costo',
+      label: 'Costo',
+      sortable: false,
+      valueGetter: (row: Product) =>
+        this.formatCurrency((row.costo_imp || 0) + (row.costo_neto || 0)),
+    },
+    {
+      key: 'pvp',
+      label: 'PVP',
+      sortable: false,
+      valueGetter: (row: Product) =>
+        this.formatCurrency((row.venta_imp || 0) + (row.venta_neto || 0)),
+    },
+    {
+      key: 'activo',
+      label: 'Activo',
+      sortable: false,
+      valueGetter: (row: Product) => (row.activo ? 'Activo' : 'Inactivo'),
+    },
+    {
+      key: 'deprecado',
+      label: 'Deprecado',
+      sortable: false,
+      valueGetter: (row: Product) =>
+        row.deprecado ? '⚠️ Deprecado' : '✅ Vigente',
+    },
+    {
+      key: 'publicado',
+      label: 'Publicado',
+      valueGetter: (row: Product) => (row.publicado ? 'Si' : 'No'),
+    },
+  ];
 
   constructor(
     readonly titleService: Title,
-    readonly spinner: NgxSpinnerService,
     readonly http: HttpClient,
-    readonly tableOptions: TableSettings
+    readonly router: Router,
   ) {
     this.titleService.setTitle('Articulos');
   }
 
   ngOnInit() {
-    this.spinner.show();
-    this.getProducts();
-  }
-  search(): void {
-    this.getProducts();
-  }
-  ngAfterViewInit(): void {
-    this.dtTrigger.next(null);
-  }
-  private getProducts() {
     this.apiService = new ApiService(this.http);
-    this.dtOptions = {
-      ...this.tableOptions.getGlobalDataTableFormat(),
-      serverSide: true,
-      order: [[0, 'asc']],
-      processing: true,
-      ajax: (dataTablesParameters: any, callback: any) => {
-        this.apiService
-          .getServiceWithParams(ApiRequest.getArticulos, {
-            page: dataTablesParameters.start / dataTablesParameters.length + 1,
-            param: this.searchTerm ? this.searchTerm : '',
-            order:
-              dataTablesParameters.order.length > 0
-                ? dataTablesParameters.columns[
-                    dataTablesParameters.order[0].column
-                  ].data
-                : '',
-            sort:
-              dataTablesParameters.order.length > 0
-                ? dataTablesParameters.order[0].dir.toUpperCase()
-                : 'DESC',
-            stock: this.stock,
-            active: this.active,
-            includeDeprecated: this.includeDeprecated,
-          })
-          .subscribe((response) => {
-            this.products = response.data;
-            callback({
-              _TOTAL_: response.count,
-              _START_: dataTablesParameters.start,
-              _END_: dataTablesParameters.start + dataTablesParameters.length,
-              data: response.data,
-              recordsTotal: +response.count,
-              recordsFiltered: +response.count,
-            });
-          });
-      },
-      columns: [
-        {
-          //id
-          data: 'id',
-          className: 'fs-12',
-          defaultContent: '',
-        },
-        {
-          //codigo interno
-          data: 'cod_interno',
-          className: 'fs-12',
-          defaultContent: '',
-        },
-        {
-          //codigo de barra
-          data: 'cod_barras',
-          className: 'fs-12',
-          defaultContent: '',
-        },
-        {
-          //descripcion
-          data: 'descripcion',
-          className: 'fs-12',
-          defaultContent: '',
-        },
-        {
-          //stock
-          data: 'stock',
-          className: 'fs-12',
-          defaultContent: '',
-        },
-        {
-          //Costo
-          data: null,
-          className: 'fs-12',
-          defaultContent: '',
-          orderable: false,
-          render: function (data: any, type: any, row: any) {
-            // suma de costo_imp y costo_neto
-            let costo = row.costo_imp + row.costo_neto;
-            // agregar signo de dolar y punto separador de miles
-            costo = costo.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
-            return `$${costo}`;
-          },
-        },
-        {
-          //PVP
-          data: null,
-          className: 'fs-12',
-          defaultContent: '',
-          orderable: false,
-          render: function (data: any, type: any, row: any) {
-            // suma de venta_imp y venta_neto
-            let pvp = row.venta_imp + row.venta_neto;
-            // agregar signo de dolar y punto separador de miles
-            pvp = pvp.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
-            // agregar signo de dolar y punto separador de miles
+  }
 
-            return `$${pvp}`;
-          },
-        },
-        {
-          //activo
-          data: 'activo',
-          className: 'fs-12',
-          defaultContent: '',
-          orderable: false,
-          render: function (data: boolean) {
-            return data ? 'Activo' : 'Inactivo';
-          },
-        },
-        {
-          //deprecado
-          data: 'deprecado',
-          className: 'fs-12',
-          defaultContent: '',
-          orderable: false,
-          render: function (data: boolean) {
-            return data
-              ? '<span class="badge badge-warning">⚠️ Deprecado</span>'
-              : '<span class="badge badge-success">✅ Vigente</span>';
-          },
-        },
-        {
-          //publicado
-          data: 'publicado',
-          className: 'fs-12',
-          defaultContent: '',
-          render: function (data: boolean) {
-            return data ? 'Si' : 'No';
-          },
-        },
+  onDataRequest(event: DataRequestEvent): void {
+    this.loading = true;
+    this.lastEvent = event;
 
-        {
-          //actions
-          data: 'id',
-          className: 'fs-12',
-          defaultContent: '',
-          orderable: false,
-          render: function (data: number) {
-            return `<div class="d-flex justify-content-center">
-            <a href="articulos/ver/${data}" class="btn btn-sm btn-primary mr-2">
-              <i class="fas fa-eye
-              "></i>
-            </a>
-            <a href="articulos/editar/${data}" class="btn btn-sm btn-success mr-2">
-              <i class="fas fa-edit
-              "></i>
-            </a>
-           
-          </div>`;
-          },
-        },
-      ],
+    const columnMap: Record<string, string> = {
+      id: 'id',
+      cod_interno: 'cod_interno',
+      cod_barras: 'cod_barras',
+      descripcion: 'descripcion',
+      stock: 'stock',
+      publicado: 'publicado',
     };
-    this.rerender();
-  }
 
-  rerender(): void {
-    this.spinner.hide();
-    if (this.dtElement?.dtInstance) {
-      this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-        dtInstance.destroy();
-        this.dtTrigger.next(null);
+    const params: any = {
+      page: event.page,
+      param: this.searchTerm || '',
+      order: columnMap[event.sortColumn] || 'id',
+      sort: event.sortDirection?.toUpperCase() || 'ASC',
+      stock: this.stock,
+      active: this.active,
+      includeDeprecated: this.includeDeprecated,
+    };
+
+    this.apiService
+      .getWithParams(ApiRequest.getArticulos, params)
+      .subscribe((response) => {
+        this.products = response.data;
+        this.totalRecords = +response.count;
+        this.loading = false;
       });
-    }
   }
 
-  changeStock() {
-    this.spinner.show();
+  search(): void {
+    this.onDataRequest(
+      this.lastEvent || {
+        page: 1,
+        pageSize: 10,
+        sortColumn: 'id',
+        sortDirection: 'asc',
+        searchTerm: this.searchTerm,
+      },
+    );
+  }
+
+  changeStock(): void {
     this.stock = !this.stock;
-    this.getProducts();
+    this.search();
   }
-  changeActive() {
-    this.spinner.show();
+
+  changeActive(): void {
     this.active = !this.active;
-    this.getProducts();
+    this.search();
   }
-  changeDeprecated() {
-    this.spinner.show();
+
+  changeDeprecated(): void {
     this.includeDeprecated = !this.includeDeprecated;
-    this.getProducts();
+    this.search();
   }
-  ngOnDestroy(): void {
-    // Do not forget to unsubscribe the event
-    this.dtTrigger.unsubscribe();
+
+  onView(row: Product): void {
+    this.router.navigate(['/articulos/ver', row.id]);
+  }
+
+  onEdit(row: Product): void {
+    this.router.navigate(['/articulos/editar', row.id]);
   }
 }

@@ -4,21 +4,21 @@ import { ListarRecepcionesComponent } from './listarRecepciones/listarRecepcione
 import { RecepcionesRoutingModule } from './recepciones-routing.module';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DataTablesModule } from 'angular-datatables';
 import { VerRecepcionComponent } from './VerRecepcion/VerRecepcion.component';
 import { AgregarRecepcionComponent } from './agregarRecepcion/agregarRecepcion.component';
 import { VentasModule } from '../ventas/ventas.module';
 import { FinalizaRecepcionComponent } from './agregarRecepcion/finalizaRecepcion/finalizaRecepcion.component';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     RecepcionesRoutingModule,
-    DataTablesModule.forRoot(),
     FormsModule,
     ReactiveFormsModule,
     NgSelectModule,
     VentasModule,
+    SharedModule,
   ],
   declarations: [
     ListarRecepcionesComponent,

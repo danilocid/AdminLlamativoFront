@@ -78,7 +78,7 @@ export class ReporteMensualComponent implements OnInit {
     this.spinner.show();
     this.apiService = new ApiService(this.http);
     this.apiService
-      .getService(
+      .get(
         ApiRequest.getReporteMensual +
           '/' +
           this.dateForm.value.month +
@@ -106,7 +106,7 @@ export class ReporteMensualComponent implements OnInit {
   getCompras() {
     this.apiService = new ApiService(this.http);
     this.apiService
-      .getServiceWithParams(ApiRequest.getComprasReporte, this.dateForm.value)
+      .getWithParams(ApiRequest.getComprasReporte, this.dateForm.value)
       .subscribe({
         next: (resp) => {
           if (resp.status === 401 || resp.status === 403) {
@@ -135,7 +135,7 @@ export class ReporteMensualComponent implements OnInit {
   getReportData() {
     this.apiService = new ApiService(this.http);
     this.apiService
-      .getService(
+      .get(
         ApiRequest.getReportData +
           '/' +
           this.dateForm.value.month +

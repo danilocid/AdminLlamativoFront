@@ -75,7 +75,7 @@ export class TipoDeDatosFormComponent implements OnInit, OnChanges {
     };
     if (this.idTipoDato != 0) {
       this.apiService
-        .patchService(
+        .patch(
           ApiRequest.getTipoDatosReportes + '/' + this.idTipoDato,
           body
         )
@@ -95,7 +95,7 @@ export class TipoDeDatosFormComponent implements OnInit, OnChanges {
         });
     } else {
       this.apiService
-        .postService(ApiRequest.getTipoDatosReportes, body)
+        .post(ApiRequest.getTipoDatosReportes, body)
         .subscribe({
           next: (result: any) => {
             this.as.alertBasic('Exito', result.msg, 'success');

@@ -4,17 +4,17 @@ import { EntidadesComponent } from './entidades/entidades.component';
 import { EntidadesRoutingModule } from './entidades-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { DataTablesModule } from 'angular-datatables';
 import { CreateComponent } from './create/create.component';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
-    DataTablesModule.forRoot(),
     EntidadesRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     NgSelectModule,
+    SharedModule,
   ],
   declarations: [EntidadesComponent, CreateComponent],
 })

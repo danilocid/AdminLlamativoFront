@@ -4,13 +4,8 @@
       <div class="col-sm-6">
         <h1 class="m-0">Ajustes de inventario</h1>
       </div>
-      <!-- /.col -->
-
-      <!-- /.col -->
     </div>
-    <!-- /.row -->
   </div>
-  <!-- /.container-fluid -->
 </div>
 <section class="content">
   <div class="container-fluid">
@@ -20,32 +15,27 @@
       </div>
 
       <div class="card-body">
-        <div class="row">
+        <div class="row mb-3">
           <div class="col">
             <a [routerLink]="['inventory']" class="btn btn-primary"
               >Agregar ajuste</a
             >
           </div>
         </div>
-        <table
-          datatable
-          [dtOptions]="dtOptions"
-          [dtTrigger]="dtTrigger"
-          class="row-border hover"
-          aria-label="Tabla"
-        >
-          <thead class="table-light">
-            <tr>
-              <th>Id</th>
-              <th>Tipo movimiento</th>
-              <th>Obs</th>
-              <th>Entradas</th>
-              <th>Salidas</th>
-              <th>Costo</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-        </table>
+
+        <app-simple-table
+          [data]="inventories"
+          [columns]="columns"
+          [serverSide]="true"
+          [totalRecords]="totalRecords"
+          [loading]="loading"
+          [showSearch]="false"
+          [showViewButton]="true"
+          [showEditButton]="false"
+          [showDeleteButton]="false"
+          (dataRequest)="onDataRequest($event)"
+          (onView)="onView($event)"
+        ></app-simple-table>
       </div>
     </div>
   </div>

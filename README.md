@@ -15,10 +15,12 @@ La versión se actualiza automáticamente con cada push mediante el comando `npm
 - **RxJS**: 7.8.x
 - **SweetAlert2**: Para notificaciones y alertas
 - **NgxSpinner**: Para indicadores de carga
+- **Chart.js**: Para gráficos interactivos
+- **Firebase**: Autenticación y hosting
 
 ## Características Principales
 
-- 🔐 Sistema de autenticación con JWT
+- 🔐 Sistema de autenticación con JWT e interceptores HTTP
 - 📦 Gestión completa de productos e inventario
 - 🛒 Módulo de ventas y compras
 - 📊 Dashboard con métricas y estadísticas
@@ -27,6 +29,7 @@ La versión se actualiza automáticamente con cada push mediante el comando `npm
 - 📱 Diseño responsive con AdminLTE
 - ✅ Validación de formularios en tiempo real
 - 🎨 Interfaz intuitiva y moderna
+- 📋 Tablas con ordenamiento, búsqueda y paginación (sin jQuery)
 
 ## Requisitos Previos
 
@@ -128,16 +131,19 @@ src/
 │   │   ├── compras/          # Módulo de compras
 │   │   ├── dashboard/        # Dashboard principal
 │   │   ├── entidades/        # Gestión de entidades
-│   │   ├── partials/         # Componentes compartidos
+│   │   ├── hydrocontrol/     # Monitoreo de temperatura (Firebase)
+│   │   ├── partials/         # Navbar, sidebar, footer
 │   │   ├── recepciones/      # Recepciones de mercancía
 │   │   ├── reportes/         # Reportes y estadísticas
 │   │   └── ventas/           # Módulo de ventas
 │   ├── login/                # Autenticación
 │   └── shared/               # Servicios y utilidades compartidas
 │       ├── components/       # Componentes reutilizables
+│       │   └── simple-table/ # Tabla con ordenamiento y paginación
 │       ├── guards/           # Guards de autenticación
+│       ├── interceptors/     # Auth y Error interceptors
 │       ├── models/           # Modelos de datos
-│       ├── services/         # Servicios
+│       ├── services/         # ApiService, AuthService, etc.
 │       └── utils/            # Utilidades
 ├── assets/                   # Recursos estáticos
 │   ├── css/                  # Estilos globales
@@ -196,9 +202,49 @@ src/
 1. **Lazy Loading**: Los módulos se cargan bajo demanda
 2. **Reactive Forms**: Para formularios complejos con validaciones
 3. **Guards**: Protección de rutas según autenticación
-4. **Interceptors**: Manejo centralizado de peticiones HTTP
-5. **Error Handling**: Manejo consistente de errores
+4. **Interceptors**: Manejo centralizado de autenticación y errores HTTP
+5. **Error Handling**: Manejo consistente de errores con SweetAlert2
 6. **Loading States**: Indicadores de carga para mejor UX
+7. **Sin jQuery en componentes**: Uso de Angular puro para tablas y UI
+
+## Componentes Compartidos
+
+### SimpleTableComponent
+
+Componente de tabla reutilizable sin dependencias jQuery, con soporte para:
+
+- Ordenamiento por columnas (click en headers)
+- Búsqueda/filtrado en tiempo real
+- Paginación local y server-side
+- Columnas personalizables con `valueGetter`
+- Acciones (ver, editar, eliminar)
+- Estados de carga
+
+**Uso básico (datos locales):**
+
+```html
+<app-simple-table [data]="items" [columns]="columns" (onView)="ver($event)" (onEdit)="editar($event)" (onDelete)="eliminar($event)"> </app-simple-table>
+```
+
+**Uso con paginación server-side:**
+
+```html
+<app-simple-table [data]="items" [columns]="columns" [serverSide]="true" [totalRecords]="totalRegistros" [loading]="cargando" (dataRequest)="cargarDatos($event)"> </app-simple-table>
+```
+
+## Interceptores HTTP
+
+### AuthInterceptor
+
+Agrega automáticamente el token JWT a todas las peticiones HTTP.
+
+### ErrorInterceptor
+
+Maneja errores HTTP de forma centralizada:
+
+- **401**: Redirige al login automáticamente
+- **403**: Muestra mensaje de acceso denegado
+- **500**: Muestra error del servidor
 
 ## Soporte de Navegadores
 

@@ -43,7 +43,7 @@ export class FinalizaRecepcionComponent implements OnInit {
     });
     this.apiService = new ApiService(this.http);
 
-    this.apiService.getService(ApiRequest.getEntities + '?t=p').subscribe({
+    this.apiService.get(ApiRequest.getEntities + '?t=p').subscribe({
       next: (resp) => {
         this.clients = resp.data;
         this.spinner.hide();
@@ -54,7 +54,7 @@ export class FinalizaRecepcionComponent implements OnInit {
       },
     });
 
-    this.apiService.getService(ApiRequest.getTipoDocumento).subscribe({
+    this.apiService.get(ApiRequest.getTipoDocumento).subscribe({
       next: (resp) => {
         if (resp.status === 401 || resp.status === 403) {
           this.router.navigate(['/login']);
@@ -72,7 +72,7 @@ export class FinalizaRecepcionComponent implements OnInit {
         this.alertSV.alertBasic('Error', error.error.msg, 'error');
       },
     });
-    this.apiService.getService(ApiRequest.getMedioPago).subscribe({
+    this.apiService.get(ApiRequest.getMedioPago).subscribe({
       next: (resp) => {
         if (resp.status === 401 || resp.status === 403) {
           this.router.navigate(['/login']);
@@ -130,7 +130,7 @@ export class FinalizaRecepcionComponent implements OnInit {
         });
       });
       this.apiService
-        .postService(ApiRequest.getRecepciones, {
+        .post(ApiRequest.getRecepciones, {
           rut: this.clientForm.value.id_cliente,
           medioDePagoId: +this.clientForm.value.id_medio_pago,
           tipoDocumento: +this.clientForm.value.id_tipo_documento,

@@ -4,13 +4,8 @@
       <div class="col-sm-6">
         <h1 class="m-0">Clientes</h1>
       </div>
-      <!-- /.col -->
-
-      <!-- /.col -->
     </div>
-    <!-- /.row -->
   </div>
-  <!-- /.container-fluid -->
 </div>
 <section class="content">
   <div class="container-fluid">
@@ -20,94 +15,40 @@
       </div>
 
       <div class="card-body">
-        <div class="row">
+        <div class="row mb-3">
           <div class="col-9">
             <a [routerLink]="['create']" class="btn btn-primary"
               >Agregar entidad</a
             >
           </div>
           <div class="col-2">
-            <div class="mb-3">
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Buscar"
-                [(ngModel)]="searchTerm"
-                (keyup)="search()"
-              />
-            </div>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Buscar"
+              [(ngModel)]="searchTerm"
+              (keyup.enter)="search()"
+            />
           </div>
-          <div class="col-1 me-3">
-            <button
-              class="btn btn-primary"
-              [disabled]="!searchTerm"
-              (click)="search()"
-            >
-              Buscar
-            </button>
+          <div class="col-1">
+            <button class="btn btn-primary" (click)="search()">Buscar</button>
           </div>
         </div>
-        <table
-          datatable
-          [dtOptions]="dtOptions"
-          [dtTrigger]="dtTrigger"
-          class="row-border hover"
-          aria-label="Clientes"
-        >
-          <thead>
-            <tr>
-              <th>RUT</th>
-              <th>Nombre</th>
-              <th>Giro</th>
-              <th>Direccion</th>
-              <th>Comuna</th>
-              <th>Region</th>
-              <th>Telefono</th>
-              <th>Mail</th>
-              <th>Tipo</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <!-- <tbody>
-            <tr *ngFor="let item of entidades">
-              <td>{{ item.rut }}</td>
-              <td>{{ item.nombre }}</td>
-              <td>{{ item.giro }}</td>
-              <td>{{ item.direccion }}</td>
-              <td>{{ item.comuna.comuna }}</td>
-              <td>
-                {{ item.comuna.region.region }}
-              </td>
-              <td>
-                {{ item.telefono }}
-              </td>
 
-              <td>{{ item.mail }}</td>
-
-              <td [ngSwitch]="item.tipo">
-                <div *ngSwitchCase="'B'">Ambos</div>
-                <div *ngSwitchCase="'C'">Cliente</div>
-                <div *ngSwitchCase="'P'">Proveedor</div>
-              </td>
-
-              <td>
-                <a
-                  routerLink="editar/{{ item.rut }}"
-                  class="me-1 text-success pointer"
-                >
-                  <i class="fas fa-edit"></i>
-                </a>
-                -
-                <a
-                  routerLink="ver/{{ item.rut }}"
-                  class="me-1 text-warning pointer"
-                >
-                  <i class="fas fa-eye"></i>
-                </a>
-              </td>
-            </tr>
-          </tbody> -->
-        </table>
+        <app-simple-table
+          [data]="entidades"
+          [columns]="columns"
+          [serverSide]="true"
+          [totalRecords]="totalRecords"
+          [loading]="loading"
+          [showSearch]="false"
+          [showViewButton]="true"
+          [showEditButton]="true"
+          [showDeleteButton]="false"
+          (dataRequest)="onDataRequest($event)"
+          (onView)="onView($event)"
+          (onEdit)="onEdit($event)"
+        ></app-simple-table>
       </div>
     </div>
   </div>

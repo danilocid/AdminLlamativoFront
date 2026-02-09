@@ -59,7 +59,7 @@
             <!-- small box -->
             <div class="small-box bg-success">
               <div class="inner">
-                <h3>{{ maxTempA | number : "1.0-1" }}°C</h3>
+                <h3>{{ maxTempA | number: "1.0-1" }}°C</h3>
                 <h4>{{ timeMaxTempA }}</h4>
 
                 <p>T° max del agua</p>
@@ -70,7 +70,7 @@
             <!-- small box -->
             <div class="small-box bg-success">
               <div class="inner">
-                <h3>{{ minTempA | number : "1.0-1" }}°C</h3>
+                <h3>{{ minTempA | number: "1.0-1" }}°C</h3>
                 <h4>{{ timeMinTempA }}</h4>
 
                 <p>T° min del agua</p>
@@ -80,7 +80,7 @@
           <div class="col-lg-2 col-md-4 col-xl-2">
             <div class="small-box bg-info">
               <div class="inner">
-                <h3>{{ maxTempE | number : "1.0-1" }}°C</h3>
+                <h3>{{ maxTempE | number: "1.0-1" }}°C</h3>
                 <h4>{{ timeMaxTempE }}</h4>
 
                 <p>T° max del ambiente</p>
@@ -90,7 +90,7 @@
           <div class="col-lg-2 col-md-4 col-xl-2">
             <div class="small-box bg-info">
               <div class="inner">
-                <h3>{{ minTempE | number : "1.0-1" }}°C</h3>
+                <h3>{{ minTempE | number: "1.0-1" }}°C</h3>
                 <h4>{{ timeMinTempE }}</h4>
 
                 <p>T° min del ambiente</p>
@@ -101,7 +101,7 @@
             <!-- small box -->
             <div class="small-box bg-primary">
               <div class="inner">
-                <h3>{{ maxTempI | number : "1.0-1" }}°C</h3>
+                <h3>{{ maxTempI | number: "1.0-1" }}°C</h3>
                 <h4>{{ timeMaxTempI }}</h4>
 
                 <p>T° max del interior</p>
@@ -112,7 +112,7 @@
             <!-- small box -->
             <div class="small-box bg-primary">
               <div class="inner">
-                <h3>{{ minTempI | number : "1.0-1" }}°C</h3>
+                <h3>{{ minTempI | number: "1.0-1" }}°C</h3>
                 <h4>{{ timeMinTempI }}</h4>
 
                 <p>T° min del interior</p>
@@ -136,105 +136,193 @@
         </div>
       </div>
       <div class="card-body">
-        <table
-          datatable
-          [dtOptions]="dtOptions"
-          [dtTrigger]="dtTrigger"
-          class="row-border hover"
-          aria-label="Tabla"
-        >
-          <thead>
-            <tr>
-              <th rowspan="2">N°</th>
-              <th rowspan="2">TimeStamp</th>
-              <th rowspan="2">Agua</th>
-
-              <th colspan="2">Interior</th>
-              <th colspan="2">Exterior</th>
-              <!--               <th colspan="2">Reles</th>
- -->
-              <th rowspan="2">Bomba</th>
-              <th rowspan="2">Ventilador</th>
-
-              <th rowspan="2"><i class="fas fa-trash pointer"></i></th>
-            </tr>
-            <tr>
-              <th>T</th>
-              <th>H</th>
-              <th>T</th>
-              <th>H</th>
-              <!-- <th>Luz</th> -->
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr *ngFor="let item of data">
-              <td *ngIf="item.timeStamp.count !== undefined">
-                {{ item.timeStamp.count }}
-              </td>
-              <td *ngIf="item.timeStamp.count === undefined">-</td>
-              <td *ngIf="item.timeStamp.date !== undefined">
-                {{ item.timeStamp.date }}
-              </td>
-              <td *ngIf="item.timeStamp.date === undefined">N/A</td>
-              <td
-                *ngIf="item.agua !== undefined"
-                [attr.data-order]="item.agua.temperatura"
+        <!-- Controles de búsqueda y paginación -->
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label>
+              Mostrar
+              <select
+                class="custom-select custom-select-sm form-control form-control-sm d-inline-block"
+                style="width: auto"
+                [(ngModel)]="pageSize"
+                (change)="currentPage = 1"
               >
-                {{ item.agua.temperatura | number : "1.0-1" }} °C
-              </td>
-              <td *ngIf="item.agua === undefined">N/A °C</td>
+                <option [value]="10">10</option>
+                <option [value]="15">15</option>
+                <option [value]="25">25</option>
+                <option [value]="50">50</option>
+              </select>
+              registros
+            </label>
+          </div>
+          <div class="col-md-6 text-right">
+            <label>
+              Buscar:
+              <input
+                type="search"
+                class="form-control form-control-sm d-inline-block"
+                style="width: auto"
+                [(ngModel)]="searchTerm"
+                (input)="onSearch()"
+              />
+            </label>
+          </div>
+        </div>
 
-              <td *ngIf="item.interior === undefined">N/A °C</td>
-              <td
-                *ngIf="item.interior !== undefined"
-                [attr.data-order]="item.interior.temperatura"
-              >
-                {{ item.interior.temperatura | number : "1.0-1" }} °C
-              </td>
-              <td *ngIf="item.interior === undefined">N/A %</td>
-              <td *ngIf="item.interior !== undefined">
-                {{ item.interior.humedad | number : "1.0-1" }} %
-              </td>
-              <td *ngIf="item.exterior === undefined">N/A °C</td>
-              <td
-                *ngIf="item.exterior !== undefined"
-                [attr.data-order]="item.exterior.temperatura"
-              >
-                {{ item.exterior.temperatura | number : "1.0-1" }} °C
-              </td>
-              <td *ngIf="item.exterior === undefined">N/A %</td>
-              <td *ngIf="item.exterior !== undefined">
-                {{ item.exterior.humedad | number : "1.0-1" }} %
-              </td>
-              <!--  <td *ngIf="item.reles === undefined">N/A</td>
-              <td *ngIf="item.reles !== undefined">
-                <span *ngIf="item.reles.luz === 'true'">ON</span>
-                <span *ngIf="item.reles.luz === 'false'">OFF</span> 
-              </td> -->
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover" aria-label="Tabla">
+            <thead>
+              <tr>
+                <th rowspan="2">N°</th>
+                <th rowspan="2">TimeStamp</th>
+                <th rowspan="2">Agua</th>
+                <th colspan="2">Interior</th>
+                <th colspan="2">Exterior</th>
+                <th rowspan="2">Bomba</th>
+                <th rowspan="2">Ventilador</th>
+                <th rowspan="2"><i class="fas fa-trash pointer"></i></th>
+              </tr>
+              <tr>
+                <th>T</th>
+                <th>H</th>
+                <th>T</th>
+                <th>H</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of paginatedData">
+                <td>{{ item.timeStamp?.count ?? "-" }}</td>
+                <td>{{ item.timeStamp?.date ?? "N/A" }}</td>
+                <td>
+                  {{
+                    item.agua?.temperatura !== undefined
+                      ? (item.agua.temperatura | number: "1.0-1") + " °C"
+                      : "N/A °C"
+                  }}
+                </td>
+                <td>
+                  {{
+                    item.interior?.temperatura !== undefined
+                      ? (item.interior.temperatura | number: "1.0-1") + " °C"
+                      : "N/A °C"
+                  }}
+                </td>
+                <td>
+                  {{
+                    item.interior?.humedad !== undefined
+                      ? (item.interior.humedad | number: "1.0-1") + " %"
+                      : "N/A %"
+                  }}
+                </td>
+                <td>
+                  {{
+                    item.exterior?.temperatura !== undefined
+                      ? (item.exterior.temperatura | number: "1.0-1") + " °C"
+                      : "N/A °C"
+                  }}
+                </td>
+                <td>
+                  {{
+                    item.exterior?.humedad !== undefined
+                      ? (item.exterior.humedad | number: "1.0-1") + " %"
+                      : "N/A %"
+                  }}
+                </td>
+                <td>
+                  <span *ngIf="item.reles?.bomba === 'true'">ON</span>
+                  <span *ngIf="item.reles?.bomba === 'false'">OFF</span>
+                  <span *ngIf="!item.reles">N/A</span>
+                </td>
+                <td>
+                  <span *ngIf="item.reles?.ventilador === 'true'">ON</span>
+                  <span *ngIf="item.reles?.ventilador === 'false'">OFF</span>
+                  <span
+                    *ngIf="item.reles?.ventilador === undefined && item.reles"
+                    >-</span
+                  >
+                  <span *ngIf="!item.reles">N/A</span>
+                </td>
+                <td>
+                  <a
+                    (click)="deleteData(item.timeStamp.count)"
+                    class="me-1 text-warning pointer"
+                  >
+                    <i class="fas fa-trash pointer"></i>
+                  </a>
+                </td>
+              </tr>
+              <tr *ngIf="paginatedData.length === 0">
+                <td colspan="10" class="text-center">
+                  No se encontraron registros
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-              <td *ngIf="item.reles !== undefined">
-                <span *ngIf="item.reles.bomba === 'true'">ON</span>
-                <span *ngIf="item.reles.bomba === 'false'">OFF</span>
-              </td>
-              <td *ngIf="item.reles === undefined">N/A</td>
-              <td *ngIf="item.reles !== undefined">
-                <span *ngIf="item.reles.ventilador === 'true'">ON</span>
-                <span *ngIf="item.reles.ventilador === 'false'">OFF</span>
-                <span *ngIf="item.reles.ventilador === undefined">-</span>
-              </td>
-              <td *ngIf="item.reles === undefined">N/A</td>
-              <td>
-                <a
-                  (click)="deleteData(item.timeStamp.count)"
-                  class="me-1 text-warning pointer"
+        <!-- Paginación -->
+        <div class="row mt-3">
+          <div class="col-md-5">
+            <div class="dataTables_info">
+              Mostrando
+              {{
+                filteredData.length === 0 ? 0 : (currentPage - 1) * pageSize + 1
+              }}
+              a
+              {{
+                currentPage * pageSize > filteredData.length
+                  ? filteredData.length
+                  : currentPage * pageSize
+              }}
+              de {{ filteredData.length }} registros
+            </div>
+          </div>
+          <div class="col-md-7">
+            <ul class="pagination justify-content-end" *ngIf="totalPages > 0">
+              <li class="page-item" [class.disabled]="currentPage === 1">
+                <a class="page-link" (click)="currentPage !== 1 && goToPage(1)"
+                  >Primero</a
                 >
-                  <i class="fas fa-trash pointer"></i>
-                </a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              </li>
+              <li class="page-item" [class.disabled]="currentPage === 1">
+                <a
+                  class="page-link"
+                  (click)="currentPage !== 1 && goToPage(currentPage - 1)"
+                  >Anterior</a
+                >
+              </li>
+              <li
+                *ngFor="let page of visiblePages"
+                class="page-item"
+                [class.active]="page === currentPage"
+              >
+                <a class="page-link" (click)="goToPage(page)">{{ page }}</a>
+              </li>
+              <li
+                class="page-item"
+                [class.disabled]="currentPage === totalPages"
+              >
+                <a
+                  class="page-link"
+                  (click)="
+                    currentPage !== totalPages && goToPage(currentPage + 1)
+                  "
+                  >Siguiente</a
+                >
+              </li>
+              <li
+                class="page-item"
+                [class.disabled]="currentPage === totalPages"
+              >
+                <a
+                  class="page-link"
+                  (click)="currentPage !== totalPages && goToPage(totalPages)"
+                  >Último</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </div>

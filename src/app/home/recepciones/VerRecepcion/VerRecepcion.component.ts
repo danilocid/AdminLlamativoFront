@@ -1,17 +1,15 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
-import { DataTableDirective } from 'angular-datatables';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { Subject } from 'rxjs';
-import { ApiRequest, FormatDataTableGlobal } from 'src/app/shared/constants';
+import { ApiRequest } from 'src/app/shared/constants';
 import {
   Reception,
   ReceptionProduct,
 } from 'src/app/shared/models/receptions.model';
 import { ApiService } from 'src/app/shared/services/ApiService';
 import { AlertService } from 'src/app/shared/services/alert.service';
+import { TableColumn } from 'src/app/shared/components/simple-table/simple-table.component';
 
 @Component({
   selector: 'app-ver-recepcion',
@@ -19,12 +17,7 @@ import { AlertService } from 'src/app/shared/services/alert.service';
   styleUrls: ['./VerRecepcion.component.css'],
 })
 export class VerRecepcionComponent implements OnInit {
-  @ViewChild(DataTableDirective)
-  dtElement!: DataTableDirective;
-  dtTrigger: Subject<any> = new Subject<any>();
-  dtOptions: DataTables.Settings = {};
   idRecepcion = '';
-  private apiService!: ApiService;
   dataRecepcion: Reception = {
     id: 0,
     costo_neto: 0,
@@ -46,7 +39,7 @@ export class VerRecepcionComponent implements OnInit {
         comuna: '',
       },
       giro: '',
-      tipo: 1,
+      tipo: '',
     },
     fecha: new Date(),
     tipo_documento: {
@@ -57,12 +50,29 @@ export class VerRecepcionComponent implements OnInit {
   };
   productsRecepcion: ReceptionProduct[] = [];
 
+  columns: TableColumn[] = [
+    { key: 'producto.cod_interno', label: 'Codigo interno', sortable: true },
+    { key: 'producto.descripcion', label: 'Descripcion', sortable: true },
+    { key: 'unidades', label: 'Cantidad', sortable: true, type: 'number' },
+    {
+      key: 'costo_total',
+      label: 'Costo total',
+      sortable: true,
+      format: (value: any, row: ReceptionProduct) =>
+        new Intl.NumberFormat('es-CL', {
+          style: 'currency',
+          currency: 'CLP',
+          maximumFractionDigits: 0,
+        }).format(row.costo_neto + row.costo_imp),
+    },
+  ];
+
   constructor(
     readonly titleService: Title,
     readonly spinner: NgxSpinnerService,
     readonly alertSV: AlertService,
-    readonly http: HttpClient,
-    readonly route: ActivatedRoute
+    readonly api: ApiService,
+    readonly route: ActivatedRoute,
   ) {
     this.titleService.setTitle('Recepciones - Ver');
     this.spinner.show();
@@ -70,25 +80,20 @@ export class VerRecepcionComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.dtOptions = FormatDataTableGlobal();
     this.getRecepcionData();
   }
 
   getRecepcionData() {
-    this.apiService = new ApiService(this.http);
-    this.apiService
-      .getService(ApiRequest.getRecepciones + '/' + this.idRecepcion)
-      .subscribe({
-        next: (resp) => {
-          this.dataRecepcion = resp.reception;
-          this.productsRecepcion = resp.details;
-          this.dtTrigger.next(this.dtOptions);
-          this.spinner.hide();
-        },
-        error: (error) => {
-          this.spinner.hide();
-          this.alertSV.alertBasic('Error', error.error.msg, 'error');
-        },
-      });
+    this.api.get(ApiRequest.getRecepciones + '/' + this.idRecepcion).subscribe({
+      next: (resp) => {
+        this.dataRecepcion = resp.reception;
+        this.productsRecepcion = resp.details;
+        this.spinner.hide();
+      },
+      error: (error) => {
+        this.spinner.hide();
+        this.alertSV.alertBasic('Error', error.error.msg, 'error');
+      },
+    });
   }
 }

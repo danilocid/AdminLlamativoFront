@@ -32,7 +32,7 @@
           <div class="col">
             <p>
               Fecha:
-              {{ venta.fecha | date : "EEEE dd/MM/yyyy HH:mm" : "UTC" }}
+              {{ venta.fecha | date: "EEEE dd/MM/yyyy HH:mm" : "UTC" }}
             </p>
           </div>
         </div>
@@ -92,7 +92,7 @@
                 venta.monto_imp -
                 (venta.costo_neto + venta.costo_imp + getTotalExtraCosts())) /
                 (venta.monto_neto + venta.monto_imp)) *
-                100 | number : "1.0-2"
+                100 | number: "1.0-2"
             }}
           </div>
         </div>
@@ -101,74 +101,31 @@
           *ngIf="venta.extraCosts.length > 0"
         >
           @for (item of venta.extraCosts; track $index) {
-          <div class="col">
-            {{ item.costo_extra.name }}: ${{ item.monto | number }}
-          </div>
+            <div class="col">
+              {{ item.costo_extra.name }}: ${{ item.monto | number }}
+            </div>
           }
         </div>
       </div>
     </div>
     <div class="card">
       <div class="card-header">
-        <h4 class="card-title">Resumen venta</h4>
+        <h4 class="card-title">Detalle venta</h4>
       </div>
       <div class="card-body">
-        <table class="table row-border hover">
-          <thead>
-            <th>Descripcion</th>
-            <th>Cantidad</th>
-            <th>Precio neto</th>
-            <th>Precio I.V.A.</th>
-            <th>Precio</th>
-            <th>Costo neto</th>
-            <th>Costo I.V.A.</th>
-            <th>Costo</th>
-            <th>Ganancia</th>
-            <th>% Ganancia</th>
-          </thead>
-          <tbody>
-            <tr *ngFor="let detalle of detalleVenta">
-              <td>
-                {{ detalle.articulo.descripcion }}
-                <a
-                  routerLink="/articulos/ver/{{ detalle.articulo.id }}"
-                  class="me-1 text-success pointer"
-                  data-toggle="tooltip"
-                  data-placement="right"
-                  title="Ver articulo"
-                >
-                  <i class="fas fa-eye"></i>
-                </a>
-              </td>
-              <td>
-                {{ detalle.cantidad }}
-              </td>
-              <td>${{ detalle.precio_neto | number }}</td>
-              <td>${{ detalle.precio_imp | number }}</td>
-              <td>${{ detalle.precio_neto + detalle.precio_imp | number }}</td>
-              <td>${{ detalle.costo_neto | number }}</td>
-              <td>${{ detalle.costo_imp | number }}</td>
-              <td>${{ detalle.costo_neto + detalle.costo_imp | number }}</td>
-              <td>
-                $
-                {{
-                  detalle.precio_neto +
-                    detalle.precio_imp -
-                    (detalle.costo_neto + detalle.costo_imp) | number
-                }}
-              </td>
-              <td>
-                {{
-                  ((detalle.precio_neto +
-                    detalle.precio_imp -
-                    (detalle.costo_neto + detalle.costo_imp)) /
-                    (detalle.precio_neto + detalle.precio_imp)) *
-                    100 | number : "1.0-2"
-                }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <app-simple-table
+          [data]="detalleVenta"
+          [columns]="columns"
+          [pageSize]="10"
+          [showSearch]="true"
+          [showPagination]="true"
+          [showActions]="true"
+          [showViewButton]="true"
+          [showEditButton]="false"
+          [showDeleteButton]="false"
+          [emptyMessage]="'No hay detalles de venta'"
+          (onView)="onViewArticulo($event)"
+        ></app-simple-table>
       </div>
     </div>
   </div>

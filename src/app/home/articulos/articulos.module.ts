@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ArticulosRoutingModule } from './articulos-routing.module';
-import { DataTablesModule } from 'angular-datatables';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SharedModule } from 'src/app/shared/shared.module';
 import { ArticulosComponent } from './articulos/articulos.component';
 import { CreateComponent } from './create/create.component';
 import { VerArticulosComponent } from './verArticulos/verArticulos.component';
@@ -17,11 +17,11 @@ import { LabelModalComponent } from './label-modal/label-modal.component';
   imports: [
     CommonModule,
     ArticulosRoutingModule,
-    DataTablesModule.forRoot(),
     FormsModule,
     ReactiveFormsModule,
     NgSelectModule,
     NgbModule,
+    SharedModule,
   ],
   declarations: [
     ArticulosComponent,

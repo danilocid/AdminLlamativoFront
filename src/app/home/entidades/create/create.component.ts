@@ -67,7 +67,7 @@ export class CreateComponent implements OnInit {
     }
   }
   getRegions() {
-    this.apiService.getService(ApiRequest.getRegiones).subscribe({
+    this.apiService.get(ApiRequest.getRegiones).subscribe({
       next: (response: ServerResponse) => {
         this.regions = response.data as Region[];
         if (this.rutCliente == null) {
@@ -98,7 +98,7 @@ export class CreateComponent implements OnInit {
   }
   getComunas(idRegion: string) {
     this.apiService
-      .getService(ApiRequest.getComunasByIdRegion + idRegion)
+      .get(ApiRequest.getComunasByIdRegion + idRegion)
       .subscribe({
         next: (response: ServerResponse) => {
           this.comunas = response.data as Commune[];
@@ -132,7 +132,7 @@ export class CreateComponent implements OnInit {
     //remove validation from rut
     this.clientForm.get('rut')?.clearValidators();
     this.apiService
-      .getService(ApiRequest.getEntities + '/' + this.rutCliente)
+      .get(ApiRequest.getEntities + '/' + this.rutCliente)
       .subscribe({
         next: (response: any) => {
           this.cliente = response.data as Entidad;
@@ -195,7 +195,7 @@ export class CreateComponent implements OnInit {
         tipo: this.clientForm.get('tipo')?.value,
       };
       //se crea el cliente
-      this.apiService.postService(ApiRequest.getEntities, body).subscribe({
+      this.apiService.post(ApiRequest.getEntities, body).subscribe({
         next: () => {
           this.spinner.hide();
 
@@ -229,7 +229,7 @@ export class CreateComponent implements OnInit {
         telefono: +this.clientForm.get('telefono')?.value.toString(),
         tipo: this.clientForm.get('tipo')?.value,
       };
-      this.apiService.patchService(ApiRequest.getEntities, body).subscribe({
+      this.apiService.patch(ApiRequest.getEntities, body).subscribe({
         next: () => {
           this.spinner.hide();
 

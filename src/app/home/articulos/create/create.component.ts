@@ -73,7 +73,7 @@ export class CreateComponent implements OnInit {
 
   getProduct() {
     this.apiService
-      .getService(ApiRequest.getArticulos + '/' + this.idProducto)
+      .get(ApiRequest.getArticulos + '/' + this.idProducto)
       .subscribe({
         next: (resp) => {
           this.producto = resp.data;
@@ -193,7 +193,7 @@ export class CreateComponent implements OnInit {
       delete product.id_ps;
     }
 
-    this.apiService.postService(ApiRequest.getArticulos, product).subscribe({
+    this.apiService.post(ApiRequest.getArticulos, product).subscribe({
       next: (resp) => {
         if (resp.serverResponseCode == 200 || resp.serverResponseCode == 201) {
           this.spinner.hide();
@@ -269,7 +269,7 @@ export class CreateComponent implements OnInit {
           delete product.id_ps;
         }
 
-        this.apiService.putService(ApiRequest.getArticulos, product).subscribe({
+        this.apiService.put(ApiRequest.getArticulos, product).subscribe({
           next: (resp) => {
             if (
               resp.serverResponseCode == 200 ||

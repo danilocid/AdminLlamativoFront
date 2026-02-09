@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { ApiService } from 'src/app/shared/services/ApiService';
 import { ApiRequest } from 'src/app/shared/constants';
 import { Notification } from 'src/app/shared/models/notification.model';
+import { AlertService } from 'src/app/shared/services/alert.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -14,6 +16,8 @@ export class NavbarComponent implements OnInit {
   constructor(
     readonly http: HttpClient,
     private router: Router,
+    private alertService: AlertService,
+    private authService: AuthService,
   ) {}
 
   apiService = new ApiService(this.http);
@@ -22,15 +26,22 @@ export class NavbarComponent implements OnInit {
   ngOnInit() {
     this.getNotifications();
   }
+
   logout() {
-    localStorage.removeItem('token');
-    localStorage.clear();
-    sessionStorage.clear();
-    window.location.reload();
+    this.alertService.verificationAlertWithFunction(
+      'Cerrar sesión',
+      '¿Está seguro que desea cerrar sesión?',
+      'Sí, cerrar sesión',
+      'Cancelar',
+      'question',
+      () => {
+        this.authService.logout();
+      },
+    );
   }
 
   getNotifications() {
-    this.apiService.getService(ApiRequest.getNotificaciones).subscribe({
+    this.apiService.get(ApiRequest.getNotificaciones).subscribe({
       next: (resp) => {
         this.notifications = resp.data;
         this.unReadedNotifications = this.notifications.filter(
@@ -42,7 +53,7 @@ export class NavbarComponent implements OnInit {
 
   markAsReaded(notification: Notification) {
     this.apiService
-      .postService(ApiRequest.markAsReaded + '/' + notification.id, {})
+      .post(ApiRequest.markAsReaded + '/' + notification.id, {})
       .subscribe({
         next: () => {
           this.getNotifications();
@@ -56,7 +67,7 @@ export class NavbarComponent implements OnInit {
     // Marcar como leída si no lo está
     if (!notification.readed) {
       this.apiService
-        .postService(ApiRequest.markAsReaded + '/' + notification.id, {})
+        .post(ApiRequest.markAsReaded + '/' + notification.id, {})
         .subscribe({
           next: () => {
             // Navegar después de marcar como leída

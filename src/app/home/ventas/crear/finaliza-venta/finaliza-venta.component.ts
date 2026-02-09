@@ -59,7 +59,7 @@ export class FinalizaVentaComponent implements OnInit {
     this.spinner.show();
     this.apiService = new ApiService(this.http);
 
-    this.apiService.getService(ApiRequest.getEntities + '?t=c').subscribe({
+    this.apiService.get(ApiRequest.getEntities + '?t=c').subscribe({
       next: (resp) => {
         this.clients = resp.data;
         this.spinner.hide();
@@ -70,7 +70,7 @@ export class FinalizaVentaComponent implements OnInit {
       },
     });
 
-    this.apiService.getService(ApiRequest.getTipoDocumento).subscribe({
+    this.apiService.get(ApiRequest.getTipoDocumento).subscribe({
       next: (resp) => {
         if (resp.status === 401 || resp.status === 403) {
           this.router.navigate(['/login']);
@@ -96,7 +96,7 @@ export class FinalizaVentaComponent implements OnInit {
         this.alertSV.alertBasic('Error', error.error.msg, 'error');
       },
     });
-    this.apiService.getService(ApiRequest.getMedioPago).subscribe({
+    this.apiService.get(ApiRequest.getMedioPago).subscribe({
       next: (resp) => {
         if (resp.status === 401 || resp.status === 403) {
           this.router.navigate(['/login']);
@@ -170,7 +170,7 @@ export class FinalizaVentaComponent implements OnInit {
         });
       });
       this.apiService
-        .postService(ApiRequest.getSales, {
+        .post(ApiRequest.getSales, {
           cliente: this.clientForm.value.id_cliente,
           medio_pago: +this.clientForm.value.id_medio_pago,
           tipo_documento: +this.clientForm.value.id_tipo_documento,

@@ -59,7 +59,7 @@ export class EditarCompraComponent implements OnInit, OnChanges {
   getTipoCompra() {
     this.apiService = new ApiService(this.http);
     this.apiService
-      .getService(ApiRequest.getComprasTipo)
+      .get(ApiRequest.getComprasTipo)
       .subscribe((res: any) => {
         this.tiposCompra = res.data;
         this.spinner.hide();
@@ -94,7 +94,7 @@ export class EditarCompraComponent implements OnInit, OnChanges {
 
       this.apiService = new ApiService(this.http);
       this.apiService
-        .postService(ApiRequest.updateCompra + '/' + this.compra.id, compra)
+        .post(ApiRequest.updateCompra + '/' + this.compra.id, compra)
         .subscribe({
           next: (resp) => {
             if (resp.status === 401 || resp.status === 403) {

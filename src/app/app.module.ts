@@ -1,6 +1,7 @@
 import {
   provideHttpClient,
   withInterceptorsFromDi,
+  HTTP_INTERCEPTORS,
 } from '@angular/common/http';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule, LOCALE_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -11,13 +12,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DataTablesModule } from 'angular-datatables';
 import { registerLocaleData } from '@angular/common';
 import { SidebarComponent } from './home/partials/sidebar/sidebar.component';
 import { NavbarComponent } from './home/partials/navbar/navbar.component';
 import { FooterComponent } from './home/partials/footer/footer.component';
 import { FIREBASE_OPTIONS } from '@angular/fire/compat';
 import { SharedModule } from './shared/shared.module';
+import { environment } from 'src/environments/environment';
+import { AuthInterceptor, ErrorInterceptor } from './shared/interceptors';
 registerLocaleData(localeEs, 'es');
 
 @NgModule({
@@ -35,21 +37,25 @@ registerLocaleData(localeEs, 'es');
     AppRoutingModule,
     NgxSpinnerModule,
     BrowserAnimationsModule,
-    BrowserModule,
     FormsModule,
     ReactiveFormsModule,
-    DataTablesModule,
     SharedModule,
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'es' },
     {
       provide: FIREBASE_OPTIONS,
-      useValue: {
-        apiKey: 'AIzaSyA4dIwysL-YcE148L9xoRxGV6iHTM5S8i4',
-        authDomain: 'hydrocontrol-f6486.firebaseapp.com',
-        databaseURL: 'https://hydrocontrol-f6486-default-rtdb.firebaseio.com/',
-      },
+      useValue: environment.firebase,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorInterceptor,
+      multi: true,
     },
     provideHttpClient(withInterceptorsFromDi()),
   ],

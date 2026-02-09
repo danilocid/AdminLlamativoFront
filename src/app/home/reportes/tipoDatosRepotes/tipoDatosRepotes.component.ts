@@ -1,31 +1,53 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ApiRequest, FormatDataTableGlobal } from 'src/app/shared/constants';
+import { ApiRequest } from 'src/app/shared/constants';
 import { ApiService } from 'src/app/shared/services/ApiService';
 import { AlertService } from 'src/app/shared/services/alert.service';
-import { DataTableDirective } from 'angular-datatables';
-import { Subject } from 'rxjs';
+import { TableColumn } from 'src/app/shared/components/simple-table/simple-table.component';
+
 @Component({
   selector: 'app-tipo-datos-repotes',
   templateUrl: './tipoDatosRepotes.component.html',
   styleUrls: ['./tipoDatosRepotes.component.css'],
 })
 export class TipoDatosRepotesComponent implements OnInit {
-  @ViewChild(DataTableDirective)
-  dtElement!: DataTableDirective;
-  dtTrigger: Subject<any> = new Subject<any>();
-  dtOptions: DataTables.Settings = {};
   tiposDatos: any[] = [];
   private apiService!: ApiService;
   showModal = false;
   tipoDato: any;
+
+  // Configuración de columnas para la tabla Angular pura
+  tableColumns: TableColumn[] = [
+    { key: 'id', label: 'Id', sortable: true },
+    { key: 'dato', label: 'Dato', sortable: true },
+    { key: 'orden', label: 'Orden', sortable: true },
+    {
+      key: 'isNumber',
+      label: 'Numero',
+      sortable: true,
+      format: (value: boolean) => (value ? 'Si' : 'No'),
+    },
+    {
+      key: 'isMoney',
+      label: 'Moneda',
+      sortable: true,
+      format: (value: boolean) => (value ? 'Si' : 'No'),
+    },
+    {
+      key: 'activo',
+      label: 'Activo',
+      sortable: true,
+      format: (value: boolean) => (value ? 'Activo' : 'Inactivo'),
+    },
+  ];
+
   constructor(
     readonly titleService: Title,
     readonly spinner: NgxSpinnerService,
     readonly alertSV: AlertService,
-    readonly http: HttpClient
+    readonly http: HttpClient,
   ) {
     this.titleService.setTitle('Tipos de datos reportes');
   }
@@ -33,26 +55,23 @@ export class TipoDatosRepotesComponent implements OnInit {
   showModalCreate() {
     this.showModal = true;
   }
+
   showModalEdit(tipoDato: any) {
     this.tipoDato = tipoDato;
     this.showModal = true;
   }
 
   ngOnInit() {
-    this.dtOptions = FormatDataTableGlobal();
-    this.dtOptions.order = [[2, 'asc']];
     this.spinner.show();
     this.getData();
   }
 
   private getData() {
     this.apiService = new ApiService(this.http);
-    this.apiService.getService(ApiRequest.getTipoDatosReportes).subscribe({
+    this.apiService.get(ApiRequest.getTipoDatosReportes).subscribe({
       next: (result: any) => {
         this.tiposDatos = result.data;
-        this.dtTrigger.next(this.dtOptions);
         this.spinner.hide();
-        //console.table(result.result);
       },
       error: (error: any) => {
         console.warn(error);

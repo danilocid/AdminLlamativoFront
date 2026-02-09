@@ -4,18 +4,11 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { HomeRoutingModule } from './home-routing.module';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DataTablesModule } from 'angular-datatables';
 import { HydrocontrolComponent } from './hydrocontrol/hydrocontrol.component';
 
 @NgModule({
   declarations: [DashboardComponent, HydrocontrolComponent],
-  imports: [
-    CommonModule,
-    HomeRoutingModule,
-    FormsModule,
-    ReactiveFormsModule,
-    DataTablesModule.forRoot(),
-  ],
+  imports: [CommonModule, HomeRoutingModule, FormsModule, ReactiveFormsModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class HomeModule {}

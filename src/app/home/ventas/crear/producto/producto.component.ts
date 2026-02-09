@@ -58,7 +58,7 @@ export class ProductoComponent implements OnInit {
       param: term ? term : '',
     };
     this.apiService
-      .getServiceWithParams(ApiRequest.getArticulos, this.params)
+      .getWithParams(ApiRequest.getArticulos, this.params)
       .subscribe({
         next: (resp) => {
           this.products = resp.data;

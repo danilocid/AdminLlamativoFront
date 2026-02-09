@@ -3,90 +3,32 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
+/**
+ * Servicio centralizado para peticiones HTTP.
+ * Los headers de autenticación son manejados automáticamente por AuthInterceptor.
+ * Los errores son manejados automáticamente por ErrorInterceptor.
+ */
 @Injectable({ providedIn: 'root' })
 export class ApiService {
-  private httpHeaders = {
-    token: '',
-    Authorization: localStorage.getItem('token') || '',
-    'Content-Type': 'application/json',
-    Accept: 'application/json',
-    'X-Content-Type-Options': 'nosniff',
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'content-type, authorization, accept',
-    'Access-Control-Allow-Methods': '',
-    'access-token': '',
-  };
-
-  //add token to header
-
   constructor(readonly http: HttpClient) {}
 
-  postService(infoUrl: string, json: object): Observable<any> {
-    const token = localStorage.getItem('token') || '';
-
-    this.httpHeaders['token'] = token;
-    // add bearer token
-    this.httpHeaders['Authorization'] = `Bearer ${token}`;
-    this.httpHeaders['Access-Control-Allow-Methods'] = 'POST';
-    const info = this.http.post(infoUrl, json, {
-      headers: this.httpHeaders,
-    });
-    return info;
+  post<T = any>(url: string, body: object): Observable<T> {
+    return this.http.post<T>(url, body);
   }
 
-  patchService(infoUrl: string, json: any): Observable<any> {
-    const token = localStorage.getItem('token') || '';
-
-    this.httpHeaders['token'] = token;
-    // add bearer token
-    this.httpHeaders['Authorization'] = `Bearer ${token}`;
-    this.httpHeaders['Access-Control-Allow-Methods'] = 'POST';
-    const info = this.http.patch(infoUrl, json, {
-      headers: this.httpHeaders,
-    });
-
-    return info;
+  patch<T = any>(url: string, body: any): Observable<T> {
+    return this.http.patch<T>(url, body);
   }
 
-  putService(infoUrl: string, json: any): Observable<any> {
-    const token = localStorage.getItem('token') || '';
-
-    this.httpHeaders['token'] = token;
-    // add bearer token
-    this.httpHeaders['Authorization'] = `Bearer ${token}`;
-    this.httpHeaders['Access-Control-Allow-Methods'] = 'POST';
-    const info = this.http.put(infoUrl, json, {
-      headers: this.httpHeaders,
-    });
-
-    return info;
+  put<T = any>(url: string, body: any): Observable<T> {
+    return this.http.put<T>(url, body);
   }
 
-  getService(infoUrl: string): Observable<any> {
-    const token = localStorage.getItem('token') || '';
-
-    this.httpHeaders['token'] = token;
-    // add bearer token
-    this.httpHeaders['Authorization'] = `Bearer ${token}`;
-    this.httpHeaders['Access-Control-Allow-Methods'] = 'POST';
-    const info = this.http.get(infoUrl, {
-      headers: this.httpHeaders,
-    });
-
-    return info;
+  get<T = any>(url: string): Observable<T> {
+    return this.http.get<T>(url);
   }
-  getServiceWithParams(infoUrl: string, params: any): Observable<any> {
-    const token = localStorage.getItem('token') || '';
 
-    this.httpHeaders['token'] = token;
-    // add bearer token
-    this.httpHeaders['Authorization'] = `Bearer ${token}`;
-    this.httpHeaders['Access-Control-Allow-Methods'] = 'POST';
-    const info = this.http.get(infoUrl, {
-      params: params,
-      headers: this.httpHeaders,
-    });
-
-    return info;
+  getWithParams<T = any>(url: string, params: any): Observable<T> {
+    return this.http.get<T>(url, { params });
   }
 }

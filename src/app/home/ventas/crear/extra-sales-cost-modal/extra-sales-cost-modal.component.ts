@@ -28,7 +28,7 @@ export class ExtraSalesCostModalComponent implements OnInit {
 
   getExtraCosts() {
     this.spinner.show('modalSpinner');
-    this.api.getService(ApiRequest.getExtraCosts).subscribe({
+    this.api.get(ApiRequest.getExtraCosts).subscribe({
       next: (resp) => {
         this.extraCosts = resp.data;
         if (this.extraCosts.length === 0) {

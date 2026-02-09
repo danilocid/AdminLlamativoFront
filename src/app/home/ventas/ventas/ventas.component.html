@@ -20,26 +20,22 @@
       </div>
 
       <div class="card-body">
-        <a [routerLink]="['create']" class="btn btn-primary">Agregar Venta</a>
-        <table
-          datatable
-          [dtOptions]="dtOptions"
-          [dtTrigger]="dtTrigger"
-          class="row-border hover"
-          aria-label="Tabla"
+        <a [routerLink]="['create']" class="btn btn-primary mb-3"
+          >Agregar Venta</a
         >
-          <thead class="table-light">
-            <tr>
-              <th>Id</th>
-              <th>Cliente</th>
-              <th>Monto</th>
-              <th>Documento</th>
-              <th>Medio de pago</th>
-              <th>Fecha</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-        </table>
+        <app-simple-table
+          [data]="ventas"
+          [columns]="columns"
+          [serverSide]="true"
+          [totalRecords]="totalRecords"
+          [loading]="loading"
+          [showSearch]="false"
+          [showViewButton]="true"
+          [showEditButton]="false"
+          [showDeleteButton]="false"
+          (dataRequest)="onDataRequest($event)"
+          (onView)="onView($event)"
+        ></app-simple-table>
       </div>
     </div>
   </div>
