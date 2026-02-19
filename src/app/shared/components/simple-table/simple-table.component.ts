@@ -68,7 +68,7 @@ export class SimpleTableComponent implements OnChanges, OnInit {
 
   searchTerm = '';
   sortColumn = '';
-  sortDirection: 'asc' | 'desc' = 'asc';
+  sortDirection: 'asc' | 'desc' = 'desc';
   currentPage = 1;
 
   filteredData: any[] = [];
