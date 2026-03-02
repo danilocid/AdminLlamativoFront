@@ -1,0 +1,228 @@
+<div
+  class="modal fade"
+  [ngClass]="{ show: show }"
+  id="modalCrearCompra"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="modalCrearCompraLabel"
+  [ngStyle]="{ display: show ? 'block' : 'none' }"
+  aria-modal="true"
+  role="dialog"
+  style="
+    --bs-modal-margin: 4rem;
+    --bs-modal-border-radius: 8px !important;
+    background: rgba(37, 37, 37, 0.5);
+    backdrop-filter: blur(2px);
+  "
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="modalCrearCompraLabel">
+          Registrar compra
+        </h1>
+        <i
+          class="fas fa-times fa-lg"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="cerrarModal()"
+          style="cursor: pointer"
+        ></i>
+      </div>
+
+      <div class="modal-body" *ngIf="compraForm">
+        <form [formGroup]="compraForm" (ngSubmit)="submit()">
+          <!-- Proveedor -->
+          <div class="form-group mb-3">
+            <label for="proveedor">Proveedor *</label>
+            <select class="form-control" formControlName="proveedor">
+              <option value="" disabled>Seleccione un proveedor</option>
+              <option *ngFor="let p of proveedores" [value]="p.rut">
+                {{ p.nombre }} ({{ p.rut }})
+              </option>
+            </select>
+            <span class="invalid-feedback" *ngIf="isValidField('proveedor')">
+              El proveedor es requerido
+            </span>
+          </div>
+
+          <div class="row">
+            <!-- Tipo documento -->
+            <div class="col-md-6 form-group mb-3">
+              <label for="tipo_documento">Tipo de documento *</label>
+              <select class="form-control" formControlName="tipo_documento">
+                <option value="" disabled>Seleccione tipo</option>
+                <option *ngFor="let td of tiposDocumento" [value]="td.id">
+                  {{ td.tipo }}
+                </option>
+              </select>
+              <span
+                class="invalid-feedback"
+                *ngIf="isValidField('tipo_documento')"
+              >
+                El tipo de documento es requerido
+              </span>
+            </div>
+
+            <!-- Número documento -->
+            <div class="col-md-6 form-group mb-3">
+              <label for="documento">N° Documento *</label>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="documento"
+                placeholder="Ej: 12345"
+              />
+              <span class="invalid-feedback" *ngIf="isValidField('documento')">
+                El número de documento es requerido
+              </span>
+            </div>
+          </div>
+
+          <div class="row">
+            <!-- Fecha -->
+            <div class="col-md-6 form-group mb-3">
+              <label for="fecha_documento">Fecha documento *</label>
+              <input
+                type="date"
+                class="form-control"
+                formControlName="fecha_documento"
+              />
+              <span
+                class="invalid-feedback"
+                *ngIf="isValidField('fecha_documento')"
+              >
+                La fecha es requerida
+              </span>
+            </div>
+
+            <!-- Tipo de compra -->
+            <div class="col-md-6 form-group mb-3">
+              <label for="tipo_compra">Tipo de compra *</label>
+              <select class="form-control" formControlName="tipo_compra">
+                <option value="" disabled>Seleccione tipo</option>
+                <option *ngFor="let tc of tiposCompra" [value]="tc.id">
+                  {{ tc.tipo_compra }}
+                </option>
+              </select>
+              <span
+                class="invalid-feedback"
+                *ngIf="isValidField('tipo_compra')"
+              >
+                El tipo de compra es requerido
+              </span>
+            </div>
+          </div>
+
+          <hr />
+          <h5>Montos del documento</h5>
+          <div class="row">
+            <div class="col-md-4 form-group mb-3">
+              <label for="monto_neto">Monto neto *</label>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="monto_neto"
+                placeholder="0"
+                (input)="calcularImpuesto('monto')"
+              />
+              <span class="invalid-feedback" *ngIf="isValidField('monto_neto')">
+                El monto neto es requerido
+              </span>
+            </div>
+
+            <div class="col-md-4 form-group mb-3">
+              <label for="monto_imp">IVA (19%)</label>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="monto_imp"
+                placeholder="0"
+              />
+            </div>
+
+            <div class="col-md-4 form-group mb-3">
+              <label>Monto total</label>
+              <input
+                type="text"
+                class="form-control"
+                [value]="'$' + (montoTotal | number: '1.0-0')"
+                readonly
+              />
+            </div>
+          </div>
+
+          <hr />
+          <h5>Costos</h5>
+          <div class="row">
+            <div class="col-md-4 form-group mb-3">
+              <label for="costo_neto">Costo neto *</label>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="costo_neto"
+                placeholder="0"
+                (input)="calcularImpuesto('costo')"
+              />
+              <span class="invalid-feedback" *ngIf="isValidField('costo_neto')">
+                El costo neto es requerido
+              </span>
+            </div>
+
+            <div class="col-md-4 form-group mb-3">
+              <label for="costo_imp">IVA (19%)</label>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="costo_imp"
+                placeholder="0"
+              />
+            </div>
+
+            <div class="col-md-4 form-group mb-3">
+              <label>Costo total</label>
+              <input
+                type="text"
+                class="form-control"
+                [value]="'$' + (costoTotal | number: '1.0-0')"
+                readonly
+              />
+            </div>
+          </div>
+
+          <!-- Observaciones -->
+          <div class="form-group mb-3">
+            <label for="observaciones">Observaciones</label>
+            <textarea
+              class="form-control"
+              formControlName="observaciones"
+              placeholder="Observaciones (opcional)"
+              rows="2"
+            ></textarea>
+          </div>
+
+          <div
+            class="row mt-3"
+            style="justify-content: center; text-align: center; display: flex"
+          >
+            <button
+              class="btn btn-success"
+              type="submit"
+              style="margin-right: 25px"
+            >
+              Registrar compra
+            </button>
+            <button
+              class="btn btn-danger"
+              type="button"
+              (click)="cerrarModal()"
+            >
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -5,30 +5,76 @@ Todos los cambios notables en el frontend serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto adhiere al [Versionado Semántico](https://semver.org/lang/es/).
 
-**Nota**: La versión se incrementa automáticamente con cada push mediante `npm version patch`.
+**Nota**: La versión se incrementa automáticamente con cada deploy mediante `npm version patch`.
 
 ## [Unreleased]
 
+## [0.0.75] - 2026-03-01
+
 ### Agregado
 
-- Sistema de marcado automático de notificaciones como leídas al hacer clic
-- Navegación automática a enlaces de notificaciones al interactuar con ellas
-- Validación de longitud máxima para código de barras (13 caracteres)
-- Mensajes de error detallados para todos los campos del formulario de productos
-- Validación en tiempo real con feedback visual para campos inválidos
+- Nuevo componente `CrearCompraComponent` con formulario modal completo para registrar compras manualmente
+- Botón "Registrar compra" en el listado de compras que reemplaza la obtención desde API
+- Endpoint `createCompra` y `getProveedores` en constantes de API
+- Formulario con validaciones reactivas: proveedor, tipo documento, montos, observaciones
+- Carga dinámica de proveedores, tipos de compra y tipos de documento en el formulario
 
 ### Modificado
 
-- Refactorización del componente de navegación para usar Router en lugar de routerLink
-- Mejora en la experiencia de usuario al interactuar con notificaciones
-- Eliminación de console.logs innecesarios en formularios
+- Eliminado método `getDataFromApi()` del componente de compras (ya no se obtienen compras desde API externa)
+- Módulo de compras actualizado para declarar `CrearCompraComponent`
+
+## [0.0.74] - 2026-02-19
+
+### Corregido
+
+- Dirección de ordenamiento predeterminada en `SimpleTableComponent` (descendente por defecto)
+
+## [0.0.73] - 2026-02-09
+
+### Agregado
+
+- Nuevo componente reutilizable `SimpleTableComponent` con paginación, ordenamiento y búsqueda integrados
+- Interceptores HTTP: `AuthInterceptor` para headers de autorización y `ErrorInterceptor` para manejo centralizado de errores
+- Validación de token JWT en `AuthService`
+- Formateo de moneda en columnas de tablas
+- Nuevos modelos y tipos para ventas (`sale.model.ts`)
+- Configuración de Firebase en archivos de entorno
+
+### Modificado
+
+- Refactorización de `VerVentaComponent` para usar `SimpleTableComponent` en lugar de DataTables
+- Refactorización masiva de tablas en múltiples módulos para usar `SimpleTableComponent`:
+  - Artículos, Ajustes de inventario, Nuevo inventario, Ver inventario
+  - Compras, Entidades, Recepciones, Reportes, Ventas
+- Simplificación de `ApiService` eliminando código redundante
+- Refactorización de `HydrocontrolComponent` con mejor estructura HTML y lógica
+- Actualización de constantes compartidas y modelos de entidad
+- Eliminación de dependencias de DataTables del proyecto
 
 ### Mejorado
 
-- Validación en tiempo real de campos del formulario con mensajes específicos
-- Experiencia de usuario en notificaciones: un solo clic para marcar como leída y navegar
-- Mejor manejo de errores en validación de formularios
-- Indicadores visuales para campos inválidos en formularios
+- Arquitectura de tablas unificada con componente reutilizable
+- Manejo centralizado de errores HTTP en toda la aplicación
+- Mejor separación de responsabilidades en servicios
+- Reducción significativa de código duplicado en componentes de listado
+
+## [0.0.72] - 2026-01-25
+
+### Agregado
+
+- Validación de longitud máxima para código de barras (13 caracteres)
+- Mensajes de error detallados para todos los campos del formulario de productos
+- Validación en tiempo real con feedback visual para campos inválidos
+- Sistema de marcado automático de notificaciones como leídas al hacer clic
+- Navegación automática a enlaces de notificaciones al interactuar con ellas
+- Documentación inicial del CHANGELOG y README
+
+### Modificado
+
+- Refactorización del componente de navegación (`NavbarComponent`) para usar Router en lugar de routerLink
+- Mejora en el componente `AlertModalComponent`
+- Eliminación de console.logs innecesarios en formularios
 
 ### Corregido
 
@@ -36,7 +82,7 @@ y este proyecto adhiere al [Versionado Semántico](https://semver.org/lang/es/).
 - Problemas de navegación en notificaciones
 - Campos de formulario que no mostraban mensajes de error apropiados
 
-## [0.0.71] - Versión Actual
+## [0.0.71] - 2025-10-24
 
 ### Características Principales
 

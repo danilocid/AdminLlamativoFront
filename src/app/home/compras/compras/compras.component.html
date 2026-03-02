@@ -56,8 +56,8 @@
             </div>
           </form>
           <div style="padding-left: 20px">
-            <button (click)="getDataFromApi()" class="btn btn-success">
-              Obtener datos desde API <i class="fas fa-retweet"></i>
+            <button (click)="abrirCrearCompra()" class="btn btn-primary">
+              <i class="fas fa-plus"></i> Registrar compra
             </button>
           </div>
         </div>
@@ -81,3 +81,7 @@
   </div>
 </section>
 <app-editar-compra [show]="showModal" [compra]="compra"></app-editar-compra>
+<app-crear-compra
+  [show]="showModalCrear"
+  (onClose)="onCloseCrear($event)"
+></app-crear-compra>

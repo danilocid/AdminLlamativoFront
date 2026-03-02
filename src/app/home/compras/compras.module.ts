@@ -4,6 +4,7 @@ import { ComprasComponent } from './compras/compras.component';
 import { ComprasRoutingModule } from './compras-routing.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { EditarCompraComponent } from './editarCompra/editarCompra.component';
+import { CrearCompraComponent } from './crearCompra/crearCompra.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
@@ -13,6 +14,6 @@ import { SharedModule } from 'src/app/shared/shared.module';
     ComprasRoutingModule,
     SharedModule,
   ],
-  declarations: [ComprasComponent, EditarCompraComponent],
+  declarations: [ComprasComponent, EditarCompraComponent, CrearCompraComponent],
 })
 export class ComprasModule {}

@@ -20,6 +20,7 @@ export class ComprasComponent implements OnInit {
   yearList = [];
   dateForm: FormGroup;
   showModal = false;
+  showModalCrear = false;
   showModalImport = false;
 
   columns: TableColumn[] = [
@@ -124,49 +125,23 @@ export class ComprasComponent implements OnInit {
     this.compra = compra;
   }
 
+  abrirCrearCompra() {
+    this.showModalCrear = true;
+  }
+
+  onCloseCrear(reload: boolean) {
+    this.showModalCrear = false;
+    if (reload) {
+      this.compras = [];
+      this.getCompras();
+    }
+  }
+
   submit() {
     this.spinner.show();
     this.month = +this.dateForm.get('month')?.value;
     this.year = +this.dateForm.get('year')?.value;
     this.compras = [];
     this.getCompras();
-  }
-
-  getDataFromApi() {
-    this.spinner.show();
-    this.month = +this.dateForm.get('month')?.value;
-    this.year = +this.dateForm.get('year')?.value;
-    this.api
-      .getWithParams(ApiRequest.getComprasFromApi, {
-        month: this.month,
-        year: this.year,
-      })
-      .subscribe({
-        next: (resp) => {
-          if (resp.status === 401 || resp.status === 403) {
-            this.router.navigateByUrl('/login');
-          }
-          this.spinner.hide();
-          this.alertSV.alertVerification(
-            'Compras',
-            'Solicitud procesada correctamente.',
-            'Ok',
-            'success',
-            () => {
-              this.compras = [];
-              this.getCompras();
-            },
-          );
-        },
-        error: (err) => {
-          this.spinner.hide();
-          console.warn(err);
-          this.alertSV.alertBasic(
-            'Error',
-            err.error.msg || 'Error desconocido',
-            'error',
-          );
-        },
-      });
   }
 }

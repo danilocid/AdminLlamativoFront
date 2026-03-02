@@ -41,6 +41,8 @@ export const ApiRequest = {
   getComprasTipo: environment.urlBackend + 'purchases/types',
   getComprasReporte: environment.urlBackend + 'purchases/report',
   updateCompra: environment.urlBackend + 'purchases/edit',
+  createCompra: environment.urlBackend + 'purchases/create',
+  getProveedores: environment.urlBackend + 'entities/providers',
 
   // notificaciones
   getNotificaciones: environment.urlBackend + 'notifications',
