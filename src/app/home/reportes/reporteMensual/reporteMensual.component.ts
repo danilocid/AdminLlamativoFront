@@ -42,13 +42,22 @@ export class ReporteMensualComponent implements OnInit {
   previousMonthCount = 0;
   previousMonthTotal = 0;
   previousMonthTotalCost = 0;
+
+  recepciones: any[] = [];
+  recepcionesTotals = {
+    count: 0,
+    costoNeto: 0,
+    costoImp: 0,
+    costoTotal: 0,
+    unidades: 0,
+  };
   constructor(
     readonly titleService: Title,
     readonly spinner: NgxSpinnerService,
     readonly router: Router,
     readonly alertSV: AlertService,
     readonly fb: FormBuilder,
-    readonly http: HttpClient
+    readonly http: HttpClient,
   ) {
     this.titleService.setTitle('Reporte mensual');
   }
@@ -83,7 +92,7 @@ export class ReporteMensualComponent implements OnInit {
           '/' +
           this.dateForm.value.month +
           '/' +
-          this.dateForm.value.year
+          this.dateForm.value.year,
       )
       .subscribe({
         next: (result: MonthlyReportResponse) => {
@@ -140,7 +149,7 @@ export class ReporteMensualComponent implements OnInit {
           '/' +
           this.dateForm.value.month +
           '/' +
-          this.dateForm.value.year
+          this.dateForm.value.year,
       )
       .subscribe({
         next: (result: any) => {
@@ -160,12 +169,35 @@ export class ReporteMensualComponent implements OnInit {
             });
           });
 
-          this.spinner.hide();
+          this.getRecepciones();
         },
         error: (error: any) => {
           console.warn(error);
           this.alertSV.alertBasic('Error', error.error.msg, 'error');
           this.spinner.hide();
+        },
+      });
+  }
+
+  getRecepciones() {
+    this.apiService = new ApiService(this.http);
+    this.apiService
+      .get(
+        ApiRequest.getRecepcionesReporte +
+          '/' +
+          this.dateForm.value.month +
+          '/' +
+          this.dateForm.value.year,
+      )
+      .subscribe({
+        next: (resp) => {
+          this.recepciones = resp.data.receptions;
+          this.recepcionesTotals = resp.data.totals;
+          this.spinner.hide();
+        },
+        error: (err) => {
+          this.spinner.hide();
+          console.warn('Error al obtener recepciones:', err);
         },
       });
   }
@@ -256,10 +288,10 @@ export class ReporteMensualComponent implements OnInit {
           currency: 'CLP',
         });
         const monto = formatter.format(
-          element.monto_neto_documento + element.monto_imp_documento
+          element.monto_neto_documento + element.monto_imp_documento,
         );
         const costo = formatter.format(
-          element.costo_neto_documento + element.costo_imp_documento
+          element.costo_neto_documento + element.costo_imp_documento,
         );
         docsRecibidos.push([
           {
@@ -345,12 +377,12 @@ export class ReporteMensualComponent implements OnInit {
           text:
             this.calculatePercentageVariation(
               element.currentMonth,
-              element.previousMonth
+              element.previousMonth,
             ) + '%',
           style:
             this.calculatePercentageVariation(
               element.currentMonth,
-              element.previousMonth
+              element.previousMonth,
             ) >= 0
               ? 'tableStyleGreen'
               : 'tableStyleRed',
@@ -361,12 +393,12 @@ export class ReporteMensualComponent implements OnInit {
           text:
             this.calculatePercentageVariation(
               element.currentMonth,
-              element.previousYear
+              element.previousYear,
             ) + '%',
           style:
             this.calculatePercentageVariation(
               element.currentMonth,
-              element.previousYear
+              element.previousYear,
             ) >= 0
               ? 'tableStyleGreen'
               : 'tableStyleRed',
@@ -399,12 +431,12 @@ export class ReporteMensualComponent implements OnInit {
         text:
           this.calculatePercentageVariation(
             totalSalesCurrentMonth,
-            totalSalesPreviousMonth
+            totalSalesPreviousMonth,
           ) + '%',
         style:
           this.calculatePercentageVariation(
             totalSalesCurrentMonth,
-            totalSalesPreviousMonth
+            totalSalesPreviousMonth,
           ) >= 0
             ? 'tableStyleGreen'
             : 'tableStyleRed',
@@ -421,12 +453,12 @@ export class ReporteMensualComponent implements OnInit {
         text:
           this.calculatePercentageVariation(
             totalSalesCurrentMonth,
-            totalSalesPreviousYear
+            totalSalesPreviousYear,
           ) + '%',
         style:
           this.calculatePercentageVariation(
             totalSalesCurrentMonth,
-            totalSalesPreviousYear
+            totalSalesPreviousYear,
           ) >= 0
             ? 'tableStyleGreen'
             : 'tableStyleRed',
@@ -461,7 +493,7 @@ export class ReporteMensualComponent implements OnInit {
 
     const previousMonthTotal = formatter.format(this.previousMonthTotal);
     const previousMonthTotalCost = formatter.format(
-      this.previousMonthTotalCost
+      this.previousMonthTotalCost,
     );
 
     comprasTable.push([
@@ -534,19 +566,19 @@ export class ReporteMensualComponent implements OnInit {
           { text: 'Costo', style: 'tableStyle' },
           {
             text: formatter.format(
-              this.salesResponse.totalCurrentMonthCost || 0
+              this.salesResponse.totalCurrentMonthCost || 0,
             ),
             style: 'tableStyle',
           },
           {
             text: formatter.format(
-              this.salesResponse.totalPreviousMonthCost || 0
+              this.salesResponse.totalPreviousMonthCost || 0,
             ),
             style: 'tableStyle',
           },
           {
             text: formatter.format(
-              this.salesResponse.totalPreviousYearCost || 0
+              this.salesResponse.totalPreviousYearCost || 0,
             ),
             style: 'tableStyle',
           },
@@ -557,19 +589,19 @@ export class ReporteMensualComponent implements OnInit {
           { text: 'Costo Extra', style: 'tableStyle' },
           {
             text: formatter.format(
-              this.salesResponse.totalCurrentMonthExtraCosts || 0
+              this.salesResponse.totalCurrentMonthExtraCosts || 0,
             ),
             style: 'tableStyle',
           },
           {
             text: formatter.format(
-              this.salesResponse.totalPreviousMonthExtraCosts || 0
+              this.salesResponse.totalPreviousMonthExtraCosts || 0,
             ),
             style: 'tableStyle',
           },
           {
             text: formatter.format(
-              this.salesResponse.totalPreviousYearExtraCosts || 0
+              this.salesResponse.totalPreviousYearExtraCosts || 0,
             ),
             style: 'tableStyle',
           },
@@ -607,7 +639,7 @@ export class ReporteMensualComponent implements OnInit {
             fillColor: function (
               rowIndex: number,
               node: any,
-              columnIndex: number
+              columnIndex: number,
             ) {
               if (rowIndex === 0) return '#3b82f6';
               return rowIndex % 2 === 0 ? '#f8fafc' : '#ffffff';
@@ -663,7 +695,7 @@ export class ReporteMensualComponent implements OnInit {
             fillColor: function (
               rowIndex: number,
               node: any,
-              columnIndex: number
+              columnIndex: number,
             ) {
               return rowIndex % 2 === 0 ? '#f8fafc' : '#ffffff';
             },
@@ -785,7 +817,7 @@ export class ReporteMensualComponent implements OnInit {
               fillColor: function (
                 rowIndex: number,
                 node: any,
-                columnIndex: number
+                columnIndex: number,
               ) {
                 if (rowIndex < 2) return '#3b82f6';
                 if (rowIndex === node.table.body.length - 1) return '#e0f2fe';
@@ -840,7 +872,7 @@ export class ReporteMensualComponent implements OnInit {
               fillColor: function (
                 rowIndex: number,
                 node: any,
-                columnIndex: number
+                columnIndex: number,
               ) {
                 if (rowIndex < 2) return '#3b82f6';
                 return rowIndex % 2 === 0 ? '#f8fafc' : '#ffffff';
@@ -886,7 +918,7 @@ export class ReporteMensualComponent implements OnInit {
           fillColor: function (
             rowIndex: number,
             node: any,
-            columnIndex: number
+            columnIndex: number,
           ) {
             if (rowIndex === 0) return '#3b82f6';
             return rowIndex % 2 === 0 ? '#ffffff' : '#f8fafc';
@@ -915,6 +947,225 @@ export class ReporteMensualComponent implements OnInit {
         },
         margin: [0, 10, 0, 15],
         unbreakable: true,
+      });
+    }
+
+    // Recepciones section
+    if (this.recepciones.length > 0) {
+      const recepcionesFormatter = new Intl.NumberFormat('es-CL', {
+        style: 'currency',
+        currency: 'CLP',
+      });
+
+      // Summary table
+      const recepcionesSummaryTable = [];
+      recepcionesSummaryTable.push([
+        { text: 'Recepciones', style: 'tableHeader', colSpan: 4 },
+        {},
+        {},
+        {},
+      ]);
+      recepcionesSummaryTable.push([
+        { text: 'Cantidad', style: 'tableHeaderSmall' },
+        { text: 'Unidades', style: 'tableHeaderSmall' },
+        { text: 'Costo Neto', style: 'tableHeaderSmall' },
+        { text: 'Costo Total', style: 'tableHeaderSmall' },
+      ]);
+      recepcionesSummaryTable.push([
+        { text: this.recepcionesTotals.count, style: 'tableStyle' },
+        { text: this.recepcionesTotals.unidades, style: 'tableStyle' },
+        {
+          text: recepcionesFormatter.format(this.recepcionesTotals.costoNeto),
+          style: 'tableStyle',
+        },
+        {
+          text: recepcionesFormatter.format(this.recepcionesTotals.costoTotal),
+          style: 'tableStyle',
+        },
+      ]);
+
+      content2.push({
+        stack: [
+          {
+            text: 'Recepciones',
+            style: 'sectionHeader',
+            margin: [0, 15, 0, 8],
+          },
+          {
+            table: {
+              body: recepcionesSummaryTable,
+              headerRows: 2,
+              keepWithHeaderRows: 2,
+            },
+            layout: {
+              fillColor: function (
+                rowIndex: number,
+                node: any,
+                columnIndex: number,
+              ) {
+                if (rowIndex < 2) return '#3b82f6';
+                return rowIndex % 2 === 0 ? '#f8fafc' : '#ffffff';
+              },
+              hLineWidth: function (i: number, node: any) {
+                return i === 0 || i === 2 || i === node.table.body.length
+                  ? 2
+                  : 0.5;
+              },
+              vLineWidth: function () {
+                return 0;
+              },
+              hLineColor: function () {
+                return '#1e40af';
+              },
+              paddingLeft: function () {
+                return 6;
+              },
+              paddingRight: function () {
+                return 6;
+              },
+              paddingTop: function () {
+                return 4;
+              },
+              paddingBottom: function () {
+                return 4;
+              },
+            },
+            margin: [0, 0, 0, 15],
+          },
+        ],
+        unbreakable: true,
+      });
+
+      // Detail table
+      const recepcionesDetail = [];
+      recepcionesDetail.push([
+        { text: 'Proveedor', style: 'tableHeaderSmall' },
+        { text: 'Documento', style: 'tableHeaderSmall' },
+        { text: 'Fecha', style: 'tableHeaderSmall' },
+        { text: 'Unidades', style: 'tableHeaderSmall' },
+        { text: 'Costo Neto', style: 'tableHeaderSmall' },
+        { text: 'IVA', style: 'tableHeaderSmall' },
+        { text: 'Costo Total', style: 'tableHeaderSmall' },
+      ]);
+
+      this.recepciones.forEach((item) => {
+        const date = new Date(item.fecha);
+        const fecha =
+          date.getDate() +
+          '/' +
+          (date.getMonth() + 1) +
+          '/' +
+          date.getFullYear();
+
+        recepcionesDetail.push([
+          {
+            text: item.proveedor.nombre + ' (' + item.proveedor.rut + ')',
+            style: 'tableStyleSmall',
+          },
+          {
+            text: '(T' + item.tipo_documento.id + ') - ' + item.documento,
+            style: 'tableStyleSmall',
+          },
+          { text: fecha, style: 'tableStyleSmall' },
+          {
+            text: item.unidades,
+            style: 'tableStyleSmall',
+            alignment: 'right',
+          },
+          {
+            text: recepcionesFormatter.format(item.costo_neto),
+            style: 'tableStyleSmall',
+            alignment: 'right',
+          },
+          {
+            text: recepcionesFormatter.format(item.costo_imp),
+            style: 'tableStyleSmall',
+            alignment: 'right',
+          },
+          {
+            text: recepcionesFormatter.format(item.costo_neto + item.costo_imp),
+            style: 'tableStyleSmall',
+            alignment: 'right',
+          },
+        ]);
+      });
+
+      // Totals row
+      recepcionesDetail.push([
+        {
+          text: 'TOTAL',
+          style: 'tableStyleSmall',
+          bold: true,
+          colSpan: 3,
+        },
+        {},
+        {},
+        {
+          text: this.recepcionesTotals.unidades,
+          style: 'tableStyleSmall',
+          bold: true,
+          alignment: 'right',
+        },
+        {
+          text: recepcionesFormatter.format(this.recepcionesTotals.costoNeto),
+          style: 'tableStyleSmall',
+          bold: true,
+          alignment: 'right',
+        },
+        {
+          text: recepcionesFormatter.format(this.recepcionesTotals.costoImp),
+          style: 'tableStyleSmall',
+          bold: true,
+          alignment: 'right',
+        },
+        {
+          text: recepcionesFormatter.format(this.recepcionesTotals.costoTotal),
+          style: 'tableStyleSmall',
+          bold: true,
+          alignment: 'right',
+        },
+      ]);
+
+      content2.push({
+        table: {
+          body: recepcionesDetail,
+          widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+          headerRows: 1,
+          keepWithHeaderRows: 1,
+        },
+        layout: {
+          fillColor: function (
+            rowIndex: number,
+            node: any,
+            columnIndex: number,
+          ) {
+            if (rowIndex === 0) return '#3b82f6';
+            if (rowIndex === node.table.body.length - 1) return '#e0f2fe';
+            return rowIndex % 2 === 0 ? '#ffffff' : '#f8fafc';
+          },
+          hLineWidth: function (i: number, node: any) {
+            return i === 0 || i === 1 || i === node.table.body.length ? 2 : 0.5;
+          },
+          vLineWidth: function () {
+            return 0;
+          },
+          hLineColor: function () {
+            return '#1e40af';
+          },
+          paddingLeft: function () {
+            return 6;
+          },
+          paddingRight: function () {
+            return 6;
+          },
+          paddingTop: function () {
+            return 4;
+          },
+          paddingBottom: function () {
+            return 4;
+          },
+        },
+        margin: [0, 10, 0, 15],
       });
     }
 
@@ -1049,7 +1300,7 @@ export class ReporteMensualComponent implements OnInit {
         currentNode: any,
         followingNodesOnPage: any,
         nodesOnNextPage: any,
-        previousNodesOnPage: any
+        previousNodesOnPage: any,
       ) {
         // Solo forzar salto en casos muy específicos para evitar fragmentación crítica
         return false; // Dejar que pdfMake maneje automáticamente los saltos
@@ -1088,7 +1339,7 @@ export class ReporteMensualComponent implements OnInit {
 
   calculatePercentageVariation(
     currentMonth: number,
-    previousMonthOrYear: number
+    previousMonthOrYear: number,
   ): number {
     if (previousMonthOrYear === 0) {
       return 0; // Retorna 0 si no se puede calcular

@@ -73,13 +73,46 @@ export class HydrocontrolComponent implements OnInit, AfterViewInit {
   }
 
   get filteredData(): Hydrocontrol[] {
-    if (!this.searchTerm) return this.data;
-    const term = this.searchTerm.toLowerCase();
-    return this.data.filter(
-      (item) =>
-        item.timeStamp?.date?.toLowerCase().includes(term) ||
-        item.agua?.temperatura?.toString().includes(term),
-    );
+    let result = this.data;
+    if (this.searchTerm) {
+      const term = this.searchTerm.toLowerCase();
+      result = result.filter(
+        (item) =>
+          item.timeStamp?.date?.toLowerCase().includes(term) ||
+          item.agua?.temperatura?.toString().includes(term),
+      );
+    }
+    if (this.sortColumn) {
+      result = [...result].sort((a, b) => {
+        const valA = this.getNestedValue(a, this.sortColumn);
+        const valB = this.getNestedValue(b, this.sortColumn);
+        let comparison = 0;
+        if (valA == null && valB == null) comparison = 0;
+        else if (valA == null) comparison = -1;
+        else if (valB == null) comparison = 1;
+        else if (typeof valA === 'number' && typeof valB === 'number')
+          comparison = valA - valB;
+        else if (valA instanceof Date && valB instanceof Date)
+          comparison = valA.getTime() - valB.getTime();
+        else comparison = String(valA).localeCompare(String(valB));
+        return this.sortDirection === 'asc' ? comparison : -comparison;
+      });
+    }
+    return result;
+  }
+
+  private getNestedValue(obj: any, path: string): any {
+    return path.split('.').reduce((o, key) => o?.[key], obj);
+  }
+
+  sort(column: string): void {
+    if (this.sortColumn === column) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortColumn = column;
+      this.sortDirection = 'asc';
+    }
+    this.currentPage = 1;
   }
 
   get paginatedData(): Hydrocontrol[] {

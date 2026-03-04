@@ -34,6 +34,7 @@ export const ApiRequest = {
 
   //recepciones
   getRecepciones: environment.urlBackend + 'receptions',
+  getRecepcionesReporte: environment.urlBackend + 'receptions/report',
 
   //compras
   getComprasFromDb: environment.urlBackend + 'purchases',

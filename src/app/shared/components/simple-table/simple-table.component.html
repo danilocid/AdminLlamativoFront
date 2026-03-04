@@ -128,7 +128,7 @@
     <div class="col-sm-12 col-md-7">
       <div
         class="dataTables_paginate paging_simple_numbers"
-        *ngIf="totalPagesServer > 0"
+        *ngIf="lastPage > 0"
       >
         <ul class="pagination">
           <li
@@ -161,26 +161,22 @@
           </li>
           <li
             class="paginate_button page-item next"
-            [class.disabled]="currentPage === totalPagesServer"
+            [class.disabled]="currentPage === lastPage"
           >
             <a
               class="page-link"
-              (click)="
-                currentPage !== totalPagesServer && goToPage(currentPage + 1)
-              "
+              (click)="currentPage !== lastPage && goToPage(currentPage + 1)"
             >
               Siguiente
             </a>
           </li>
           <li
             class="paginate_button page-item last"
-            [class.disabled]="currentPage === totalPagesServer"
+            [class.disabled]="currentPage === lastPage"
           >
             <a
               class="page-link"
-              (click)="
-                currentPage !== totalPagesServer && goToPage(totalPagesServer)
-              "
+              (click)="currentPage !== lastPage && goToPage(lastPage)"
             >
               Último
             </a>

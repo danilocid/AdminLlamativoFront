@@ -101,12 +101,19 @@ Los artefactos se almacenarán en el directorio `dist/`.
 # Ejecutar pruebas unitarias
 npm test
 
+# Ejecutar tests en modo headless (sin abrir navegador)
+npm test -- --browsers=ChromeHeadless --watch=false
+
 # Ejecutar linter
 npm run lint
 
 # Análisis de código con SonarQube
 npm run scanner
 ```
+
+**Tests Actuales:**
+
+- SimpleTableComponent: 11 tests unitarios cubriendo paginación, ordenamiento, eventos y formateo de datos
 
 ### Despliegue
 

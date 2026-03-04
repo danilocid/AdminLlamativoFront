@@ -9,6 +9,22 @@ y este proyecto adhiere al [Versionado Semántico](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+## [0.0.76] - 2026-03-03
+
+### Agregado
+
+- Suite de pruebas unitarias para `SimpleTableComponent` (11 tests)
+  - Validación de creación y valores por defecto (3 tests)
+  - Pruebas de visualización de datos en modo cliente (1 test)
+  - Validación de eventos y emisores (onView, onEdit, dataRequest) (3 tests)
+  - Pruebas de formateo de celdas y ordenamiento (2 tests)
+  - Validación de cálculos de paginación cliente/servidor (2 tests)
+
+### Mejorado
+
+- Cobertura de tests iniciada con componente crítico de la aplicación
+- Configuración de Karma y Jasmine para ejecución de tests
+
 ## [0.0.75] - 2026-03-01
 
 ### Agregado

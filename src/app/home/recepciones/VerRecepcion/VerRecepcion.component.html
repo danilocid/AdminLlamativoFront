@@ -15,8 +15,17 @@
 <section class="content">
   <div class="container-fluid">
     <div class="card">
-      <div class="card-header">
+      <div
+        class="card-header d-flex justify-content-between align-items-center"
+      >
         <h4 class="card-title">Ver recepcion {{ idRecepcion }}</h4>
+        <button
+          class="btn btn-outline-primary btn-sm"
+          (click)="generatePdf()"
+          [disabled]="!dataRecepcion.id"
+        >
+          <i class="fas fa-file-pdf"></i> Generar PDF
+        </button>
       </div>
 
       <div class="card-body">
@@ -79,6 +88,8 @@
           [pageSize]="10"
           [showSearch]="true"
           [showPagination]="true"
+          [showViewButton]="false"
+          [showEditButton]="false"
           [emptyMessage]="'No hay artículos en esta recepción'"
         ></app-simple-table>
       </div>

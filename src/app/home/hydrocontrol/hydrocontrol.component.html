@@ -173,20 +173,117 @@
           <table class="table table-bordered table-hover" aria-label="Tabla">
             <thead>
               <tr>
-                <th rowspan="2">N°</th>
-                <th rowspan="2">TimeStamp</th>
-                <th rowspan="2">Agua</th>
+                <th
+                  rowspan="2"
+                  class="pointer"
+                  (click)="sort('timeStamp.count')"
+                >
+                  N°
+                  <i
+                    *ngIf="sortColumn === 'timeStamp.count'"
+                    class="fas"
+                    [ngClass]="
+                      sortDirection === 'asc' ? 'fa-sort-up' : 'fa-sort-down'
+                    "
+                  ></i>
+                </th>
+                <th
+                  rowspan="2"
+                  class="pointer"
+                  (click)="sort('timeStamp.dateString')"
+                >
+                  TimeStamp
+                  <i
+                    *ngIf="sortColumn === 'timeStamp.dateString'"
+                    class="fas"
+                    [ngClass]="
+                      sortDirection === 'asc' ? 'fa-sort-up' : 'fa-sort-down'
+                    "
+                  ></i>
+                </th>
+                <th
+                  rowspan="2"
+                  class="pointer"
+                  (click)="sort('agua.temperatura')"
+                >
+                  Agua
+                  <i
+                    *ngIf="sortColumn === 'agua.temperatura'"
+                    class="fas"
+                    [ngClass]="
+                      sortDirection === 'asc' ? 'fa-sort-up' : 'fa-sort-down'
+                    "
+                  ></i>
+                </th>
                 <th colspan="2">Interior</th>
                 <th colspan="2">Exterior</th>
-                <th rowspan="2">Bomba</th>
-                <th rowspan="2">Ventilador</th>
+                <th rowspan="2" class="pointer" (click)="sort('reles.bomba')">
+                  Bomba
+                  <i
+                    *ngIf="sortColumn === 'reles.bomba'"
+                    class="fas"
+                    [ngClass]="
+                      sortDirection === 'asc' ? 'fa-sort-up' : 'fa-sort-down'
+                    "
+                  ></i>
+                </th>
+                <th
+                  rowspan="2"
+                  class="pointer"
+                  (click)="sort('reles.ventilador')"
+                >
+                  Ventilador
+                  <i
+                    *ngIf="sortColumn === 'reles.ventilador'"
+                    class="fas"
+                    [ngClass]="
+                      sortDirection === 'asc' ? 'fa-sort-up' : 'fa-sort-down'
+                    "
+                  ></i>
+                </th>
                 <th rowspan="2"><i class="fas fa-trash pointer"></i></th>
               </tr>
               <tr>
-                <th>T</th>
-                <th>H</th>
-                <th>T</th>
-                <th>H</th>
+                <th class="pointer" (click)="sort('interior.temperatura')">
+                  T
+                  <i
+                    *ngIf="sortColumn === 'interior.temperatura'"
+                    class="fas"
+                    [ngClass]="
+                      sortDirection === 'asc' ? 'fa-sort-up' : 'fa-sort-down'
+                    "
+                  ></i>
+                </th>
+                <th class="pointer" (click)="sort('interior.humedad')">
+                  H
+                  <i
+                    *ngIf="sortColumn === 'interior.humedad'"
+                    class="fas"
+                    [ngClass]="
+                      sortDirection === 'asc' ? 'fa-sort-up' : 'fa-sort-down'
+                    "
+                  ></i>
+                </th>
+                <th class="pointer" (click)="sort('exterior.temperatura')">
+                  T
+                  <i
+                    *ngIf="sortColumn === 'exterior.temperatura'"
+                    class="fas"
+                    [ngClass]="
+                      sortDirection === 'asc' ? 'fa-sort-up' : 'fa-sort-down'
+                    "
+                  ></i>
+                </th>
+                <th class="pointer" (click)="sort('exterior.humedad')">
+                  H
+                  <i
+                    *ngIf="sortColumn === 'exterior.humedad'"
+                    class="fas"
+                    [ngClass]="
+                      sortDirection === 'asc' ? 'fa-sort-up' : 'fa-sort-down'
+                    "
+                  ></i>
+                </th>
               </tr>
             </thead>
             <tbody>

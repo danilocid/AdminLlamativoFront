@@ -47,10 +47,13 @@ export class SimpleTableComponent implements OnChanges, OnInit {
   @Input() showSearch = true;
   @Input() showPagination = true;
   @Input() showPageSize = true;
-  @Input() showActions = false;
   @Input() showViewButton = true;
   @Input() showEditButton = true;
   @Input() showDeleteButton = false;
+
+  get showActions(): boolean {
+    return this.showViewButton || this.showEditButton || this.showDeleteButton;
+  }
   @Input() emptyMessage = 'No hay datos disponibles';
   @Input() trackByKey = 'id';
 
@@ -230,6 +233,10 @@ export class SimpleTableComponent implements OnChanges, OnInit {
 
   get totalPagesServer(): number {
     return Math.ceil(this.totalRecords / this.pageSize);
+  }
+
+  get lastPage(): number {
+    return this.serverSide ? this.totalPagesServer : this.totalPages;
   }
 
   get startIndex(): number {

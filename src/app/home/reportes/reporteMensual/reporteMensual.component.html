@@ -105,68 +105,74 @@
             </tr>
           </thead>
           <tbody>
-            @for(item of salesData; track item.id) {
-            <tr>
-              <td>{{ item.name }}</td>
-              <td class="text-right">{{ item.currentMonthCount | number }}</td>
-              <td class="text-right">
-                ${{ item.currentMonth | number : "1.0-0" }}
-              </td>
+            @for (item of salesData; track item.id) {
+              <tr>
+                <td>{{ item.name }}</td>
+                <td class="text-right">
+                  {{ item.currentMonthCount | number }}
+                </td>
+                <td class="text-right">
+                  ${{ item.currentMonth | number: "1.0-0" }}
+                </td>
 
-              <td class="text-right">{{ item.previousMonthCount | number }}</td>
-              <td class="text-right">
-                ${{ item.previousMonth | number : "1.0-0" }}
-              </td>
-              <td
-                class="text-right"
-                [ngClass]="{
-                  'text-success':
+                <td class="text-right">
+                  {{ item.previousMonthCount | number }}
+                </td>
+                <td class="text-right">
+                  ${{ item.previousMonth | number: "1.0-0" }}
+                </td>
+                <td
+                  class="text-right"
+                  [ngClass]="{
+                    'text-success':
+                      calculatePercentageVariation(
+                        item.currentMonth,
+                        item.previousMonth
+                      ) >= 0,
+                    'text-danger':
+                      calculatePercentageVariation(
+                        item.currentMonth,
+                        item.previousMonth
+                      ) < 0,
+                  }"
+                >
+                  {{
                     calculatePercentageVariation(
                       item.currentMonth,
                       item.previousMonth
-                    ) >= 0,
-                  'text-danger':
-                    calculatePercentageVariation(
-                      item.currentMonth,
-                      item.previousMonth
-                    ) < 0
-                }"
-              >
-                {{
-                  calculatePercentageVariation(
-                    item.currentMonth,
-                    item.previousMonth
-                  )
-                }}%
-              </td>
+                    )
+                  }}%
+                </td>
 
-              <td class="text-right">{{ item.previousYearCount | number }}</td>
-              <td class="text-right">
-                ${{ item.previousYear | number : "1.0-0" }}
-              </td>
-              <td
-                class="text-right"
-                [ngClass]="{
-                  'text-success':
+                <td class="text-right">
+                  {{ item.previousYearCount | number }}
+                </td>
+                <td class="text-right">
+                  ${{ item.previousYear | number: "1.0-0" }}
+                </td>
+                <td
+                  class="text-right"
+                  [ngClass]="{
+                    'text-success':
+                      calculatePercentageVariation(
+                        item.currentMonth,
+                        item.previousYear
+                      ) >= 0,
+                    'text-danger':
+                      calculatePercentageVariation(
+                        item.currentMonth,
+                        item.previousYear
+                      ) < 0,
+                  }"
+                >
+                  {{
                     calculatePercentageVariation(
                       item.currentMonth,
                       item.previousYear
-                    ) >= 0,
-                  'text-danger':
-                    calculatePercentageVariation(
-                      item.currentMonth,
-                      item.previousYear
-                    ) < 0
-                }"
-              >
-                {{
-                  calculatePercentageVariation(
-                    item.currentMonth,
-                    item.previousYear
-                  )
-                }}%
-              </td>
-            </tr>
+                    )
+                  }}%
+                </td>
+              </tr>
             }
             <!-- Fila de totales -->
             <tr class="table-info font-weight-bold" *ngIf="salesResponse">
@@ -177,7 +183,7 @@
               <td class="text-right">
                 <strong
                   >${{
-                    salesResponse.totalCurrentMonth | number : "1.0-0"
+                    salesResponse.totalCurrentMonth | number: "1.0-0"
                   }}</strong
                 >
               </td>
@@ -187,7 +193,7 @@
               <td class="text-right">
                 <strong
                   >${{
-                    salesResponse.totalPreviousMonth | number : "1.0-0"
+                    salesResponse.totalPreviousMonth | number: "1.0-0"
                   }}</strong
                 >
               </td>
@@ -203,7 +209,7 @@
                     calculatePercentageVariation(
                       salesResponse.totalCurrentMonth,
                       salesResponse.totalPreviousMonth
-                    ) < 0
+                    ) < 0,
                 }"
               >
                 <strong
@@ -221,7 +227,7 @@
               <td class="text-right">
                 <strong
                   >${{
-                    salesResponse.totalPreviousYear | number : "1.0-0"
+                    salesResponse.totalPreviousYear | number: "1.0-0"
                   }}</strong
                 >
               </td>
@@ -237,7 +243,7 @@
                     calculatePercentageVariation(
                       salesResponse.totalCurrentMonth,
                       salesResponse.totalPreviousYear
-                    ) < 0
+                    ) < 0,
                 }"
               >
                 <strong
@@ -283,7 +289,7 @@
                     <i class="fas fa-dollar-sign"></i>
                   </span>
                   <h5 class="description-header">
-                    ${{ salesResponse.totalCurrentMonth | number : "1.0-0" }}
+                    ${{ salesResponse.totalCurrentMonth | number: "1.0-0" }}
                   </h5>
                   <span class="description-text">VENTAS</span>
                 </div>
@@ -295,8 +301,7 @@
                   </span>
                   <h5 class="description-header">
                     ${{
-                      salesResponse.totalCurrentMonthCost || 0
-                        | number : "1.0-0"
+                      salesResponse.totalCurrentMonthCost || 0 | number: "1.0-0"
                     }}
                   </h5>
                   <span class="description-text">COSTO</span>
@@ -310,7 +315,7 @@
                   <h5 class="description-header">
                     ${{
                       salesResponse.totalCurrentMonthExtraCosts || 0
-                        | number : "1.0-0"
+                        | number: "1.0-0"
                     }}
                   </h5>
                   <span class="description-text">C.EXTRA</span>
@@ -323,7 +328,7 @@
                   <span class="badge badge-success badge-lg">
                     <i class="fas fa-chart-line mr-1"></i>
                     Ganancia: ${{
-                      salesResponse.totalGrossCurrentMonth | number : "1.0-0"
+                      salesResponse.totalGrossCurrentMonth | number: "1.0-0"
                     }}
                   </span>
                 </div>
@@ -353,7 +358,7 @@
                         salesResponse.countPreviousMonth,
                       'text-danger':
                         salesResponse.countCurrentMonth <
-                        salesResponse.countPreviousMonth
+                        salesResponse.countPreviousMonth,
                     }"
                   >
                     <i
@@ -364,7 +369,7 @@
                           salesResponse.countPreviousMonth,
                         'fa-arrow-down':
                           salesResponse.countCurrentMonth <
-                          salesResponse.countPreviousMonth
+                          salesResponse.countPreviousMonth,
                       }"
                     ></i>
                   </span>
@@ -388,7 +393,7 @@
                         calculatePercentageVariation(
                           salesResponse.totalCurrentMonth,
                           salesResponse.totalPreviousMonth
-                        ) < 0
+                        ) < 0,
                     }"
                   >
                     {{
@@ -399,7 +404,7 @@
                     }}%
                   </span>
                   <h5 class="description-header">
-                    ${{ salesResponse.totalPreviousMonth | number : "1.0-0" }}
+                    ${{ salesResponse.totalPreviousMonth | number: "1.0-0" }}
                   </h5>
                   <span class="description-text">VENTAS</span>
                 </div>
@@ -418,7 +423,7 @@
                         calculatePercentageVariation(
                           salesResponse.totalCurrentMonthCost || 0,
                           salesResponse.totalPreviousMonthCost || 0
-                        ) < 0
+                        ) < 0,
                     }"
                   >
                     {{
@@ -431,7 +436,7 @@
                   <h5 class="description-header">
                     ${{
                       salesResponse.totalPreviousMonthCost || 0
-                        | number : "1.0-0"
+                        | number: "1.0-0"
                     }}
                   </h5>
                   <span class="description-text">COSTO</span>
@@ -451,7 +456,7 @@
                         calculatePercentageVariation(
                           salesResponse.totalCurrentMonthExtraCosts || 0,
                           salesResponse.totalPreviousMonthExtraCosts || 0
-                        ) < 0
+                        ) < 0,
                     }"
                   >
                     {{
@@ -464,7 +469,7 @@
                   <h5 class="description-header">
                     ${{
                       salesResponse.totalPreviousMonthExtraCosts || 0
-                        | number : "1.0-0"
+                        | number: "1.0-0"
                     }}
                   </h5>
                   <span class="description-text">C.EXTRA</span>
@@ -477,7 +482,7 @@
                   <span class="badge badge-success badge-lg">
                     <i class="fas fa-chart-line mr-1"></i>
                     Ganancia: ${{
-                      salesResponse.totalGrossPreviousMonth | number : "1.0-0"
+                      salesResponse.totalGrossPreviousMonth | number: "1.0-0"
                     }}
                   </span>
                 </div>
@@ -507,7 +512,7 @@
                         salesResponse.countPreviousYear,
                       'text-danger':
                         salesResponse.countCurrentMonth <
-                        salesResponse.countPreviousYear
+                        salesResponse.countPreviousYear,
                     }"
                   >
                     <i
@@ -518,7 +523,7 @@
                           salesResponse.countPreviousYear,
                         'fa-arrow-down':
                           salesResponse.countCurrentMonth <
-                          salesResponse.countPreviousYear
+                          salesResponse.countPreviousYear,
                       }"
                     ></i>
                   </span>
@@ -542,7 +547,7 @@
                         calculatePercentageVariation(
                           salesResponse.totalCurrentMonth,
                           salesResponse.totalPreviousYear
-                        ) < 0
+                        ) < 0,
                     }"
                   >
                     {{
@@ -553,7 +558,7 @@
                     }}%
                   </span>
                   <h5 class="description-header">
-                    ${{ salesResponse.totalPreviousYear | number : "1.0-0" }}
+                    ${{ salesResponse.totalPreviousYear | number: "1.0-0" }}
                   </h5>
                   <span class="description-text">VENTAS</span>
                 </div>
@@ -572,7 +577,7 @@
                         calculatePercentageVariation(
                           salesResponse.totalCurrentMonthCost || 0,
                           salesResponse.totalPreviousYearCost || 0
-                        ) < 0
+                        ) < 0,
                     }"
                   >
                     {{
@@ -584,8 +589,7 @@
                   </span>
                   <h5 class="description-header">
                     ${{
-                      salesResponse.totalPreviousYearCost || 0
-                        | number : "1.0-0"
+                      salesResponse.totalPreviousYearCost || 0 | number: "1.0-0"
                     }}
                   </h5>
                   <span class="description-text">COSTO</span>
@@ -605,7 +609,7 @@
                         calculatePercentageVariation(
                           salesResponse.totalCurrentMonthExtraCosts || 0,
                           salesResponse.totalPreviousYearExtraCosts || 0
-                        ) < 0
+                        ) < 0,
                     }"
                   >
                     {{
@@ -618,7 +622,7 @@
                   <h5 class="description-header">
                     ${{
                       salesResponse.totalPreviousYearExtraCosts || 0
-                        | number : "1.0-0"
+                        | number: "1.0-0"
                     }}
                   </h5>
                   <span class="description-text">C.EXTRA</span>
@@ -631,7 +635,7 @@
                   <span class="badge badge-success badge-lg">
                     <i class="fas fa-chart-line mr-1"></i>
                     Ganancia: ${{
-                      salesResponse.totalGrossPreviousYear | number : "1.0-0"
+                      salesResponse.totalGrossPreviousYear | number: "1.0-0"
                     }}
                   </span>
                 </div>
@@ -725,18 +729,18 @@
               <td>{{ item.proveedor.nombre }} ({{ item.proveedor.rut }})</td>
               <td>(T{{ item.tipo_documento.id }}) - {{ item.documento }}</td>
               <td [attr.data-order]="item.fecha_documento">
-                {{ item.fecha_documento | date : "dd/MM/yyyy" : "UTC + 3" }}
+                {{ item.fecha_documento | date: "dd/MM/yyyy" : "UTC + 3" }}
               </td>
               <td>
                 ${{
                   item.monto_neto_documento + item.monto_imp_documento
-                    | currency : "CLP" : "" : "1.0-0"
+                    | currency: "CLP" : "" : "1.0-0"
                 }}
               </td>
               <td>
                 ${{
                   item.costo_neto_documento + item.costo_imp_documento
-                    | currency : "CLP" : "" : "1.0-0"
+                    | currency: "CLP" : "" : "1.0-0"
                 }}
               </td>
 
@@ -745,6 +749,119 @@
               </td>
 
               <td>{{ item.observaciones }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Recepciones -->
+    <div class="card" *ngIf="recepciones.length > 0">
+      <div class="card-header">
+        <h4 class="card-title">Recepciones</h4>
+      </div>
+      <div class="card-body">
+        <div class="row mb-3">
+          <div class="col-md-3">
+            <div class="info-box bg-light">
+              <span class="info-box-icon bg-info"
+                ><i class="fas fa-boxes"></i
+              ></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Recepciones</span>
+                <span class="info-box-number">{{
+                  recepcionesTotals.count
+                }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="info-box bg-light">
+              <span class="info-box-icon bg-success"
+                ><i class="fas fa-cubes"></i
+              ></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Unidades</span>
+                <span class="info-box-number">{{
+                  recepcionesTotals.unidades | number
+                }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="info-box bg-light">
+              <span class="info-box-icon bg-warning"
+                ><i class="fas fa-dollar-sign"></i
+              ></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Costo Neto</span>
+                <span class="info-box-number"
+                  >${{ recepcionesTotals.costoNeto | number: "1.0-0" }}</span
+                >
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="info-box bg-light">
+              <span class="info-box-icon bg-primary"
+                ><i class="fas fa-receipt"></i
+              ></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Costo Total</span>
+                <span class="info-box-number"
+                  >${{ recepcionesTotals.costoTotal | number: "1.0-0" }}</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <table class="row-border hover table" aria-label="Tabla recepciones">
+          <thead class="table-light">
+            <tr>
+              <th>Proveedor</th>
+              <th>Documento</th>
+              <th>Fecha</th>
+              <th>Unidades</th>
+              <th>Costo Neto</th>
+              <th>IVA</th>
+              <th>Costo Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of recepciones">
+              <td>{{ item.proveedor.nombre }} ({{ item.proveedor.rut }})</td>
+              <td>(T{{ item.tipo_documento.id }}) - {{ item.documento }}</td>
+              <td>{{ item.fecha | date: "dd/MM/yyyy" }}</td>
+              <td class="text-right">{{ item.unidades | number }}</td>
+              <td class="text-right">
+                ${{ item.costo_neto | number: "1.0-0" }}
+              </td>
+              <td class="text-right">
+                ${{ item.costo_imp | number: "1.0-0" }}
+              </td>
+              <td class="text-right">
+                ${{ item.costo_neto + item.costo_imp | number: "1.0-0" }}
+              </td>
+            </tr>
+            <tr class="table-info font-weight-bold">
+              <td colspan="3"><strong>TOTAL</strong></td>
+              <td class="text-right">
+                <strong>{{ recepcionesTotals.unidades | number }}</strong>
+              </td>
+              <td class="text-right">
+                <strong
+                  >${{ recepcionesTotals.costoNeto | number: "1.0-0" }}</strong
+                >
+              </td>
+              <td class="text-right">
+                <strong
+                  >${{ recepcionesTotals.costoImp | number: "1.0-0" }}</strong
+                >
+              </td>
+              <td class="text-right">
+                <strong
+                  >${{ recepcionesTotals.costoTotal | number: "1.0-0" }}</strong
+                >
+              </td>
             </tr>
           </tbody>
         </table>
