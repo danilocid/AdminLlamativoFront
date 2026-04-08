@@ -38,4 +38,7 @@ export interface ReportDataItem {
   title: string;
   value: number;
   isMoney: boolean;
+  previousValue?: number;
+  variation?: number;
+  hasComparison?: boolean;
 }

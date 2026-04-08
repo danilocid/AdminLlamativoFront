@@ -6,7 +6,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { VerRecepcionComponent } from './VerRecepcion/VerRecepcion.component';
 import { AgregarRecepcionComponent } from './agregarRecepcion/agregarRecepcion.component';
-import { VentasModule } from '../ventas/ventas.module';
+import { VentasModule } from '../../ventas/ventas.module';
 import { FinalizaRecepcionComponent } from './agregarRecepcion/finalizaRecepcion/finalizaRecepcion.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 

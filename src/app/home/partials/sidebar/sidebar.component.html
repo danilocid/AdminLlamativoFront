@@ -40,27 +40,36 @@
             <p>Articulos</p>
           </a>
         </li>
-        <li class="nav-item">
-          <a
-            [routerLink]="['recepciones']"
-            [routerLinkActive]="['recepciones']"
-            [class.active]="isActive('recepciones')"
-            class="nav-link"
-          >
-            <i class="nav-icon fas fa-boxes"></i>
-            <p>Recepciones</p>
+        <li class="nav-item" [class.menu-open]="isActive('inventario')">
+          <a class="nav-link" [class.active]="isActive('inventario')">
+            <i class="nav-icon fas fa-warehouse"></i>
+            <p>
+              Inventario
+              <i class="right fas fa-angle-left"></i>
+            </p>
           </a>
-        </li>
-        <li class="nav-item">
-          <a
-            [routerLink]="['articulos/ajustes']"
-            [routerLinkActive]="['active']"
-            [class.active]="isActive('ajustes')"
-            class="nav-link"
-          >
-            <i class="fas fa-clipboard-list nav-icon"></i>
-            <p>Ajustes de Inventario</p>
-          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a
+                [routerLink]="['inventario/recepciones']"
+                [routerLinkActive]="['active']"
+                class="nav-link"
+              >
+                <i class="far fa-circle nav-icon"></i>
+                <p>Recepciones</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                [routerLink]="['inventario/ajustes']"
+                [routerLinkActive]="['active']"
+                class="nav-link"
+              >
+                <i class="far fa-circle nav-icon"></i>
+                <p>Ajustes de Inventario</p>
+              </a>
+            </li>
+          </ul>
         </li>
 
         <li class="nav-item">

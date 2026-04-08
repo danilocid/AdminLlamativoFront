@@ -5,7 +5,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ApiRequest } from 'src/app/shared/constants';
 import { ApiService } from 'src/app/shared/services/ApiService';
 import { AlertService } from 'src/app/shared/services/alert.service';
-import { Entidad } from '../../../../shared/models/entidad.model';
+import { Entidad } from '../../../../../shared/models/entidad.model';
 import { Router } from '@angular/router';
 import { ProductCart } from 'src/app/shared/models/product.model';
 import { DocumentType } from 'src/app/shared/models/documentType.model';
@@ -30,7 +30,7 @@ export class FinalizaRecepcionComponent implements OnInit {
     readonly http: HttpClient,
     readonly spinner: NgxSpinnerService,
     readonly alertSV: AlertService,
-    readonly router: Router
+    readonly router: Router,
   ) {}
 
   ngOnInit() {
@@ -100,14 +100,14 @@ export class FinalizaRecepcionComponent implements OnInit {
       this.alertSV.alertBasic(
         'Aviso',
         'Debe seleccionar un medio de pago',
-        'info'
+        'info',
       );
       return;
     } else if (this.clientForm.value.id_tipo_documento === 'Tipo documento') {
       this.alertSV.alertBasic(
         'Aviso',
         'Debe seleccionar un tipo de documento',
-        'info'
+        'info',
       );
       return;
     } else {
@@ -146,7 +146,7 @@ export class FinalizaRecepcionComponent implements OnInit {
             this.alertSV.alertBasic(
               'Aviso',
               'Recepcion generada correctamente',
-              'success'
+              'success',
             );
             //this.router.navigate(['/recepciones']);
           },
@@ -155,7 +155,7 @@ export class FinalizaRecepcionComponent implements OnInit {
             this.alertSV.alertBasic(
               'Error al generar la recepcion',
               error.error.msg,
-              'error'
+              'error',
             );
           },
         });

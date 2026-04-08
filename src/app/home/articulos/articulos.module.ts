@@ -7,10 +7,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { ArticulosComponent } from './articulos/articulos.component';
 import { CreateComponent } from './create/create.component';
 import { VerArticulosComponent } from './verArticulos/verArticulos.component';
-import { AjustesDeInventarioComponent } from './ajustesDeInventario/ajustesDeInventario.component';
-import { NewInventoryComponent } from './newInventory/newInventory.component';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { VerInventarioComponent } from './ver-inventario/ver-inventario.component';
 import { LabelModalComponent } from './label-modal/label-modal.component';
 
 @NgModule({
@@ -27,9 +24,6 @@ import { LabelModalComponent } from './label-modal/label-modal.component';
     ArticulosComponent,
     CreateComponent,
     VerArticulosComponent,
-    AjustesDeInventarioComponent,
-    NewInventoryComponent,
-    VerInventarioComponent,
     LabelModalComponent,
   ],
   exports: [ArticulosComponent],

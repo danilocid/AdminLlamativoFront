@@ -25,7 +25,7 @@ export class VerInventarioComponent implements OnInit {
     entradas: 0,
     salidas: 0,
     tipo_movimiento: '',
-    created_at: '',
+    createdAt: '',
     name: '',
     observaciones: '',
   };
@@ -71,7 +71,7 @@ export class VerInventarioComponent implements OnInit {
             this.spinner.hide();
             this.alertSV.alertBasic('Error', resp.message, 'error');
             setTimeout(() => {
-              this.router.navigate(['/articulos/ajustes']);
+              this.router.navigate(['/inventario/ajustes']);
             }, 3000);
           }
           this.movimiento = resp.data;

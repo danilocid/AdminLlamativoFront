@@ -108,6 +108,6 @@ export class ListarRecepcionesComponent implements OnInit {
   }
 
   onView(row: Reception): void {
-    this.router.navigate(['/recepciones/ver', row.id]);
+    this.router.navigate(['/inventario/recepciones/ver', row.id]);
   }
 }

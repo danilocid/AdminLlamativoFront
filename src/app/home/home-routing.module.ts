@@ -25,11 +25,9 @@ const routes: Routes = [
       import('./ventas/ventas.module').then((m) => m.VentasModule),
   },
   {
-    path: 'recepciones',
+    path: 'inventario',
     loadChildren: () =>
-      import('./recepciones/recepciones.module').then(
-        (m) => m.RecepcionesModule
-      ),
+      import('./inventario/inventario.module').then((m) => m.InventarioModule),
   },
   {
     path: 'compras',

@@ -40,7 +40,7 @@
             <p>observaciones: {{ movimiento.observaciones }}</p>
             <p>
               Fecha:
-              {{ movimiento.created_at || date | date: "dd/MM/yyyy HH:mm" }}
+              {{ movimiento.createdAt || date | date: "dd/MM/yyyy HH:mm" }}
             </p>
             <p>Entradas {{ movimiento.entradas }}</p>
             <p>Salidas {{ movimiento.salidas }}</p>

@@ -9,6 +9,29 @@ y este proyecto adhiere al [Versionado Semántico](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+## [0.0.77] - 2026-04-07
+
+### Agregado
+
+- **Módulo Inventario** (`/inventario`)
+  - Nuevo módulo lazy-loaded que agrupa Recepciones y Ajustes de Inventario
+  - Recepciones movidas a `inventario/recepciones`
+  - Ajustes de inventario movidos a `inventario/ajustes`
+- **Menú sidebar desplegable "Inventario"** con sub-ítems Recepciones y Ajustes de Inventario (AdminLTE treeview)
+- **Columna Fecha** en la tabla de Ajustes de Inventario (campo `createdAt`, formato `dd/mm/aaaa`)
+- **Soporte `rowLink` en `SimpleTableComponent`**: el botón "Ver" se convierte en `<a href>` real cuando se provee `rowLink`, habilitando apertura en nueva pestaña
+- **Links de movimientos reales** en la vista de detalle de artículo (Venta, Recepción, Ajuste de inventario)
+- **Links reales** en la tabla de artículos (botón Ver como enlace)
+
+### Modificado
+
+- `SimpleTableComponent`: nuevo input `rowLink?: (row: any) => string`
+- Rutas de recepciones y ajustes actualizadas en sidebar, componentes y navegaciones programáticas
+- `verArticulos`: función `movementLink` convertida a arrow function para uso como referencia de input
+- Error handler del reporte mensual: eliminada alerta duplicada (ya manejada por `ErrorInterceptor`)
+- `tsconfig.json`: `ignoreDeprecations` revertido a `"5.0"` (máximo soportado en TypeScript 5.9.x)
+- `strictPropertyInitialization` eliminado de `angularCompilerOptions` (no permitido ahí)
+
 ## [0.0.76] - 2026-03-03
 
 ### Agregado

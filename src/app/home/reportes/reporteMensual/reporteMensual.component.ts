@@ -4,16 +4,17 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { forkJoin } from 'rxjs';
 import { ApiRequest } from 'src/app/shared/constants';
 import { ApiService } from 'src/app/shared/services/ApiService';
 import { AlertService } from 'src/app/shared/services/alert.service';
+import { PdfGeneratorService } from 'src/app/shared/services/pdf-generator.service';
 import {
   MonthlyReportResponse,
   SalesData,
   SalesResponse,
   ReportDataItem,
 } from 'src/app/shared/models/monthlyReport.model';
-import * as pdfMake from 'pdfmake/build/pdfmake';
 import packageJson from '../../../../../package.json';
 
 @Component({
@@ -58,6 +59,7 @@ export class ReporteMensualComponent implements OnInit {
     readonly alertSV: AlertService,
     readonly fb: FormBuilder,
     readonly http: HttpClient,
+    private pdfGenerator: PdfGeneratorService,
   ) {
     this.titleService.setTitle('Reporte mensual');
   }
@@ -69,9 +71,7 @@ export class ReporteMensualComponent implements OnInit {
     for (let i = 2023; i <= this.year; i++) {
       this.yearList.push(i);
     }
-    //FIXME: remove this, only for testing
-    /* this.month = 2;
-    this.year = 2025; */
+
     this.dateForm = this.fb.group({
       month: [this.month],
       year: [this.year],
@@ -82,1255 +82,152 @@ export class ReporteMensualComponent implements OnInit {
   }
 
   submit() {
+    // Limpiar datos previos
     this.compras = [];
-    //console.log(this.dateForm.value);
+    this.data = [];
+    this.recepciones = [];
+    this.haveData = false;
+
     this.spinner.show();
     this.apiService = new ApiService(this.http);
-    this.apiService
-      .get(
-        ApiRequest.getReporteMensual +
-          '/' +
-          this.dateForm.value.month +
-          '/' +
-          this.dateForm.value.year,
-      )
-      .subscribe({
-        next: (result: MonthlyReportResponse) => {
-          this.month = this.dateForm.controls['month'].value - 1;
-          this.year = this.dateForm.controls['year'].value;
 
-          this.salesData = result.data.sales;
-          this.salesResponse = result.data;
+    const month = this.dateForm.value.month;
+    const year = this.dateForm.value.year;
 
-          this.getCompras();
-        },
-        error: (error: any) => {
-          console.warn(error);
-          this.alertSV.alertBasic('Error', error.error.msg, 'error');
-          this.spinner.hide();
-        },
-      });
-  }
+    // Calcular mes anterior
+    let previousMonth = month - 1;
+    let previousYear = year;
+    if (previousMonth === 0) {
+      previousMonth = 12;
+      previousYear = year - 1;
+    }
 
-  getCompras() {
-    this.apiService = new ApiService(this.http);
-    this.apiService
-      .getWithParams(ApiRequest.getComprasReporte, this.dateForm.value)
-      .subscribe({
-        next: (resp) => {
-          if (resp.status === 401 || resp.status === 403) {
-            this.router.navigateByUrl('/login');
-          }
+    // Ejecutar todas las llamadas en paralelo (incluyendo mes anterior)
+    forkJoin({
+      reporteMensual: this.apiService.get(
+        `${ApiRequest.getReporteMensual}/${month}/${year}`,
+      ),
+      compras: this.apiService.getWithParams(ApiRequest.getComprasReporte, {
+        month,
+        year,
+      }),
+      reportData: this.apiService.get(
+        `${ApiRequest.getReportData}/${month}/${year}`,
+      ),
+      reportDataPrevious: this.apiService.get(
+        `${ApiRequest.getReportData}/${previousMonth}/${previousYear}`,
+      ),
+      recepciones: this.apiService.get(
+        `${ApiRequest.getRecepcionesReporte}/${month}/${year}`,
+      ),
+    }).subscribe({
+      next: (results) => {
+        // Actualizar mes y año
+        this.month = month - 1;
+        this.year = year;
 
-          //  console.log(resp);
-          this.compras = resp.data.purchases;
-          this.currentMonthCount = resp.data.totals.currentMonth.count;
-          this.currentMonthTotal = resp.data.totals.currentMonth.total;
-          this.currentMonthTotalCost = resp.data.totals.currentMonth.totalCost;
-          this.previousMonthCount = resp.data.totals.previousMonth.count;
-          this.previousMonthTotal = resp.data.totals.previousMonth.total;
-          this.previousMonthTotalCost =
-            resp.data.totals.previousMonth.totalCost;
+        // Procesar datos de ventas (reporteMensual)
+        const salesResult = results.reporteMensual as MonthlyReportResponse;
+        this.salesData = salesResult.data.sales;
+        this.salesResponse = salesResult.data;
 
-          this.getReportData();
-        },
-        error: (err) => {
-          this.spinner.hide();
-          this.alertSV.alertBasic('Error', err.error.msg, 'error');
-        },
-      });
-  }
+        // Procesar datos de compras
+        const comprasResult = results.compras;
+        if (comprasResult.status === 401 || comprasResult.status === 403) {
+          this.router.navigateByUrl('/login');
+          return;
+        }
+        this.compras = comprasResult.data.purchases;
+        this.currentMonthCount = comprasResult.data.totals.currentMonth.count;
+        this.currentMonthTotal = comprasResult.data.totals.currentMonth.total;
+        this.currentMonthTotalCost =
+          comprasResult.data.totals.currentMonth.totalCost;
+        this.previousMonthCount = comprasResult.data.totals.previousMonth.count;
+        this.previousMonthTotal = comprasResult.data.totals.previousMonth.total;
+        this.previousMonthTotalCost =
+          comprasResult.data.totals.previousMonth.totalCost;
 
-  getReportData() {
-    this.apiService = new ApiService(this.http);
-    this.apiService
-      .get(
-        ApiRequest.getReportData +
-          '/' +
-          this.dateForm.value.month +
-          '/' +
-          this.dateForm.value.year,
-      )
-      .subscribe({
-        next: (result: any) => {
-          //console.log(result.result);
-          if (result.data.length == 0) {
-            this.haveData = false;
-          }
-          result.data.forEach((element: any) => {
-            //element.dato retorna el nombre del dato, modificar la primera letra en mayuscula
-            this.haveData = true;
+        // Procesar datos adicionales (reportData) del mes actual y anterior
+        const reportDataResult = results.reportData;
+        const reportDataPreviousResult = results.reportDataPrevious;
+
+        // Crear mapa de datos del mes anterior por tipo
+        const previousDataMap = new Map<string, number>();
+        if (
+          reportDataPreviousResult.data &&
+          reportDataPreviousResult.data.length > 0
+        ) {
+          reportDataPreviousResult.data.forEach((element: any) => {
+            const key = element.reportDataType.dato;
+            previousDataMap.set(key, element.dato);
+          });
+        }
+
+        if (reportDataResult.data.length === 0) {
+          this.haveData = false;
+        } else {
+          this.haveData = true;
+          reportDataResult.data.forEach((element: any) => {
+            const title =
+              element.reportDataType.dato.charAt(0).toUpperCase() +
+              element.reportDataType.dato.slice(1);
+            const currentValue = element.dato;
+            const previousValue = previousDataMap.get(
+              element.reportDataType.dato,
+            );
+
+            let variation: number | undefined;
+            if (previousValue !== undefined && previousValue !== 0) {
+              variation =
+                ((currentValue - previousValue) / previousValue) * 100;
+              variation = parseFloat(variation.toFixed(2));
+            }
+
             this.data.push({
-              title:
-                element.reportDataType.dato.charAt(0).toUpperCase() +
-                element.reportDataType.dato.slice(1),
-              value: element.dato,
-              isMoney: element.reportDataType.isMoney == 1 ? true : false,
+              title,
+              value: currentValue,
+              isMoney: element.reportDataType.isMoney == 1,
+              previousValue,
+              variation,
+              hasComparison: previousValue !== undefined,
             });
           });
+        }
 
-          this.getRecepciones();
-        },
-        error: (error: any) => {
-          console.warn(error);
-          this.alertSV.alertBasic('Error', error.error.msg, 'error');
-          this.spinner.hide();
-        },
-      });
-  }
+        // Procesar recepciones
+        const recepcionesResult = results.recepciones;
+        this.recepciones = recepcionesResult.data.receptions;
+        this.recepcionesTotals = recepcionesResult.data.totals;
 
-  getRecepciones() {
-    this.apiService = new ApiService(this.http);
-    this.apiService
-      .get(
-        ApiRequest.getRecepcionesReporte +
-          '/' +
-          this.dateForm.value.month +
-          '/' +
-          this.dateForm.value.year,
-      )
-      .subscribe({
-        next: (resp) => {
-          this.recepciones = resp.data.receptions;
-          this.recepcionesTotals = resp.data.totals;
-          this.spinner.hide();
-        },
-        error: (err) => {
-          this.spinner.hide();
-          console.warn('Error al obtener recepciones:', err);
-        },
-      });
+        this.spinner.hide();
+      },
+      error: (error: any) => {
+        console.warn('Error al cargar datos del reporte:', error);
+        this.spinner.hide();
+      },
+    });
   }
 
   generatePdf() {
-    const data = [];
-    this.data.forEach((element) => {
-      if (element.isMoney) {
-        //add money format
-        const formatter = new Intl.NumberFormat('es-CL', {
-          style: 'currency',
-          currency: 'CLP',
-        });
-        const money = formatter.format(element.value);
-        data.push([
-          { text: element.title, style: 'table' },
-          { text: money, style: 'dataStyle' },
-        ]);
-      } else {
-        data.push([
-          { text: element.title, style: 'table' },
-          { text: element.value, style: 'dataStyle' },
-        ]);
-      }
-    });
-    const today = new Date();
-    const todayDate =
-      today.getDate() +
-      '/' +
-      (today.getMonth() + 1) +
-      '/' +
-      today.getFullYear() +
-      ' ' +
-      today.getHours() +
-      ':' +
-      today.getMinutes();
-
-    //get month name on spanish
-    const monthNames = [
-      'Enero',
-      'Febrero',
-      'Marzo',
-      'Abril',
-      'Mayo',
-      'Junio ',
-      'Julio',
-      'Agosto',
-      'Septiembre',
-      'Octubre',
-      'Noviembre',
-      'Diciembre ',
-    ];
-    const monthName = monthNames[this.dateForm.controls['month'].value - 1];
-    const header =
-      'Reporte mensual ' +
-      monthName +
-      ' - ' +
-      this.dateForm.controls['year'].value;
-    const docsRecibidos = [];
-
-    //header for docs recibidos (emisor, fecha, documento, neto, iva, total, tipo, observaciones)
-
-    //body for docs recibidos
-    //dummy data
-    if (this.compras.length != 0) {
-      docsRecibidos.push([
-        { text: 'Emisor', style: 'tableHeaderSmall' },
-        { text: 'Fecha', style: 'tableHeaderSmall' },
-        { text: 'Doc', style: 'tableHeaderSmall' },
-        { text: 'Monto', style: 'tableHeaderSmall' },
-        { text: 'Costo', style: 'tableHeaderSmall' },
-        { text: 'Tipo', style: 'tableHeaderSmall' },
-        { text: 'Obs.', style: 'tableHeaderSmall' },
-      ]);
-      this.compras.forEach((element) => {
-        //format date to dd/mm/yyyy
-        const date = new Date(element.fecha_documento);
-        const fecha =
-          date.getDate() +
-          '/' +
-          (date.getMonth() + 1) +
-          '/' +
-          date.getFullYear();
-
-        //format money
-        const formatter = new Intl.NumberFormat('es-CL', {
-          style: 'currency',
-          currency: 'CLP',
-        });
-        const monto = formatter.format(
-          element.monto_neto_documento + element.monto_imp_documento,
-        );
-        const costo = formatter.format(
-          element.costo_neto_documento + element.costo_imp_documento,
-        );
-        docsRecibidos.push([
-          {
-            text: element.proveedor.nombre + ' (' + element.proveedor.rut + ')',
-            style: 'tableStyleSmall',
-          },
-
-          { text: fecha, style: 'tableStyleSmall' },
-          {
-            text: element.documento + ' (' + element.tipo_documento.id + ')',
-            style: 'tableStyleSmall',
-          },
-
-          { text: monto, style: 'tableStyleSmall' },
-          { text: costo, style: 'tableStyleSmall' },
-
-          { text: element.tipo_compra.tipo_compra, style: 'tableStyleSmall' },
-          { text: element.observaciones, style: 'tableStyleSmall' },
-        ]);
-      });
-    }
-
-    //body for docs emitidos
-    //dummy data
-    const docsEmitidos = [];
-
-    docsEmitidos.push([
-      { text: 'Documento', style: 'tableHeaderSmall', rowSpan: 2 },
-      { text: 'Mes actual', style: 'tableHeader', colSpan: 2 },
-      {},
-      { text: 'Mes anterior', style: 'tableHeader', colSpan: 3 },
-      {},
-      {},
-      { text: 'Año anterior', style: 'tableHeader', colSpan: 3 },
-      {},
-      {},
-    ]);
-    docsEmitidos.push([
-      {},
-      { text: 'Cantidad', style: 'tableHeaderSmall' },
-      { text: 'Monto', style: 'tableHeaderSmall' },
-      { text: 'Cantidad', style: 'tableHeaderSmall' },
-      { text: 'Monto', style: 'tableHeaderSmall' },
-      { text: '% Dif.', style: 'tableHeaderSmall' },
-      { text: 'Cantidad', style: 'tableHeaderSmall' },
-      { text: 'Monto', style: 'tableHeaderSmall' },
-      { text: '% Dif', style: 'tableHeaderSmall' },
-    ]);
-
-    //get total docs emitidos for each tipo documento
-    let totalSalesCurrentMonth = 0;
-    let totalSalesCurrentMonthCount = 0;
-    let totalSalesPreviousMonth = 0;
-    let totalSalesPreviousMonthCount = 0;
-    let totalSalesPreviousYear = 0;
-    let totalSalesPreviousYearCount = 0;
-
-    this.salesData.forEach((element) => {
-      //format money
-      const formatter = new Intl.NumberFormat('es-CL', {
-        style: 'currency',
-        currency: 'CLP',
-      });
-      const monto = formatter.format(element.currentMonth);
-      const montoAnterior = formatter.format(element.previousMonth);
-      const montoAnioAnterior = formatter.format(element.previousYear);
-      totalSalesCurrentMonth += element.currentMonth;
-      totalSalesCurrentMonthCount += element.currentMonthCount;
-      totalSalesPreviousMonth += element.previousMonth;
-      totalSalesPreviousMonthCount += element.previousMonthCount;
-      totalSalesPreviousYear += element.previousYear;
-      totalSalesPreviousYearCount += element.previousYearCount;
-      docsEmitidos.push([
-        {
-          text: element.name,
-          style: 'tableStyle',
-        },
-        { text: element.currentMonthCount, style: 'tableStyle' },
-        { text: monto, style: 'tableStyle' },
-        { text: element.previousMonthCount, style: 'tableStyle' },
-        { text: montoAnterior, style: 'tableStyle' },
-        {
-          text:
-            this.calculatePercentageVariation(
-              element.currentMonth,
-              element.previousMonth,
-            ) + '%',
-          style:
-            this.calculatePercentageVariation(
-              element.currentMonth,
-              element.previousMonth,
-            ) >= 0
-              ? 'tableStyleGreen'
-              : 'tableStyleRed',
-        },
-        { text: element.previousYearCount, style: 'tableStyle' },
-        { text: montoAnioAnterior, style: 'tableStyle' },
-        {
-          text:
-            this.calculatePercentageVariation(
-              element.currentMonth,
-              element.previousYear,
-            ) + '%',
-          style:
-            this.calculatePercentageVariation(
-              element.currentMonth,
-              element.previousYear,
-            ) >= 0
-              ? 'tableStyleGreen'
-              : 'tableStyleRed',
-        },
-      ]);
-    });
-
-    docsEmitidos.push([
+    this.pdfGenerator.generateMonthlyReportPdf(
+      this.month,
+      this.year,
+      this.data,
+      this.compras,
       {
-        text: 'Total',
-        style: 'tableStyle',
+        currentMonthCount: this.currentMonthCount,
+        currentMonthTotal: this.currentMonthTotal,
+        currentMonthTotalCost: this.currentMonthTotalCost,
+        previousMonthCount: this.previousMonthCount,
+        previousMonthTotal: this.previousMonthTotal,
+        previousMonthTotalCost: this.previousMonthTotalCost,
       },
-      { text: totalSalesCurrentMonthCount, style: 'tableStyle' },
-      {
-        text: new Intl.NumberFormat('es-CL', {
-          style: 'currency',
-          currency: 'CLP',
-        }).format(totalSalesCurrentMonth),
-        style: 'tableStyle',
-      },
-      { text: totalSalesPreviousMonthCount, style: 'tableStyle' },
-      {
-        text: new Intl.NumberFormat('es-CL', {
-          style: 'currency',
-          currency: 'CLP',
-        }).format(totalSalesPreviousMonth),
-        style: 'tableStyle',
-      },
-      {
-        text:
-          this.calculatePercentageVariation(
-            totalSalesCurrentMonth,
-            totalSalesPreviousMonth,
-          ) + '%',
-        style:
-          this.calculatePercentageVariation(
-            totalSalesCurrentMonth,
-            totalSalesPreviousMonth,
-          ) >= 0
-            ? 'tableStyleGreen'
-            : 'tableStyleRed',
-      },
-      { text: totalSalesPreviousYearCount, style: 'tableStyle' },
-      {
-        text: new Intl.NumberFormat('es-CL', {
-          style: 'currency',
-          currency: 'CLP',
-        }).format(totalSalesPreviousYear),
-        style: 'tableStyle',
-      },
-      {
-        text:
-          this.calculatePercentageVariation(
-            totalSalesCurrentMonth,
-            totalSalesPreviousYear,
-          ) + '%',
-        style:
-          this.calculatePercentageVariation(
-            totalSalesCurrentMonth,
-            totalSalesPreviousYear,
-          ) >= 0
-            ? 'tableStyleGreen'
-            : 'tableStyleRed',
-      },
-    ]);
-
-    const comprasTable = [];
-    comprasTable.push([
-      { text: 'Mes actual', colSpan: 3, style: 'tableHeader' },
-      {},
-      {},
-      { text: 'Mes anterior', colSpan: 3, style: 'tableHeader' },
-      {},
-      {},
-    ]);
-    comprasTable.push([
-      { text: 'Cantidad', style: 'tableHeaderSmall' },
-      { text: 'Monto', style: 'tableHeaderSmall' },
-      { text: 'Costo', style: 'tableHeaderSmall' },
-      { text: 'Cantidad', style: 'tableHeaderSmall' },
-      { text: 'Monto', style: 'tableHeaderSmall' },
-      { text: 'Costo', style: 'tableHeaderSmall' },
-    ]);
-
-    const formatter = new Intl.NumberFormat('es-CL', {
-      style: 'currency',
-      currency: 'CLP',
-    });
-
-    const currentMonthTotal = formatter.format(this.currentMonthTotal);
-    const currentMonthTotalCost = formatter.format(this.currentMonthTotalCost);
-
-    const previousMonthTotal = formatter.format(this.previousMonthTotal);
-    const previousMonthTotalCost = formatter.format(
-      this.previousMonthTotalCost,
+      this.salesData,
+      this.salesResponse,
+      this.recepciones,
+      this.recepcionesTotals,
+      this.version,
     );
-
-    comprasTable.push([
-      { text: this.currentMonthCount, style: 'tableStyle' },
-      { text: currentMonthTotal, style: 'tableStyle' },
-      { text: currentMonthTotalCost, style: 'tableStyle' },
-      { text: this.previousMonthCount, style: 'tableStyle' },
-      { text: previousMonthTotal, style: 'tableStyle' },
-      { text: previousMonthTotalCost, style: 'tableStyle' },
-    ]);
-
-    //insert docs emitidos table, if there is data
-    const content2 = [];
-    content2.push({ text: header, style: 'header' });
-
-    // Crear sección con dos columnas: Resumen Financiero y Datos Adicionales
-    if (this.salesResponse || data.length > 0) {
-      const columnsContent = [];
-
-      // Columna izquierda: Resumen Financiero
-      if (this.salesResponse) {
-        const resumenFinancieroColumn = [];
-
-        resumenFinancieroColumn.push({
-          text: 'Resumen Financiero',
-          style: 'sectionHeader',
-        });
-
-        // Crear tabla de resumen financiero
-        const resumenFinanciero = [];
-        resumenFinanciero.push([
-          { text: '', style: 'tableHeaderSmall' },
-          { text: 'Mes Actual', style: 'tableHeaderSmall' },
-          { text: 'Mes Anterior', style: 'tableHeaderSmall' },
-          { text: 'Año Anterior', style: 'tableHeaderSmall' },
-        ]);
-
-        const formatter = new Intl.NumberFormat('es-CL', {
-          style: 'currency',
-          currency: 'CLP',
-        });
-
-        // Fila de documentos
-        resumenFinanciero.push([
-          { text: 'Documentos', style: 'tableStyle' },
-          { text: this.salesResponse.countCurrentMonth, style: 'tableStyle' },
-          { text: this.salesResponse.countPreviousMonth, style: 'tableStyle' },
-          { text: this.salesResponse.countPreviousYear, style: 'tableStyle' },
-        ]);
-
-        // Fila de ventas
-        resumenFinanciero.push([
-          { text: 'Ventas', style: 'tableStyle' },
-          {
-            text: formatter.format(this.salesResponse.totalCurrentMonth),
-            style: 'tableStyle',
-          },
-          {
-            text: formatter.format(this.salesResponse.totalPreviousMonth),
-            style: 'tableStyle',
-          },
-          {
-            text: formatter.format(this.salesResponse.totalPreviousYear),
-            style: 'tableStyle',
-          },
-        ]);
-
-        // Fila de costos
-        resumenFinanciero.push([
-          { text: 'Costo', style: 'tableStyle' },
-          {
-            text: formatter.format(
-              this.salesResponse.totalCurrentMonthCost || 0,
-            ),
-            style: 'tableStyle',
-          },
-          {
-            text: formatter.format(
-              this.salesResponse.totalPreviousMonthCost || 0,
-            ),
-            style: 'tableStyle',
-          },
-          {
-            text: formatter.format(
-              this.salesResponse.totalPreviousYearCost || 0,
-            ),
-            style: 'tableStyle',
-          },
-        ]);
-
-        // Fila de costos extra
-        resumenFinanciero.push([
-          { text: 'Costo Extra', style: 'tableStyle' },
-          {
-            text: formatter.format(
-              this.salesResponse.totalCurrentMonthExtraCosts || 0,
-            ),
-            style: 'tableStyle',
-          },
-          {
-            text: formatter.format(
-              this.salesResponse.totalPreviousMonthExtraCosts || 0,
-            ),
-            style: 'tableStyle',
-          },
-          {
-            text: formatter.format(
-              this.salesResponse.totalPreviousYearExtraCosts || 0,
-            ),
-            style: 'tableStyle',
-          },
-        ]);
-
-        // Fila de ganancia (si está disponible)
-        if (this.salesResponse.totalGrossCurrentMonth) {
-          resumenFinanciero.push([
-            { text: 'Ganancia', style: 'tableStyleGreen' },
-            {
-              text: formatter.format(this.salesResponse.totalGrossCurrentMonth),
-              style: 'tableStyleGreen',
-            },
-            {
-              text: this.salesResponse.totalGrossPreviousMonth
-                ? formatter.format(this.salesResponse.totalGrossPreviousMonth)
-                : '$0',
-              style: 'tableStyleGreen',
-            },
-            {
-              text: this.salesResponse.totalGrossPreviousYear
-                ? formatter.format(this.salesResponse.totalGrossPreviousYear)
-                : '$0',
-              style: 'tableStyleGreen',
-            },
-          ]);
-        }
-
-        resumenFinancieroColumn.push({
-          table: {
-            body: resumenFinanciero,
-            widths: ['*', 'auto', 'auto', 'auto'],
-          },
-          layout: {
-            fillColor: function (
-              rowIndex: number,
-              node: any,
-              columnIndex: number,
-            ) {
-              if (rowIndex === 0) return '#3b82f6';
-              return rowIndex % 2 === 0 ? '#f8fafc' : '#ffffff';
-            },
-            hLineWidth: function (i: number, node: any) {
-              return i === 0 || i === node.table.body.length ? 2 : 1;
-            },
-            vLineWidth: function (i: number, node: any) {
-              return 0;
-            },
-            hLineColor: function (i: number, node: any) {
-              return i === 0 || i === node.table.body.length
-                ? '#1e40af'
-                : '#e2e8f0';
-            },
-            paddingLeft: function (i: number) {
-              return 8;
-            },
-            paddingRight: function (i: number) {
-              return 8;
-            },
-            paddingTop: function (i: number) {
-              return 6;
-            },
-            paddingBottom: function (i: number) {
-              return 6;
-            },
-          },
-          margin: [0, 8, 0, 0],
-        });
-
-        columnsContent.push({
-          width: '55%',
-          stack: resumenFinancieroColumn,
-        });
-      }
-
-      // Columna derecha: Datos Adicionales
-      if (data.length > 0) {
-        const datosAdicionalesColumn = [];
-
-        datosAdicionalesColumn.push({
-          text: 'Datos Adicionales',
-          style: 'sectionHeader',
-        });
-
-        datosAdicionalesColumn.push({
-          table: {
-            body: data,
-            widths: ['*', 'auto'],
-          },
-          layout: {
-            fillColor: function (
-              rowIndex: number,
-              node: any,
-              columnIndex: number,
-            ) {
-              return rowIndex % 2 === 0 ? '#f8fafc' : '#ffffff';
-            },
-            hLineWidth: function (i: number, node: any) {
-              return i === 0 || i === node.table.body.length ? 2 : 1;
-            },
-            vLineWidth: function (i: number, node: any) {
-              return 0;
-            },
-            hLineColor: function (i: number, node: any) {
-              return i === 0 || i === node.table.body.length
-                ? '#1e40af'
-                : '#e2e8f0';
-            },
-            paddingLeft: function (i: number) {
-              return 8;
-            },
-            paddingRight: function (i: number) {
-              return 8;
-            },
-            paddingTop: function (i: number) {
-              return 5;
-            },
-            paddingBottom: function (i: number) {
-              return 5;
-            },
-          },
-          margin: [0, 8, 0, 0],
-        });
-
-        columnsContent.push({
-          width: '5%',
-          text: '', // Espacio separador
-        });
-
-        columnsContent.push({
-          width: '40%',
-          stack: datosAdicionalesColumn,
-        });
-      } else if (this.salesResponse) {
-        // Si no hay datos adicionales pero sí resumen financiero, agregar espacio vacío
-        columnsContent.push({
-          width: '45%',
-          text: '',
-        });
-      }
-
-      // Solo agregar si no hay datos adicionales pero sí resumen financiero
-      if (!this.salesResponse && data.length > 0) {
-        // Si solo hay datos adicionales, centrar la columna
-        const datosAdicionalesColumn = [];
-
-        datosAdicionalesColumn.push({
-          text: 'Datos Adicionales',
-          style: 'sectionHeader',
-        });
-
-        datosAdicionalesColumn.push({
-          table: {
-            body: data,
-            widths: ['*', 'auto'],
-          },
-          layout: 'lightHorizontalLines',
-          margin: [0, 5, 0, 0],
-        });
-
-        columnsContent.unshift({
-          width: '25%',
-          text: '',
-        });
-        columnsContent.push({
-          width: '5%',
-          text: '',
-        });
-        columnsContent.push({
-          width: '40%',
-          stack: datosAdicionalesColumn,
-        });
-        columnsContent.push({
-          width: '30%',
-          text: '',
-        });
-      }
-
-      // Agregar las columnas al contenido
-      content2.push({
-        columns: columnsContent,
-        margin: [0, 0, 0, 20],
-        unbreakable: false,
-      });
-    }
-
-    if (docsEmitidos.length != 0) {
-      content2.push({
-        stack: [
-          {
-            text: 'Documentos Emitidos',
-            style: 'sectionHeader',
-            margin: [0, 15, 0, 8],
-          },
-          {
-            table: {
-              body: docsEmitidos,
-              headerRows: 2,
-              widths: [
-                '*',
-                'auto',
-                'auto',
-                'auto',
-                'auto',
-                'auto',
-                'auto',
-                'auto',
-                'auto',
-              ],
-              keepWithHeaderRows: 2,
-            },
-            layout: {
-              fillColor: function (
-                rowIndex: number,
-                node: any,
-                columnIndex: number,
-              ) {
-                if (rowIndex < 2) return '#3b82f6';
-                if (rowIndex === node.table.body.length - 1) return '#e0f2fe';
-                return rowIndex % 2 === 0 ? '#f8fafc' : '#ffffff';
-              },
-              hLineWidth: function (i: number, node: any) {
-                return i === 0 || i === 2 || i === node.table.body.length
-                  ? 2
-                  : 0.5;
-              },
-              vLineWidth: function (i: number, node: any) {
-                return 0;
-              },
-              hLineColor: function (i: number, node: any) {
-                return '#1e40af';
-              },
-              paddingLeft: function (i: number) {
-                return 6;
-              },
-              paddingRight: function (i: number) {
-                return 6;
-              },
-              paddingTop: function (i: number) {
-                return 4;
-              },
-              paddingBottom: function (i: number) {
-                return 4;
-              },
-            },
-            margin: [0, 0, 0, 15],
-          },
-        ],
-        unbreakable: true,
-      });
-    }
-
-    if (docsRecibidos.length != 0) {
-      content2.push({
-        stack: [
-          {
-            text: 'Documentos Recibidos',
-            style: 'sectionHeader',
-            margin: [0, 15, 0, 8],
-          },
-          {
-            table: {
-              body: comprasTable,
-              headerRows: 2,
-              keepWithHeaderRows: 2,
-            },
-            layout: {
-              fillColor: function (
-                rowIndex: number,
-                node: any,
-                columnIndex: number,
-              ) {
-                if (rowIndex < 2) return '#3b82f6';
-                return rowIndex % 2 === 0 ? '#f8fafc' : '#ffffff';
-              },
-              hLineWidth: function (i: number, node: any) {
-                return i === 0 || i === 2 || i === node.table.body.length
-                  ? 2
-                  : 0.5;
-              },
-              vLineWidth: function (i: number, node: any) {
-                return 0;
-              },
-              hLineColor: function (i: number, node: any) {
-                return '#1e40af';
-              },
-              paddingLeft: function (i: number) {
-                return 6;
-              },
-              paddingRight: function (i: number) {
-                return 6;
-              },
-              paddingTop: function (i: number) {
-                return 4;
-              },
-              paddingBottom: function (i: number) {
-                return 4;
-              },
-            },
-            margin: [0, 0, 0, 15],
-          },
-        ],
-        unbreakable: true,
-      });
-
-      content2.push({
-        table: {
-          body: docsRecibidos,
-          widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
-          headerRows: 1,
-          keepWithHeaderRows: 1,
-        },
-        layout: {
-          fillColor: function (
-            rowIndex: number,
-            node: any,
-            columnIndex: number,
-          ) {
-            if (rowIndex === 0) return '#3b82f6';
-            return rowIndex % 2 === 0 ? '#ffffff' : '#f8fafc';
-          },
-          hLineWidth: function (i: number, node: any) {
-            return i === 0 || i === 1 || i === node.table.body.length ? 2 : 0.5;
-          },
-          vLineWidth: function (i: number, node: any) {
-            return 0;
-          },
-          hLineColor: function (i: number, node: any) {
-            return '#1e40af';
-          },
-          paddingLeft: function (i: number) {
-            return 6;
-          },
-          paddingRight: function (i: number) {
-            return 6;
-          },
-          paddingTop: function (i: number) {
-            return 4;
-          },
-          paddingBottom: function (i: number) {
-            return 4;
-          },
-        },
-        margin: [0, 10, 0, 15],
-        unbreakable: true,
-      });
-    }
-
-    // Recepciones section
-    if (this.recepciones.length > 0) {
-      const recepcionesFormatter = new Intl.NumberFormat('es-CL', {
-        style: 'currency',
-        currency: 'CLP',
-      });
-
-      // Summary table
-      const recepcionesSummaryTable = [];
-      recepcionesSummaryTable.push([
-        { text: 'Recepciones', style: 'tableHeader', colSpan: 4 },
-        {},
-        {},
-        {},
-      ]);
-      recepcionesSummaryTable.push([
-        { text: 'Cantidad', style: 'tableHeaderSmall' },
-        { text: 'Unidades', style: 'tableHeaderSmall' },
-        { text: 'Costo Neto', style: 'tableHeaderSmall' },
-        { text: 'Costo Total', style: 'tableHeaderSmall' },
-      ]);
-      recepcionesSummaryTable.push([
-        { text: this.recepcionesTotals.count, style: 'tableStyle' },
-        { text: this.recepcionesTotals.unidades, style: 'tableStyle' },
-        {
-          text: recepcionesFormatter.format(this.recepcionesTotals.costoNeto),
-          style: 'tableStyle',
-        },
-        {
-          text: recepcionesFormatter.format(this.recepcionesTotals.costoTotal),
-          style: 'tableStyle',
-        },
-      ]);
-
-      content2.push({
-        stack: [
-          {
-            text: 'Recepciones',
-            style: 'sectionHeader',
-            margin: [0, 15, 0, 8],
-          },
-          {
-            table: {
-              body: recepcionesSummaryTable,
-              headerRows: 2,
-              keepWithHeaderRows: 2,
-            },
-            layout: {
-              fillColor: function (
-                rowIndex: number,
-                node: any,
-                columnIndex: number,
-              ) {
-                if (rowIndex < 2) return '#3b82f6';
-                return rowIndex % 2 === 0 ? '#f8fafc' : '#ffffff';
-              },
-              hLineWidth: function (i: number, node: any) {
-                return i === 0 || i === 2 || i === node.table.body.length
-                  ? 2
-                  : 0.5;
-              },
-              vLineWidth: function () {
-                return 0;
-              },
-              hLineColor: function () {
-                return '#1e40af';
-              },
-              paddingLeft: function () {
-                return 6;
-              },
-              paddingRight: function () {
-                return 6;
-              },
-              paddingTop: function () {
-                return 4;
-              },
-              paddingBottom: function () {
-                return 4;
-              },
-            },
-            margin: [0, 0, 0, 15],
-          },
-        ],
-        unbreakable: true,
-      });
-
-      // Detail table
-      const recepcionesDetail = [];
-      recepcionesDetail.push([
-        { text: 'Proveedor', style: 'tableHeaderSmall' },
-        { text: 'Documento', style: 'tableHeaderSmall' },
-        { text: 'Fecha', style: 'tableHeaderSmall' },
-        { text: 'Unidades', style: 'tableHeaderSmall' },
-        { text: 'Costo Neto', style: 'tableHeaderSmall' },
-        { text: 'IVA', style: 'tableHeaderSmall' },
-        { text: 'Costo Total', style: 'tableHeaderSmall' },
-      ]);
-
-      this.recepciones.forEach((item) => {
-        const date = new Date(item.fecha);
-        const fecha =
-          date.getDate() +
-          '/' +
-          (date.getMonth() + 1) +
-          '/' +
-          date.getFullYear();
-
-        recepcionesDetail.push([
-          {
-            text: item.proveedor.nombre + ' (' + item.proveedor.rut + ')',
-            style: 'tableStyleSmall',
-          },
-          {
-            text: '(T' + item.tipo_documento.id + ') - ' + item.documento,
-            style: 'tableStyleSmall',
-          },
-          { text: fecha, style: 'tableStyleSmall' },
-          {
-            text: item.unidades,
-            style: 'tableStyleSmall',
-            alignment: 'right',
-          },
-          {
-            text: recepcionesFormatter.format(item.costo_neto),
-            style: 'tableStyleSmall',
-            alignment: 'right',
-          },
-          {
-            text: recepcionesFormatter.format(item.costo_imp),
-            style: 'tableStyleSmall',
-            alignment: 'right',
-          },
-          {
-            text: recepcionesFormatter.format(item.costo_neto + item.costo_imp),
-            style: 'tableStyleSmall',
-            alignment: 'right',
-          },
-        ]);
-      });
-
-      // Totals row
-      recepcionesDetail.push([
-        {
-          text: 'TOTAL',
-          style: 'tableStyleSmall',
-          bold: true,
-          colSpan: 3,
-        },
-        {},
-        {},
-        {
-          text: this.recepcionesTotals.unidades,
-          style: 'tableStyleSmall',
-          bold: true,
-          alignment: 'right',
-        },
-        {
-          text: recepcionesFormatter.format(this.recepcionesTotals.costoNeto),
-          style: 'tableStyleSmall',
-          bold: true,
-          alignment: 'right',
-        },
-        {
-          text: recepcionesFormatter.format(this.recepcionesTotals.costoImp),
-          style: 'tableStyleSmall',
-          bold: true,
-          alignment: 'right',
-        },
-        {
-          text: recepcionesFormatter.format(this.recepcionesTotals.costoTotal),
-          style: 'tableStyleSmall',
-          bold: true,
-          alignment: 'right',
-        },
-      ]);
-
-      content2.push({
-        table: {
-          body: recepcionesDetail,
-          widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
-          headerRows: 1,
-          keepWithHeaderRows: 1,
-        },
-        layout: {
-          fillColor: function (
-            rowIndex: number,
-            node: any,
-            columnIndex: number,
-          ) {
-            if (rowIndex === 0) return '#3b82f6';
-            if (rowIndex === node.table.body.length - 1) return '#e0f2fe';
-            return rowIndex % 2 === 0 ? '#ffffff' : '#f8fafc';
-          },
-          hLineWidth: function (i: number, node: any) {
-            return i === 0 || i === 1 || i === node.table.body.length ? 2 : 0.5;
-          },
-          vLineWidth: function () {
-            return 0;
-          },
-          hLineColor: function () {
-            return '#1e40af';
-          },
-          paddingLeft: function () {
-            return 6;
-          },
-          paddingRight: function () {
-            return 6;
-          },
-          paddingTop: function () {
-            return 4;
-          },
-          paddingBottom: function () {
-            return 4;
-          },
-        },
-        margin: [0, 10, 0, 15],
-      });
-    }
-
-    const docDefinition = {
-      content: content2,
-      footer: function (currentPage: number, pageCount: number) {
-        return {
-          table: {
-            widths: ['*', 'auto'],
-            body: [
-              [
-                {
-                  text: `Reporte mensual ${this.month + 1}-${this.year}`,
-                  style: 'footerLeft',
-                  border: [false, false, false, false],
-                },
-                {
-                  text: `Página ${currentPage} de ${pageCount}`,
-                  style: 'footerRight',
-                  border: [false, false, false, false],
-                },
-              ],
-              [
-                {
-                  text: `Generado por llamativoAdmin v${this.version} el ${todayDate}`,
-                  style: 'footerSubtext',
-                  colSpan: 2,
-                  border: [false, false, false, false],
-                },
-                {},
-              ],
-            ],
-          },
-          layout: 'noBorders',
-          margin: [40, 10, 40, 10],
-        };
-      }.bind(this),
-      styles: {
-        header: {
-          fontSize: 24,
-          bold: true,
-          alignment: 'center',
-          margin: [0, 0, 0, 30],
-          color: '#1e3a8a',
-          decoration: 'underline',
-          decorationColor: '#3b82f6',
-        },
-        sectionHeader: {
-          fontSize: 18,
-          bold: true,
-          color: '#1e40af',
-          margin: [0, 15, 0, 8],
-          /*  fillColor: '#f1f5f9',
-          background: '#f1f5f9', */
-        },
-        tableHeader: {
-          fontSize: 12,
-          bold: true,
-          fillColor: '#3b82f6',
-          color: '#ffffff',
-          alignment: 'center',
-          margin: [2, 4, 2, 4],
-        },
-        tableHeaderSmall: {
-          fontSize: 10,
-          bold: true,
-          fillColor: '#60a5fa',
-          color: '#ffffff',
-          alignment: 'center',
-          margin: [2, 3, 2, 3],
-        },
-        tableStyle: {
-          fontSize: 10,
-          margin: [3, 3, 3, 3],
-          alignment: 'right',
-          color: '#374151',
-        },
-        tableStyleRed: {
-          fontSize: 10,
-          color: '#dc2626',
-          bold: true,
-          margin: [3, 3, 3, 3],
-          alignment: 'right',
-        },
-        tableStyleGreen: {
-          fontSize: 10,
-          color: '#16a34a',
-          bold: true,
-          margin: [3, 3, 3, 3],
-          alignment: 'right',
-        },
-        tableStyleSmall: {
-          fontSize: 9,
-          margin: [2, 2, 2, 2],
-          color: '#4b5563',
-        },
-        dataStyle: {
-          alignment: 'right',
-          fontSize: 11,
-          margin: [5, 3, 5, 3],
-          color: '#374151',
-          bold: false,
-        },
-        table: {
-          fontSize: 11,
-          color: '#374151',
-          margin: [5, 3, 0, 3],
-        },
-        footerLeft: {
-          fontSize: 9,
-          color: '#4b5563',
-          alignment: 'left',
-        },
-        footerRight: {
-          fontSize: 9,
-          color: '#4b5563',
-          alignment: 'right',
-        },
-        footerSubtext: {
-          fontSize: 8,
-          color: '#6b7280',
-          alignment: 'center',
-          italics: true,
-        },
-      },
-      pageSize: 'LETTER',
-      pageMargins: [40, 40, 40, 80],
-      defaultStyle: {
-        font: 'Roboto',
-      },
-      pageBreakBefore: function (
-        currentNode: any,
-        followingNodesOnPage: any,
-        nodesOnNextPage: any,
-        previousNodesOnPage: any,
-      ) {
-        // Solo forzar salto en casos muy específicos para evitar fragmentación crítica
-        return false; // Dejar que pdfMake maneje automáticamente los saltos
-      },
-      background: {
-        canvas: [
-          {
-            type: 'rect',
-            x: 0,
-            y: 0,
-            w: 612,
-            h: 792,
-            color: '#ffffff',
-          },
-        ],
-      },
-    };
-
-    pdfMake.setFonts({
-      Roboto: {
-        normal:
-          'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/fonts/Roboto/Roboto-Regular.ttf',
-        bold: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/fonts/Roboto/Roboto-Medium.ttf',
-        italics:
-          'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/fonts/Roboto/Roboto-Italic.ttf',
-        bolditalics:
-          'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/fonts/Roboto/Roboto-MediumItalic.ttf',
-      },
-    });
-    pdfMake.createPdf(docDefinition).open();
   }
 
   showForm() {

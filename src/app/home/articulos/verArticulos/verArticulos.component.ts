@@ -148,15 +148,15 @@ export class VerArticulosComponent implements OnInit {
     }
   }
 
-  movementLink(movement: any) {
+  movementLink = (movement: any): string => {
     if (movement.movimiento.tipo_movimiento === 'Venta') {
       return '/ventas/ver/' + movement.id_movimiento;
     } else if (movement.movimiento.tipo_movimiento === 'Recepcion') {
-      return '/recepciones/ver/' + movement.id_movimiento;
+      return '/inventario/recepciones/ver/' + movement.id_movimiento;
     } else if (movement.movimiento.tipo_movimiento === 'Ajuste de inventario') {
-      return '/articulos/ajustes/ver/' + movement.id_movimiento;
+      return '/inventario/ajustes/ver/' + movement.id_movimiento;
     } else {
       return '#';
     }
-  }
+  };
 }

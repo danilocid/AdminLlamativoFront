@@ -9,7 +9,7 @@ export interface Inventory {
   observaciones: string;
   tipo_movimiento: string;
   name: string;
-  created_at: string;
+  createdAt: string;
 }
 
 export interface MovementType {

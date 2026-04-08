@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { ApiService } from 'src/app/shared/services/ApiService';
 import { ApiRequest } from 'src/app/shared/constants';
 import { HttpClient } from '@angular/common/http';
-import { Inventory } from '../../../shared/models/inventory.model';
+import { Inventory } from '../../../../shared/models/inventory.model';
 import {
   TableColumn,
   DataRequestEvent,
@@ -32,6 +32,15 @@ export class AjustesDeInventarioComponent implements OnInit {
       sortable: false,
     },
     { key: 'observaciones', label: 'Obs', sortable: false },
+    {
+      key: 'createdAt',
+      label: 'Fecha',
+      sortable: false,
+      valueGetter: (row: Inventory) =>
+        row.createdAt
+          ? new Date(row.createdAt).toLocaleDateString('es-CL')
+          : '-',
+    },
     { key: 'entradas', label: 'Entradas', sortable: false },
     { key: 'salidas', label: 'Salidas', sortable: false },
     {
@@ -74,6 +83,6 @@ export class AjustesDeInventarioComponent implements OnInit {
   }
 
   onView(row: Inventory): void {
-    this.router.navigate(['/articulos/ajustes/ver', row.id]);
+    this.router.navigate(['/inventario/ajustes/ver', row.id]);
   }
 }

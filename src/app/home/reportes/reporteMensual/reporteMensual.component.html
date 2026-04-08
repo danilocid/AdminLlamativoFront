@@ -648,15 +648,65 @@
 
     <div class="card" *ngIf="data.length !== 0">
       <div class="card-header">
-        <h4 class="card-title">Datos</h4>
+        <h4 class="card-title">Datos Adicionales</h4>
       </div>
       <div class="card-body">
-        <p *ngFor="let item of data">
-          {{ item.title }}:
-          {{
-            item.isMoney ? "$" + (item.value | number) : (item.value | number)
-          }}
-        </p>
+        <table class="table table-bordered table-hover">
+          <thead>
+            <tr>
+              <th>Concepto</th>
+              <th class="text-right">Valor Actual</th>
+              <th class="text-right">Valor Anterior</th>
+              <th class="text-right">Variación</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of data">
+              <td>
+                <strong>{{ item.title }}</strong>
+              </td>
+              <td class="text-right">
+                {{
+                  item.isMoney
+                    ? "$" + (item.value | number: "1.0-0")
+                    : (item.value | number)
+                }}
+              </td>
+              <td class="text-right" *ngIf="item.hasComparison">
+                {{
+                  item.isMoney
+                    ? "$" + (item.previousValue | number: "1.0-0")
+                    : (item.previousValue | number)
+                }}
+              </td>
+              <td class="text-right" *ngIf="!item.hasComparison">
+                <span class="text-muted">-</span>
+              </td>
+              <td
+                class="text-right"
+                *ngIf="item.hasComparison && item.variation !== undefined"
+                [ngClass]="{
+                  'text-success': item.variation >= 0,
+                  'text-danger': item.variation < 0,
+                }"
+              >
+                <strong>
+                  <i
+                    class="fas"
+                    [ngClass]="{
+                      'fa-arrow-up': item.variation >= 0,
+                      'fa-arrow-down': item.variation < 0,
+                    }"
+                  ></i>
+                  {{ item.variation }}%
+                </strong>
+              </td>
+              <td class="text-right" *ngIf="!item.hasComparison">
+                <span class="text-muted">-</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
     <div class="card" *ngIf="compras.length !== 0">

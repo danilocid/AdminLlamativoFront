@@ -50,6 +50,7 @@ export class SimpleTableComponent implements OnChanges, OnInit {
   @Input() showViewButton = true;
   @Input() showEditButton = true;
   @Input() showDeleteButton = false;
+  @Input() rowLink?: (row: any) => string;
 
   get showActions(): boolean {
     return this.showViewButton || this.showEditButton || this.showDeleteButton;

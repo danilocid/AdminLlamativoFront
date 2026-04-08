@@ -144,6 +144,8 @@ export class ArticulosComponent implements OnInit {
     this.router.navigate(['/articulos/ver', row.id]);
   }
 
+  rowLink = (row: Product): string => '/articulos/ver/' + row.id;
+
   onEdit(row: Product): void {
     this.router.navigate(['/articulos/editar', row.id]);
   }

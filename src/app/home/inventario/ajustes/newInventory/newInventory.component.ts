@@ -5,7 +5,7 @@ import { AlertService } from 'src/app/shared/services/alert.service';
 import { ApiService } from 'src/app/shared/services/ApiService';
 import { ApiRequest } from 'src/app/shared/constants';
 import { debounceTime, Subject } from 'rxjs';
-import { ProductInventory } from '../../../shared/models/productInventory.model';
+import { ProductInventory } from '../../../../shared/models/productInventory.model';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Product } from 'src/app/shared/models/product.model';
