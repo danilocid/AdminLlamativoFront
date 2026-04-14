@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AjustesDeInventarioComponent } from './ajustes/ajustesDeInventario/ajustesDeInventario.component';
 import { NewInventoryComponent } from './ajustes/newInventory/newInventory.component';
 import { VerInventarioComponent } from './ajustes/ver-inventario/ver-inventario.component';
+import { ConteoAleatorioComponent } from './ajustes/conteo-aleatorio/conteo-aleatorio.component';
 
 const routes: Routes = [
   {
@@ -23,6 +24,10 @@ const routes: Routes = [
   {
     path: 'ajustes/ver/:id',
     component: VerInventarioComponent,
+  },
+  {
+    path: 'conteo-aleatorio',
+    component: ConteoAleatorioComponent,
   },
   {
     path: '**',

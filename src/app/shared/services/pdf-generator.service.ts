@@ -23,6 +23,15 @@ interface RecepcionesTotals {
   unidades: number;
 }
 
+interface AjustesTotals {
+  count: number;
+  entradas: number;
+  salidas: number;
+  costoNeto: number;
+  costoImp: number;
+  costoTotal: number;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -37,6 +46,7 @@ export class PdfGeneratorService {
     salesResponse: SalesResponse | null,
     recepciones: any[],
     recepcionesTotals: RecepcionesTotals,
+    ajustesTotals: AjustesTotals,
     version: string,
   ): void {
     const dataTable = this.buildDataTable(data);
@@ -73,6 +83,7 @@ export class PdfGeneratorService {
       docsRecibidos,
       recepciones,
       recepcionesTotals,
+      ajustesTotals,
     );
 
     const docDefinition = this.createDocDefinition(
@@ -385,6 +396,7 @@ export class PdfGeneratorService {
     docsRecibidos: any[][],
     recepciones: any[],
     recepcionesTotals: RecepcionesTotals,
+    ajustesTotals: AjustesTotals,
   ): any[] {
     const content: any[] = [];
     content.push({ text: header, style: 'header' });
@@ -435,6 +447,11 @@ export class PdfGeneratorService {
       content.push(
         ...this.buildRecepcionesSection(recepciones, recepcionesTotals),
       );
+    }
+
+    // Ajustes de inventario
+    if (ajustesTotals.count > 0) {
+      content.push(this.buildAjustesSection(ajustesTotals));
     }
 
     return content;
@@ -729,6 +746,46 @@ export class PdfGeneratorService {
         false,
       ),
     ];
+  }
+
+  private buildAjustesSection(ajustesTotals: AjustesTotals): any {
+    const formatter = new Intl.NumberFormat('es-CL', {
+      style: 'currency',
+      currency: 'CLP',
+    });
+
+    const tableBody: any[][] = [];
+    tableBody.push([
+      { text: 'Ajustes de Inventario', style: 'tableHeader', colSpan: 6 },
+      {},
+      {},
+      {},
+      {},
+      {},
+    ]);
+    tableBody.push([
+      { text: 'Cantidad', style: 'tableHeaderSmall' },
+      { text: 'Ingresos (u.)', style: 'tableHeaderSmall' },
+      { text: 'Egresos (u.)', style: 'tableHeaderSmall' },
+      { text: 'Costo Neto', style: 'tableHeaderSmall' },
+      { text: 'IVA', style: 'tableHeaderSmall' },
+      { text: 'Costo Total', style: 'tableHeaderSmall' },
+    ]);
+    tableBody.push([
+      { text: ajustesTotals.count, style: 'tableStyle' },
+      { text: ajustesTotals.entradas, style: 'tableStyle' },
+      { text: ajustesTotals.salidas, style: 'tableStyle' },
+      { text: formatter.format(ajustesTotals.costoNeto), style: 'tableStyle' },
+      { text: formatter.format(ajustesTotals.costoImp), style: 'tableStyle' },
+      { text: formatter.format(ajustesTotals.costoTotal), style: 'tableStyle' },
+    ]);
+
+    return this.createTableSection(
+      'Ajustes de Inventario',
+      tableBody,
+      undefined,
+      2,
+    );
   }
 
   private createTableSection(

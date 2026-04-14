@@ -52,6 +52,15 @@ export class ReporteMensualComponent implements OnInit {
     costoTotal: 0,
     unidades: 0,
   };
+
+  ajustesTotals = {
+    count: 0,
+    entradas: 0,
+    salidas: 0,
+    costoNeto: 0,
+    costoImp: 0,
+    costoTotal: 0,
+  };
   constructor(
     readonly titleService: Title,
     readonly spinner: NgxSpinnerService,
@@ -119,6 +128,9 @@ export class ReporteMensualComponent implements OnInit {
       ),
       recepciones: this.apiService.get(
         `${ApiRequest.getRecepcionesReporte}/${month}/${year}`,
+      ),
+      ajustes: this.apiService.get(
+        `${ApiRequest.getInventarioReporte}/${month}/${year}`,
       ),
     }).subscribe({
       next: (results) => {
@@ -199,6 +211,12 @@ export class ReporteMensualComponent implements OnInit {
         this.recepciones = recepcionesResult.data.receptions;
         this.recepcionesTotals = recepcionesResult.data.totals;
 
+        // Procesar ajustes de inventario
+        const ajustesResult = results.ajustes;
+        if (ajustesResult?.data?.totals) {
+          this.ajustesTotals = ajustesResult.data.totals;
+        }
+
         this.spinner.hide();
       },
       error: (error: any) => {
@@ -226,6 +244,7 @@ export class ReporteMensualComponent implements OnInit {
       this.salesResponse,
       this.recepciones,
       this.recepcionesTotals,
+      this.ajustesTotals,
       this.version,
     );
   }

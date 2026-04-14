@@ -9,6 +9,27 @@ y este proyecto adhiere al [Versionado Semántico](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+## [0.0.78] - 2026-04-13
+
+### Agregado
+
+- **Conteo Aleatorio de Inventario** (`/inventario/conteo-aleatorio`)
+  - Nuevo componente con formulario para registrar el conteo físico de un producto
+  - Muestra el producto con menor fecha de último conteo (`last_cont`)
+  - Registra la cantidad contada; si hay diferencia, crea un ajuste de inventario automáticamente
+  - Alerta de resultado con diferencia en unidades y botón para continuar con el siguiente producto
+  - Botón "Saltar" para pasar al siguiente producto sin contar
+  - Integrado en el módulo `InventarioModule` y la ruta `inventario/conteo-aleatorio`
+  - Enlace en sidebar bajo Inventario → Conteo Aleatorio
+- **Sección de Ajustes de Inventario en Reporte Mensual**
+  - Tarjeta con resumen: cantidad de ajustes, ingresos (u.), egresos (u.), costo neto, IVA y costo total
+  - Sección incluida en el PDF generado del reporte mensual
+
+### Corregido
+
+- **Interfaz `Product`** (`product.model.ts`): propiedad `last_cont: Date` faltante agregada
+- **`target="_blank"` en `SimpleTableComponent`**: eliminado del botón "Ver" para que los enlaces abran en la misma pestaña por defecto (Ctrl+Click sigue abriendo en nueva pestaña)
+
 ## [0.0.77] - 2026-04-07
 
 ### Agregado

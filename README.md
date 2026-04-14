@@ -22,7 +22,8 @@ La versión se actualiza automáticamente con cada push mediante el comando `npm
 
 - 🔐 Sistema de autenticación con JWT e interceptores HTTP
 - 📦 Gestión completa de productos e inventario
-- 🛒 Módulo de ventas y compras
+- � **Conteo aleatorio de inventario** con ajuste automático de stock
+- �🛒 Módulo de ventas y compras
 - 📊 Dashboard con métricas y estadísticas
 - 🔔 Sistema de notificaciones en tiempo real
 - 🏪 Integración con Mercado Libre y PrestaShop

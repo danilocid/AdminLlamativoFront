@@ -917,6 +917,92 @@
         </table>
       </div>
     </div>
+    <!-- Ajustes de Inventario -->
+    <div class="card" *ngIf="ajustesTotals.count > 0">
+      <div class="card-header">
+        <h4 class="card-title">Ajustes de Inventario</h4>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-2">
+            <div class="info-box bg-light">
+              <span class="info-box-icon bg-secondary"
+                ><i class="fas fa-clipboard-list"></i
+              ></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Ajustes</span>
+                <span class="info-box-number">{{ ajustesTotals.count }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="info-box bg-light">
+              <span class="info-box-icon bg-success"
+                ><i class="fas fa-arrow-up"></i
+              ></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Ingresos (u.)</span>
+                <span class="info-box-number">{{
+                  ajustesTotals.entradas | number
+                }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="info-box bg-light">
+              <span class="info-box-icon bg-danger"
+                ><i class="fas fa-arrow-down"></i
+              ></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Egresos (u.)</span>
+                <span class="info-box-number">{{
+                  ajustesTotals.salidas | number
+                }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="info-box bg-light">
+              <span class="info-box-icon bg-warning"
+                ><i class="fas fa-dollar-sign"></i
+              ></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Costo Neto</span>
+                <span class="info-box-number"
+                  >${{ ajustesTotals.costoNeto | number: "1.0-0" }}</span
+                >
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="info-box bg-light">
+              <span class="info-box-icon bg-info"
+                ><i class="fas fa-receipt"></i
+              ></span>
+              <div class="info-box-content">
+                <span class="info-box-text">IVA</span>
+                <span class="info-box-number"
+                  >${{ ajustesTotals.costoImp | number: "1.0-0" }}</span
+                >
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="info-box bg-light">
+              <span class="info-box-icon bg-primary"
+                ><i class="fas fa-coins"></i
+              ></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Costo Total</span>
+                <span class="info-box-number"
+                  >${{ ajustesTotals.costoTotal | number: "1.0-0" }}</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 <app-agregar-datos-reporte

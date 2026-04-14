@@ -20,6 +20,7 @@ export interface Product {
   enlace_ps: string;
   id_ps: string;
   deprecado: boolean;
+  last_cont: Date;
 }
 
 export interface ProductCart {

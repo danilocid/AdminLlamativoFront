@@ -8,6 +8,7 @@ import { InventarioRoutingModule } from './inventario-routing.module';
 import { AjustesDeInventarioComponent } from './ajustes/ajustesDeInventario/ajustesDeInventario.component';
 import { NewInventoryComponent } from './ajustes/newInventory/newInventory.component';
 import { VerInventarioComponent } from './ajustes/ver-inventario/ver-inventario.component';
+import { ConteoAleatorioComponent } from './ajustes/conteo-aleatorio/conteo-aleatorio.component';
 
 @NgModule({
   imports: [
@@ -23,6 +24,7 @@ import { VerInventarioComponent } from './ajustes/ver-inventario/ver-inventario.
     AjustesDeInventarioComponent,
     NewInventoryComponent,
     VerInventarioComponent,
+    ConteoAleatorioComponent,
   ],
 })
 export class InventarioModule {}

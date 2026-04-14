@@ -1,0 +1,157 @@
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">Conteo Aleatorio</h1>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="content">
+  <div class="container-fluid">
+    <!-- Resultado del conteo anterior -->
+    <div *ngIf="lastResult" class="row mb-3">
+      <div class="col-12">
+        <div
+          class="alert"
+          [ngClass]="{
+            'alert-success': !lastResult.adjustmentCreated,
+            'alert-warning': lastResult.adjustmentCreated,
+          }"
+          role="alert"
+        >
+          <h5 class="alert-heading">
+            <i
+              class="fas"
+              [ngClass]="{
+                'fa-check-circle': !lastResult.adjustmentCreated,
+                'fa-exclamation-triangle': lastResult.adjustmentCreated,
+              }"
+            ></i>
+            {{
+              lastResult.adjustmentCreated ? "Ajuste creado" : "Sin diferencias"
+            }}
+          </h5>
+          <p class="mb-1">{{ lastResult.message }}</p>
+          <p *ngIf="lastResult.adjustmentCreated" class="mb-0">
+            Diferencia registrada:
+            <strong
+              [ngClass]="{
+                'text-danger': lastResult.diff < 0,
+                'text-success': lastResult.diff > 0,
+              }"
+            >
+              {{ lastResult.diff > 0 ? "+" : "" }}{{ lastResult.diff }} unidades
+            </strong>
+          </p>
+          <hr />
+          <button class="btn btn-sm btn-primary" (click)="loadNextProduct()">
+            <i class="fas fa-arrow-right mr-1"></i> Contar siguiente producto
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tarjeta de conteo -->
+    <div class="row" *ngIf="!lastResult">
+      <div class="col-md-6 offset-md-3 col-sm-12">
+        <div class="card card-info">
+          <div class="card-header">
+            <h3 class="card-title">
+              <i class="fas fa-boxes mr-2"></i>Producto a contar
+            </h3>
+          </div>
+
+          <div class="card-body">
+            <!-- Sin productos disponibles -->
+            <div *ngIf="!loading && !product" class="text-center py-4">
+              <i class="fas fa-check-double fa-3x text-success mb-3"></i>
+              <p class="lead">
+                No hay productos con stock pendiente de contar.
+              </p>
+            </div>
+
+            <!-- Cargando -->
+            <div *ngIf="loading" class="text-center py-4">
+              <i class="fas fa-spinner fa-spin fa-2x"></i>
+            </div>
+
+            <!-- Datos del producto -->
+            <div *ngIf="!loading && product">
+              <table class="table table-borderless mb-4">
+                <tbody>
+                  <tr>
+                    <th class="w-50">Descripción</th>
+                    <td>{{ product.descripcion }}</td>
+                  </tr>
+                  <tr>
+                    <th>Código interno</th>
+                    <td>{{ product.cod_interno }}</td>
+                  </tr>
+                  <tr>
+                    <th>Código de barras</th>
+                    <td>{{ product.cod_barras }}</td>
+                  </tr>
+                  <tr>
+                    <th>Último conteo</th>
+                    <td>{{ product.last_cont | date: "dd/MM/yyyy HH:mm" }}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <form [formGroup]="countForm" (ngSubmit)="submit()">
+                <div class="form-group">
+                  <label for="stock_counted">
+                    <strong>Cantidad contada</strong>
+                  </label>
+                  <input
+                    type="number"
+                    id="stock_counted"
+                    class="form-control form-control-lg"
+                    formControlName="stock_counted"
+                    placeholder="Ingrese la cantidad física"
+                    min="0"
+                    autofocus
+                    required
+                  />
+                  <small
+                    *ngIf="
+                      countForm.get('stock_counted')?.invalid &&
+                      countForm.get('stock_counted')?.touched
+                    "
+                    class="text-danger"
+                  >
+                    Ingrese una cantidad válida (mínimo 0).
+                  </small>
+                </div>
+
+                <div class="row mt-3">
+                  <div class="col-6">
+                    <button
+                      type="button"
+                      class="btn btn-secondary btn-block"
+                      (click)="skip()"
+                      [disabled]="submitting"
+                    >
+                      <i class="fas fa-forward mr-1"></i> Saltar
+                    </button>
+                  </div>
+                  <div class="col-6">
+                    <button
+                      type="submit"
+                      class="btn btn-success btn-block"
+                      [disabled]="countForm.invalid || submitting"
+                    >
+                      <i class="fas fa-check mr-1"></i> Confirmar
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
