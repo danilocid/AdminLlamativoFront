@@ -10,6 +10,7 @@ import { AlertService } from 'src/app/shared/services/alert.service';
 import { ApiService } from 'src/app/shared/services/ApiService';
 
 @Component({
+  standalone: false,
   selector: 'app-create',
   templateUrl: './create.component.html',
   styleUrls: [],

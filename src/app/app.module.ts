@@ -1,12 +1,8 @@
-import {
-  provideHttpClient,
-  withInterceptorsFromDi,
-  HTTP_INTERCEPTORS,
-} from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule, LOCALE_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgxSpinnerModule } from 'ngx-spinner';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import localeEs from '@angular/common/locales/es';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -19,7 +15,7 @@ import { FooterComponent } from './home/partials/footer/footer.component';
 import { FIREBASE_OPTIONS } from '@angular/fire/compat';
 import { SharedModule } from './shared/shared.module';
 import { environment } from 'src/environments/environment';
-import { AuthInterceptor, ErrorInterceptor } from './shared/interceptors';
+import { authInterceptor, errorInterceptor } from './shared/interceptors';
 registerLocaleData(localeEs, 'es');
 
 @NgModule({
@@ -36,7 +32,6 @@ registerLocaleData(localeEs, 'es');
     BrowserModule,
     AppRoutingModule,
     NgxSpinnerModule,
-    BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
@@ -47,17 +42,8 @@ registerLocaleData(localeEs, 'es');
       provide: FIREBASE_OPTIONS,
       useValue: environment.firebase,
     },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
-      multi: true,
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: ErrorInterceptor,
-      multi: true,
-    },
-    provideHttpClient(withInterceptorsFromDi()),
+    provideAnimations(),
+    provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
   ],
 })
 export class AppModule {}

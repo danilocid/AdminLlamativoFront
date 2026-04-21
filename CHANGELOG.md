@@ -9,6 +9,20 @@ y este proyecto adhiere al [Versionado Semántico](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+## [0.0.79] - 2026-04-20
+
+### Eliminado
+
+- `assets/css/dataTables.bootstrap4.min.css` y `assets/js/dataTables.bootstrap4.min.js`: archivos sin uso (DataTables fue removido en v0.0.73)
+
+### Corregido
+
+- **`HydrocontrolComponent`**: error NG0203 (`_NgZone` injection failed) corregido inyectando `EnvironmentInjector` y envolviendo todas las llamadas a `AngularFireDatabase` (`list()`, `valueChanges()`, `remove()`) en `runInInjectionContext`
+
+### Modificado
+
+- **Angular actualizado de 18.2.13 a 19.2.21**
+
 ## [0.0.78] - 2026-04-13
 
 ### Agregado

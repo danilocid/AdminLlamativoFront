@@ -4,6 +4,7 @@ import { Product, ProductCart } from 'src/app/shared/models/product.model';
 import { AlertService } from 'src/app/shared/services/alert.service';
 
 @Component({
+  standalone: false,
   selector: 'app-crear',
   templateUrl: './crear.component.html',
   styleUrls: ['./crear.component.css'],

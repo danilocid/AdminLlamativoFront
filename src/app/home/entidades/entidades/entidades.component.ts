@@ -11,6 +11,7 @@ import {
 } from 'src/app/shared/components/simple-table/simple-table.component';
 
 @Component({
+  standalone: false,
   selector: 'app-entidades',
   templateUrl: './entidades.component.html',
   styleUrls: [],

@@ -13,6 +13,7 @@ import { MovementType } from 'src/app/shared/models/inventory.model';
 import { TableColumn } from 'src/app/shared/components/simple-table/simple-table.component';
 
 @Component({
+  standalone: false,
   selector: 'app-new-inventory',
   templateUrl: './newInventory.component.html',
   styleUrls: [],

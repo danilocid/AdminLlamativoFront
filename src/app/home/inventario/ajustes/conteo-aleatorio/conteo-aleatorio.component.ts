@@ -8,6 +8,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Product } from 'src/app/shared/models/product.model';
 
 @Component({
+  standalone: false,
   selector: 'app-conteo-aleatorio',
   templateUrl: './conteo-aleatorio.component.html',
   styleUrls: [],

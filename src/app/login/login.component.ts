@@ -7,6 +7,7 @@ import { UtilService } from '../shared/services/util.service';
 import { AlertService } from '../shared/services/alert.service';
 
 @Component({
+  standalone: false,
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],

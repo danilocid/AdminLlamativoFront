@@ -11,6 +11,7 @@ import {
 import { Router } from '@angular/router';
 
 @Component({
+  standalone: false,
   selector: 'app-ventas',
   templateUrl: './ventas.component.html',
 })

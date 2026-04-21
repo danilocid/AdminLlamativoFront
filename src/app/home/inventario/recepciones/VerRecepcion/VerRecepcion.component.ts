@@ -13,6 +13,7 @@ import { TableColumn } from 'src/app/shared/components/simple-table/simple-table
 import * as pdfMake from 'pdfmake/build/pdfmake';
 
 @Component({
+  standalone: false,
   selector: 'app-ver-recepcion',
   templateUrl: './VerRecepcion.component.html',
   styleUrls: ['./VerRecepcion.component.css'],

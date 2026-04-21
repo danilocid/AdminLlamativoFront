@@ -18,6 +18,7 @@ import {
 import packageJson from '../../../../../package.json';
 
 @Component({
+  standalone: false,
   selector: 'app-reporte-mensual',
   templateUrl: './reporteMensual.component.html',
   styleUrls: ['./reporteMensual.component.css'],

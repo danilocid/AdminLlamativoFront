@@ -12,6 +12,7 @@ import {
 import { TableColumn } from 'src/app/shared/components/simple-table/simple-table.component';
 
 @Component({
+  standalone: false,
   selector: 'app-ver-inventario',
   templateUrl: './ver-inventario.component.html',
   styleUrls: [],

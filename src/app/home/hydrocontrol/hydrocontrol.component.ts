@@ -1,4 +1,10 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  EnvironmentInjector,
+  runInInjectionContext,
+} from '@angular/core';
 import {
   AngularFireDatabase,
   AngularFireList,
@@ -24,6 +30,7 @@ Chart.register(
   CategoryScale,
 );
 @Component({
+  standalone: false,
   selector: 'app-hydrocontrol',
   templateUrl: './hydrocontrol.component.html',
   styleUrls: ['./hydrocontrol.component.css'],
@@ -33,6 +40,7 @@ export class HydrocontrolComponent implements OnInit, AfterViewInit {
     readonly titleService: Title,
     readonly db: AngularFireDatabase,
     readonly spinner: NgxSpinnerService,
+    private readonly injector: EnvironmentInjector,
   ) {
     this.titleService.setTitle('Hydrocontrol');
     Chart.register(...registerables);
@@ -68,8 +76,10 @@ export class HydrocontrolComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.spinner.show();
-    this.hydroData = this.db.list('data');
-    this.getData();
+    runInInjectionContext(this.injector, () => {
+      this.hydroData = this.db.list('data');
+      this.getData();
+    });
   }
 
   get filteredData(): Hydrocontrol[] {
@@ -147,17 +157,19 @@ export class HydrocontrolComponent implements OnInit, AfterViewInit {
   }
 
   private getData() {
-    this.hydroData?.valueChanges().subscribe({
-      next: (value) => {
-        if (this.isUpdated == false) {
-          this.data = value;
-          this.orderData();
-          this.isUpdated = true;
-        }
-      },
-      error: (error) => {
-        console.error('There was an error!', error);
-      },
+    runInInjectionContext(this.injector, () => {
+      this.hydroData?.valueChanges().subscribe({
+        next: (value) => {
+          if (this.isUpdated == false) {
+            this.data = value;
+            this.orderData();
+            this.isUpdated = true;
+          }
+        },
+        error: (error) => {
+          console.error('There was an error!', error);
+        },
+      });
     });
   }
 
@@ -248,7 +260,7 @@ export class HydrocontrolComponent implements OnInit, AfterViewInit {
         } else {
           // Datos válidos - formatear fecha y agregar a tmpData
           const date = new Date(element.timeStamp.timeStamp);
-          date.setHours(date.getHours() - 3);
+          date.setHours(date.getHours() - 4);
           let dateString = date.toISOString();
           dateString = dateString.replace('T', ' ');
           dateString = dateString.replace('Z', '');
@@ -434,7 +446,9 @@ export class HydrocontrolComponent implements OnInit, AfterViewInit {
 
   deleteData(id: number) {
     try {
-      this.db.list('data').remove(id.toString());
+      runInInjectionContext(this.injector, () => {
+        this.db.list('data').remove(id.toString());
+      });
     } catch (error) {
       console.error('There was an error!', error);
     }

@@ -14,6 +14,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ExtraSalesCostModalComponent } from '../extra-sales-cost-modal/extra-sales-cost-modal.component';
 
 @Component({
+  standalone: false,
   selector: 'app-finaliza-venta',
   templateUrl: './finaliza-venta.component.html',
   styleUrls: ['./finaliza-venta.component.css'],

@@ -11,16 +11,8 @@ export class AuthGuard {
     return this.hasToken();
   }
 
-  canLoad(): Observable<boolean> | Promise<boolean> | boolean {
+  canMatch(): Observable<boolean> | Promise<boolean> | boolean {
     return this.hasToken();
-    /*     return this.authSV.authVerification()
-      .pipe(
-        tap(isAuth => {
-          if (!isAuth) {
-            this.router.navigate(['/login']);
-          }
-        })
-      )  */
   }
 
   private async hasToken(): Promise<boolean> {

@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
+  standalone: false,
   selector: 'app-label-modal',
   templateUrl: './label-modal.component.html',
   styleUrls: ['./label-modal.component.scss'],

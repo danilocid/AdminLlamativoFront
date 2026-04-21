@@ -4,6 +4,7 @@ import { AuthService } from './shared/services/auth.service';
 import { jwtDecode } from 'jwt-decode';
 
 @Component({
+  standalone: false,
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: [],

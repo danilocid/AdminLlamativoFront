@@ -12,6 +12,7 @@ import { DocumentType } from 'src/app/shared/models/documentType.model';
 import { PaymentMethod } from 'src/app/shared/models/paymentMethod.model';
 
 @Component({
+  standalone: false,
   selector: 'app-finaliza-recepcion',
   templateUrl: './finalizaRecepcion.component.html',
   styleUrls: ['./finalizaRecepcion.component.css'],

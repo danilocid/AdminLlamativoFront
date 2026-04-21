@@ -36,6 +36,7 @@ export interface DataRequestEvent {
 }
 
 @Component({
+  standalone: false,
   selector: 'app-simple-table',
   templateUrl: './simple-table.component.html',
   styleUrls: ['./simple-table.component.scss'],

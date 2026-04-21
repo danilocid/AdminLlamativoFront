@@ -7,6 +7,7 @@ import { ApiService } from 'src/app/shared/services/ApiService';
 import { AlertService } from 'src/app/shared/services/alert.service';
 
 @Component({
+  standalone: false,
   selector: 'app-tipo-de-datos-form',
   templateUrl: './tipoDeDatosForm.component.html',
   styleUrls: ['./tipoDeDatosForm.component.css'],

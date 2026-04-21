@@ -12,6 +12,7 @@ import { LabelModalComponent } from '../label-modal/label-modal.component';
 import { TableColumn } from 'src/app/shared/components/simple-table/simple-table.component';
 
 @Component({
+  standalone: false,
   selector: 'app-ver-articulos',
   templateUrl: './verArticulos.component.html',
   styleUrls: [],

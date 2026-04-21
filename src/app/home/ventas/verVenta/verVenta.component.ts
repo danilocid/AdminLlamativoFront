@@ -8,6 +8,7 @@ import { Sale, SaleDetail } from 'src/app/shared/models/sale.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TableColumn } from 'src/app/shared/components/simple-table/simple-table.component';
 @Component({
+  standalone: false,
   selector: 'app-ver-venta',
   templateUrl: './verVenta.component.html',
 })

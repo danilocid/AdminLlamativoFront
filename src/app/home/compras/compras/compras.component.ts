@@ -9,6 +9,7 @@ import { AlertService } from 'src/app/shared/services/alert.service';
 import { TableColumn } from 'src/app/shared/components/simple-table/simple-table.component';
 
 @Component({
+  standalone: false,
   selector: 'app-compras',
   templateUrl: './compras.component.html',
 })

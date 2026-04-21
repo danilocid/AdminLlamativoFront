@@ -8,6 +8,7 @@ import { AlertService } from 'src/app/shared/services/alert.service';
 import { TableColumn } from 'src/app/shared/components/simple-table/simple-table.component';
 
 @Component({
+  standalone: false,
   selector: 'app-tipo-datos-repotes',
   templateUrl: './tipoDatosRepotes.component.html',
   styleUrls: ['./tipoDatosRepotes.component.css'],

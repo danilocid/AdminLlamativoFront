@@ -13,6 +13,7 @@ import { Region } from 'src/app/shared/models/region.model';
 import { Commune } from 'src/app/shared/models/commun.model';
 
 @Component({
+  standalone: false,
   selector: 'app-create',
   templateUrl: './create.component.html',
   styleUrls: [],

@@ -7,6 +7,7 @@ import { ApiRequest } from 'src/app/shared/constants';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
+  standalone: false,
   selector: 'app-extra-sales-cost-modal',
   templateUrl: './extra-sales-cost-modal.component.html',
   styleUrls: ['./extra-sales-cost-modal.component.css'],
