@@ -9,6 +9,15 @@ y este proyecto adhiere al [Versionado Semántico](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+## [0.0.80] - 2026-04-21
+
+### Corregido
+
+- **`ng-select` en múltiples componentes**: reemplazado patrón incorrecto `<ng-option *ngFor value="{{ item.id }}">` por uso correcto de `[items]`, `bindLabel` y `bindValue`, lo que corregía que las opciones no se mostraban en el selector
+- **`NewInventoryComponent`**: valor inicial de `movementType` cambiado de string `'4'` a número `4` para coincidir con el tipo del `id` devuelto por la API
+- **`FinalizaVentaComponent`**: valores iniciales de `id_cliente`, `id_medio_pago` e `id_tipo_documento` cambiados de strings centinela a `null`, permitiendo que el placeholder de `ng-select` se muestre correctamente; validaciones manuales actualizadas a `!value`
+- **Componentes afectados**: `newInventory`, `finaliza-venta`, `finalizaRecepcion`, `entidades/create`
+
 ## [0.0.79] - 2026-04-20
 
 ### Eliminado

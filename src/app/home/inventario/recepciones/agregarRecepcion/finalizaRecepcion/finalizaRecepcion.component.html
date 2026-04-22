@@ -5,28 +5,40 @@
   <div class="card-body">
     <form [formGroup]="clientForm" (submit)="generarVenta()" class="form">
       <div class="form-group">
-        <ng-select formControlName="id_cliente" id="" name="" required>
-          <option value="" selected disabled>Seleccione</option>
-          <ng-option *ngFor="let item of clients" value="{{ item.rut }}">
+        <ng-select
+          formControlName="id_cliente"
+          [items]="clients"
+          bindValue="rut"
+          placeholder="Seleccione"
+          required
+        >
+          <ng-template ng-label-tmp let-item="item">
             {{ item.nombre }} - {{ item.rut }}
-          </ng-option>
+          </ng-template>
+          <ng-template ng-option-tmp let-item="item">
+            {{ item.nombre }} - {{ item.rut }}
+          </ng-template>
         </ng-select>
       </div>
       <div class="form-group">
-        <ng-select formControlName="id_medio_pago" id="" name="" required>
-          <option value="" selected disabled>Seleccione</option>
-          <ng-option *ngFor="let item of medioDePago" value="{{ item.id }}">
-            {{ item.medio_de_pago }}
-          </ng-option>
-        </ng-select>
+        <ng-select
+          formControlName="id_medio_pago"
+          [items]="medioDePago"
+          bindLabel="medio_de_pago"
+          bindValue="id"
+          placeholder="Seleccione"
+          required
+        ></ng-select>
       </div>
       <div class="form-group">
-        <ng-select formControlName="id_tipo_documento" id="" name="" required>
-          <option value="" selected disabled>Seleccione</option>
-          <ng-option *ngFor="let item of documentTypes" value="{{ item.id }}">
-            {{ item.tipo }}
-          </ng-option>
-        </ng-select>
+        <ng-select
+          formControlName="id_tipo_documento"
+          [items]="documentTypes"
+          bindLabel="tipo"
+          bindValue="id"
+          placeholder="Seleccione"
+          required
+        ></ng-select>
       </div>
       <div class="form-group">
         <label for="">Numero documento</label>

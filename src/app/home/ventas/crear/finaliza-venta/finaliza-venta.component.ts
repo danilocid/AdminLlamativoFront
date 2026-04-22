@@ -34,15 +34,15 @@ export class FinalizaVentaComponent implements OnInit {
     readonly spinner: NgxSpinnerService,
     readonly alertSV: AlertService,
     readonly router: Router,
-    private modalService: NgbModal
+    private modalService: NgbModal,
   ) {}
 
   ngOnInit() {
     this.spinner.show();
     this.clientForm = this.fb.group({
-      id_cliente: ['Buscar cliente', Validators.required],
-      id_medio_pago: ['Medio de pago', Validators.required],
-      id_tipo_documento: ['Tipo documento', Validators.required],
+      id_cliente: [null, Validators.required],
+      id_medio_pago: [null, Validators.required],
+      id_tipo_documento: [null, Validators.required],
       numero_documento: ['1', Validators.required],
     });
     this.loadData();
@@ -51,7 +51,7 @@ export class FinalizaVentaComponent implements OnInit {
   changeDocumentType() {
     const documentType = this.clientForm.value.id_tipo_documento;
     const lastEmited = this.documentTypes.find(
-      (document) => document.id === +documentType
+      (document) => document.id === +documentType,
     )?.lastEmited;
     this.clientForm.controls['numero_documento'].setValue(lastEmited + 1);
   }
@@ -83,7 +83,7 @@ export class FinalizaVentaComponent implements OnInit {
           documentType.lastEmited =
             resp.lastDocumentType.find(
               (lastDocumentType) =>
-                lastDocumentType.documentType === documentType.id
+                lastDocumentType.documentType === documentType.id,
             )?.lastDocument || 0;
         });
         this.spinner.hide();
@@ -120,24 +120,24 @@ export class FinalizaVentaComponent implements OnInit {
   generarVenta() {
     this.spinner.show();
 
-    if (this.clientForm.value.id_cliente === 'Buscar cliente') {
+    if (!this.clientForm.value.id_cliente) {
       this.spinner.hide();
       this.alertSV.alertBasic('Aviso', 'Debe seleccionar un cliente', 'info');
       return;
-    } else if (this.clientForm.value.id_medio_pago === 'Medio de pago') {
+    } else if (!this.clientForm.value.id_medio_pago) {
       this.spinner.hide();
       this.alertSV.alertBasic(
         'Aviso',
         'Debe seleccionar un medio de pago',
-        'info'
+        'info',
       );
       return;
-    } else if (this.clientForm.value.id_tipo_documento === 'Tipo documento') {
+    } else if (!this.clientForm.value.id_tipo_documento) {
       this.spinner.hide();
       this.alertSV.alertBasic(
         'Aviso',
         'Debe seleccionar un tipo de documento',
-        'info'
+        'info',
       );
       return;
     } else {
@@ -189,7 +189,7 @@ export class FinalizaVentaComponent implements OnInit {
             this.alertSV.alertBasic(
               'Aviso',
               'Venta generada correctamente',
-              'success'
+              'success',
             );
             this.router.navigate(['/ventas']);
           },
@@ -198,7 +198,7 @@ export class FinalizaVentaComponent implements OnInit {
             this.alertSV.alertBasic(
               'Error al generar la venta',
               error.error.msg,
-              'error'
+              'error',
             );
           },
         });
@@ -227,7 +227,7 @@ export class FinalizaVentaComponent implements OnInit {
       },
       () => {
         window.location.reload();
-      }
+      },
     );
   }
 }

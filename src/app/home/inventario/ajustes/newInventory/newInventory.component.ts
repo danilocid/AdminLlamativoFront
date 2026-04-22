@@ -75,7 +75,7 @@ export class NewInventoryComponent implements OnInit, OnDestroy {
       quantity: [1, [Validators.required]],
     });
     this.movementForm = this.fb.group({
-      movementType: ['4', [Validators.required]],
+      movementType: [4, [Validators.required]],
       obs: ['', [Validators.required]],
     });
 
@@ -86,6 +86,7 @@ export class NewInventoryComponent implements OnInit, OnDestroy {
           return;
         }
         this.movementTypes = resp.data;
+        console.log(this.movementTypes);
         this.spinner.hide();
       },
       error: (error) => {

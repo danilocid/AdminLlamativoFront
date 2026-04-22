@@ -164,21 +164,13 @@
                           <div class="form-group">
                             <label for="name">Tipo movimiento</label>
                             <ng-select
-                              id=""
-                              name=""
-                              required
                               formControlName="movementType"
-                            >
-                              <option value="" selected disabled>
-                                Seleccione
-                              </option>
-                              <ng-option
-                                *ngFor="let item of movementTypes"
-                                value="{{ item.id }}"
-                              >
-                                {{ item.tipo_movimiento }}
-                              </ng-option>
-                            </ng-select>
+                              [items]="movementTypes"
+                              bindLabel="tipo_movimiento"
+                              bindValue="id"
+                              placeholder="Seleccione"
+                              required
+                            ></ng-select>
                           </div>
                           <div class="form-group">
                             <label for="name">Observaciones</label>

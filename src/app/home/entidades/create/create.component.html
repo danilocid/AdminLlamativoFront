@@ -96,28 +96,27 @@
             <label for="region">Region</label>
             <ng-select
               formControlName="region"
-              id=""
-              name=""
+              [items]="regions"
+              bindLabel="region"
+              bindValue="id"
+              placeholder="Seleccione"
               required
               (change)="onChangeRegion()"
-            >
-              <option value="" selected disabled>Seleccione</option>
-              <ng-option *ngFor="let item of regions" value="{{ item.id }}">
-                {{ item.region }}
-              </ng-option>
-            </ng-select>
+            ></ng-select>
             <div *ngIf="isValidField('region')" class="invalid-feedback">
               La region es requerida
             </div>
           </div>
           <div class="form-group col-lg-4">
             <label for="comuna">Comuna</label>
-            <ng-select formControlName="comuna" id="" name="" required>
-              <option value="" selected disabled>Seleccione</option>
-              <ng-option *ngFor="let item of comunas" value="{{ item.id }}">
-                {{ item.comuna }}
-              </ng-option>
-            </ng-select>
+            <ng-select
+              formControlName="comuna"
+              [items]="comunas"
+              bindLabel="comuna"
+              bindValue="id"
+              placeholder="Seleccione"
+              required
+            ></ng-select>
             <div *ngIf="isValidField('comuna')" class="invalid-feedback">
               La comuna es requerida
             </div>
