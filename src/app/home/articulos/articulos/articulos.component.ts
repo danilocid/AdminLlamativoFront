@@ -108,8 +108,8 @@ export class ArticulosComponent implements OnInit {
     this.apiService
       .getWithParams(ApiRequest.getArticulos, params)
       .subscribe((response) => {
-        this.products = response.data;
-        this.totalRecords = +response.count;
+        this.products = response.data.products || [];
+        this.totalRecords = +response.data.count || 0;
         this.loading = false;
       });
   }
