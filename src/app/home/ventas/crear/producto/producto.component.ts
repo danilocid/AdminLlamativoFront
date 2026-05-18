@@ -28,7 +28,7 @@ export class ProductoComponent implements OnInit {
     readonly fb: FormBuilder,
     readonly http: HttpClient,
     readonly spinner: NgxSpinnerService,
-    readonly alertSV: AlertService
+    readonly alertSV: AlertService,
   ) {
     this.initializeSearch();
   }
@@ -62,7 +62,7 @@ export class ProductoComponent implements OnInit {
       .getWithParams(ApiRequest.getArticulos, this.params)
       .subscribe({
         next: (resp) => {
-          this.products = resp.data;
+          this.products = resp.data.products;
           this.spinner.hide();
         },
         error: (error) => {
@@ -119,7 +119,7 @@ export class ProductoComponent implements OnInit {
   onChangeProduct() {
     this.productTmp = {
       ...this.products.find(
-        (product) => product.id === this.productForm.value.id
+        (product) => product.id === this.productForm.value.id,
       ),
       quantity: this.productForm.value.quantity,
     };
@@ -127,11 +127,11 @@ export class ProductoComponent implements OnInit {
     if (this.productTmp) {
       if (this.type === 'venta') {
         this.productForm.controls['price'].setValue(
-          this.productTmp.venta_imp + this.productTmp.venta_neto
+          this.productTmp.venta_imp + this.productTmp.venta_neto,
         );
       } else {
         this.productForm.controls['price'].setValue(
-          this.productTmp.costo_imp + this.productTmp.costo_neto
+          this.productTmp.costo_imp + this.productTmp.costo_neto,
         );
       }
     }
