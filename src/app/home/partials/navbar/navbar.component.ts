@@ -83,7 +83,13 @@ export class NavbarComponent implements OnInit {
 
   private navigateToUrl(url: string) {
     if (url && url !== 'null') {
-      this.router.navigateByUrl(url);
+      // Si es un enlace externo (http/https), abrir en nueva pestaña
+      if (/^https?:\/\//i.test(url)) {
+        window.open(url, '_blank');
+      } else {
+        // Si es ruta interna, navegar normalmente
+        this.router.navigateByUrl(url);
+      }
     }
   }
 }
