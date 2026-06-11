@@ -4,6 +4,7 @@ import { AjustesDeInventarioComponent } from './ajustes/ajustesDeInventario/ajus
 import { NewInventoryComponent } from './ajustes/newInventory/newInventory.component';
 import { VerInventarioComponent } from './ajustes/ver-inventario/ver-inventario.component';
 import { ConteoAleatorioComponent } from './ajustes/conteo-aleatorio/conteo-aleatorio.component';
+import { ConteoMultipleComponent } from './ajustes/conteo-multiple/conteo-multiple.component';
 
 const routes: Routes = [
   {
@@ -28,6 +29,10 @@ const routes: Routes = [
   {
     path: 'conteo-aleatorio',
     component: ConteoAleatorioComponent,
+  },
+  {
+    path: 'conteo-multiple',
+    component: ConteoMultipleComponent,
   },
   {
     path: '**',

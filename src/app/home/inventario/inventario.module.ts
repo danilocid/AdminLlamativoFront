@@ -9,6 +9,7 @@ import { AjustesDeInventarioComponent } from './ajustes/ajustesDeInventario/ajus
 import { NewInventoryComponent } from './ajustes/newInventory/newInventory.component';
 import { VerInventarioComponent } from './ajustes/ver-inventario/ver-inventario.component';
 import { ConteoAleatorioComponent } from './ajustes/conteo-aleatorio/conteo-aleatorio.component';
+import { ConteoMultipleComponent } from './ajustes/conteo-multiple/conteo-multiple.component';
 
 @NgModule({
   imports: [
@@ -25,6 +26,7 @@ import { ConteoAleatorioComponent } from './ajustes/conteo-aleatorio/conteo-alea
     NewInventoryComponent,
     VerInventarioComponent,
     ConteoAleatorioComponent,
+    ConteoMultipleComponent,
   ],
 })
 export class InventarioModule {}

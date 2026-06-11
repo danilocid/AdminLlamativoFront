@@ -14,6 +14,8 @@ export const ApiRequest = {
   getRandomCount: environment.urlBackend + 'inventories/random-count',
   postRandomCount: environment.urlBackend + 'inventories/random-count',
   getInventarioReporte: environment.urlBackend + 'inventories/report',
+  lookupSku: environment.urlBackend + 'inventories/lookup-sku',
+  postBulkCount: environment.urlBackend + 'inventories/bulk-count',
 
   //entities
   getEntities: environment.urlBackend + 'entities',

@@ -81,6 +81,14 @@ describe('PdfGeneratorService', () => {
       mockSalesResponse,
       [],
       mockRecepcionesTotals,
+      {
+        count: 0,
+        entradas: 0,
+        salidas: 0,
+        costoNeto: 0,
+        costoImp: 0,
+        costoTotal: 0,
+      },
       '1.0.0',
     );
 
