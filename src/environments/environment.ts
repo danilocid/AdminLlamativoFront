@@ -4,8 +4,7 @@
 
 export const environment = {
   production: false,
-  urlBackend:
-    'https://llamativo-admin-backend-832653590074.us-central1.run.app/',
+  urlBackend: 'http://localhost:3000/',
   firebase: {
     apiKey: 'AIzaSyA4dIwysL-YcE148L9xoRxGV6iHTM5S8i4',
     authDomain: 'hydrocontrol-f6486.firebaseapp.com',
