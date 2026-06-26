@@ -26,6 +26,12 @@ export interface SalesResponse {
   totalCurrentMonthExtraCosts: number | null;
   totalPreviousMonthExtraCosts: number | null;
   totalPreviousYearExtraCosts: number | null;
+  // Acumulado anual
+  totalYear: number;
+  countYear: number;
+  totalCostYear: number | null;
+  totalGrossYear: number | null;
+  totalExtraCostsYear: number | null;
 }
 
 export interface MonthlyReportResponse {

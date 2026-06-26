@@ -76,6 +76,8 @@ export class PdfGeneratorService {
 
     const content2 = this.buildPdfContent(
       header,
+      monthName,
+      year,
       salesResponse,
       dataTable,
       docsEmitidos,
@@ -227,26 +229,26 @@ export class PdfGeneratorService {
 
     docsEmitidos.push([
       { text: 'Documento', style: 'tableHeaderSmall', rowSpan: 2 },
-      { text: 'Mes actual', style: 'tableHeader', colSpan: 2 },
+      { text: 'Mes Actual', style: 'tableHeader', colSpan: 2 },
       {},
-      { text: 'Mes anterior', style: 'tableHeader', colSpan: 3 },
+      { text: 'Mes Anterior', style: 'tableHeader', colSpan: 3 },
       {},
       {},
-      { text: 'Año anterior', style: 'tableHeader', colSpan: 3 },
+      { text: 'Año Anterior', style: 'tableHeader', colSpan: 3 },
       {},
       {},
     ]);
 
     docsEmitidos.push([
       {},
-      { text: 'Cantidad', style: 'tableHeaderSmall' },
+      { text: 'Cant.', style: 'tableHeaderSmall' },
       { text: 'Monto', style: 'tableHeaderSmall' },
-      { text: 'Cantidad', style: 'tableHeaderSmall' },
+      { text: 'Cant.', style: 'tableHeaderSmall' },
       { text: 'Monto', style: 'tableHeaderSmall' },
       { text: '% Dif.', style: 'tableHeaderSmall' },
-      { text: 'Cantidad', style: 'tableHeaderSmall' },
+      { text: 'Cant.', style: 'tableHeaderSmall' },
       { text: 'Monto', style: 'tableHeaderSmall' },
-      { text: '% Dif', style: 'tableHeaderSmall' },
+      { text: '% Dif.', style: 'tableHeaderSmall' },
     ]);
 
     const formatter = new Intl.NumberFormat('es-CL', {
@@ -389,6 +391,8 @@ export class PdfGeneratorService {
 
   private buildPdfContent(
     header: string,
+    monthName: string,
+    year: number,
     salesResponse: SalesResponse | null,
     dataTable: any[][],
     docsEmitidos: any[][],
@@ -400,6 +404,24 @@ export class PdfGeneratorService {
   ): any[] {
     const content: any[] = [];
     content.push({ text: header, style: 'header' });
+    content.push({
+      text: `Resumen operacional del mes de ${monthName} ${year}`,
+      style: 'subtitle',
+    });
+    content.push({
+      canvas: [
+        {
+          type: 'line',
+          x1: 0,
+          y1: 0,
+          x2: 532,
+          y2: 0,
+          lineWidth: 1,
+          lineColor: '#e2e8f0',
+        },
+      ],
+      margin: [0, 5, 0, 15],
+    });
 
     // Sección de resumen financiero y datos adicionales
     if (salesResponse || dataTable.length > 0) {
@@ -466,7 +488,7 @@ export class PdfGeneratorService {
     if (salesResponse) {
       const resumenFinancieroColumn = [];
       resumenFinancieroColumn.push({
-        text: 'Resumen Financiero',
+        text: 'RESUMEN FINANCIERO',
         style: 'sectionHeader',
       });
 
@@ -481,6 +503,7 @@ export class PdfGeneratorService {
         { text: 'Mes Actual', style: 'tableHeaderSmall' },
         { text: 'Mes Anterior', style: 'tableHeaderSmall' },
         { text: 'Año Anterior', style: 'tableHeaderSmall' },
+        { text: 'Acum. Año', style: 'tableHeaderSmall' },
       ]);
 
       resumenFinanciero.push([
@@ -488,6 +511,7 @@ export class PdfGeneratorService {
         { text: salesResponse.countCurrentMonth, style: 'tableStyle' },
         { text: salesResponse.countPreviousMonth, style: 'tableStyle' },
         { text: salesResponse.countPreviousYear, style: 'tableStyle' },
+        { text: salesResponse.countYear || 0, style: 'dataStyle' },
       ]);
 
       resumenFinanciero.push([
@@ -504,6 +528,10 @@ export class PdfGeneratorService {
           text: formatter.format(salesResponse.totalPreviousYear),
           style: 'tableStyle',
         },
+        {
+          text: formatter.format(salesResponse.totalYear || 0),
+          style: 'dataStyle',
+        },
       ]);
 
       resumenFinanciero.push([
@@ -519,6 +547,10 @@ export class PdfGeneratorService {
         {
           text: formatter.format(salesResponse.totalPreviousYearCost || 0),
           style: 'tableStyle',
+        },
+        {
+          text: formatter.format(salesResponse.totalCostYear || 0),
+          style: 'dataStyle',
         },
       ]);
 
@@ -542,26 +574,81 @@ export class PdfGeneratorService {
           ),
           style: 'tableStyle',
         },
+        {
+          text: formatter.format(salesResponse.totalExtraCostsYear || 0),
+          style: 'dataStyle',
+        },
       ]);
 
+      // Margen de ganancia (%)
+      const margenActual = salesResponse.totalCurrentMonth
+        ? ((salesResponse.totalGrossCurrentMonth || 0) / salesResponse.totalCurrentMonth * 100).toFixed(1)
+        : '0.0';
+      const margenAnterior = salesResponse.totalPreviousMonth
+        ? (((salesResponse.totalGrossPreviousMonth || 0) / salesResponse.totalPreviousMonth) * 100).toFixed(1)
+        : '0.0';
+      const margenAnioAnterior = salesResponse.totalPreviousYear
+        ? (((salesResponse.totalGrossPreviousYear || 0) / salesResponse.totalPreviousYear) * 100).toFixed(1)
+        : '0.0';
+      const margenYear = (salesResponse.totalYear && salesResponse.totalGrossYear)
+        ? ((salesResponse.totalGrossYear / salesResponse.totalYear) * 100).toFixed(1)
+        : '0.0';
+
+      resumenFinanciero.push([
+        { text: 'Margen (%)', style: 'tableStyle' },
+        { text: `${margenActual}%`, style: 'dataStyle' },
+        { text: `${margenAnterior}%`, style: 'dataStyle' },
+        { text: `${margenAnioAnterior}%`, style: 'dataStyle' },
+        { text: `${margenYear}%`, style: 'dataStyle' },
+      ]);
+
+      // Ticket promedio
+      const ticketActual = salesResponse.countCurrentMonth
+        ? formatter.format(salesResponse.totalCurrentMonth / salesResponse.countCurrentMonth)
+        : '$0';
+      const ticketAnterior = salesResponse.countPreviousMonth
+        ? formatter.format(salesResponse.totalPreviousMonth / salesResponse.countPreviousMonth)
+        : '$0';
+      const ticketAnioAnterior = salesResponse.countPreviousYear
+        ? formatter.format(salesResponse.totalPreviousYear / salesResponse.countPreviousYear)
+        : '$0';
+      const ticketYear = salesResponse.countYear
+        ? formatter.format((salesResponse.totalYear || 0) / salesResponse.countYear)
+        : '$0';
+
+      resumenFinanciero.push([
+        { text: 'Ticket Promedio', style: 'tableStyle' },
+        { text: ticketActual, style: 'dataStyle' },
+        { text: ticketAnterior, style: 'dataStyle' },
+        { text: ticketAnioAnterior, style: 'dataStyle' },
+        { text: ticketYear, style: 'dataStyle' },
+      ]);
+
+      // Ganancia (al final, dato principal)
       if (salesResponse.totalGrossCurrentMonth) {
         resumenFinanciero.push([
-          { text: 'Ganancia', style: 'tableStyleGreen' },
+          { text: 'Ganancia', style: 'tableStyleGreenBold' },
           {
             text: formatter.format(salesResponse.totalGrossCurrentMonth),
-            style: 'tableStyleGreen',
+            style: 'tableStyleGreenBold',
           },
           {
             text: salesResponse.totalGrossPreviousMonth
               ? formatter.format(salesResponse.totalGrossPreviousMonth)
               : '$0',
-            style: 'tableStyleGreen',
+            style: 'tableStyleGreenBold',
           },
           {
             text: salesResponse.totalGrossPreviousYear
               ? formatter.format(salesResponse.totalGrossPreviousYear)
               : '$0',
-            style: 'tableStyleGreen',
+            style: 'tableStyleGreenBold',
+          },
+          {
+            text: salesResponse.totalGrossYear
+              ? formatter.format(salesResponse.totalGrossYear)
+              : '$0',
+            style: 'tableStyleGreenBold',
           },
         ]);
       }
@@ -569,7 +656,7 @@ export class PdfGeneratorService {
       resumenFinancieroColumn.push({
         table: {
           body: resumenFinanciero,
-          widths: ['auto', 'auto', 'auto', 'auto'],
+          widths: ['auto', 'auto', 'auto', 'auto', 'auto'],
         },
         layout: this.getTableLayout(false),
         margin: [0, 8, 0, 0],
@@ -797,9 +884,9 @@ export class PdfGeneratorService {
     return {
       stack: [
         {
-          text: title,
+          text: title.toUpperCase(),
           style: 'sectionHeader',
-          margin: [0, 15, 0, 8],
+          margin: [0, 20, 0, 10],
         },
         {
           table: {
@@ -809,7 +896,7 @@ export class PdfGeneratorService {
             keepWithHeaderRows: headerRows,
           },
           layout: this.getTableLayout(),
-          margin: [0, 0, 0, 15],
+          margin: [0, 0, 0, 18],
         },
       ],
       unbreakable: true,
@@ -837,19 +924,25 @@ export class PdfGeneratorService {
   private getTableLayout(highlightHeader = true): any {
     return {
       fillColor: (rowIndex: number, node: any) => {
-        if (highlightHeader && rowIndex < 2) return '#3b82f6';
-        if (rowIndex === node.table.body.length - 1) return '#e0f2fe';
+        if (highlightHeader && rowIndex < 2) return '#1e40af';
+        if (rowIndex === node.table.body.length - 1) return '#dbeafe';
         return rowIndex % 2 === 0 ? '#f8fafc' : '#ffffff';
       },
       hLineWidth: (i: number, node: any) => {
-        return i === 0 || i === 2 || i === node.table.body.length ? 2 : 0.5;
+        if (i === 0 || i === node.table.body.length) return 0;
+        if (highlightHeader && i === 2) return 1;
+        return 0.2;
       },
-      vLineWidth: () => 0,
-      hLineColor: () => '#1e40af',
-      paddingLeft: () => 6,
-      paddingRight: () => 6,
-      paddingTop: () => 4,
-      paddingBottom: () => 4,
+      vLineWidth: () => 0.2,
+      hLineColor: (i: number, node: any) => {
+        if (highlightHeader && i < 2) return '#1e40af';
+        return '#e2e8f0';
+      },
+      vLineColor: () => '#f1f5f9',
+      paddingLeft: () => 8,
+      paddingRight: () => 8,
+      paddingTop: () => 5,
+      paddingBottom: () => 5,
     };
   }
 
@@ -860,8 +953,28 @@ export class PdfGeneratorService {
     version: string,
     todayDate: string,
   ): any {
+    const monthNames = [
+      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre',
+    ];
+
     return {
-      content: content,
+      content: [
+        {
+          canvas: [
+            {
+              type: 'rect',
+              x: 0,
+              y: 0,
+              w: 612,
+              h: 4,
+              color: '#1e40af',
+            },
+          ],
+          margin: [-40, -50, -40, 0],
+        },
+        ...content,
+      ],
       footer: (currentPage: number, pageCount: number) => {
         return {
           table: {
@@ -869,7 +982,15 @@ export class PdfGeneratorService {
             body: [
               [
                 {
-                  text: `Reporte mensual ${month + 1}-${year}`,
+                  text: '',
+                  border: [false, false, false, false],
+                  colSpan: 2,
+                },
+                {},
+              ],
+              [
+                {
+                  text: `Reporte mensual ${monthNames[month]} ${year}`,
                   style: 'footerLeft',
                   border: [false, false, false, false],
                 },
@@ -890,13 +1011,21 @@ export class PdfGeneratorService {
               ],
             ],
           },
-          layout: 'noBorders',
+          layout: {
+            hLineWidth: (i: number) => (i === 1 ? 0.5 : 0),
+            hLineColor: () => '#cbd5e1',
+            vLineWidth: () => 0,
+            paddingLeft: () => 0,
+            paddingRight: () => 0,
+            paddingTop: () => 0,
+            paddingBottom: () => 0,
+          },
           margin: [40, 10, 40, 10],
         };
       },
       styles: this.getPdfStyles(),
       pageSize: 'LETTER',
-      pageMargins: [40, 40, 40, 80],
+      pageMargins: [40, 50, 40, 80],
       defaultStyle: {
         font: 'Roboto',
       },
@@ -919,86 +1048,101 @@ export class PdfGeneratorService {
   private getPdfStyles(): any {
     return {
       header: {
-        fontSize: 23,
+        fontSize: 24,
         bold: true,
         alignment: 'center',
-        margin: [0, 0, 0, 30],
-        color: '#1e3a8a',
-        decoration: 'underline',
-        decorationColor: '#3b82f6',
+        margin: [0, 0, 0, 4],
+        color: '#0f172a',
+      },
+      subtitle: {
+        fontSize: 11,
+        alignment: 'center',
+        color: '#64748b',
+        margin: [0, 0, 0, 10],
+        italics: true,
       },
       sectionHeader: {
-        fontSize: 17,
+        fontSize: 13,
         bold: true,
         color: '#1e40af',
-        margin: [0, 15, 0, 8],
+        margin: [0, 20, 0, 10],
+        border: [false, false, true, false],
+        borderGap: 6,
+        borderColor: '#3b82f6',
       },
       tableHeader: {
-        fontSize: 11,
+        fontSize: 10,
+        bold: true,
+        fillColor: '#1e40af',
+        color: '#ffffff',
+        alignment: 'center',
+        margin: [2, 5, 2, 5],
+      },
+      tableHeaderSmall: {
+        fontSize: 8.5,
         bold: true,
         fillColor: '#3b82f6',
         color: '#ffffff',
         alignment: 'center',
         margin: [2, 4, 2, 4],
       },
-      tableHeaderSmall: {
-        fontSize: 9,
-        bold: true,
-        fillColor: '#60a5fa',
-        color: '#ffffff',
-        alignment: 'center',
-        margin: [2, 3, 2, 3],
-      },
       tableStyle: {
         fontSize: 9,
-        margin: [3, 3, 3, 3],
+        margin: [4, 4, 4, 4],
         alignment: 'right',
-        color: '#374151',
+        color: '#1e293b',
       },
       tableStyleRed: {
         fontSize: 9,
         color: '#dc2626',
         bold: true,
-        margin: [3, 3, 3, 3],
+        margin: [4, 4, 4, 4],
         alignment: 'right',
       },
       tableStyleGreen: {
         fontSize: 9,
         color: '#16a34a',
         bold: true,
-        margin: [3, 3, 3, 3],
+        margin: [4, 4, 4, 4],
+        alignment: 'right',
+      },
+      tableStyleGreenBold: {
+        fontSize: 10,
+        color: '#15803d',
+        bold: true,
+        margin: [4, 5, 4, 5],
         alignment: 'right',
       },
       tableStyleSmall: {
         fontSize: 8,
-        margin: [2, 2, 2, 2],
-        color: '#4b5563',
+        margin: [3, 3, 3, 3],
+        color: '#334155',
       },
       dataStyle: {
         alignment: 'right',
         fontSize: 10,
-        margin: [5, 3, 5, 3],
-        color: '#374151',
+        margin: [6, 4, 6, 4],
+        color: '#1e293b',
         bold: false,
       },
       table: {
         fontSize: 10,
-        color: '#374151',
-        margin: [5, 3, 0, 3],
+        color: '#1e293b',
+        margin: [6, 4, 0, 4],
       },
       footerLeft: {
-        fontSize: 9,
-        color: '#4b5563',
+        fontSize: 8,
+        color: '#64748b',
         alignment: 'left',
       },
       footerRight: {
-        fontSize: 9,
-        color: '#4b5563',
+        fontSize: 8,
+        color: '#64748b',
         alignment: 'right',
       },
       footerSubtext: {
-        fontSize: 8,
-        color: '#6b7280',
+        fontSize: 7,
+        color: '#94a3b8',
         alignment: 'center',
         italics: true,
       },
