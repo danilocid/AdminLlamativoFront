@@ -32,6 +32,24 @@ export interface SalesResponse {
   totalCostYear: number | null;
   totalGrossYear: number | null;
   totalExtraCostsYear: number | null;
+  // Acumulado año anterior (enero al mismo mes)
+  totalYearPrev: number;
+  countYearPrev: number;
+  totalCostYearPrev: number | null;
+  totalGrossYearPrev: number | null;
+  totalExtraCostsYearPrev: number | null;
+  // Compras del mes
+  purchasesCurrentMonth: number;
+  purchasesPreviousMonth: number;
+  purchasesPreviousYear: number;
+  purchasesYear: number;
+  purchasesYearPrev: number;
+  // Ganancia neta (ventas - costos facturas de compras)
+  netProfitCurrentMonth: number;
+  netProfitPreviousMonth: number;
+  netProfitPreviousYear: number;
+  netProfitYear: number;
+  netProfitYearPrev: number;
 }
 
 export interface MonthlyReportResponse {

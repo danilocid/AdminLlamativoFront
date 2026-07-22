@@ -504,6 +504,7 @@ export class PdfGeneratorService {
         { text: 'Mes Anterior', style: 'tableHeaderSmall' },
         { text: 'Año Anterior', style: 'tableHeaderSmall' },
         { text: 'Acum. Año', style: 'tableHeaderSmall' },
+        { text: 'Acum. Año Ant.', style: 'tableHeaderSmall' },
       ]);
 
       resumenFinanciero.push([
@@ -512,6 +513,7 @@ export class PdfGeneratorService {
         { text: salesResponse.countPreviousMonth, style: 'tableStyle' },
         { text: salesResponse.countPreviousYear, style: 'tableStyle' },
         { text: salesResponse.countYear || 0, style: 'dataStyle' },
+        { text: salesResponse.countYearPrev || 0, style: 'dataStyle' },
       ]);
 
       resumenFinanciero.push([
@@ -532,6 +534,10 @@ export class PdfGeneratorService {
           text: formatter.format(salesResponse.totalYear || 0),
           style: 'dataStyle',
         },
+        {
+          text: formatter.format(salesResponse.totalYearPrev || 0),
+          style: 'dataStyle',
+        },
       ]);
 
       resumenFinanciero.push([
@@ -550,6 +556,10 @@ export class PdfGeneratorService {
         },
         {
           text: formatter.format(salesResponse.totalCostYear || 0),
+          style: 'dataStyle',
+        },
+        {
+          text: formatter.format(salesResponse.totalCostYearPrev || 0),
           style: 'dataStyle',
         },
       ]);
@@ -578,6 +588,35 @@ export class PdfGeneratorService {
           text: formatter.format(salesResponse.totalExtraCostsYear || 0),
           style: 'dataStyle',
         },
+        {
+          text: formatter.format(salesResponse.totalExtraCostsYearPrev || 0),
+          style: 'dataStyle',
+        },
+      ]);
+
+      // Ganancia Neta (ventas - costos facturas de compras)
+      resumenFinanciero.push([
+        { text: 'Ganancia Neta', style: 'tableStyleBold' },
+        {
+          text: formatter.format(salesResponse.netProfitCurrentMonth || 0),
+          style: 'tableStyleBold',
+        },
+        {
+          text: formatter.format(salesResponse.netProfitPreviousMonth || 0),
+          style: 'tableStyleBold',
+        },
+        {
+          text: formatter.format(salesResponse.netProfitPreviousYear || 0),
+          style: 'tableStyleBold',
+        },
+        {
+          text: formatter.format(salesResponse.netProfitYear || 0),
+          style: 'dataStyle',
+        },
+        {
+          text: formatter.format(salesResponse.netProfitYearPrev || 0),
+          style: 'dataStyle',
+        },
       ]);
 
       // Margen de ganancia (%)
@@ -600,6 +639,7 @@ export class PdfGeneratorService {
         { text: `${margenAnterior}%`, style: 'dataStyle' },
         { text: `${margenAnioAnterior}%`, style: 'dataStyle' },
         { text: `${margenYear}%`, style: 'dataStyle' },
+        { text: '', style: 'dataStyle' },
       ]);
 
       // Ticket promedio
@@ -615,6 +655,9 @@ export class PdfGeneratorService {
       const ticketYear = salesResponse.countYear
         ? formatter.format((salesResponse.totalYear || 0) / salesResponse.countYear)
         : '$0';
+      const ticketYearPrev = salesResponse.countYearPrev
+        ? formatter.format((salesResponse.totalYearPrev || 0) / salesResponse.countYearPrev)
+        : '$0';
 
       resumenFinanciero.push([
         { text: 'Ticket Promedio', style: 'tableStyle' },
@@ -622,6 +665,7 @@ export class PdfGeneratorService {
         { text: ticketAnterior, style: 'dataStyle' },
         { text: ticketAnioAnterior, style: 'dataStyle' },
         { text: ticketYear, style: 'dataStyle' },
+        { text: ticketYearPrev, style: 'dataStyle' },
       ]);
 
       // Ganancia (al final, dato principal)
@@ -650,13 +694,19 @@ export class PdfGeneratorService {
               : '$0',
             style: 'tableStyleGreenBold',
           },
+          {
+            text: salesResponse.totalGrossYearPrev
+              ? formatter.format(salesResponse.totalGrossYearPrev)
+              : '$0',
+            style: 'tableStyleGreenBold',
+          },
         ]);
       }
 
       resumenFinancieroColumn.push({
         table: {
           body: resumenFinanciero,
-          widths: ['auto', 'auto', 'auto', 'auto', 'auto'],
+          widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
         },
         layout: this.getTableLayout(false),
         margin: [0, 8, 0, 0],
@@ -1111,6 +1161,13 @@ export class PdfGeneratorService {
         color: '#15803d',
         bold: true,
         margin: [4, 5, 4, 5],
+        alignment: 'right',
+      },
+      tableStyleBold: {
+        fontSize: 9,
+        color: '#1e293b',
+        bold: true,
+        margin: [4, 4, 4, 4],
         alignment: 'right',
       },
       tableStyleSmall: {
