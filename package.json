@@ -1,6 +1,6 @@
 {
   "name": "front",
-  "version": "0.0.90",
+  "version": "0.0.91",
   "locale": "es_CL",
   "scripts": {
     "ng": "ng",
