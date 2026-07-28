@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { HydrocontrolComponent } from './hydrocontrol/hydrocontrol.component';
 
 const routes: Routes = [
   {
@@ -39,10 +38,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('./reportes/reportes.module').then((m) => m.ReportesModule),
   },
+  /*
   {
-    path: 'hydrocontrol',
-    component: HydrocontrolComponent,
+    path: 'google-drive',
+    loadChildren: () =>
+      import('./google-drive/google-drive.module').then((m) => m.GoogleDriveModule),
   },
+  */
   {
     // captura cualquier ruta que no este definida
     path: '**',

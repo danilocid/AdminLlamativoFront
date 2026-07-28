@@ -53,6 +53,12 @@ export const ApiRequest = {
   // notificaciones
   getNotificaciones: environment.urlBackend + 'notifications',
   markAsReaded: environment.urlBackend + 'notifications/readed',
+
+  // Google Drive
+  googleDriveUpload: environment.urlBackend + 'google-drive/upload',
+  googleDriveList: environment.urlBackend + 'google-drive/list',
+  googleDriveFolders: environment.urlBackend + 'google-drive/folders',
+  googleDriveDelete: environment.urlBackend + 'google-drive',
 };
 export interface ServerResponse {
   serverResponseCode: number;

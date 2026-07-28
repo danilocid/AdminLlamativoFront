@@ -4,10 +4,9 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { HomeRoutingModule } from './home-routing.module';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HydrocontrolComponent } from './hydrocontrol/hydrocontrol.component';
 
 @NgModule({
-  declarations: [DashboardComponent, HydrocontrolComponent],
+  declarations: [DashboardComponent],
   imports: [CommonModule, HomeRoutingModule, FormsModule, ReactiveFormsModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

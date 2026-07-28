@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HydrocontrolComponent } from './hydrocontrol.component';
+import { GoogleDriveComponent } from './google-drive.component';
 
 const routes: Routes = [
   {
-    path: 'hydrocontrol',
-    component: HydrocontrolComponent,
+    path: '',
+    component: GoogleDriveComponent,
   },
 ];
 
@@ -13,4 +13,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class HydrocontrolRoutingModule {}
+export class GoogleDriveRoutingModule {}

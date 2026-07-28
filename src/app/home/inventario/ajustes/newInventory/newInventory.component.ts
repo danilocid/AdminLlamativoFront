@@ -114,7 +114,7 @@ export class NewInventoryComponent implements OnInit, OnDestroy {
     };
     this.api.getWithParams(ApiRequest.getArticulos, params).subscribe({
       next: (resp) => {
-        this.products = resp.data;
+        this.products = resp.data.products;
         this.spinner.hide();
       },
       error: (error) => {

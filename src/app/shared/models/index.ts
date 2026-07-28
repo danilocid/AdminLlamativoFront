@@ -2,7 +2,6 @@
 export * from './commun.model';
 export * from './documentType.model';
 export * from './entidad.model';
-export * from './hydrocontrol.model';
 export * from './inventory.model';
 export * from './notification.model';
 export * from './paymentMethod.model';

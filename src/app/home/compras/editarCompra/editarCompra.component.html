@@ -32,9 +32,9 @@
       </div>
 
       <div class="modal-body">
-        <h4>Proveedor: {{ proveedor }}</h4>
-        <h5>{{ tipoDocumento }} - {{ numeroDocumento }}</h5>
-        <form [formGroup]="compraForm" (ngSubmit)="submit()">
+        <h4 class="no-print">Proveedor: {{ proveedor }}</h4>
+        <h5 class="no-print">{{ tipoDocumento }} - {{ numeroDocumento }}</h5>
+        <form [formGroup]="compraForm" (ngSubmit)="submit()" class="no-print">
           <div class="form-group">
             <label for="tipo">Tipo de compra</label>
             <select class="form-control" formControlName="tipo">
@@ -108,6 +108,37 @@
             </button>
           </div>
         </form>
+
+        <div id="resumen-compra-print" class="print-summary">
+          <div class="summary-header">
+            <h4>Resumen de Compra</h4>
+          </div>
+          <table class="summary-table">
+            <tr>
+              <td class="summary-label">ID</td>
+              <td class="summary-value">{{ compra?.id }}</td>
+            </tr>
+            <tr>
+              <td class="summary-label">Tipo</td>
+              <td class="summary-value">{{ compra?.tipo_compra?.tipo_compra }}</td>
+            </tr>
+            <tr>
+              <td class="summary-label">Costo Total</td>
+              <td class="summary-value">{{ (compra?.costo_neto_documento + compra?.costo_imp_documento) | number:'1.0-0' }}</td>
+            </tr>
+            <tr>
+              <td class="summary-label">Observaciones</td>
+              <td class="summary-value">{{ compra?.observaciones }}</td>
+            </tr>
+          </table>
+          <div class="print-date">Fecha de impresión: {{ today | date:'dd/MM/yyyy HH:mm' }}</div>
+        </div>
+
+        <div class="no-print text-right mt-3">
+          <button class="btn btn-outline-secondary btn-sm" (click)="printSummary()">
+            <i class="fas fa-print"></i> Imprimir resumen
+          </button>
+        </div>
       </div>
     </div>
   </div>

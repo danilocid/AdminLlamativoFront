@@ -44,16 +44,7 @@ export class FinalizaRecepcionComponent implements OnInit {
     });
     this.apiService = new ApiService(this.http);
 
-    this.apiService.get(ApiRequest.getEntities + '?t=p').subscribe({
-      next: (resp) => {
-        this.clients = resp.data;
-        this.spinner.hide();
-      },
-      error: (error) => {
-        this.spinner.hide();
-        this.alertSV.alertBasic('Error', error.error.msg, 'error');
-      },
-    });
+    this.loadEntities();
 
     this.apiService.get(ApiRequest.getTipoDocumento).subscribe({
       next: (resp) => {
@@ -87,6 +78,20 @@ export class FinalizaRecepcionComponent implements OnInit {
           this.router.navigate(['/login']);
           return;
         }
+        this.spinner.hide();
+        this.alertSV.alertBasic('Error', error.error.msg, 'error');
+      },
+    });
+  }
+
+  loadEntities() {
+    this.spinner.show();
+    this.apiService.get(ApiRequest.getEntities + '?t=p').subscribe({
+      next: (resp) => {
+        this.clients = resp.data.entities;
+        this.spinner.hide();
+      },
+      error: (error) => {
         this.spinner.hide();
         this.alertSV.alertBasic('Error', error.error.msg, 'error');
       },

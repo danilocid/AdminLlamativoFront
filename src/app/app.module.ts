@@ -12,9 +12,7 @@ import { registerLocaleData } from '@angular/common';
 import { SidebarComponent } from './home/partials/sidebar/sidebar.component';
 import { NavbarComponent } from './home/partials/navbar/navbar.component';
 import { FooterComponent } from './home/partials/footer/footer.component';
-import { FIREBASE_OPTIONS } from '@angular/fire/compat';
 import { SharedModule } from './shared/shared.module';
-import { environment } from 'src/environments/environment';
 import { authInterceptor, errorInterceptor } from './shared/interceptors';
 registerLocaleData(localeEs, 'es');
 
@@ -38,10 +36,6 @@ registerLocaleData(localeEs, 'es');
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'es' },
-    {
-      provide: FIREBASE_OPTIONS,
-      useValue: environment.firebase,
-    },
     provideAnimations(),
     provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
   ],

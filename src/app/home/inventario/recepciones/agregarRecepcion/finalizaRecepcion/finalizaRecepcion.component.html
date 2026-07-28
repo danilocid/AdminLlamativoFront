@@ -1,6 +1,11 @@
 <div class="card">
   <div class="card-header">
     <h4 class="card-title">Finalizar venta</h4>
+    <div class="card-tools">
+      <button type="button" class="btn btn-tool" (click)="loadEntities()">
+        <i class="fas fa-sync-alt"></i>
+      </button>
+    </div>
   </div>
   <div class="card-body">
     <form [formGroup]="clientForm" (submit)="generarVenta()" class="form">

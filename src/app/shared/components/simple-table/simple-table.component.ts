@@ -93,7 +93,7 @@ export class SimpleTableComponent implements OnChanges, OnInit {
 
   ngOnInit(): void {
     if (this.serverSide) {
-      this.requestData();
+      setTimeout(() => this.requestData(), 0);
     }
   }
 

@@ -23,6 +23,7 @@
           <table class="table" *ngIf="productsCart.length !== 0">
             <thead>
               <tr>
+                <th>ID</th>
                 <th>Producto</th>
                 <th>Cantidad</th>
                 <th>Neto</th>
@@ -34,6 +35,7 @@
             </thead>
             <tbody>
               <tr *ngFor="let item of productsCart">
+                <td>{{ item.id }}</td>
                 <td>
                   {{ item.descripcion }}
                   <span *ngIf="item.deprecado" class="badge badge-warning ml-2"
