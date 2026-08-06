@@ -518,108 +518,119 @@ export class PdfGeneratorService {
 
       resumenFinanciero.push([
         { text: 'Ventas', style: 'tableStyle' },
+        {
+          text: formatter.format(salesResponse.totalCurrentMonth),
+          style: 'tableStyle',
+        },
         this.createValueWithPercentage(
-          formatter.format(salesResponse.totalCurrentMonth),
-          salesResponse.totalCurrentMonth,
+          formatter.format(salesResponse.totalPreviousMonth),
           salesResponse.totalPreviousMonth,
+          salesResponse.totalCurrentMonth,
         ),
-        {
-          text: formatter.format(salesResponse.totalPreviousMonth),
-          style: 'tableStyle',
-        },
-        {
-          text: formatter.format(salesResponse.totalPreviousYear),
-          style: 'tableStyle',
-        },
+        this.createValueWithPercentage(
+          formatter.format(salesResponse.totalPreviousYear),
+          salesResponse.totalPreviousYear,
+          salesResponse.totalCurrentMonth,
+        ),
         {
           text: formatter.format(salesResponse.totalYear || 0),
           style: 'dataStyle',
         },
-        {
-          text: formatter.format(salesResponse.totalYearPrev || 0),
-          style: 'dataStyle',
-        },
+        this.createValueWithPercentage(
+          formatter.format(salesResponse.totalYearPrev || 0),
+          salesResponse.totalYearPrev || 0,
+          salesResponse.totalYear || 0,
+          'dataStyle',
+        ),
       ]);
 
       resumenFinanciero.push([
         { text: 'Costo', style: 'tableStyle' },
+        {
+          text: formatter.format(salesResponse.totalCurrentMonthCost || 0),
+          style: 'tableStyle',
+        },
         this.createValueWithPercentage(
-          formatter.format(salesResponse.totalCurrentMonthCost || 0),
-          salesResponse.totalCurrentMonthCost || 0,
+          formatter.format(salesResponse.totalPreviousMonthCost || 0),
           salesResponse.totalPreviousMonthCost || 0,
+          salesResponse.totalCurrentMonthCost || 0,
         ),
-        {
-          text: formatter.format(salesResponse.totalPreviousMonthCost || 0),
-          style: 'tableStyle',
-        },
-        {
-          text: formatter.format(salesResponse.totalPreviousYearCost || 0),
-          style: 'tableStyle',
-        },
+        this.createValueWithPercentage(
+          formatter.format(salesResponse.totalPreviousYearCost || 0),
+          salesResponse.totalPreviousYearCost || 0,
+          salesResponse.totalCurrentMonthCost || 0,
+        ),
         {
           text: formatter.format(salesResponse.totalCostYear || 0),
           style: 'dataStyle',
         },
-        {
-          text: formatter.format(salesResponse.totalCostYearPrev || 0),
-          style: 'dataStyle',
-        },
+        this.createValueWithPercentage(
+          formatter.format(salesResponse.totalCostYearPrev || 0),
+          salesResponse.totalCostYearPrev || 0,
+          salesResponse.totalCostYear || 0,
+          'dataStyle',
+        ),
       ]);
 
       resumenFinanciero.push([
         { text: 'Costo Extra', style: 'tableStyle' },
+        {
+          text: formatter.format(
+            salesResponse.totalCurrentMonthExtraCosts || 0,
+          ),
+          style: 'tableStyle',
+        },
         this.createValueWithPercentage(
-          formatter.format(salesResponse.totalCurrentMonthExtraCosts || 0),
-          salesResponse.totalCurrentMonthExtraCosts || 0,
+          formatter.format(salesResponse.totalPreviousMonthExtraCosts || 0),
           salesResponse.totalPreviousMonthExtraCosts || 0,
+          salesResponse.totalCurrentMonthExtraCosts || 0,
         ),
-        {
-          text: formatter.format(
-            salesResponse.totalPreviousMonthExtraCosts || 0,
-          ),
-          style: 'tableStyle',
-        },
-        {
-          text: formatter.format(
-            salesResponse.totalPreviousYearExtraCosts || 0,
-          ),
-          style: 'tableStyle',
-        },
+        this.createValueWithPercentage(
+          formatter.format(salesResponse.totalPreviousYearExtraCosts || 0),
+          salesResponse.totalPreviousYearExtraCosts || 0,
+          salesResponse.totalCurrentMonthExtraCosts || 0,
+        ),
         {
           text: formatter.format(salesResponse.totalExtraCostsYear || 0),
           style: 'dataStyle',
         },
-        {
-          text: formatter.format(salesResponse.totalExtraCostsYearPrev || 0),
-          style: 'dataStyle',
-        },
+        this.createValueWithPercentage(
+          formatter.format(salesResponse.totalExtraCostsYearPrev || 0),
+          salesResponse.totalExtraCostsYearPrev || 0,
+          salesResponse.totalExtraCostsYear || 0,
+          'dataStyle',
+        ),
       ]);
 
       // Ganancia Neta (ventas - costos facturas de compras)
       resumenFinanciero.push([
         { text: 'Ganancia Neta', style: 'tableStyleBold' },
+        {
+          text: formatter.format(salesResponse.netProfitCurrentMonth || 0),
+          style: 'tableStyleBold',
+        },
         this.createValueWithPercentage(
-          formatter.format(salesResponse.netProfitCurrentMonth || 0),
-          salesResponse.netProfitCurrentMonth || 0,
+          formatter.format(salesResponse.netProfitPreviousMonth || 0),
           salesResponse.netProfitPreviousMonth || 0,
+          salesResponse.netProfitCurrentMonth || 0,
           'tableStyleBold',
         ),
-        {
-          text: formatter.format(salesResponse.netProfitPreviousMonth || 0),
-          style: 'tableStyleBold',
-        },
-        {
-          text: formatter.format(salesResponse.netProfitPreviousYear || 0),
-          style: 'tableStyleBold',
-        },
+        this.createValueWithPercentage(
+          formatter.format(salesResponse.netProfitPreviousYear || 0),
+          salesResponse.netProfitPreviousYear || 0,
+          salesResponse.netProfitCurrentMonth || 0,
+          'tableStyleBold',
+        ),
         {
           text: formatter.format(salesResponse.netProfitYear || 0),
           style: 'dataStyle',
         },
-        {
-          text: formatter.format(salesResponse.netProfitYearPrev || 0),
-          style: 'dataStyle',
-        },
+        this.createValueWithPercentage(
+          formatter.format(salesResponse.netProfitYearPrev || 0),
+          salesResponse.netProfitYearPrev || 0,
+          salesResponse.netProfitYear || 0,
+          'dataStyle',
+        ),
       ]);
 
       // Margen de ganancia (%)
@@ -664,51 +675,63 @@ export class PdfGeneratorService {
 
       resumenFinanciero.push([
         { text: 'Ticket Promedio', style: 'tableStyle' },
+        { text: ticketActual, style: 'dataStyle' },
         this.createValueWithPercentage(
-          ticketActual,
-          salesResponse.totalCurrentMonth / (salesResponse.countCurrentMonth || 1),
+          ticketAnterior,
           salesResponse.totalPreviousMonth / (salesResponse.countPreviousMonth || 1),
+          salesResponse.totalCurrentMonth / (salesResponse.countCurrentMonth || 1),
         ),
-        { text: ticketAnterior, style: 'dataStyle' },
-        { text: ticketAnioAnterior, style: 'dataStyle' },
+        this.createValueWithPercentage(
+          ticketAnioAnterior,
+          salesResponse.totalPreviousYear / (salesResponse.countPreviousYear || 1),
+          salesResponse.totalCurrentMonth / (salesResponse.countCurrentMonth || 1),
+        ),
         { text: ticketYear, style: 'dataStyle' },
-        { text: ticketYearPrev, style: 'dataStyle' },
+        this.createValueWithPercentage(
+          ticketYearPrev,
+          (salesResponse.totalYearPrev || 0) / (salesResponse.countYearPrev || 1),
+          (salesResponse.totalYear || 0) / (salesResponse.countYear || 1),
+        ),
       ]);
 
       // Ganancia (al final, dato principal)
       if (salesResponse.totalGrossCurrentMonth) {
         resumenFinanciero.push([
           { text: 'Ganancia', style: 'tableStyleGreenBold' },
-          this.createValueWithPercentage(
-            formatter.format(salesResponse.totalGrossCurrentMonth),
-            salesResponse.totalGrossCurrentMonth,
-            salesResponse.totalGrossPreviousMonth || 0,
-            'tableStyleGreenBold',
-          ),
           {
-            text: salesResponse.totalGrossPreviousMonth
+            text: formatter.format(salesResponse.totalGrossCurrentMonth),
+            style: 'tableStyleGreenBold',
+          },
+          this.createValueWithPercentage(
+            salesResponse.totalGrossPreviousMonth
               ? formatter.format(salesResponse.totalGrossPreviousMonth)
               : '$0',
-            style: 'tableStyleGreenBold',
-          },
-          {
-            text: salesResponse.totalGrossPreviousYear
+            salesResponse.totalGrossPreviousMonth || 0,
+            salesResponse.totalGrossCurrentMonth,
+            'tableStyleGreenBold',
+          ),
+          this.createValueWithPercentage(
+            salesResponse.totalGrossPreviousYear
               ? formatter.format(salesResponse.totalGrossPreviousYear)
               : '$0',
-            style: 'tableStyleGreenBold',
-          },
+            salesResponse.totalGrossPreviousYear || 0,
+            salesResponse.totalGrossCurrentMonth,
+            'tableStyleGreenBold',
+          ),
           {
             text: salesResponse.totalGrossYear
               ? formatter.format(salesResponse.totalGrossYear)
               : '$0',
             style: 'tableStyleGreenBold',
           },
-          {
-            text: salesResponse.totalGrossYearPrev
+          this.createValueWithPercentage(
+            salesResponse.totalGrossYearPrev
               ? formatter.format(salesResponse.totalGrossYearPrev)
               : '$0',
-            style: 'tableStyleGreenBold',
-          },
+            salesResponse.totalGrossYearPrev || 0,
+            salesResponse.totalGrossYear || 0,
+            'tableStyleGreenBold',
+          ),
         ]);
       }
 
