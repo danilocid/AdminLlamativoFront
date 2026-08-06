@@ -518,10 +518,11 @@ export class PdfGeneratorService {
 
       resumenFinanciero.push([
         { text: 'Ventas', style: 'tableStyle' },
-        {
-          text: formatter.format(salesResponse.totalCurrentMonth),
-          style: 'tableStyle',
-        },
+        this.createValueWithPercentage(
+          formatter.format(salesResponse.totalCurrentMonth),
+          salesResponse.totalCurrentMonth,
+          salesResponse.totalPreviousMonth,
+        ),
         {
           text: formatter.format(salesResponse.totalPreviousMonth),
           style: 'tableStyle',
@@ -542,10 +543,11 @@ export class PdfGeneratorService {
 
       resumenFinanciero.push([
         { text: 'Costo', style: 'tableStyle' },
-        {
-          text: formatter.format(salesResponse.totalCurrentMonthCost || 0),
-          style: 'tableStyle',
-        },
+        this.createValueWithPercentage(
+          formatter.format(salesResponse.totalCurrentMonthCost || 0),
+          salesResponse.totalCurrentMonthCost || 0,
+          salesResponse.totalPreviousMonthCost || 0,
+        ),
         {
           text: formatter.format(salesResponse.totalPreviousMonthCost || 0),
           style: 'tableStyle',
@@ -566,12 +568,11 @@ export class PdfGeneratorService {
 
       resumenFinanciero.push([
         { text: 'Costo Extra', style: 'tableStyle' },
-        {
-          text: formatter.format(
-            salesResponse.totalCurrentMonthExtraCosts || 0,
-          ),
-          style: 'tableStyle',
-        },
+        this.createValueWithPercentage(
+          formatter.format(salesResponse.totalCurrentMonthExtraCosts || 0),
+          salesResponse.totalCurrentMonthExtraCosts || 0,
+          salesResponse.totalPreviousMonthExtraCosts || 0,
+        ),
         {
           text: formatter.format(
             salesResponse.totalPreviousMonthExtraCosts || 0,
@@ -597,10 +598,12 @@ export class PdfGeneratorService {
       // Ganancia Neta (ventas - costos facturas de compras)
       resumenFinanciero.push([
         { text: 'Ganancia Neta', style: 'tableStyleBold' },
-        {
-          text: formatter.format(salesResponse.netProfitCurrentMonth || 0),
-          style: 'tableStyleBold',
-        },
+        this.createValueWithPercentage(
+          formatter.format(salesResponse.netProfitCurrentMonth || 0),
+          salesResponse.netProfitCurrentMonth || 0,
+          salesResponse.netProfitPreviousMonth || 0,
+          'tableStyleBold',
+        ),
         {
           text: formatter.format(salesResponse.netProfitPreviousMonth || 0),
           style: 'tableStyleBold',
@@ -661,7 +664,11 @@ export class PdfGeneratorService {
 
       resumenFinanciero.push([
         { text: 'Ticket Promedio', style: 'tableStyle' },
-        { text: ticketActual, style: 'dataStyle' },
+        this.createValueWithPercentage(
+          ticketActual,
+          salesResponse.totalCurrentMonth / (salesResponse.countCurrentMonth || 1),
+          salesResponse.totalPreviousMonth / (salesResponse.countPreviousMonth || 1),
+        ),
         { text: ticketAnterior, style: 'dataStyle' },
         { text: ticketAnioAnterior, style: 'dataStyle' },
         { text: ticketYear, style: 'dataStyle' },
@@ -672,10 +679,12 @@ export class PdfGeneratorService {
       if (salesResponse.totalGrossCurrentMonth) {
         resumenFinanciero.push([
           { text: 'Ganancia', style: 'tableStyleGreenBold' },
-          {
-            text: formatter.format(salesResponse.totalGrossCurrentMonth),
-            style: 'tableStyleGreenBold',
-          },
+          this.createValueWithPercentage(
+            formatter.format(salesResponse.totalGrossCurrentMonth),
+            salesResponse.totalGrossCurrentMonth,
+            salesResponse.totalGrossPreviousMonth || 0,
+            'tableStyleGreenBold',
+          ),
           {
             text: salesResponse.totalGrossPreviousMonth
               ? formatter.format(salesResponse.totalGrossPreviousMonth)
@@ -1216,5 +1225,29 @@ export class PdfGeneratorService {
     const variation =
       ((currentMonth - previousMonthOrYear) / previousMonthOrYear) * 100;
     return parseFloat(variation.toFixed(2));
+  }
+
+  private createValueWithPercentage(
+    value: string,
+    current: number,
+    previous: number,
+    style: string = 'tableStyle',
+  ): any {
+    const percentage = this.calculatePercentageVariation(current, previous);
+    const percentageColor = percentage >= 0 ? '#16a34a' : '#dc2626';
+    const percentageSign = percentage >= 0 ? '+' : '';
+
+    return {
+      stack: [
+        { text: value, style: style },
+        {
+          text: `(${percentageSign}${percentage}%)`,
+          fontSize: 7,
+          color: percentageColor,
+          alignment: 'right',
+          margin: [0, 0, 4, 0],
+        },
+      ],
+    };
   }
 }

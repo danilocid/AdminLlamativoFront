@@ -9,6 +9,16 @@ y este proyecto adhiere al [Versionado Semántico](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+## [0.0.92] - 2026-07-29
+
+### Added
+
+- **Reporte mensual: porcentaje de diferencia en resumen financiero**
+  - Agregado porcentaje de variación entre mes actual y mes anterior
+  - Porcentaje en verde si es positivo, rojo si es negativo
+  - Tamaño de fuente menor para el porcentaje
+  - Aplicado a: Ventas, Costo, Costo Extra, Ganancia Neta, Ticket Promedio, Ganancia
+
 ## [0.0.80] - 2026-04-21
 
 ### Corregido
