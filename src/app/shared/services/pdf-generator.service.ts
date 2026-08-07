@@ -524,13 +524,13 @@ export class PdfGeneratorService {
         },
         this.createValueWithPercentage(
           formatter.format(salesResponse.totalPreviousMonth),
-          salesResponse.totalPreviousMonth,
           salesResponse.totalCurrentMonth,
+          salesResponse.totalPreviousMonth,
         ),
         this.createValueWithPercentage(
           formatter.format(salesResponse.totalPreviousYear),
-          salesResponse.totalPreviousYear,
           salesResponse.totalCurrentMonth,
+          salesResponse.totalPreviousYear,
         ),
         {
           text: formatter.format(salesResponse.totalYear || 0),
@@ -538,8 +538,8 @@ export class PdfGeneratorService {
         },
         this.createValueWithPercentage(
           formatter.format(salesResponse.totalYearPrev || 0),
-          salesResponse.totalYearPrev || 0,
           salesResponse.totalYear || 0,
+          salesResponse.totalYearPrev || 0,
           'dataStyle',
         ),
       ]);
@@ -552,13 +552,13 @@ export class PdfGeneratorService {
         },
         this.createValueWithPercentage(
           formatter.format(salesResponse.totalPreviousMonthCost || 0),
-          salesResponse.totalPreviousMonthCost || 0,
           salesResponse.totalCurrentMonthCost || 0,
+          salesResponse.totalPreviousMonthCost || 0,
         ),
         this.createValueWithPercentage(
           formatter.format(salesResponse.totalPreviousYearCost || 0),
-          salesResponse.totalPreviousYearCost || 0,
           salesResponse.totalCurrentMonthCost || 0,
+          salesResponse.totalPreviousYearCost || 0,
         ),
         {
           text: formatter.format(salesResponse.totalCostYear || 0),
@@ -566,8 +566,8 @@ export class PdfGeneratorService {
         },
         this.createValueWithPercentage(
           formatter.format(salesResponse.totalCostYearPrev || 0),
-          salesResponse.totalCostYearPrev || 0,
           salesResponse.totalCostYear || 0,
+          salesResponse.totalCostYearPrev || 0,
           'dataStyle',
         ),
       ]);
@@ -582,13 +582,13 @@ export class PdfGeneratorService {
         },
         this.createValueWithPercentage(
           formatter.format(salesResponse.totalPreviousMonthExtraCosts || 0),
-          salesResponse.totalPreviousMonthExtraCosts || 0,
           salesResponse.totalCurrentMonthExtraCosts || 0,
+          salesResponse.totalPreviousMonthExtraCosts || 0,
         ),
         this.createValueWithPercentage(
           formatter.format(salesResponse.totalPreviousYearExtraCosts || 0),
-          salesResponse.totalPreviousYearExtraCosts || 0,
           salesResponse.totalCurrentMonthExtraCosts || 0,
+          salesResponse.totalPreviousYearExtraCosts || 0,
         ),
         {
           text: formatter.format(salesResponse.totalExtraCostsYear || 0),
@@ -596,8 +596,8 @@ export class PdfGeneratorService {
         },
         this.createValueWithPercentage(
           formatter.format(salesResponse.totalExtraCostsYearPrev || 0),
-          salesResponse.totalExtraCostsYearPrev || 0,
           salesResponse.totalExtraCostsYear || 0,
+          salesResponse.totalExtraCostsYearPrev || 0,
           'dataStyle',
         ),
       ]);
@@ -611,14 +611,14 @@ export class PdfGeneratorService {
         },
         this.createValueWithPercentage(
           formatter.format(salesResponse.netProfitPreviousMonth || 0),
-          salesResponse.netProfitPreviousMonth || 0,
           salesResponse.netProfitCurrentMonth || 0,
+          salesResponse.netProfitPreviousMonth || 0,
           'tableStyleBold',
         ),
         this.createValueWithPercentage(
           formatter.format(salesResponse.netProfitPreviousYear || 0),
-          salesResponse.netProfitPreviousYear || 0,
           salesResponse.netProfitCurrentMonth || 0,
+          salesResponse.netProfitPreviousYear || 0,
           'tableStyleBold',
         ),
         {
@@ -627,8 +627,8 @@ export class PdfGeneratorService {
         },
         this.createValueWithPercentage(
           formatter.format(salesResponse.netProfitYearPrev || 0),
-          salesResponse.netProfitYearPrev || 0,
           salesResponse.netProfitYear || 0,
+          salesResponse.netProfitYearPrev || 0,
           'dataStyle',
         ),
       ]);
@@ -678,19 +678,19 @@ export class PdfGeneratorService {
         { text: ticketActual, style: 'dataStyle' },
         this.createValueWithPercentage(
           ticketAnterior,
-          salesResponse.totalPreviousMonth / (salesResponse.countPreviousMonth || 1),
           salesResponse.totalCurrentMonth / (salesResponse.countCurrentMonth || 1),
+          salesResponse.totalPreviousMonth / (salesResponse.countPreviousMonth || 1),
         ),
         this.createValueWithPercentage(
           ticketAnioAnterior,
-          salesResponse.totalPreviousYear / (salesResponse.countPreviousYear || 1),
           salesResponse.totalCurrentMonth / (salesResponse.countCurrentMonth || 1),
+          salesResponse.totalPreviousYear / (salesResponse.countPreviousYear || 1),
         ),
         { text: ticketYear, style: 'dataStyle' },
         this.createValueWithPercentage(
           ticketYearPrev,
-          (salesResponse.totalYearPrev || 0) / (salesResponse.countYearPrev || 1),
           (salesResponse.totalYear || 0) / (salesResponse.countYear || 1),
+          (salesResponse.totalYearPrev || 0) / (salesResponse.countYearPrev || 1),
         ),
       ]);
 
@@ -706,16 +706,16 @@ export class PdfGeneratorService {
             salesResponse.totalGrossPreviousMonth
               ? formatter.format(salesResponse.totalGrossPreviousMonth)
               : '$0',
-            salesResponse.totalGrossPreviousMonth || 0,
             salesResponse.totalGrossCurrentMonth,
+            salesResponse.totalGrossPreviousMonth || 0,
             'tableStyleGreenBold',
           ),
           this.createValueWithPercentage(
             salesResponse.totalGrossPreviousYear
               ? formatter.format(salesResponse.totalGrossPreviousYear)
               : '$0',
-            salesResponse.totalGrossPreviousYear || 0,
             salesResponse.totalGrossCurrentMonth,
+            salesResponse.totalGrossPreviousYear || 0,
             'tableStyleGreenBold',
           ),
           {
@@ -728,8 +728,8 @@ export class PdfGeneratorService {
             salesResponse.totalGrossYearPrev
               ? formatter.format(salesResponse.totalGrossYearPrev)
               : '$0',
-            salesResponse.totalGrossYearPrev || 0,
             salesResponse.totalGrossYear || 0,
+            salesResponse.totalGrossYearPrev || 0,
             'tableStyleGreenBold',
           ),
         ]);
