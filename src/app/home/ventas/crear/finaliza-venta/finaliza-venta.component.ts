@@ -215,6 +215,10 @@ export class FinalizaVentaComponent implements OnInit {
       centered: true,
     });
 
+    if (this.productsCart.length === 1) {
+      modalRef.componentInstance.productId = this.productsCart[0].id;
+    }
+
     modalRef.result.then(
       (result) => {
         if (result) {

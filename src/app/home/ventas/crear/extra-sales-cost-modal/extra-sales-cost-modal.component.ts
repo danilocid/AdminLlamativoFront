@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SaleExtraCost } from 'src/app/shared/models/sale-extra-cost.model';
@@ -22,14 +22,19 @@ export class ExtraSalesCostModalComponent implements OnInit {
   extraCostForm!: FormGroup;
   extraCosts: SaleExtraCost[] = [];
   lastExtraCosts: Map<number, number> = new Map();
+  @Input() productId?: number;
 
   ngOnInit() {
-    this.getLastExtraCosts();
     this.extraCostForm = this.fb.group({});
+    if (this.productId) {
+      this.getLastExtraCostsByProduct();
+    } else {
+      this.getExtraCosts();
+    }
   }
 
-  getLastExtraCosts() {
-    this.api.get(ApiRequest.getLastExtraCosts).subscribe({
+  getLastExtraCostsByProduct() {
+    this.api.get(ApiRequest.getLastExtraCostsByProduct + this.productId).subscribe({
       next: (resp) => {
         if (resp.data) {
           resp.data.forEach((item: any) => {
