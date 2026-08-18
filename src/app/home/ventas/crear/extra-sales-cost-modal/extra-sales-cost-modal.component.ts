@@ -21,10 +21,27 @@ export class ExtraSalesCostModalComponent implements OnInit {
   ) {}
   extraCostForm!: FormGroup;
   extraCosts: SaleExtraCost[] = [];
+  lastExtraCosts: Map<number, number> = new Map();
 
   ngOnInit() {
-    this.getExtraCosts();
+    this.getLastExtraCosts();
     this.extraCostForm = this.fb.group({});
+  }
+
+  getLastExtraCosts() {
+    this.api.get(ApiRequest.getLastExtraCosts).subscribe({
+      next: (resp) => {
+        if (resp.data) {
+          resp.data.forEach((item: any) => {
+            this.lastExtraCosts.set(item.id, item.monto);
+          });
+        }
+        this.getExtraCosts();
+      },
+      error: () => {
+        this.getExtraCosts();
+      },
+    });
   }
 
   getExtraCosts() {
@@ -37,9 +54,10 @@ export class ExtraSalesCostModalComponent implements OnInit {
           this.activeModal.close();
         } else {
           this.extraCosts.forEach((extraCost) => {
+            const lastValue = this.lastExtraCosts.get(extraCost.id) || 0;
             this.extraCostForm.addControl(
               extraCost.id.toString(),
-              this.fb.control(0, Validators.required)
+              this.fb.control(lastValue, Validators.required)
             );
           });
         }

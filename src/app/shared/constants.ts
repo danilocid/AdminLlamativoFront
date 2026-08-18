@@ -29,6 +29,7 @@ export const ApiRequest = {
   //sales
   getSales: environment.urlBackend + 'sales',
   getExtraCosts: environment.urlBackend + 'sales/extra-costs',
+  getLastExtraCosts: environment.urlBackend + 'sales/extra-costs/last',
 
   //reports
   dashboardReport: environment.urlBackend + 'products/inventory',
