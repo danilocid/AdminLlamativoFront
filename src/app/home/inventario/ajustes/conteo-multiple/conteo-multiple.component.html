@@ -64,8 +64,11 @@
               <i class="fas fa-barcode mr-2"></i>Escanear / Ingresar SKU
             </h3>
             <div class="card-tools">
-              <span class="badge badge-light"
+              <span class="badge badge-light mr-2"
                 >{{ items.length }} / {{ MAX_ITEMS }} productos</span
+              >
+              <span class="badge badge-info"
+                >{{ totalUnits }} unidades</span
               >
             </div>
           </div>
@@ -82,7 +85,7 @@
                     placeholder="Escanea o escribe el SKU / código de barras"
                     [(ngModel)]="skuValue"
                     (keydown)="onSkuKeydown($event)"
-                    [disabled]="searching || !canAddMore"
+                    [disabled]="searching"
                     autofocus
                   />
                   <div class="input-group-append">
@@ -90,7 +93,7 @@
                       class="btn btn-info"
                       type="button"
                       (click)="lookupSku()"
-                      [disabled]="searching || !skuValue.trim() || !canAddMore"
+                      [disabled]="searching || !skuValue.trim()"
                     >
                       <i
                         class="fas"
@@ -101,10 +104,6 @@
                     </button>
                   </div>
                 </div>
-                <small *ngIf="!canAddMore" class="text-warning">
-                  <i class="fas fa-exclamation-circle mr-1"></i>Límite de
-                  {{ MAX_ITEMS }} productos alcanzado.
-                </small>
               </div>
             </div>
 

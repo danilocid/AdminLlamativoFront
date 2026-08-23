@@ -30,7 +30,7 @@ export class ConteoMultipleComponent implements OnInit {
     inventoryId: number | null;
   } | null = null;
 
-  readonly MAX_ITEMS = 10;
+  readonly MAX_ITEMS = 15;
 
   constructor(
     readonly titleService: Title,
@@ -45,6 +45,10 @@ export class ConteoMultipleComponent implements OnInit {
 
   get canAddMore(): boolean {
     return this.items.length < this.MAX_ITEMS;
+  }
+
+  get totalUnits(): number {
+    return this.items.reduce((sum, i) => sum + (i.stockCounted ?? 0), 0);
   }
 
   get canSubmit(): boolean {
@@ -63,21 +67,24 @@ export class ConteoMultipleComponent implements OnInit {
     const sku = this.skuValue.trim();
     if (!sku) return;
 
-    if (!this.canAddMore) {
-      this.alertSV.alertBasic(
-        'Límite alcanzado',
-        `Solo se pueden agregar hasta ${this.MAX_ITEMS} productos por conteo.`,
-        'warning',
-      );
-      return;
-    }
-
     // Si el producto ya está en la lista, incrementar su stock contado en 1
     const existing = this.items.find(
       (i) => i.product.cod_interno === sku || i.product.cod_barras === sku,
     );
     if (existing) {
       existing.stockCounted = (existing.stockCounted ?? 0) + 1;
+      this.skuValue = '';
+      setTimeout(() => this.skuInput?.nativeElement.focus(), 50);
+      return;
+    }
+
+    // Si ya se alcanzó el límite y es un producto nuevo, no agregar
+    if (!this.canAddMore) {
+      this.alertSV.alertBasic(
+        'Límite alcanzado',
+        `Solo se pueden agregar hasta ${this.MAX_ITEMS} productos diferentes. Escanea un producto ya existente para aumentar su unidad.`,
+        'warning',
+      );
       this.skuValue = '';
       setTimeout(() => this.skuInput?.nativeElement.focus(), 50);
       return;
