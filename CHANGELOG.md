@@ -9,6 +9,12 @@ y este proyecto adhiere al [Versionado Semántico](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Added
+
+- Notificaciones ahora muestran hora (HH:mm) junto a la fecha
+- Conteo múltiple: límite aumentado a 15 productos, contador de unidades
+- Modal de costos extra carga valores por defecto de la última venta del producto
+
 ## [0.0.92] - 2026-07-29
 
 ### Added
