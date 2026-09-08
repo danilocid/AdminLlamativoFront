@@ -7,3 +7,4 @@ services:
     restart: unless-stopped
     ports:
       - "4200:4200"
+    shm_size: '1gb'
