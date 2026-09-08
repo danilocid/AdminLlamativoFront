@@ -38,6 +38,11 @@ const routes: Routes = [
     loadChildren: () =>
       import('./reportes/reportes.module').then((m) => m.ReportesModule),
   },
+  {
+    path: 'mercado-libre',
+    loadChildren: () =>
+      import('./mercado-libre/mercado-libre.module').then((m) => m.MercadoLibreModule),
+  },
   /*
   {
     path: 'google-drive',

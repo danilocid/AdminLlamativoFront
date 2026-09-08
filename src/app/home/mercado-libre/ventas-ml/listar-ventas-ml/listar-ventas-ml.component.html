@@ -1,0 +1,134 @@
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">Ventas MercadoLibre</h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item">MercadoLibre</li>
+          <li class="breadcrumb-item active">Ventas ML</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card card-info">
+          <div class="card-header">
+            <h3 class="card-title">
+              <i class="fab fa-mercadopago mr-2"></i>Listado de Ventas
+            </h3>
+            <div class="card-tools">
+              <button
+                class="btn btn-info btn-sm"
+                (click)="syncSales()"
+                [disabled]="syncing"
+              >
+                <i
+                  class="fas"
+                  [ngClass]="syncing ? 'fa-spinner fa-spin' : 'fa-sync'"
+                ></i>
+                {{ syncing ? 'Sincronizando...' : 'Sincronizar desde ML' }}
+              </button>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <!-- Filtros -->
+            <div class="row mb-3">
+              <div class="col-md-3">
+                <select
+                  class="form-control form-control-sm"
+                  [(ngModel)]="filtroAsociada"
+                  (change)="onFiltroChange()"
+                >
+                  <option value="">Todas</option>
+                  <option value="true">Asociadas</option>
+                  <option value="false">Sin asociar</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <span class="text-muted">
+                  {{ total }} ventas encontradas
+                </span>
+              </div>
+            </div>
+
+            <!-- Tabla -->
+            <div class="table-responsive">
+              <table class="table table-bordered table-hover">
+                <thead class="thead-light">
+                  <tr>
+                    <th># ML</th>
+                    <th>Fecha</th>
+                    <th>Comprador</th>
+                    <th class="text-center">Productos</th>
+                    <th class="text-right">Monto</th>
+                    <th class="text-center">Estado</th>
+                    <th class="text-center">Asociada</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let venta of ventas">
+                    <td>
+                      <span class="badge badge-secondary">{{ venta.id_orden_ml }}</span>
+                    </td>
+                    <td>{{ formatDate(venta.fecha_venta_ml) }}</td>
+                    <td>{{ venta.comprador_nombre }}</td>
+                    <td class="text-center">{{ venta.productos?.length || 0 }}</td>
+                    <td class="text-right">{{ formatCurrency(venta.monto_total) }}</td>
+                    <td class="text-center">
+                      <span class="badge" [ngClass]="getEstadoBadgeClass(venta.estado)">
+                        {{ getEstadoLabel(venta.estado) }}
+                      </span>
+                    </td>
+                    <td class="text-center">
+                      <span *ngIf="venta.venta_id" class="badge badge-success">
+                        Venta #{{ venta.venta_id }}
+                      </span>
+                      <span *ngIf="!venta.venta_id" class="badge badge-light">
+                        Sin asociar
+                      </span>
+                    </td>
+                  </tr>
+                  <tr *ngIf="ventas.length === 0 && !loading">
+                    <td colspan="7" class="text-center text-muted py-4">
+                      <i class="fab fa-mercadopago fa-3x mb-3 d-block"></i>
+                      No hay ventas ML para mostrar. Haz clic en "Sincronizar desde ML" para importar.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Paginación -->
+            <div *ngIf="totalPages > 1" class="text-center">
+              <nav>
+                <ul class="pagination justify-content-center">
+                  <li class="page-item" [class.disabled]="currentPage === 1">
+                    <a class="page-link" (click)="changePage(currentPage - 1)">Anterior</a>
+                  </li>
+                  <li
+                    class="page-item"
+                    *ngFor="let p of [].constructor(totalPages); let i = index"
+                    [class.active]="currentPage === i + 1"
+                  >
+                    <a class="page-link" (click)="changePage(i + 1)">{{ i + 1 }}</a>
+                  </li>
+                  <li class="page-item" [class.disabled]="currentPage === totalPages">
+                    <a class="page-link" (click)="changePage(currentPage + 1)">Siguiente</a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

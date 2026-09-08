@@ -55,6 +55,10 @@ export const ApiRequest = {
   getNotificaciones: environment.urlBackend + 'notifications',
   markAsReaded: environment.urlBackend + 'notifications/readed',
 
+  // Mercado Libre
+  syncSalesMl: environment.urlBackend + 'mercado-libre/sync-sales',
+  getVentasMl: environment.urlBackend + 'mercado-libre/ventas-ml',
+
   // Google Drive
   googleDriveUpload: environment.urlBackend + 'google-drive/upload',
   googleDriveList: environment.urlBackend + 'google-drive/list',

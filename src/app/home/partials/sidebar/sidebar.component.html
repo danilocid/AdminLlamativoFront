@@ -125,6 +125,29 @@
             <p>Reportes</p>
           </a>
         </li>
+
+        <li class="nav-item" [class.menu-open]="isActive('mercado-libre')">
+          <a class="nav-link" [class.active]="isActive('mercado-libre')">
+            <i class="nav-icon fab fa-mercadopago"></i>
+            <p>
+              MercadoLibre
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a
+                [routerLink]="['mercado-libre/ventas-ml']"
+                [routerLinkActive]="['active']"
+                class="nav-link"
+              >
+                <i class="far fa-circle nav-icon"></i>
+                <p>Ventas ML</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+
         <!--
         <li class="nav-item">
           <a
