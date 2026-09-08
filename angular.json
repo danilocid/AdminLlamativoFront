@@ -121,6 +121,9 @@
             },
             "qa": {
               "buildTarget": "front:build:qa"
+            },
+            "dev": {
+              "buildTarget": "front:build:dev"
             }
           },
           "defaultConfiguration": "development"
