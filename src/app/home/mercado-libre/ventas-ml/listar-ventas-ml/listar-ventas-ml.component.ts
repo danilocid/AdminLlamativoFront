@@ -16,6 +16,7 @@ export class ListarVentasMlComponent implements OnInit {
   loading = false;
   syncing = false;
   currentPage = 1;
+  limit = 10;
   totalPages = 1;
   total = 0;
   filtroAsociada = '';
@@ -37,7 +38,7 @@ export class ListarVentasMlComponent implements OnInit {
     this.loading = true;
     this.spinner.show();
 
-    let url = `${ApiRequest.getVentasMl}?page=${this.currentPage}`;
+    let url = `${ApiRequest.getVentasMl}?page=${this.currentPage}&limit=${this.limit}`;
     if (this.filtroAsociada) {
       url += `&asociada=${this.filtroAsociada}`;
     }
