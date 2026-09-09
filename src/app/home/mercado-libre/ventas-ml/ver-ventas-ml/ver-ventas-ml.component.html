@@ -1,0 +1,134 @@
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">Detalle Venta ML</h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a [routerLink]="['/home/mercado-libre/ventas-ml']">Ventas ML</a></li>
+          <li class="breadcrumb-item active">Detalle</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card card-info">
+          <div class="card-header">
+            <h3 class="card-title">
+              <i class="fab fa-mercadopago mr-2"></i>Venta ML #{{ venta?.id_envio_ml }}
+            </h3>
+            <div class="card-tools">
+              <button class="btn btn-secondary btn-sm" (click)="volver()">
+                <i class="fas fa-arrow-left mr-1"></i>Volver
+              </button>
+            </div>
+          </div>
+
+          <div class="card-body" *ngIf="venta">
+            <!-- Info general -->
+            <div class="row mb-4">
+              <div class="col-md-3">
+                <strong>ID Envío ML:</strong><br>
+                <span class="badge badge-secondary">{{ venta.id_envio_ml }}</span>
+              </div>
+              <div class="col-md-3">
+                <strong>Comprador:</strong><br>
+                {{ venta.comprador_nombre }}
+              </div>
+              <div class="col-md-3">
+                <strong>Email:</strong><br>
+                {{ venta.comprador_email || '-' }}
+              </div>
+              <div class="col-md-3">
+                <strong>Estado:</strong><br>
+                <span class="badge" [ngClass]="getEstadoBadgeClass(venta.estado)">
+                  {{ getEstadoLabel(venta.estado) }}
+                </span>
+              </div>
+            </div>
+
+            <div class="row mb-4">
+              <div class="col-md-3">
+                <strong>Fecha venta:</strong><br>
+                {{ formatDate(venta.fecha_venta_ml) }}
+              </div>
+              <div class="col-md-3">
+                <strong>Última sync:</strong><br>
+                {{ formatDate(venta.fecha_sync) }}
+              </div>
+              <div class="col-md-3">
+                <strong>Monto total:</strong><br>
+                <span class="text-success font-weight-bold">{{ formatCurrency(venta.monto_total) }}</span>
+              </div>
+              <div class="col-md-3">
+                <strong>Costo envío:</strong><br>
+                {{ venta.costo_envio ? formatCurrency(venta.costo_envio) : '-' }}
+              </div>
+            </div>
+
+            <div class="row mb-4" *ngIf="venta.venta_id">
+              <div class="col-md-3">
+                <strong>Venta asociada:</strong><br>
+                <a [routerLink]="['/home/ventas/ver', venta.venta_id]">Venta #{{ venta.venta_id }}</a>
+              </div>
+            </div>
+
+            <div class="row mb-4" *ngIf="venta.observaciones">
+              <div class="col-md-12">
+                <strong>Observaciones:</strong><br>
+                {{ venta.observaciones }}
+              </div>
+            </div>
+
+            <!-- Órdenes -->
+            <h5 class="mb-3"><i class="fas fa-list-ul mr-2"></i>Órdenes ({{ countOrdenes() }})</h5>
+
+            <div class="card mb-3" *ngFor="let detalle of venta.detalles">
+              <div class="card-header">
+                <h6 class="card-title mb-0">
+                  <i class="fas fa-file-invoice mr-1"></i>
+                  Orden #{{ detalle.id_orden_ml }}
+                  <span class="text-muted ml-2">- {{ formatDate(detalle.fecha_orden_ml) }}</span>
+                  <span class="float-right font-weight-bold">{{ formatCurrency(detalle.monto_orden) }}</span>
+                </h6>
+              </div>
+              <div class="card-body p-0">
+                <table class="table table-sm mb-0" *ngIf="detalle.productos?.length > 0">
+                  <thead>
+                    <tr>
+                      <th>SKU</th>
+                      <th>Producto</th>
+                      <th class="text-center">Cant.</th>
+                      <th class="text-right">Precio</th>
+                      <th class="text-right">Subtotal</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let prod of detalle.productos">
+                      <td><code>{{ prod.sku || '-' }}</code></td>
+                      <td>{{ prod.titulo }}</td>
+                      <td class="text-center">{{ prod.cantidad }}</td>
+                      <td class="text-right">{{ formatCurrency(prod.precio) }}</td>
+                      <td class="text-right">{{ formatCurrency(prod.precio * prod.cantidad) }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p class="text-muted mb-0 p-3" *ngIf="!detalle.productos?.length">Sin productos registrados</p>
+              </div>
+            </div>
+
+            <div *ngIf="!venta.detalles?.length" class="text-center text-muted py-3">
+              No hay órdenes registradas para esta venta.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

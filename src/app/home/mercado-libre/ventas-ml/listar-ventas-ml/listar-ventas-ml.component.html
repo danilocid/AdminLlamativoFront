@@ -71,6 +71,7 @@
                     <th class="text-right">Monto</th>
                     <th class="text-center">Estado</th>
                     <th class="text-center">Asociada</th>
+                    <th class="text-center"></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -95,9 +96,14 @@
                         Sin asociar
                       </span>
                     </td>
+                    <td class="text-center">
+                      <button class="btn btn-info btn-sm" [routerLink]="['ver', venta.id]">
+                        <i class="fas fa-eye"></i>
+                      </button>
+                    </td>
                   </tr>
                   <tr *ngIf="ventas.length === 0 && !loading">
-                    <td colspan="7" class="text-center text-muted py-4">
+                    <td colspan="8" class="text-center text-muted py-4">
                       <i class="fab fa-mercadopago fa-3x mb-3 d-block"></i>
                       No hay ventas ML para mostrar. Haz clic en "Sincronizar desde ML" para importar.
                     </td>
