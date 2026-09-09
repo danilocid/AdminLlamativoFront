@@ -141,4 +141,11 @@ export class ListarVentasMlComponent implements OnInit {
     this.currentPage = 1;
     this.loadVentas();
   }
+
+  countProductos(venta: any): number {
+    if (!venta.detalles || !Array.isArray(venta.detalles)) return 0;
+    return venta.detalles.reduce((sum: number, d: any) => {
+      return sum + (Array.isArray(d.productos) ? d.productos.length : 0);
+    }, 0);
+  }
 }

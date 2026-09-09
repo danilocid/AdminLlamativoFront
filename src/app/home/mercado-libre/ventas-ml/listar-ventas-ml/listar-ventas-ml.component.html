@@ -76,11 +76,11 @@
                 <tbody>
                   <tr *ngFor="let venta of ventas">
                     <td>
-                      <span class="badge badge-secondary">{{ venta.id_orden_ml }}</span>
+                      <span class="badge badge-secondary">{{ venta.id_envio_ml }}</span>
                     </td>
                     <td>{{ formatDate(venta.fecha_venta_ml) }}</td>
                     <td>{{ venta.comprador_nombre }}</td>
-                    <td class="text-center">{{ venta.productos?.length || 0 }}</td>
+                    <td class="text-center">{{ countProductos(venta) }}</td>
                     <td class="text-right">{{ formatCurrency(venta.monto_total) }}</td>
                     <td class="text-center">
                       <span class="badge" [ngClass]="getEstadoBadgeClass(venta.estado)">
