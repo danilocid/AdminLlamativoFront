@@ -32,12 +32,11 @@
       </div>
 
       <!-- Barra de progreso arriba del body -->
-      <div *ngIf="data.autoClose" class="progress" style="height: 4px; border-radius: 0;">
+      <div *ngIf="data.autoClose" class="progress-bar-container">
         <div
-          class="progress-bar"
-          [ngClass]="getProgressBarClass()"
+          class="progress-bar-fill"
+          [style.background]="getProgressBarColor()"
           [style.width.%]="progressWidth"
-          role="progressbar"
         ></div>
       </div>
 

@@ -113,18 +113,18 @@ export class AlertModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  getProgressBarClass(): string {
+  getProgressBarColor(): string {
     switch (this.data.type) {
       case 'success':
-        return 'bg-success';
+        return '#ffffff';
       case 'error':
-        return 'bg-danger';
+        return '#ffffff';
       case 'warning':
-        return 'bg-warning';
+        return '#ffffff';
       case 'question':
       case 'info':
       default:
-        return 'bg-info';
+        return '#ffffff';
     }
   }
 
