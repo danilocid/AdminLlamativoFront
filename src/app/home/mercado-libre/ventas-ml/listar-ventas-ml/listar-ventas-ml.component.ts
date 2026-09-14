@@ -20,6 +20,8 @@ export class ListarVentasMlComponent implements OnInit {
   totalPages = 1;
   total = 0;
   filtroAsociada = '';
+  mostrarModalAsociar = false;
+  ventaMlSeleccionada: any = null;
 
   constructor(
     readonly titleService: Title,
@@ -147,5 +149,19 @@ export class ListarVentasMlComponent implements OnInit {
     return venta.detalles.reduce((sum: number, d: any) => {
       return sum + (Array.isArray(d.productos) ? d.productos.length : 0);
     }, 0);
+  }
+
+  abrirModalAsociar(venta: any): void {
+    this.ventaMlSeleccionada = venta;
+    this.mostrarModalAsociar = true;
+  }
+
+  cerrarModal(): void {
+    this.mostrarModalAsociar = false;
+    this.ventaMlSeleccionada = null;
+  }
+
+  onAsociada(): void {
+    this.loadVentas();
   }
 }

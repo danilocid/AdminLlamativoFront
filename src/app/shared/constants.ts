@@ -59,6 +59,7 @@ export const ApiRequest = {
   syncSalesMl: environment.urlBackend + 'mercado-libre/sync-sales',
   getVentasMl: environment.urlBackend + 'mercado-libre/ventas-ml',
   getVentaMlById: environment.urlBackend + 'mercado-libre/ventas-ml',
+  asociarVentaMl: environment.urlBackend + 'mercado-libre/ventas-ml/asociar',
 
   // Google Drive
   googleDriveUpload: environment.urlBackend + 'google-drive/upload',

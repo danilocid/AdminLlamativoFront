@@ -1,0 +1,111 @@
+<div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5)">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-info text-white">
+        <h5 class="modal-title">
+          <i class="fas fa-link mr-2"></i>Asociar Venta ML #{{ ventaMl?.id_envio_ml }}
+        </h5>
+        <button type="button" class="close text-white" (click)="cerrar()">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Resumen venta ML -->
+        <div class="card card-outline card-info mb-3">
+          <div class="card-body p-2">
+            <div class="row">
+              <div class="col-md-4">
+                <small class="text-muted">Comprador:</small><br>
+                <strong>{{ ventaMl?.comprador_nombre }}</strong>
+              </div>
+              <div class="col-md-4">
+                <small class="text-muted">Monto total:</small><br>
+                <strong class="text-success">{{ formatCurrency(ventaMl?.monto_total) }}</strong>
+              </div>
+              <div class="col-md-4">
+                <small class="text-muted">Órdenes:</small><br>
+                <strong>{{ ventaMl?.detalles?.length || 0 }}</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formulario -->
+        <form [formGroup]="form">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Tipo de documento *</label>
+                <ng-select
+                  formControlName="id_tipo_documento"
+                  [items]="documentTypes"
+                  bindLabel="tipo"
+                  bindValue="id"
+                  placeholder="Seleccione"
+                  required
+                  (change)="changeDocumentType()"
+                ></ng-select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Número de documento *</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  formControlName="numero_documento"
+                  min="1"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Cliente *</label>
+                <ng-select
+                  formControlName="id_cliente"
+                  [items]="clients"
+                  bindValue="rut"
+                  placeholder="Seleccione"
+                  required
+                >
+                  <ng-template ng-label-tmp let-item="item">
+                    {{ item.nombre }} - {{ item.rut }}
+                  </ng-template>
+                  <ng-template ng-option-tmp let-item="item">
+                    {{ item.nombre }} - {{ item.rut }}
+                  </ng-template>
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Medio de pago *</label>
+                <ng-select
+                  formControlName="id_medio_pago"
+                  [items]="medioDePago"
+                  bindLabel="medio_de_pago"
+                  bindValue="id"
+                  placeholder="Seleccione"
+                  required
+                ></ng-select>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="cerrar()" [disabled]="procesando">
+          Cancelar
+        </button>
+        <button type="button" class="btn btn-info" (click)="asociar()" [disabled]="procesando">
+          <i class="fas" [ngClass]="procesando ? 'fa-spinner fa-spin' : 'fa-link'"></i>
+          {{ procesando ? 'Asociando...' : 'Asociar venta' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
