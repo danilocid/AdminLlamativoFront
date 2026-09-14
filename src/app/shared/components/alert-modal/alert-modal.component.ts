@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 export interface AlertModalData {
@@ -28,8 +28,10 @@ export class AlertModalComponent implements OnInit, OnDestroy {
   countdown = 5;
   progressWidth = 100;
   private timer: any;
+  private startTime = 0;
+  private duration = 5000;
 
-  constructor(public activeModal: NgbActiveModal) {}
+  constructor(public activeModal: NgbActiveModal, private ngZone: NgZone) {}
 
   ngOnInit() {
     if (!this.data) {
@@ -44,8 +46,10 @@ export class AlertModalComponent implements OnInit, OnDestroy {
     }
 
     if (this.data.autoClose) {
+      this.duration = (this.data.autoCloseSeconds || 5) * 1000;
       this.countdown = this.data.autoCloseSeconds || 5;
       this.progressWidth = 100;
+      this.startTime = Date.now();
       this.startCountdown();
     }
   }
@@ -55,18 +59,21 @@ export class AlertModalComponent implements OnInit, OnDestroy {
   }
 
   startCountdown(): void {
-    const totalMs = this.countdown * 1000;
-    const intervalMs = 50;
-    const decrement = (intervalMs / totalMs) * 100;
+    this.ngZone.runOutsideAngular(() => {
+      this.timer = setInterval(() => {
+        const elapsed = Date.now() - this.startTime;
+        const remaining = Math.max(0, this.duration - elapsed);
+        this.progressWidth = (remaining / this.duration) * 100;
+        this.countdown = Math.ceil(remaining / 1000);
 
-    this.timer = setInterval(() => {
-      this.progressWidth -= decrement;
-      if (this.progressWidth <= 0) {
-        this.progressWidth = 0;
-        this.clearTimer();
-        this.activeModal.close(true);
-      }
-    }, intervalMs);
+        if (remaining <= 0) {
+          this.clearTimer();
+          this.ngZone.run(() => {
+            this.activeModal.close(true);
+          });
+        }
+      }, 50);
+    });
   }
 
   clearTimer(): void {
