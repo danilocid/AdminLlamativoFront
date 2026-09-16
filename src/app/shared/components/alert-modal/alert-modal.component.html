@@ -31,6 +31,15 @@
         </button>
       </div>
 
+      <!-- Barra de progreso arriba del body -->
+      <div *ngIf="data.autoClose" class="progress-bar-container">
+        <div
+          class="progress-bar-fill"
+          [style.background]="getProgressBarColor()"
+          [style.width.%]="progressWidth"
+        ></div>
+      </div>
+
       <div class="modal-body bg-white">
         <div
           class="text-dark"

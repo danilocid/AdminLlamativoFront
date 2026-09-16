@@ -22,6 +22,7 @@ export class AlertService {
     message: string,
     type: 'success' | 'error' | 'warning' | 'info' | 'question'
   ): Promise<boolean> {
+    const autoClose = type === 'success' || type === 'info';
     const modalRef: NgbModalRef = this.modalService.open(AlertModalComponent, {
       centered: true,
       backdrop: false,
@@ -37,6 +38,8 @@ export class AlertService {
       type,
       confirmText: 'Aceptar',
       showCancel: false,
+      autoClose,
+      autoCloseSeconds: 5,
     };
 
     modalRef.componentInstance.data = data;

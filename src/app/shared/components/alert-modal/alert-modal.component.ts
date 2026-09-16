@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, NgZone, ChangeDetectorRef } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 export interface AlertModalData {
@@ -8,6 +8,8 @@ export interface AlertModalData {
   confirmText?: string;
   cancelText?: string;
   showCancel?: boolean;
+  autoClose?: boolean;
+  autoCloseSeconds?: number;
 }
 
 @Component({
@@ -16,17 +18,26 @@ export interface AlertModalData {
   templateUrl: './alert-modal.component.html',
   styleUrls: ['./alert-modal.component.scss'],
 })
-export class AlertModalComponent implements OnInit {
+export class AlertModalComponent implements OnInit, OnDestroy {
   data: AlertModalData = {
     title: 'Título por defecto',
     message: 'Mensaje por defecto',
     type: 'info',
   };
 
-  constructor(public activeModal: NgbActiveModal) {}
+  countdown = 5;
+  progressWidth = 100;
+  private timer: any;
+  private startTime = 0;
+  private duration = 5000;
+
+  constructor(
+    public activeModal: NgbActiveModal,
+    private ngZone: NgZone,
+    private cdr: ChangeDetectorRef,
+  ) {}
 
   ngOnInit() {
-    // Solo establecer valores por defecto si realmente no hay datos
     if (!this.data) {
       this.data = {
         title: 'Notificación',
@@ -36,6 +47,44 @@ export class AlertModalComponent implements OnInit {
     }
     if (this.data.message === undefined) {
       this.data.message = 'Error desconocido.';
+    }
+
+    if (this.data.autoClose) {
+      this.duration = (this.data.autoCloseSeconds || 5) * 1000;
+      this.countdown = this.data.autoCloseSeconds || 5;
+      this.progressWidth = 100;
+      this.startTime = Date.now();
+      this.startCountdown();
+    }
+  }
+
+  ngOnDestroy() {
+    this.clearTimer();
+  }
+
+  startCountdown(): void {
+    this.ngZone.runOutsideAngular(() => {
+      this.timer = setInterval(() => {
+        const elapsed = Date.now() - this.startTime;
+        const remaining = Math.max(0, this.duration - elapsed);
+        this.progressWidth = (remaining / this.duration) * 100;
+        this.countdown = Math.ceil(remaining / 1000);
+        this.cdr.detectChanges();
+
+        if (remaining <= 0) {
+          this.clearTimer();
+          this.ngZone.run(() => {
+            this.activeModal.close(true);
+          });
+        }
+      }, 50);
+    });
+  }
+
+  clearTimer(): void {
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
     }
   }
 
@@ -69,11 +118,28 @@ export class AlertModalComponent implements OnInit {
     }
   }
 
+  getProgressBarColor(): string {
+    switch (this.data.type) {
+      case 'success':
+        return '#28a745';
+      case 'error':
+        return '#dc3545';
+      case 'warning':
+        return '#ffc107';
+      case 'question':
+      case 'info':
+      default:
+        return '#17a2b8';
+    }
+  }
+
   confirm(): void {
+    this.clearTimer();
     this.activeModal.close(true);
   }
 
   cancel(): void {
+    this.clearTimer();
     this.activeModal.dismiss(false);
   }
 }
