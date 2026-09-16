@@ -22,16 +22,16 @@ La versión se actualiza automáticamente con cada push mediante el comando `npm
 
 - 🔐 Sistema de autenticación con JWT e interceptores HTTP
 - 📦 Gestión completa de productos e inventario
-- � **Conteo aleatorio de inventario** con ajuste automático de stock
-- �🛒 Módulo de ventas y compras
+- 📊 **Conteo aleatorio de inventario** con ajuste automático de stock
+- 🛒 Módulo de ventas y compras
 - 📊 Dashboard con métricas y estadísticas
 - 🔔 Sistema de notificaciones en tiempo real
-- 🏪 Integración con Mercado Libre
+- 🏪 **Integración con Mercado Libre**: sincronización de productos, precios, stock y ventas
 - 📱 Diseño responsive con AdminLTE
 - ✅ Validación de formularios en tiempo real
 - 🎨 Interfaz intuitiva y moderna
 - 📋 Tablas con ordenamiento, búsqueda y paginación (sin jQuery)
-- 🌡️ Módulo Hydrocontrol: monitoreo de temperaturas en tiempo real con Firebase Realtime Database y gráficos Chart.js
+- 🔄 Alertas info/success con auto-cierre y barra de progreso
 
 ## Requisitos Previos
 
@@ -140,11 +140,11 @@ src/
 │   │   ├── compras/          # Módulo de compras
 │   │   ├── dashboard/        # Dashboard principal
 │   │   ├── entidades/        # Gestión de entidades
-│   │   ├── hydrocontrol/     # Monitoreo de temperatura (Firebase)
 │   │   ├── partials/         # Navbar, sidebar, footer
 │   │   ├── recepciones/      # Recepciones de mercancía
 │   │   ├── reportes/         # Reportes y estadísticas
-│   │   └── ventas/           # Módulo de ventas
+│   │   ├── ventas/           # Módulo de ventas
+│   │   └── mercado-libre/    # Ventas ML y sincronización
 │   ├── login/                # Autenticación
 │   └── shared/               # Servicios y utilidades compartidas
 │       ├── components/       # Componentes reutilizables

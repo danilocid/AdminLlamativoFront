@@ -11,7 +11,18 @@ y este proyecto adhiere al [Versionado Semántico](https://semver.org/lang/es/).
 
 ### Added
 
-- Notificaciones ahora muestran hora (HH:mm) junto a la fecha
+- **Módulo MercadoLibre - Ventas ML** (`/mercado-libre/ventas-ml`)
+  - Listado de ventas sincronizadas desde MercadoLibre con filtros y paginación
+  - Botón "Sincronizar desde ML" para importar órdenes
+  - Botón "Asociar" para vincular venta ML a venta del sistema (modal con tipo documento, cliente, medio pago)
+  - Vista de detalle de venta ML con órdenes y productos (SKU, cantidad, precio)
+  - Badges de estado (pagada, entregada, cancelada) y de asociación
+- **Alertas con auto-cierre**
+  - Alertas de tipo success e info se cierran automáticamente en 5 segundos
+  - Barra de progreso visible con color que acompaña el tipo de alerta
+  - Timer preciso usando `NgZone.runOutsideAngular` + `ChangeDetectorRef`
+
+### Notificaciones ahora muestran hora (HH:mm) junto a la fecha
 - Conteo múltiple: límite aumentado a 15 productos, contador de unidades
 - Modal de costos extra carga valores por defecto de la última venta del producto
 

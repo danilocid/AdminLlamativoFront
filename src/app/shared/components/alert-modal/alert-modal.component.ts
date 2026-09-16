@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
+import { Component, OnInit, OnDestroy, NgZone, ChangeDetectorRef } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 export interface AlertModalData {
@@ -31,7 +31,11 @@ export class AlertModalComponent implements OnInit, OnDestroy {
   private startTime = 0;
   private duration = 5000;
 
-  constructor(public activeModal: NgbActiveModal, private ngZone: NgZone) {}
+  constructor(
+    public activeModal: NgbActiveModal,
+    private ngZone: NgZone,
+    private cdr: ChangeDetectorRef,
+  ) {}
 
   ngOnInit() {
     if (!this.data) {
@@ -65,6 +69,7 @@ export class AlertModalComponent implements OnInit, OnDestroy {
         const remaining = Math.max(0, this.duration - elapsed);
         this.progressWidth = (remaining / this.duration) * 100;
         this.countdown = Math.ceil(remaining / 1000);
+        this.cdr.detectChanges();
 
         if (remaining <= 0) {
           this.clearTimer();
@@ -116,15 +121,15 @@ export class AlertModalComponent implements OnInit, OnDestroy {
   getProgressBarColor(): string {
     switch (this.data.type) {
       case 'success':
-        return '#ffffff';
+        return '#28a745';
       case 'error':
-        return '#ffffff';
+        return '#dc3545';
       case 'warning':
-        return '#ffffff';
+        return '#ffc107';
       case 'question':
       case 'info':
       default:
-        return '#ffffff';
+        return '#17a2b8';
     }
   }
 
