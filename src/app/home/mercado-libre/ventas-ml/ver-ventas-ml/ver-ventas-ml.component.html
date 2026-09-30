@@ -23,11 +23,25 @@
             <h3 class="card-title">
               <i class="fab fa-mercadopago mr-2"></i>Venta ML #{{ venta?.id_envio_ml }}
             </h3>
-            <div class="card-tools">
-              <button class="btn btn-secondary btn-sm" (click)="volver()">
-                <i class="fas fa-arrow-left mr-1"></i>Volver
-              </button>
-            </div>
+          <div class="card-tools">
+            <button
+              class="btn btn-success btn-sm mr-2"
+              *ngIf="venta && !venta.venta_id"
+              (click)="abrirModalAsociar()"
+            >
+              <i class="fas fa-link mr-1"></i>Asociar
+            </button>
+            <button
+              class="btn btn-warning btn-sm mr-2"
+              *ngIf="venta && !venta.venta_id"
+              (click)="abrirModalVincular()"
+            >
+              <i class="fas fa-external-link-alt mr-1"></i>Vincular
+            </button>
+            <button class="btn btn-secondary btn-sm" (click)="volver()">
+              <i class="fas fa-arrow-left mr-1"></i>Volver
+            </button>
+          </div>
           </div>
 
           <div class="card-body" *ngIf="venta">
@@ -40,10 +54,6 @@
               <div class="col-md-3">
                 <strong>Comprador:</strong><br>
                 {{ venta.comprador_nombre }}
-              </div>
-              <div class="col-md-3">
-                <strong>Email:</strong><br>
-                {{ venta.comprador_email || '-' }}
               </div>
               <div class="col-md-3">
                 <strong>Estado:</strong><br>
@@ -62,20 +72,27 @@
                 <strong>Última sync:</strong><br>
                 {{ formatDate(venta.fecha_sync) }}
               </div>
-              <div class="col-md-3">
+            </div>
+
+            <div class="row mb-4">
+              <div class="col-md-4">
                 <strong>Monto total:</strong><br>
                 <span class="text-success font-weight-bold">{{ formatCurrency(venta.monto_total) }}</span>
               </div>
-              <div class="col-md-3">
+              <div class="col-md-4">
                 <strong>Costo envío:</strong><br>
                 {{ venta.costo_envio ? formatCurrency(venta.costo_envio) : '-' }}
+              </div>
+              <div class="col-md-4">
+                <strong>Comisión ML:</strong><br>
+                {{ venta.comision_ml ? formatCurrency(venta.comision_ml) : '-' }}
               </div>
             </div>
 
             <div class="row mb-4" *ngIf="venta.venta_id">
               <div class="col-md-3">
                 <strong>Venta asociada:</strong><br>
-                <a [routerLink]="['/home/ventas/ver', venta.venta_id]">Venta #{{ venta.venta_id }}</a>
+                <a [routerLink]="['/ventas/ver', venta.venta_id]">Venta #{{ venta.venta_id }}</a>
               </div>
             </div>
 
@@ -132,3 +149,17 @@
     </div>
   </div>
 </section>
+
+<app-asociar-venta-ml
+  *ngIf="mostrarModalAsociar"
+  [ventaMl]="venta"
+  (onClose)="cerrarModal()"
+  (onAsociada)="onAsociada()"
+></app-asociar-venta-ml>
+
+<app-vincular-venta-existente
+  *ngIf="mostrarModalVincular"
+  [ventaMl]="venta"
+  (onClose)="cerrarModal()"
+  (onVinculada)="onVinculada()"
+></app-vincular-venta-existente>

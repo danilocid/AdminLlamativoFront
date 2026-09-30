@@ -21,6 +21,13 @@ export interface Sale {
   medio_pago: PaymentMethod;
   extraCosts: SaleExtraCost[];
   cliente?: SaleCliente;
+  venta_ml?: {
+    id: number;
+    id_envio_ml: string;
+    comprador_nombre: string;
+    monto_total: number;
+    estado: string;
+  };
 }
 
 export interface SaleDetail {

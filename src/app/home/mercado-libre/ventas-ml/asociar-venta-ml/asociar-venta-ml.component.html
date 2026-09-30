@@ -81,21 +81,55 @@
                 </ng-select>
               </div>
             </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label>Medio de pago *</label>
-                <ng-select
-                  formControlName="id_medio_pago"
-                  [items]="medioDePago"
-                  bindLabel="medio_de_pago"
-                  bindValue="id"
-                  placeholder="Seleccione"
-                  required
-                ></ng-select>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Medio de pago *</label>
+                  <ng-select
+                    formControlName="id_medio_pago"
+                    [items]="medioDePago"
+                    bindLabel="medio_de_pago"
+                    bindValue="id"
+                    placeholder="Seleccione"
+                    [disabled]="true"
+                    required
+                  ></ng-select>
+                </div>
               </div>
-            </div>
           </div>
         </form>
+
+        <!-- Productos sin SKU -->
+        <div *ngIf="productosSinSku.length > 0" class="mt-3">
+          <div class="alert alert-warning">
+            <i class="fas fa-exclamation-triangle mr-1"></i>
+            Hay {{ productosSinSku.length }} producto(s) sin SKU. Seleccione el producto correspondiente en el sistema.
+          </div>
+          <div class="card card-outline card-warning" *ngFor="let prod of productosSinSku; let i = index">
+            <div class="card-header">
+              <h6 class="card-title mb-0">
+                <i class="fas fa-box mr-1"></i>{{ prod.titulo }}
+                <span class="text-muted ml-2">- {{ prod.cantidad }} x {{ formatCurrency(prod.precio) }}</span>
+              </h6>
+            </div>
+            <div class="card-body p-2">
+              <ng-select
+                [items]="systemProducts"
+                bindLabel="descripcion"
+                bindValue="id"
+                placeholder="Buscar producto..."
+                [ngModel]="productoMapping[prod.titulo]"
+                (ngModelChange)="onProductSelect(prod.titulo, $event)"
+              >
+                <ng-template ng-label-tmp let-item="item">
+                  {{ item.descripcion }} (Stock: {{ item.stock }})
+                </ng-template>
+                <ng-template ng-option-tmp let-item="item">
+                  {{ item.descripcion }} (Stock: {{ item.stock }})
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="cerrar()" [disabled]="procesando">

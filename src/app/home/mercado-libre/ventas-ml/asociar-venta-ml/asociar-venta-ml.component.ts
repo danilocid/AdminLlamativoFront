@@ -23,6 +23,10 @@ export class AsociarVentaMlComponent implements OnInit {
   documentTypes: DocumentType[] = [];
   clients: Entidad[] = [];
   medioDePago: PaymentMethod[] = [];
+  systemProducts: any[] = [];
+  allProducts: any[] = [];
+  productosSinSku: any[] = [];
+  productoMapping: { [key: string]: number } = {};
   procesando = false;
 
   constructor(
@@ -39,13 +43,29 @@ export class AsociarVentaMlComponent implements OnInit {
       id_tipo_documento: [null, Validators.required],
       numero_documento: [1, Validators.required],
     });
+    this.identificarProductosSinSku();
     this.loadData();
+  }
+
+  identificarProductosSinSku(): void {
+    if (!this.ventaMl?.detalles) return;
+    const seen = new Set();
+    for (const detalle of this.ventaMl.detalles) {
+      if (Array.isArray(detalle.productos)) {
+        for (const prod of detalle.productos) {
+          if (!prod.sku && !seen.has(prod.titulo)) {
+            seen.add(prod.titulo);
+            this.productosSinSku.push(prod);
+          }
+        }
+      }
+    }
   }
 
   loadData(): void {
     this.spinner.show();
     let loaded = 0;
-    const total = 3;
+    const total = 4;
 
     const checkDone = () => {
       loaded++;
@@ -79,10 +99,43 @@ export class AsociarVentaMlComponent implements OnInit {
     this.api.get(ApiRequest.getMedioPago).subscribe({
       next: (resp: any) => {
         this.medioDePago = resp.data || [];
+        const mp = this.medioDePago.find((m: any) =>
+          m.medio_de_pago?.toLowerCase().includes('mercado pago'),
+        );
+        if (mp) {
+          this.form.controls['id_medio_pago'].setValue(mp.id);
+        }
         checkDone();
       },
       error: () => checkDone(),
     });
+
+    this.api.get(ApiRequest.getArticulos + '?all=true').subscribe({
+      next: (resp: any) => {
+        this.allProducts = resp.data?.products || resp.data || [];
+        this.systemProducts = this.allProducts;
+        checkDone();
+      },
+      error: () => checkDone(),
+    });
+  }
+
+  filterProducts(term: string): void {
+    if (!term) {
+      this.systemProducts = this.allProducts;
+      return;
+    }
+    const lower = term.toLowerCase();
+    this.systemProducts = this.allProducts.filter(
+      (p) =>
+        p.descripcion?.toLowerCase().includes(lower) ||
+        p.cod_interno?.toLowerCase().includes(lower) ||
+        p.cod_barras?.toLowerCase().includes(lower),
+    );
+  }
+
+  onProductSelect(titulo: string, productId: number): void {
+    this.productoMapping[titulo] = productId;
   }
 
   changeDocumentType(): void {
@@ -111,6 +164,17 @@ export class AsociarVentaMlComponent implements OnInit {
       return;
     }
 
+    for (const prod of this.productosSinSku) {
+      if (!this.productoMapping[prod.titulo]) {
+        this.alertSV.alertBasic(
+          'Aviso',
+          `Debe seleccionar el producto para "${prod.titulo}" (no tiene SKU)`,
+          'info',
+        );
+        return;
+      }
+    }
+
     this.procesando = true;
     this.spinner.show();
 
@@ -120,6 +184,7 @@ export class AsociarVentaMlComponent implements OnInit {
       documento: +this.form.value.numero_documento,
       cliente: this.form.value.id_cliente,
       medio_pago: +this.form.value.id_medio_pago,
+      producto_mapping: this.productosSinSku.length > 0 ? this.productoMapping : undefined,
     };
 
     this.api.post(ApiRequest.asociarVentaMl, dto).subscribe({

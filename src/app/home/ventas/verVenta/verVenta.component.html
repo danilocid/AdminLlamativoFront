@@ -36,6 +36,23 @@
             </p>
           </div>
         </div>
+
+        <!-- Venta ML asociada -->
+        <div class="row" *ngIf="venta.venta_ml">
+          <div class="col-12">
+            <div class="alert alert-info d-flex align-items-center">
+              <i class="fab fa-mercadopago mr-2"></i>
+              <span>
+                Venta MercadoLibre:
+                <a [routerLink]="['/mercado-libre/ventas-ml/ver', venta.venta_ml.id]">
+                  Envío #{{ venta.venta_ml.id_envio_ml }}
+                </a>
+                - {{ venta.venta_ml.comprador_nombre }}
+                ({{ venta.venta_ml.estado }})
+              </span>
+            </div>
+          </div>
+        </div>
         <div class="row justify-content-center align-items-center g-2">
           <div class="col">
             <p>

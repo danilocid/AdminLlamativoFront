@@ -1,0 +1,108 @@
+<div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5)">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-warning text-white">
+        <h5 class="modal-title">
+          <i class="fas fa-link mr-2"></i>Vincular Venta Existente - ML #{{ ventaMl?.id_envio_ml }}
+        </h5>
+        <button type="button" class="close text-white" (click)="cerrar()">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Resumen venta ML -->
+        <div class="card card-outline card-warning mb-3">
+          <div class="card-body p-2">
+            <div class="row">
+              <div class="col-md-4">
+                <small class="text-muted">Comprador:</small><br>
+                <strong>{{ ventaMl?.comprador_nombre }}</strong>
+              </div>
+              <div class="col-md-4">
+                <small class="text-muted">Monto total:</small><br>
+                <strong class="text-success">{{ formatCurrency(ventaMl?.monto_total) }}</strong>
+              </div>
+              <div class="col-md-4">
+                <small class="text-muted">Órdenes:</small><br>
+                <strong>{{ ventaMl?.detalles?.length || 0 }}</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Buscador -->
+        <div class="form-group">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Buscar venta por número de documento, cliente..."
+              [(ngModel)]="search"
+              (keyup.enter)="onSearch()"
+            />
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary" type="button" (click)="onSearch()">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lista de ventas -->
+        <div class="table-responsive">
+          <table class="table table-sm table-hover">
+            <thead class="thead-light">
+              <tr>
+                <th></th>
+                <th>#</th>
+                <th>Fecha</th>
+                <th>Cliente</th>
+                <th>Documento</th>
+                <th class="text-right">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let venta of ventas"
+                (click)="seleccionar(venta.id)"
+                [class.table-primary]="ventaSeleccionada === venta.id"
+                style="cursor: pointer"
+              >
+                <td>
+                  <i
+                    class="fas"
+                    [ngClass]="ventaSeleccionada === venta.id ? 'fa-check-circle text-primary' : 'fa-circle text-muted'"
+                  ></i>
+                </td>
+                <td>{{ venta.id }}</td>
+                <td>{{ formatDate(venta.fecha) }}</td>
+                <td>{{ venta.cliente?.nombre || venta.nombre || '-' }}</td>
+                <td>{{ venta.tipo_documento?.tipo }} {{ venta.documento }}</td>
+                <td class="text-right">{{ formatCurrency(venta.monto_neto + venta.monto_imp) }}</td>
+              </tr>
+              <tr *ngIf="ventas.length === 0 && !searching">
+                <td colspan="6" class="text-center text-muted py-3">
+                  No hay ventas disponibles
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="cerrar()" [disabled]="procesando">
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-warning"
+          (click)="vincular()"
+          [disabled]="procesando || !ventaSeleccionada"
+        >
+          <i class="fas" [ngClass]="procesando ? 'fa-spinner fa-spin' : 'fa-link'"></i>
+          {{ procesando ? 'Vinculando...' : 'Vincular venta' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

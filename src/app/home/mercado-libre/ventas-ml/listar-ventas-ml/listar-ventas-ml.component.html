@@ -89,9 +89,9 @@
                       </span>
                     </td>
                     <td class="text-center">
-                      <span *ngIf="venta.venta_id" class="badge badge-success">
+                      <a *ngIf="venta.venta_id" [routerLink]="['/ventas/ver', venta.venta_id]" class="badge badge-success">
                         Venta #{{ venta.venta_id }}
-                      </span>
+                      </a>
                       <span *ngIf="!venta.venta_id" class="badge badge-light">
                         Sin asociar
                       </span>
@@ -99,6 +99,9 @@
                     <td class="text-center">
                       <button *ngIf="!venta.venta_id" class="btn btn-success btn-sm mr-1" (click)="abrirModalAsociar(venta)" title="Asociar a venta del sistema">
                         <i class="fas fa-link"></i>
+                      </button>
+                      <button *ngIf="!venta.venta_id" class="btn btn-warning btn-sm mr-1" (click)="abrirModalVincular(venta)" title="Vincular a venta existente">
+                        <i class="fas fa-external-link-alt"></i>
                       </button>
                       <button class="btn btn-info btn-sm" [routerLink]="['ver', venta.id]" title="Ver detalle">
                         <i class="fas fa-eye"></i>
@@ -148,3 +151,10 @@
   (onClose)="cerrarModal()"
   (onAsociada)="onAsociada()"
 ></app-asociar-venta-ml>
+
+<app-vincular-venta-existente
+  *ngIf="mostrarModalVincular"
+  [ventaMl]="ventaMlSeleccionada"
+  (onClose)="cerrarModal()"
+  (onVinculada)="onVinculada()"
+></app-vincular-venta-existente>

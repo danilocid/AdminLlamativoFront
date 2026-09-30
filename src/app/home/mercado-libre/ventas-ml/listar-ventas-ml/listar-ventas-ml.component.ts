@@ -21,6 +21,7 @@ export class ListarVentasMlComponent implements OnInit {
   total = 0;
   filtroAsociada = '';
   mostrarModalAsociar = false;
+  mostrarModalVincular = false;
   ventaMlSeleccionada: any = null;
 
   constructor(
@@ -60,7 +61,6 @@ export class ListarVentasMlComponent implements OnInit {
       error: () => {
         this.spinner.hide();
         this.loading = false;
-        this.alertSV.alertBasic('Error', 'No se pudieron cargar las ventas ML', 'error');
       },
     });
   }
@@ -87,7 +87,6 @@ export class ListarVentasMlComponent implements OnInit {
       error: () => {
         this.spinner.hide();
         this.syncing = false;
-        this.alertSV.alertBasic('Error', 'No se pudieron sincronizar las ventas', 'error');
       },
     });
   }
@@ -156,12 +155,22 @@ export class ListarVentasMlComponent implements OnInit {
     this.mostrarModalAsociar = true;
   }
 
+  abrirModalVincular(venta: any): void {
+    this.ventaMlSeleccionada = venta;
+    this.mostrarModalVincular = true;
+  }
+
   cerrarModal(): void {
     this.mostrarModalAsociar = false;
+    this.mostrarModalVincular = false;
     this.ventaMlSeleccionada = null;
   }
 
   onAsociada(): void {
+    this.loadVentas();
+  }
+
+  onVinculada(): void {
     this.loadVentas();
   }
 }

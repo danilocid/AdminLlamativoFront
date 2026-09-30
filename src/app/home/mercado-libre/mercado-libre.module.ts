@@ -6,9 +6,15 @@ import { MercadoLibreRoutingModule } from './mercado-libre-routing.module';
 import { ListarVentasMlComponent } from './ventas-ml/listar-ventas-ml/listar-ventas-ml.component';
 import { VerVentasMlComponent } from './ventas-ml/ver-ventas-ml/ver-ventas-ml.component';
 import { AsociarVentaMlComponent } from './ventas-ml/asociar-venta-ml/asociar-venta-ml.component';
+import { VincularVentaExistenteComponent } from './ventas-ml/vincular-venta-existente/vincular-venta-existente.component';
 
 @NgModule({
-  declarations: [ListarVentasMlComponent, VerVentasMlComponent, AsociarVentaMlComponent],
+  declarations: [
+    ListarVentasMlComponent,
+    VerVentasMlComponent,
+    AsociarVentaMlComponent,
+    VincularVentaExistenteComponent,
+  ],
   imports: [
     CommonModule,
     FormsModule,

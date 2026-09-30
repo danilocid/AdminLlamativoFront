@@ -60,6 +60,7 @@ export const ApiRequest = {
   getVentasMl: environment.urlBackend + 'mercado-libre/ventas-ml',
   getVentaMlById: environment.urlBackend + 'mercado-libre/ventas-ml',
   asociarVentaMl: environment.urlBackend + 'mercado-libre/ventas-ml/asociar',
+  vincularVentaExistente: environment.urlBackend + 'mercado-libre/ventas-ml/vincular',
 
   // Google Drive
   googleDriveUpload: environment.urlBackend + 'google-drive/upload',

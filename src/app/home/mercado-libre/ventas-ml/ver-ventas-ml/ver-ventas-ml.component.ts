@@ -14,6 +14,8 @@ import { ApiRequest } from 'src/app/shared/constants';
 export class VerVentasMlComponent implements OnInit {
   venta: any = null;
   loading = false;
+  mostrarModalAsociar = false;
+  mostrarModalVincular = false;
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -108,5 +110,26 @@ export class VerVentasMlComponent implements OnInit {
 
   volver(): void {
     this.router.navigate(['/home/mercado-libre/ventas-ml']);
+  }
+
+  abrirModalAsociar(): void {
+    this.mostrarModalAsociar = true;
+  }
+
+  abrirModalVincular(): void {
+    this.mostrarModalVincular = true;
+  }
+
+  cerrarModal(): void {
+    this.mostrarModalAsociar = false;
+    this.mostrarModalVincular = false;
+  }
+
+  onAsociada(): void {
+    this.loadVenta(this.venta.id);
+  }
+
+  onVinculada(): void {
+    this.loadVenta(this.venta.id);
   }
 }
