@@ -9,22 +9,32 @@ y este proyecto adhiere al [Versionado Semántico](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+## [0.0.104] - 2026-10-07
+
 ### Added
 
 - **Módulo MercadoLibre - Ventas ML** (`/mercado-libre/ventas-ml`)
   - Listado de ventas sincronizadas desde MercadoLibre con filtros y paginación
   - Botón "Sincronizar desde ML" para importar órdenes
-  - Botón "Asociar" para vincular venta ML a venta del sistema (modal con tipo documento, cliente, medio pago)
-  - Vista de detalle de venta ML con órdenes y productos (SKU, cantidad, precio)
+  - Botón "Asociar" para crear una venta del sistema desde una venta ML (modal con tipo documento, cliente y medio pago; MercadoPago preseleccionado y bloqueado)
+  - Selección manual del producto del sistema cuando un producto de ML no tiene SKU (`producto_mapping`), con búsqueda local mientras se escribe
+  - Botón "Vincular" para asociar una venta ML a una venta ya existente del sistema (modal con las últimas 10 ventas sin asociar, de más reciente a más antigua)
+  - Vista de detalle de venta ML con órdenes y productos (SKU, cantidad, precio), comisión ML y costo de envío
   - Badges de estado (pagada, entregada, cancelada) y de asociación
+  - Los costos extra "Envío ML" y "Comisión ML" se crean al asociar o vincular
+- **Venta del sistema vinculada a Mercado Libre**
+  - Banner con los datos de la venta ML enlazada dentro del detalle de la venta del sistema, con acceso a su vista
 - **Alertas con auto-cierre**
   - Alertas de tipo success e info se cierran automáticamente en 5 segundos
   - Barra de progreso visible con color que acompaña el tipo de alerta
   - Timer preciso usando `NgZone.runOutsideAngular` + `ChangeDetectorRef`
 
-### Notificaciones ahora muestran hora (HH:mm) junto a la fecha
+### Changed
+
+- Notificaciones ahora muestran hora (HH:mm) junto a la fecha
 - Conteo múltiple: límite aumentado a 15 productos, contador de unidades
 - Modal de costos extra carga valores por defecto de la última venta del producto
+- Entorno de desarrollo: `environment.dev.ts`, `Dockerfile.dev` y `docker-compose.dev.yml`
 
 ## [0.0.92] - 2026-07-29
 

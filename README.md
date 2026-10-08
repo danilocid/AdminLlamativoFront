@@ -178,6 +178,15 @@ src/
 - Gestión de clientes
 - Historial de transacciones
 
+### Ventas de Mercado Libre (`/mercado-libre/ventas-ml`)
+
+- Sincronización de órdenes desde Mercado Libre
+- Listado y detalle de ventas ML (órdenes, productos, comisión y envío)
+- Asociación: crea una venta del sistema desde una venta ML
+- Vinculación: asocia una venta ML a una venta ya existente del sistema
+- Selección manual de producto cuando un producto de ML no tiene SKU
+- Enlace desde la venta del sistema a la venta ML enlazada
+
 ### Compras
 
 - Registro de compras
