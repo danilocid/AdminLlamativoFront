@@ -9,6 +9,10 @@ y este proyecto adhiere al [Versionado Semántico](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Changed
+
+- El enlace **"Ventas ML"** del menú lateral pasó a estar debajo de **"Ventas"**; se eliminó el grupo "MercadoLibre", que solo contenía ese ítem
+
 ## [0.0.104] - 2026-10-07
 
 ### Added
