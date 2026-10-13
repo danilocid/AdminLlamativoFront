@@ -20,6 +20,7 @@ export class ListarVentasMlComponent implements OnInit {
   totalPages = 1;
   total = 0;
   filtroAsociada = '';
+  filtroPaquete = '';
   mostrarModalAsociar = false;
   mostrarModalVincular = false;
   ventaMlSeleccionada: any = null;
@@ -44,6 +45,9 @@ export class ListarVentasMlComponent implements OnInit {
     let url = `${ApiRequest.getVentasMl}?page=${this.currentPage}&limit=${this.limit}`;
     if (this.filtroAsociada) {
       url += `&asociada=${this.filtroAsociada}`;
+    }
+    if (this.filtroPaquete.trim()) {
+      url += `&paquete=${encodeURIComponent(this.filtroPaquete.trim())}`;
     }
 
     this.api.get(url).subscribe({

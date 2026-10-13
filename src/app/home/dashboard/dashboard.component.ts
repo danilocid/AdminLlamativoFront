@@ -16,6 +16,7 @@ export class DashboardComponent implements OnInit {
     totalCost: 0,
     totalSale: 0,
     totalProfit: 0,
+    boleta: null,
   };
   private apiService!: ApiService;
 
@@ -33,5 +34,31 @@ export class DashboardComponent implements OnInit {
         this.dasboardReport = resp.data;
       },
     });
+  }
+
+  /** Fecha estimada para emitir la boleta 1000, o el motivo de no tenerla. */
+  get fechaBoleta1000(): string {
+    const boleta = this.dasboardReport?.boleta;
+    if (!boleta) return '—';
+    if (boleta.reached) return 'Alcanzada';
+    if (!boleta.estimatedDate) return 'Sin datos';
+
+    return new Date(boleta.estimatedDate).toLocaleDateString('es-CL', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+  }
+
+  /** Contexto que acompaña a la fecha: numero actual, faltantes y dias. */
+  get detalleBoleta1000(): string {
+    const boleta = this.dasboardReport?.boleta;
+    if (!boleta) return 'Cargando...';
+    if (boleta.reached) return `Boleta ${boleta.current} emitida`;
+
+    const base = `Boleta ${boleta.current} de ${boleta.target} · faltan ${boleta.remaining}`;
+    if (boleta.daysRemaining === null) return `${base} · sin historial`;
+
+    return `${base} · ~${Math.round(boleta.daysRemaining)} días`;
   }
 }

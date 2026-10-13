@@ -52,7 +52,29 @@
                   <option value="false">Sin asociar</option>
                 </select>
               </div>
-              <div class="col-md-3">
+              <div class="col-md-5">
+                <div class="input-group input-group-sm">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Buscar por número de paquete"
+                    title="Coincidencia parcial: puede pegar el número completo o una parte"
+                    [(ngModel)]="filtroPaquete"
+                    (keyup.enter)="onFiltroChange()"
+                  />
+                  <div class="input-group-append">
+                    <button
+                      class="btn btn-outline-secondary"
+                      type="button"
+                      (click)="onFiltroChange()"
+                      title="Buscar"
+                    >
+                      <i class="fas fa-search"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
                 <span class="text-muted">
                   {{ total }} ventas encontradas
                 </span>
