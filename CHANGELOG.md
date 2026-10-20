@@ -28,6 +28,7 @@ y este proyecto adhiere al [Versionado Semántico](https://semver.org/lang/es/).
 - Reporte mensual: recuerda el último período (mes/año) consultado
 - `label-modal` y `verArticulos`: eliminados `console.log` de debug; `conteo-multiple`: eliminado `ngOnInit` vacío
 - Lint del frontend en **0 errores y 0 warnings** (antes 63); regla `prefer-standalone` desactivada (el proyecto es NgModule por diseño)
+- `firebase.json`: definido `"site": "llamativo-admin"` en Hosting para evitar el error *"resolving hosting target of a site with no site name or target name"*
 
 ## [0.0.105] - 2026-10-08
 

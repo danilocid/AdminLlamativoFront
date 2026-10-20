@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "llamativo-admin",
     "public": "dist/front",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "predeploy": ["npm run build"],
