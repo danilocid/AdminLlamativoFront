@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AlertService } from 'src/app/shared/services/alert.service';
@@ -16,6 +16,7 @@ import { TableColumn } from 'src/app/shared/components/simple-table/simple-table
   standalone: false,
   selector: 'app-new-inventory',
   templateUrl: './newInventory.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: [],
 })
 export class NewInventoryComponent implements OnInit, OnDestroy {

@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ApiRequest } from 'src/app/shared/constants';
@@ -17,6 +17,7 @@ import { ExtraSalesCostModalComponent } from '../extra-sales-cost-modal/extra-sa
   standalone: false,
   selector: 'app-finaliza-venta',
   templateUrl: './finaliza-venta.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./finaliza-venta.component.css'],
 })
 export class FinalizaVentaComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AlertService } from 'src/app/shared/services/alert.service';
@@ -11,6 +11,7 @@ import { Product } from 'src/app/shared/models/product.model';
   standalone: false,
   selector: 'app-conteo-aleatorio',
   templateUrl: './conteo-aleatorio.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: [],
 })
 export class ConteoAleatorioComponent implements OnInit {

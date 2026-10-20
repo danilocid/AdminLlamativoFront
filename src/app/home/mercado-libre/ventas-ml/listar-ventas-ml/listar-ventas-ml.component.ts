@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AlertService } from 'src/app/shared/services/alert.service';
@@ -9,6 +9,7 @@ import { ApiRequest } from 'src/app/shared/constants';
   standalone: false,
   selector: 'app-listar-ventas-ml',
   templateUrl: './listar-ventas-ml.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: [],
 })
 export class ListarVentasMlComponent implements OnInit {

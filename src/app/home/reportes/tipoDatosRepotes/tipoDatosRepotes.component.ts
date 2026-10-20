@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ApiRequest } from 'src/app/shared/constants';
@@ -15,6 +15,7 @@ import {
   standalone: false,
   selector: 'app-tipo-datos-repotes',
   templateUrl: './tipoDatosRepotes.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./tipoDatosRepotes.component.css'],
 })
 export class TipoDatosRepotesComponent implements OnInit {

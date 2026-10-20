@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { ApiRequest } from 'src/app/shared/constants';
@@ -18,6 +18,7 @@ import {
   standalone: false,
   selector: 'app-listar-recepciones',
   templateUrl: './listarRecepciones.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./listarRecepciones.component.css'],
 })
 export class ListarRecepcionesComponent implements OnInit {

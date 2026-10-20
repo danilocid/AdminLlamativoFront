@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ApiRequest } from 'src/app/shared/constants';
@@ -10,6 +10,7 @@ import { AlertService } from 'src/app/shared/services/alert.service';
   standalone: false,
   selector: 'app-agregar-datos-reporte',
   templateUrl: './agregarDatosReporte.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./agregarDatosReporte.component.css'],
 })
 export class AgregarDatosReporteComponent implements OnInit {

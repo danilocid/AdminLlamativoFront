@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ApiRequest } from 'src/app/shared/constants';
 import { Sale } from 'src/app/shared/models/sale.model';
@@ -17,6 +17,7 @@ import {
 @Component({
   standalone: false,
   selector: 'app-ventas',
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './ventas.component.html',
 })
 export class VentasComponent implements OnInit {

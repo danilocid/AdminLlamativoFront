@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AlertService } from 'src/app/shared/services/alert.service';
@@ -15,6 +15,7 @@ import { TableColumn } from 'src/app/shared/components/simple-table/simple-table
   standalone: false,
   selector: 'app-ver-inventario',
   templateUrl: './ver-inventario.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: [],
 })
 export class VerInventarioComponent implements OnInit {

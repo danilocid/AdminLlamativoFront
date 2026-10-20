@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
 import { ApiService } from 'src/app/shared/services/ApiService';
@@ -8,6 +8,7 @@ import { ApiRequest } from 'src/app/shared/constants';
   standalone: false,
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: [],
 })
 export class DashboardComponent implements OnInit {

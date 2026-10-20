@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ApiRequest } from 'src/app/shared/constants';
@@ -15,6 +15,7 @@ import { PaymentMethod } from 'src/app/shared/models/paymentMethod.model';
   standalone: false,
   selector: 'app-finaliza-recepcion',
   templateUrl: './finalizaRecepcion.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./finalizaRecepcion.component.css'],
 })
 export class FinalizaRecepcionComponent implements OnInit {

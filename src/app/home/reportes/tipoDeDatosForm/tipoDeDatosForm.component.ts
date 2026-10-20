@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ApiRequest } from 'src/app/shared/constants';
@@ -10,6 +10,7 @@ import { AlertService } from 'src/app/shared/services/alert.service';
   standalone: false,
   selector: 'app-tipo-de-datos-form',
   templateUrl: './tipoDeDatosForm.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./tipoDeDatosForm.component.css'],
 })
 export class TipoDeDatosFormComponent implements OnInit, OnChanges {

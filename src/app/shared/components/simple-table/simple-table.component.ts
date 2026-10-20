@@ -6,6 +6,7 @@ import {
   OnChanges,
   SimpleChanges,
   OnInit,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { ListState } from 'src/app/shared/services/list-state.service';
 
@@ -40,6 +41,7 @@ export interface DataRequestEvent {
   standalone: false,
   selector: 'app-simple-table',
   templateUrl: './simple-table.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./simple-table.component.scss'],
 })
 export class SimpleTableComponent implements OnChanges, OnInit {

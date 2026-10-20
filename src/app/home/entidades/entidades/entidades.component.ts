@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { ApiService } from 'src/app/shared/services/ApiService';
@@ -18,6 +18,7 @@ import {
   standalone: false,
   selector: 'app-entidades',
   templateUrl: './entidades.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: [],
 })
 export class EntidadesComponent implements OnInit {

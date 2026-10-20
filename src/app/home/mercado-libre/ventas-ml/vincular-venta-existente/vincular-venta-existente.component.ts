@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ApiService } from 'src/app/shared/services/ApiService';
 import { ApiRequest } from 'src/app/shared/constants';
@@ -8,6 +8,7 @@ import { AlertService } from 'src/app/shared/services/alert.service';
   standalone: false,
   selector: 'app-vincular-venta-existente',
   templateUrl: './vincular-venta-existente.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: [],
 })
 export class VincularVentaExistenteComponent implements OnInit {

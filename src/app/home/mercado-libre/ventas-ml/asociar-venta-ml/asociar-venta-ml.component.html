@@ -20,7 +20,7 @@
               </div>
               <div class="col-md-4">
                 <small class="text-muted">Monto total:</small><br>
-                <strong class="text-success">{{ formatCurrency(ventaMl?.monto_total) }}</strong>
+                <strong class="text-success">{{ formatCurrency($safeNavigationMigration(ventaMl?.monto_total)) }}</strong>
               </div>
               <div class="col-md-4">
                 <small class="text-muted">Órdenes:</small><br>

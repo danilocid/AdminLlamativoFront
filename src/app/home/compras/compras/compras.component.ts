@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -15,6 +15,7 @@ import {
 @Component({
   standalone: false,
   selector: 'app-compras',
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './compras.component.html',
 })
 export class ComprasComponent implements OnInit {

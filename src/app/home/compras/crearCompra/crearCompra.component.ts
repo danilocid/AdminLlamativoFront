@@ -5,6 +5,7 @@ import {
   OnChanges,
   OnInit,
   Output,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -15,6 +16,7 @@ import { AlertService } from 'src/app/shared/services/alert.service';
 @Component({
   standalone: false,
   selector: 'app-crear-compra',
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './crearCompra.component.html',
 })
 export class CrearCompraComponent implements OnInit, OnChanges {

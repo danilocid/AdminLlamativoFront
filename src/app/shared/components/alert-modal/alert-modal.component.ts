@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, NgZone, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, NgZone, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 export interface AlertModalData {
@@ -16,6 +16,7 @@ export interface AlertModalData {
   standalone: false,
   selector: 'app-alert-modal',
   templateUrl: './alert-modal.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./alert-modal.component.scss'],
 })
 export class AlertModalComponent implements OnInit, OnDestroy {

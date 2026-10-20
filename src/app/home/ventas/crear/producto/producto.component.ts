@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Product, ProductCart } from 'src/app/shared/models/product.model';
@@ -11,6 +11,7 @@ import { Subject, debounceTime } from 'rxjs';
   standalone: false,
   selector: 'app-producto',
   templateUrl: './producto.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./producto.component.css'],
 })
 export class ProductoComponent implements OnInit {

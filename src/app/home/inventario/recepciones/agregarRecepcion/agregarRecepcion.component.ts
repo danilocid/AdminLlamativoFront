@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Product, ProductCart } from 'src/app/shared/models/product.model';
 import { AlertService } from 'src/app/shared/services/alert.service';
@@ -7,6 +7,7 @@ import { AlertService } from 'src/app/shared/services/alert.service';
   standalone: false,
   selector: 'app-agregar-recepcion',
   templateUrl: './agregarRecepcion.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./agregarRecepcion.component.css'],
 })
 export class AgregarRecepcionComponent {

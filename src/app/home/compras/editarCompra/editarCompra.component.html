@@ -124,7 +124,7 @@
             </tr>
             <tr>
               <td class="summary-label">Costo Total</td>
-              <td class="summary-value">{{ (compra?.costo_neto_documento + compra?.costo_imp_documento) | number:'1.0-0' }}</td>
+              <td class="summary-value">{{ ($safeNavigationMigration(compra?.costo_neto_documento) + $safeNavigationMigration(compra?.costo_imp_documento)) | number:'1.0-0' }}</td>
             </tr>
             <tr>
               <td class="summary-label">Observaciones</td>

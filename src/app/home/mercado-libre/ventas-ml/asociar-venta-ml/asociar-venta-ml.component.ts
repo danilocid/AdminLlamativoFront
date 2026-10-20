@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ApiService } from 'src/app/shared/services/ApiService';
@@ -12,6 +12,7 @@ import { Entidad } from 'src/app/shared/models/entidad.model';
   standalone: false,
   selector: 'app-asociar-venta-ml',
   templateUrl: './asociar-venta-ml.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: [],
 })
 export class AsociarVentaMlComponent implements OnInit {

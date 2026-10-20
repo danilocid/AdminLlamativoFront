@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ApiService } from 'src/app/shared/services/ApiService';
 import { ApiRequest } from 'src/app/shared/constants';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -10,6 +10,7 @@ import { TableColumn } from 'src/app/shared/components/simple-table/simple-table
 @Component({
   standalone: false,
   selector: 'app-ver-venta',
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './verVenta.component.html',
 })
 export class VerVentaComponent implements OnInit {

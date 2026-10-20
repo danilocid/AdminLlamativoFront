@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -22,6 +22,7 @@ import packageJson from '../../../../../package.json';
   standalone: false,
   selector: 'app-reporte-mensual',
   templateUrl: './reporteMensual.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./reporteMensual.component.css'],
 })
 export class ReporteMensualComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SaleExtraCost } from 'src/app/shared/models/sale-extra-cost.model';
@@ -10,6 +10,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   standalone: false,
   selector: 'app-extra-sales-cost-modal',
   templateUrl: './extra-sales-cost-modal.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./extra-sales-cost-modal.component.css'],
 })
 export class ExtraSalesCostModalComponent implements OnInit {

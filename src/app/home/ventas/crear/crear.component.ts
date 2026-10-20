@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Product, ProductCart } from 'src/app/shared/models/product.model';
 import { AlertService } from 'src/app/shared/services/alert.service';
@@ -7,6 +7,7 @@ import { AlertService } from 'src/app/shared/services/alert.service';
   standalone: false,
   selector: 'app-crear',
   templateUrl: './crear.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./crear.component.css'],
 })
 export class CrearComponent implements OnInit {

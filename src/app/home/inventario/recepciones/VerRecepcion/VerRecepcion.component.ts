@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -16,6 +16,7 @@ import * as pdfMake from 'pdfmake/build/pdfmake';
   standalone: false,
   selector: 'app-ver-recepcion',
   templateUrl: './VerRecepcion.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./VerRecepcion.component.css'],
 })
 export class VerRecepcionComponent implements OnInit {
