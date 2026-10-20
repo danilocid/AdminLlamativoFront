@@ -4,7 +4,9 @@ Frontend de administración para Llamativo, desarrollado con Angular 22. Sistema
 
 ## Versión Actual
 
-La versión se actualiza automáticamente con cada push mediante el comando `npm version patch`.
+**1.0.0**
+
+La versión se incrementa automáticamente (patch) en cada deploy mediante `pnpm version patch`.
 
 ## Tecnologías
 
@@ -35,18 +37,18 @@ La versión se actualiza automáticamente con cada push mediante el comando `npm
 
 ## Requisitos Previos
 
-- Node.js >= 18.0.0
-- npm >= 9.0.0
-- Angular CLI 18.x
+- Node.js >= 20.0.0
+- pnpm >= 9.0.0
+- Angular CLI 22.x
 
 ## Instalación
 
 ```bash
-# Instalar dependencias
-npm install
+# Instalar dependencias (el gestor de paquetes es pnpm)
+pnpm install
 
 # Instalar Angular CLI globalmente (si no está instalado)
-npm install -g @angular/cli@18
+pnpm add -g @angular/cli@22
 ```
 
 ## Configuración
@@ -75,12 +77,12 @@ export const environment = {
 
 ```bash
 # Servidor de desarrollo (HTTPS)
-npm start
+pnpm start
 
 # Servidor de desarrollo - ambiente específico
-npm run start:dev      # Desarrollo
-npm run start:qa       # QA
-npm run start:prod     # Producción
+pnpm run start:dev      # Desarrollo
+pnpm run start:qa       # QA
+pnpm run start:prod     # Producción
 ```
 
 Navega a `https://localhost:4200/`. La aplicación se recargará automáticamente si cambias algún archivo.
@@ -89,10 +91,10 @@ Navega a `https://localhost:4200/`. La aplicación se recargará automáticament
 
 ```bash
 # Build para producción
-npm run build
+pnpm run build
 
 # Build con watch mode
-npm run watch
+pnpm run watch
 ```
 
 Los artefactos se almacenarán en el directorio `dist/`.
@@ -101,16 +103,16 @@ Los artefactos se almacenarán en el directorio `dist/`.
 
 ```bash
 # Ejecutar pruebas unitarias
-npm test
+pnpm test
 
 # Ejecutar tests en modo headless (sin abrir navegador)
-npm test -- --browsers=ChromeHeadless --watch=false
+pnpm test -- --browsers=ChromeHeadless --watch=false
 
 # Ejecutar linter
-npm run lint
+pnpm run lint
 
 # Análisis de código con SonarQube
-npm run scanner
+pnpm run scanner
 ```
 
 **Tests Actuales:**
@@ -121,7 +123,7 @@ npm run scanner
 
 ```bash
 # Deploy a Firebase (incrementa versión automáticamente)
-npm run deploy
+pnpm run deploy
 ```
 
 Este comando:

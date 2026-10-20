@@ -5,9 +5,26 @@ Todos los cambios notables en el frontend serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto adhiere al [Versionado Semántico](https://semver.org/lang/es/).
 
-**Nota**: La versión se incrementa automáticamente con cada deploy mediante `npm version patch`.
+**Nota**: La versión se incrementa automáticamente con cada deploy mediante `pnpm version patch`.
 
 ## [Unreleased]
+
+## [1.0.0] - 2026-10-20
+
+### Changed
+
+- **Migración de Angular 19.2.21 a Angular 22.2.3** (TypeScript 6.0.3, RxJS 7.8)
+  - Actualizados todos los paquetes `@angular/*` a v22, `ngx-spinner` a v22 y migraciones de código 20→22 (change detection `Eager`, safe optional chaining, `withXhr`)
+  - ESLint migrado a flat config (`eslint.config.js`) con `angular-eslint` + `typescript-eslint`; lint en 0 errores
+  - Se mantiene AdminLTE 3 y la arquitectura NgModule (sin cambios de UI)
+- **Gestor de paquetes**: el frontend usa **pnpm**; se retiró `package-lock.json` (lockfile dual desactualizado) y se ignora en `.gitignore`
+- Documentación (`README.md`) actualizada a Angular 22, Node >= 20 y pnpm
+
+### Fixed
+
+- **Change detection zoneless**: desde Angular 21 la app corre *zoneless* por defecto y las respuestas HTTP ya no repintaban las vistas. Añadido `provideZoneChangeDetection()` en `AppModule`; tablas como **Compras** ahora cargan sin necesidad de un click
+- **Entidades**: el listado leía `response.data` como si fuera un array, pero el servicio devuelve `data: { entities, count }`; corregido a `data.entities` / `data.count` (único listado desfasado; el resto verificado)
+- Añadido spec de `pdf-generator.service` que valida la generación de etiquetas (JsBarcode + pdfmake); **16/16 tests en verde**
 
 ## [0.0.107] - 2026-10-19
 
