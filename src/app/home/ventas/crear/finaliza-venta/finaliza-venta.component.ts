@@ -226,6 +226,7 @@ export class FinalizaVentaComponent implements OnInit {
             this.extraCosts = result;
           } catch (error) {
             // console.error(error);
+            void error;
           }
         }
       },

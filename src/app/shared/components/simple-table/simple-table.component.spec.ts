@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { SimpleTableComponent, TableColumn } from './simple-table.component';
 
@@ -73,10 +73,13 @@ describe('SimpleTableComponent', () => {
     expect(component.paginatedData.length).toBeGreaterThan(0);
   });
 
-  it('should emit dataRequest on init when serverSide is true', () => {
+  it('should emit dataRequest on init when serverSide is true', fakeAsync(() => {
     spyOn(component.dataRequest, 'emit');
     component.serverSide = true;
     component.ngOnInit();
+
+    // ngOnInit agenda requestData() con setTimeout(..., 0)
+    tick();
 
     expect(component.dataRequest.emit).toHaveBeenCalledWith({
       page: 1,
@@ -85,7 +88,7 @@ describe('SimpleTableComponent', () => {
       sortDirection: 'desc',
       searchTerm: '',
     });
-  });
+  }));
 
   it('should emit view when view button is clicked', () => {
     spyOn(component.view, 'emit');

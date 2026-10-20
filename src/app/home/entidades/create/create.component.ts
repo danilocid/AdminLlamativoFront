@@ -77,7 +77,7 @@ export class CreateComponent implements OnInit {
       next: (response: ServerResponse) => {
         this.regions = response.data as Region[];
         if (this.rutCliente == null) {
-          this.spinner.hide;
+          this.spinner.hide();
         }
       },
       error: (error: ServerResponse) => {
