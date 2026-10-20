@@ -108,8 +108,8 @@ export class EntidadesComponent implements OnInit {
     this.apiService
       .getWithParams(ApiRequest.getEntities, params)
       .subscribe((response) => {
-        this.entidades = response.data;
-        this.totalRecords = +response.count;
+        this.entidades = response.data.entities || [];
+        this.totalRecords = +response.data.count || 0;
         this.loading = false;
       });
   }

@@ -10,6 +10,9 @@
 /node_modules
 npm-debug.log
 yarn-error.log
+# El gestor de paquetes es pnpm: ignorar lockfiles de otros gestores
+package-lock.json
+yarn.lock
 # IDEs and editors
 .idea/
 .project

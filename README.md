@@ -1,6 +1,6 @@
-# Llamativo Admin - Frontend
+﻿# Llamativo Admin - Frontend
 
-Frontend de administración para Llamativo, desarrollado con Angular 19. Sistema de gestión integral para productos, inventarios, ventas, compras y reportes con integración a Mercado Libre.
+Frontend de administración para Llamativo, desarrollado con Angular 22. Sistema de gestión integral para productos, inventarios, ventas, compras y reportes con integración a Mercado Libre.
 
 ## Versión Actual
 
@@ -8,8 +8,8 @@ La versión se actualiza automáticamente con cada push mediante el comando `npm
 
 ## Tecnologías
 
-- **Angular**: 19.2.21
-- **TypeScript**: 5.5.4
+- **Angular**: 22.2.3
+- **TypeScript**: 6.0.3
 - **Bootstrap**: 5.3.3
 - **AdminLTE**: 3.x
 - **RxJS**: 7.8.x

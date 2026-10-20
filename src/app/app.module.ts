@@ -1,5 +1,10 @@
 import { provideHttpClient, withInterceptors, withXhr } from '@angular/common/http';
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule, LOCALE_ID } from '@angular/core';
+import {
+  CUSTOM_ELEMENTS_SCHEMA,
+  NgModule,
+  LOCALE_ID,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -35,6 +40,10 @@ registerLocaleData(localeEs, 'es');
     SharedModule,
   ],
   providers: [
+    // Angular 21+ es zoneless por defecto: sin este provider, la respuesta HTTP
+    // ya no programa change detection y las vistas (p. ej. la tabla de Compras)
+    // no se repintan hasta un click/navegación. Restaura el comportamiento previo.
+    provideZoneChangeDetection(),
     { provide: LOCALE_ID, useValue: 'es' },
     provideAnimations(),
     provideHttpClient(withXhr(), withInterceptors([authInterceptor, errorInterceptor])),
