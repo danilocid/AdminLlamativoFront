@@ -9,6 +9,10 @@ import {
   DataRequestEvent,
 } from 'src/app/shared/components/simple-table/simple-table.component';
 import { Router } from '@angular/router';
+import {
+  ListState,
+  ListStateService,
+} from 'src/app/shared/services/list-state.service';
 
 @Component({
   standalone: false,
@@ -16,9 +20,14 @@ import { Router } from '@angular/router';
   templateUrl: './ventas.component.html',
 })
 export class VentasComponent implements OnInit {
+  /** Clave en localStorage donde se guarda el estado de este listado */
+  static readonly LIST_STATE_KEY = 'ventas';
+
   ventas: Sale[] = [];
   totalRecords = 0;
   loading = false;
+  /** Estado anterior del listado, restaurado al volver desde el detalle */
+  initialState: ListState | null = null;
   private apiService!: ApiService;
 
   columns: TableColumn[] = [
@@ -66,12 +75,14 @@ export class VentasComponent implements OnInit {
     readonly http: HttpClient,
     readonly titleService: Title,
     readonly router: Router,
+    readonly listStateSV: ListStateService,
   ) {
     this.titleService.setTitle('Ventas');
   }
 
   ngOnInit() {
     this.apiService = new ApiService(this.http);
+    this.initialState = this.listStateSV.load(VentasComponent.LIST_STATE_KEY);
   }
 
   onDataRequest(event: DataRequestEvent): void {
@@ -88,6 +99,15 @@ export class VentasComponent implements OnInit {
       order: columnMap[event.sortColumn] || 'id',
       sort: event.sortDirection?.toUpperCase() || 'DESC',
     };
+
+    // Se persiste el estado para restaurarlo al volver desde el detalle
+    this.listStateSV.save(VentasComponent.LIST_STATE_KEY, {
+      page: event.page,
+      pageSize: event.pageSize,
+      sortColumn: event.sortColumn,
+      sortDirection: event.sortDirection,
+      searchTerm: event.searchTerm,
+    });
 
     this.apiService
       .getWithParams(ApiRequest.getSales, params)

@@ -9,6 +9,10 @@ import {
   TableColumn,
   DataRequestEvent,
 } from 'src/app/shared/components/simple-table/simple-table.component';
+import {
+  ListState,
+  ListStateService,
+} from 'src/app/shared/services/list-state.service';
 
 @Component({
   standalone: false,
@@ -17,6 +21,9 @@ import {
   styleUrls: ['./articulos.component.css'],
 })
 export class ArticulosComponent implements OnInit {
+  /** Clave en localStorage donde se guarda el estado de este listado */
+  static readonly LIST_STATE_KEY = 'articulos';
+
   products: Product[] = [];
   totalRecords = 0;
   loading = false;
@@ -24,6 +31,8 @@ export class ArticulosComponent implements OnInit {
   stock = true;
   includeDeprecated = false;
   searchTerm = '';
+  /** Estado anterior del listado, restaurado al volver desde el detalle */
+  initialState: ListState | null = null;
   private apiService!: ApiService;
   private lastEvent: DataRequestEvent | null = null;
 
@@ -74,12 +83,23 @@ export class ArticulosComponent implements OnInit {
     readonly titleService: Title,
     readonly http: HttpClient,
     readonly router: Router,
+    readonly listStateSV: ListStateService,
   ) {
     this.titleService.setTitle('Articulos');
   }
 
   ngOnInit() {
     this.apiService = new ApiService(this.http);
+
+    const state = this.listStateSV.load(ArticulosComponent.LIST_STATE_KEY);
+    if (state?.extra) {
+      this.searchTerm = state.extra['searchTerm'] ?? '';
+      this.active = state.extra['active'] ?? this.active;
+      this.stock = state.extra['stock'] ?? this.stock;
+      this.includeDeprecated =
+        state.extra['includeDeprecated'] ?? this.includeDeprecated;
+    }
+    this.initialState = state;
   }
 
   onDataRequest(event: DataRequestEvent): void {
@@ -104,6 +124,21 @@ export class ArticulosComponent implements OnInit {
       active: this.active,
       includeDeprecated: this.includeDeprecated,
     };
+
+    // Se persiste el estado para restaurarlo al volver desde el detalle
+    this.listStateSV.save(ArticulosComponent.LIST_STATE_KEY, {
+      page: event.page,
+      pageSize: event.pageSize,
+      sortColumn: event.sortColumn,
+      sortDirection: event.sortDirection,
+      searchTerm: event.searchTerm,
+      extra: {
+        searchTerm: this.searchTerm,
+        active: this.active,
+        stock: this.stock,
+        includeDeprecated: this.includeDeprecated,
+      },
+    });
 
     this.apiService
       .getWithParams(ApiRequest.getArticulos, params)

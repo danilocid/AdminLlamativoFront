@@ -9,6 +9,10 @@ import {
   TableColumn,
   DataRequestEvent,
 } from 'src/app/shared/components/simple-table/simple-table.component';
+import {
+  ListState,
+  ListStateService,
+} from 'src/app/shared/services/list-state.service';
 
 @Component({
   standalone: false,
@@ -17,10 +21,15 @@ import {
   styleUrls: ['./listarRecepciones.component.css'],
 })
 export class ListarRecepcionesComponent implements OnInit {
+  /** Clave en localStorage donde se guarda el estado de este listado */
+  static readonly LIST_STATE_KEY = 'recepciones';
+
   recepciones: Reception[] = [];
   totalRecords = 0;
   loading = false;
   searchTerm = '';
+  /** Estado anterior del listado, restaurado al volver desde el detalle */
+  initialState: ListState | null = null;
   private apiService!: ApiService;
 
   formatCurrency = (value: number) =>
@@ -66,12 +75,19 @@ export class ListarRecepcionesComponent implements OnInit {
     readonly http: HttpClient,
     readonly titleService: Title,
     readonly router: Router,
+    readonly listStateSV: ListStateService,
   ) {
     this.titleService.setTitle('Recepciones');
   }
 
   ngOnInit() {
     this.apiService = new ApiService(this.http);
+
+    const state = this.listStateSV.load(
+      ListarRecepcionesComponent.LIST_STATE_KEY,
+    );
+    this.searchTerm = state?.extra?.['searchTerm'] ?? '';
+    this.initialState = state;
   }
 
   onDataRequest(event: DataRequestEvent): void {
@@ -88,6 +104,16 @@ export class ListarRecepcionesComponent implements OnInit {
       order: columnMap[event.sortColumn] || 'id',
       sort: event.sortDirection || 'asc',
     };
+
+    // Se persiste el estado para restaurarlo al volver desde el detalle
+    this.listStateSV.save(ListarRecepcionesComponent.LIST_STATE_KEY, {
+      page: event.page,
+      pageSize: event.pageSize,
+      sortColumn: event.sortColumn,
+      sortDirection: event.sortDirection,
+      searchTerm: event.searchTerm,
+      extra: { searchTerm: this.searchTerm },
+    });
 
     this.apiService
       .getWithParams(ApiRequest.getRecepciones, params)

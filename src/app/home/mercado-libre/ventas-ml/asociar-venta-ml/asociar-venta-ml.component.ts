@@ -16,8 +16,8 @@ import { Entidad } from 'src/app/shared/models/entidad.model';
 })
 export class AsociarVentaMlComponent implements OnInit {
   @Input() ventaMl: any;
-  @Output() onClose = new EventEmitter<void>();
-  @Output() onAsociada = new EventEmitter<void>();
+  @Output() cerrado = new EventEmitter<void>();
+  @Output() asociada = new EventEmitter<void>();
 
   form: FormGroup;
   documentTypes: DocumentType[] = [];
@@ -197,7 +197,7 @@ export class AsociarVentaMlComponent implements OnInit {
             `Venta ML asociada a la venta #${resp.data.venta_id} del sistema`,
             'success',
           );
-          this.onAsociada.emit();
+          this.asociada.emit();
           this.cerrar();
         } else {
           this.alertSV.alertBasic('Error', resp.serverResponseMessage, 'error');
@@ -213,7 +213,7 @@ export class AsociarVentaMlComponent implements OnInit {
   }
 
   cerrar(): void {
-    this.onClose.emit();
+    this.cerrado.emit();
   }
 
   formatCurrency(value: number): string {

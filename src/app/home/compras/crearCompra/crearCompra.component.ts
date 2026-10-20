@@ -19,7 +19,7 @@ import { AlertService } from 'src/app/shared/services/alert.service';
 })
 export class CrearCompraComponent implements OnInit, OnChanges {
   @Input() show = false;
-  @Output() onClose = new EventEmitter<boolean>();
+  @Output() cerrado = new EventEmitter<boolean>();
 
   compraForm!: FormGroup;
   proveedores: any[] = [];
@@ -116,7 +116,7 @@ export class CrearCompraComponent implements OnInit, OnChanges {
   cerrarModal() {
     this.show = false;
     this.compraForm?.reset();
-    this.onClose.emit(true);
+    this.cerrado.emit(true);
   }
 
   submit() {

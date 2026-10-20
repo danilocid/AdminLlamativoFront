@@ -9,6 +9,10 @@ import {
   TableColumn,
   DataRequestEvent,
 } from 'src/app/shared/components/simple-table/simple-table.component';
+import {
+  ListState,
+  ListStateService,
+} from 'src/app/shared/services/list-state.service';
 
 @Component({
   standalone: false,
@@ -17,10 +21,15 @@ import {
   styleUrls: [],
 })
 export class EntidadesComponent implements OnInit {
+  /** Clave en localStorage donde se guarda el estado de este listado */
+  static readonly LIST_STATE_KEY = 'entidades';
+
   entidades: Entidad[] = [];
   totalRecords = 0;
   loading = false;
   searchTerm = '';
+  /** Estado anterior del listado, restaurado al volver desde el detalle */
+  initialState: ListState | null = null;
   private apiService!: ApiService;
 
   columns: TableColumn[] = [
@@ -54,12 +63,17 @@ export class EntidadesComponent implements OnInit {
     readonly titleService: Title,
     readonly http: HttpClient,
     readonly router: Router,
+    readonly listStateSV: ListStateService,
   ) {
     this.titleService.setTitle('Entidades');
   }
 
   ngOnInit(): void {
     this.apiService = new ApiService(this.http);
+
+    const state = this.listStateSV.load(EntidadesComponent.LIST_STATE_KEY);
+    this.searchTerm = state?.extra?.['searchTerm'] ?? '';
+    this.initialState = state;
   }
 
   onDataRequest(event: DataRequestEvent): void {
@@ -79,6 +93,16 @@ export class EntidadesComponent implements OnInit {
       order: columnMap[event.sortColumn] || 'rut',
       sort: event.sortDirection || 'asc',
     };
+
+    // Se persiste el estado para restaurarlo al volver desde el detalle
+    this.listStateSV.save(EntidadesComponent.LIST_STATE_KEY, {
+      page: event.page,
+      pageSize: event.pageSize,
+      sortColumn: event.sortColumn,
+      sortDirection: event.sortDirection,
+      searchTerm: event.searchTerm,
+      extra: { searchTerm: this.searchTerm },
+    });
 
     this.apiService
       .getWithParams(ApiRequest.getEntities, params)

@@ -170,13 +170,13 @@
 <app-asociar-venta-ml
   *ngIf="mostrarModalAsociar"
   [ventaMl]="ventaMlSeleccionada"
-  (onClose)="cerrarModal()"
-  (onAsociada)="onAsociada()"
+  (cerrado)="cerrarModal()"
+  (asociada)="onAsociada()"
 ></app-asociar-venta-ml>
 
 <app-vincular-venta-existente
   *ngIf="mostrarModalVincular"
   [ventaMl]="ventaMlSeleccionada"
-  (onClose)="cerrarModal()"
-  (onVinculada)="onVinculada()"
+  (cerrado)="cerrarModal()"
+  (vinculada)="onVinculada()"
 ></app-vincular-venta-existente>

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ApiRequest } from 'src/app/shared/constants';
 import {
@@ -75,6 +75,7 @@ export class VerRecepcionComponent implements OnInit {
     readonly alertSV: AlertService,
     readonly api: ApiService,
     readonly route: ActivatedRoute,
+    readonly router: Router,
   ) {
     this.titleService.setTitle('Recepciones - Ver');
     this.spinner.show();
@@ -83,6 +84,11 @@ export class VerRecepcionComponent implements OnInit {
 
   ngOnInit() {
     this.getRecepcionData();
+  }
+
+  /** Vuelve al listado de recepciones conservando el estado (página/orden/búsqueda) */
+  volver(): void {
+    this.router.navigate(['/inventario/recepciones']);
   }
 
   getRecepcionData() {

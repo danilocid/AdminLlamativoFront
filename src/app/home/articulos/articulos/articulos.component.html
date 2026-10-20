@@ -76,14 +76,15 @@
           [serverSide]="true"
           [totalRecords]="totalRecords"
           [loading]="loading"
+          [initialState]="initialState"
           [showSearch]="false"
           [showViewButton]="true"
           [showEditButton]="true"
           [showDeleteButton]="false"
           [rowLink]="rowLink"
           (dataRequest)="onDataRequest($event)"
-          (onView)="onView($event)"
-          (onEdit)="onEdit($event)"
+          (view)="onView($event)"
+          (edit)="onEdit($event)"
         ></app-simple-table>
       </div>
     </div>

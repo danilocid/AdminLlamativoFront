@@ -66,13 +66,15 @@
             [data]="compras"
             [columns]="columns"
             [pageSize]="10"
+            [initialState]="initialState"
             [showSearch]="true"
             [showPagination]="true"
             [showViewButton]="false"
             [showEditButton]="true"
             [showDeleteButton]="false"
             [emptyMessage]="'No hay compras en el período seleccionado'"
-            (onEdit)="editCompra($event)"
+            (edit)="editCompra($event)"
+            (stateChange)="onStateChange($event)"
           ></app-simple-table>
         </div>
       </div>
@@ -82,5 +84,5 @@
 <app-editar-compra [show]="showModal" [compra]="compra"></app-editar-compra>
 <app-crear-compra
   [show]="showModalCrear"
-  (onClose)="onCloseCrear($event)"
+  (cerrado)="onCloseCrear($event)"
 ></app-crear-compra>

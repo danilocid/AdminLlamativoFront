@@ -87,7 +87,7 @@
             <button
               *ngIf="showViewButton && !rowLink"
               class="btn btn-sm btn-info mr-1"
-              (click)="onView.emit(row)"
+              (click)="view.emit(row)"
               title="Ver"
             >
               <i class="fas fa-eye"></i>
@@ -95,7 +95,7 @@
             <button
               *ngIf="showEditButton"
               class="btn btn-sm btn-warning mr-1"
-              (click)="onEdit.emit(row)"
+              (click)="edit.emit(row)"
               title="Editar"
             >
               <i class="fas fa-edit"></i>
@@ -103,7 +103,7 @@
             <button
               *ngIf="showDeleteButton"
               class="btn btn-sm btn-danger"
-              (click)="onDelete.emit(row)"
+              (click)="delete.emit(row)"
               title="Eliminar"
             >
               <i class="fas fa-trash"></i>

@@ -6,6 +6,15 @@
       </div>
       <!-- /.col -->
 
+      <div class="col-sm-6">
+        <button
+          type="button"
+          class="btn btn-secondary float-sm-right"
+          (click)="volver()"
+        >
+          <i class="fas fa-arrow-left mr-1"></i>Volver atrás
+        </button>
+      </div>
       <!-- /.col -->
     </div>
     <!-- /.row -->
@@ -146,7 +155,7 @@
           [showDeleteButton]="false"
           [rowLink]="movementLink"
           [emptyMessage]="'No hay movimientos disponibles'"
-          (onView)="onViewMovement($event)"
+          (view)="onViewMovement($event)"
         ></app-simple-table>
       </div>
     </div>

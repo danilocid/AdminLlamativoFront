@@ -87,22 +87,22 @@ describe('SimpleTableComponent', () => {
     });
   });
 
-  it('should emit onView when view button is clicked', () => {
-    spyOn(component.onView, 'emit');
+  it('should emit view when view button is clicked', () => {
+    spyOn(component.view, 'emit');
     const testItem = mockData[0];
 
-    component.onView.emit(testItem);
+    component.view.emit(testItem);
 
-    expect(component.onView.emit).toHaveBeenCalledWith(testItem);
+    expect(component.view.emit).toHaveBeenCalledWith(testItem);
   });
 
-  it('should emit onEdit when edit button is clicked', () => {
-    spyOn(component.onEdit, 'emit');
+  it('should emit edit when edit button is clicked', () => {
+    spyOn(component.edit, 'emit');
     const testItem = mockData[0];
 
-    component.onEdit.emit(testItem);
+    component.edit.emit(testItem);
 
-    expect(component.onEdit.emit).toHaveBeenCalledWith(testItem);
+    expect(component.edit.emit).toHaveBeenCalledWith(testItem);
   });
 
   it('should format cell values correctly using valueGetter', () => {

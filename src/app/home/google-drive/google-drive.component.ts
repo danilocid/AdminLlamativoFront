@@ -72,7 +72,7 @@ export class GoogleDriveComponent implements OnInit {
         this.images = response.files || [];
         this.loading = false;
       },
-      error: (error) => {
+      error: () => {
         this.loading = false;
         this.alertService.alertBasic(
           'Error',

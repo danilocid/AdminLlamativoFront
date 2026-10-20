@@ -12,8 +12,8 @@ import { AlertService } from 'src/app/shared/services/alert.service';
 })
 export class VincularVentaExistenteComponent implements OnInit {
   @Input() ventaMl: any;
-  @Output() onClose = new EventEmitter<void>();
-  @Output() onVinculada = new EventEmitter<void>();
+  @Output() cerrado = new EventEmitter<void>();
+  @Output() vinculada = new EventEmitter<void>();
 
   ventas: any[] = [];
   ventaSeleccionada: number | null = null;
@@ -87,7 +87,7 @@ export class VincularVentaExistenteComponent implements OnInit {
             `Venta ML vinculada a la venta #${resp.data.venta_id}`,
             'success',
           );
-          this.onVinculada.emit();
+          this.vinculada.emit();
           this.cerrar();
         } else {
           this.alertSV.alertBasic('Error', resp.serverResponseMessage, 'error');
@@ -103,7 +103,7 @@ export class VincularVentaExistenteComponent implements OnInit {
   }
 
   cerrar(): void {
-    this.onClose.emit();
+    this.cerrado.emit();
   }
 
   formatCurrency(value: number): string {

@@ -85,4 +85,9 @@ export class VerInventarioComponent implements OnInit {
         },
       });
   }
+
+  /** Vuelve al listado de ajustes conservando el estado (página/orden) */
+  volver(): void {
+    this.router.navigate(['/inventario/ajustes']);
+  }
 }

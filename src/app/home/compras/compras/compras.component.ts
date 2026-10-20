@@ -7,6 +7,10 @@ import { ApiRequest } from 'src/app/shared/constants';
 import { ApiService } from 'src/app/shared/services/ApiService';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { TableColumn } from 'src/app/shared/components/simple-table/simple-table.component';
+import {
+  ListState,
+  ListStateService,
+} from 'src/app/shared/services/list-state.service';
 
 @Component({
   standalone: false,
@@ -14,6 +18,9 @@ import { TableColumn } from 'src/app/shared/components/simple-table/simple-table
   templateUrl: './compras.component.html',
 })
 export class ComprasComponent implements OnInit {
+  /** Clave en localStorage donde se guarda el estado de este listado */
+  static readonly LIST_STATE_KEY = 'compras';
+
   compras: any[] = [];
   compra: any;
   month: any;
@@ -23,6 +30,10 @@ export class ComprasComponent implements OnInit {
   showModal = false;
   showModalCrear = false;
   showModalImport = false;
+  /** Estado anterior de la tabla, restaurado al volver a la lista */
+  initialState: ListState | null = null;
+  /** Último estado emitido por la tabla (página, orden, búsqueda) */
+  private tableState: ListState | null = null;
 
   columns: TableColumn[] = [
     { key: 'id', label: 'Id', sortable: true },
@@ -77,15 +88,21 @@ export class ComprasComponent implements OnInit {
     readonly alertSV: AlertService,
     readonly fb: FormBuilder,
     readonly api: ApiService,
+    readonly listStateSV: ListStateService,
   ) {
     this.titleService.setTitle('Compras');
   }
 
   ngOnInit() {
     this.spinner.show();
+
+    const state = this.listStateSV.load(ComprasComponent.LIST_STATE_KEY);
     const date = new Date();
-    this.month = date.getMonth() + 1;
-    this.year = date.getFullYear();
+    this.month = state?.extra?.['month'] ?? date.getMonth() + 1;
+    this.year = state?.extra?.['year'] ?? date.getFullYear();
+    this.initialState = state;
+    this.tableState = state;
+
     for (let i = 2023; i <= this.year; i++) {
       this.yearList.push(i);
     }
@@ -97,6 +114,7 @@ export class ComprasComponent implements OnInit {
   }
 
   getCompras() {
+    this.saveState();
     this.api
       .getWithParams(ApiRequest.getComprasFromDb, {
         month: this.month,
@@ -136,6 +154,24 @@ export class ComprasComponent implements OnInit {
       this.compras = [];
       this.getCompras();
     }
+  }
+
+  /** Guarda el estado de la tabla + filtros de período en localStorage */
+  private saveState(): void {
+    this.listStateSV.save(ComprasComponent.LIST_STATE_KEY, {
+      page: this.tableState?.page ?? 1,
+      pageSize: this.tableState?.pageSize ?? 10,
+      sortColumn: this.tableState?.sortColumn ?? '',
+      sortDirection: this.tableState?.sortDirection ?? '',
+      searchTerm: this.tableState?.searchTerm ?? '',
+      extra: { month: this.month, year: this.year },
+    });
+  }
+
+  /** Se dispara ante cada cambio de página, orden o búsqueda de la tabla */
+  onStateChange(state: ListState): void {
+    this.tableState = state;
+    this.saveState();
   }
 
   submit() {

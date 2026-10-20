@@ -9,6 +9,10 @@ import {
   TableColumn,
   DataRequestEvent,
 } from 'src/app/shared/components/simple-table/simple-table.component';
+import {
+  ListState,
+  ListStateService,
+} from 'src/app/shared/services/list-state.service';
 
 @Component({
   standalone: false,
@@ -17,9 +21,14 @@ import {
   styleUrls: [],
 })
 export class AjustesDeInventarioComponent implements OnInit {
+  /** Clave en localStorage donde se guarda el estado de este listado */
+  static readonly LIST_STATE_KEY = 'ajustes-inventario';
+
   inventories: Inventory[] = [];
   totalRecords = 0;
   loading = false;
+  /** Estado anterior del listado, restaurado al volver desde el detalle */
+  initialState: ListState | null = null;
   private apiService!: ApiService;
 
   formatCurrency = (value: number) =>
@@ -57,12 +66,16 @@ export class AjustesDeInventarioComponent implements OnInit {
     readonly titleService: Title,
     readonly http: HttpClient,
     readonly router: Router,
+    readonly listStateSV: ListStateService,
   ) {
     this.titleService.setTitle('Ajustes de Inventario');
   }
 
   ngOnInit() {
     this.apiService = new ApiService(this.http);
+    this.initialState = this.listStateSV.load(
+      AjustesDeInventarioComponent.LIST_STATE_KEY,
+    );
   }
 
   onDataRequest(event: DataRequestEvent): void {
@@ -73,6 +86,15 @@ export class AjustesDeInventarioComponent implements OnInit {
       order: event.sortColumn || 'id',
       sort: event.sortDirection?.toUpperCase() || 'ASC',
     };
+
+    // Se persiste el estado para restaurarlo al volver desde el detalle
+    this.listStateSV.save(AjustesDeInventarioComponent.LIST_STATE_KEY, {
+      page: event.page,
+      pageSize: event.pageSize,
+      sortColumn: event.sortColumn,
+      sortDirection: event.sortDirection,
+      searchTerm: event.searchTerm,
+    });
 
     this.apiService
       .getWithParams(ApiRequest.getAllInventory, params)

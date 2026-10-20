@@ -7,6 +7,7 @@ import {
   SimpleChanges,
   OnInit,
 } from '@angular/core';
+import { ListState } from 'src/app/shared/services/list-state.service';
 
 export interface TableColumn {
   key: string;
@@ -64,12 +65,20 @@ export class SimpleTableComponent implements OnChanges, OnInit {
   @Input() totalRecords = 0;
   @Input() loading = false;
 
-  @Output() onView = new EventEmitter<any>();
-  @Output() onEdit = new EventEmitter<any>();
-  @Output() onDelete = new EventEmitter<any>();
+  /**
+   * Estado a restaurar al iniciar la tabla (página, orden, búsqueda, pageSize).
+   * Usado para mantener el estado del listado al volver desde una vista de detalle.
+   */
+  @Input() initialState: ListState | null = null;
+
+  @Output() view = new EventEmitter<any>();
+  @Output() edit = new EventEmitter<any>();
+  @Output() delete = new EventEmitter<any>();
   @Output() sortChange = new EventEmitter<SortEvent>();
   @Output() pageChange = new EventEmitter<PageEvent>();
   @Output() dataRequest = new EventEmitter<DataRequestEvent>();
+  /** Emite el estado actual de la tabla (página, orden, búsqueda) tras cada cambio */
+  @Output() stateChange = new EventEmitter<ListState>();
 
   searchTerm = '';
   sortColumn = '';
@@ -89,11 +98,47 @@ export class SimpleTableComponent implements OnChanges, OnInit {
         this.applyFilters();
       }
     }
+
+    // Si la página actual quedó fuera de rango (dato eliminado o estado
+    // restaurado con una página ya inexistente), se salta a la última válida
+    if (changes['data']) {
+      const maxPage = this.serverSide ? this.totalPagesServer : this.totalPages;
+      if (maxPage > 0 && this.currentPage > maxPage) {
+        this.goToPage(maxPage);
+      }
+    }
   }
 
   ngOnInit(): void {
+    this.applyInitialState();
+
     if (this.serverSide) {
       setTimeout(() => this.requestData(), 0);
+    } else if (this.initialState) {
+      this.applyFilters();
+    }
+  }
+
+  private applyInitialState(): void {
+    const state = this.initialState;
+    if (!state) {
+      return;
+    }
+
+    if (typeof state.page === 'number' && state.page >= 1) {
+      this.currentPage = state.page;
+    }
+    if ([10, 25, 50, 100].includes(state.pageSize as number)) {
+      this.pageSize = state.pageSize as number;
+    }
+    if (state.sortColumn) {
+      this.sortColumn = state.sortColumn;
+    }
+    if (state.sortDirection === 'asc' || state.sortDirection === 'desc') {
+      this.sortDirection = state.sortDirection;
+    }
+    if (state.searchTerm) {
+      this.searchTerm = state.searchTerm;
     }
   }
 
@@ -118,6 +163,7 @@ export class SimpleTableComponent implements OnChanges, OnInit {
     } else {
       this.applyFilters();
     }
+    this.emitState();
   }
 
   onSort(column: string): void {
@@ -133,6 +179,7 @@ export class SimpleTableComponent implements OnChanges, OnInit {
     } else {
       this.applyFilters();
     }
+    this.emitState();
   }
 
   onPageSizeChange(): void {
@@ -143,6 +190,7 @@ export class SimpleTableComponent implements OnChanges, OnInit {
     } else {
       this.applyFilters();
     }
+    this.emitState();
   }
 
   goToPage(page: number): void {
@@ -155,7 +203,18 @@ export class SimpleTableComponent implements OnChanges, OnInit {
       } else {
         this.applyFilters();
       }
+      this.emitState();
     }
+  }
+
+  private emitState(): void {
+    this.stateChange.emit({
+      page: this.currentPage,
+      pageSize: this.pageSize,
+      sortColumn: this.sortColumn,
+      sortDirection: this.sortDirection,
+      searchTerm: this.searchTerm,
+    });
   }
 
   private applyFilters(): void {

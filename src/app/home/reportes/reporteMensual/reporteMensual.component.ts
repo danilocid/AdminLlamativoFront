@@ -15,6 +15,7 @@ import {
   SalesResponse,
   ReportDataItem,
 } from 'src/app/shared/models/monthlyReport.model';
+import { ListStateService } from 'src/app/shared/services/list-state.service';
 import packageJson from '../../../../../package.json';
 
 @Component({
@@ -24,6 +25,9 @@ import packageJson from '../../../../../package.json';
   styleUrls: ['./reporteMensual.component.css'],
 })
 export class ReporteMensualComponent implements OnInit {
+  /** Clave en localStorage donde se guarda el período seleccionado */
+  static readonly LIST_STATE_KEY = 'reporte-mensual';
+
   dateForm: FormGroup;
   month: number;
   year: number;
@@ -69,14 +73,19 @@ export class ReporteMensualComponent implements OnInit {
     readonly alertSV: AlertService,
     readonly fb: FormBuilder,
     readonly http: HttpClient,
+    readonly listStateSV: ListStateService,
     private pdfGenerator: PdfGeneratorService,
   ) {
     this.titleService.setTitle('Reporte mensual');
   }
   ngOnInit() {
     const date = new Date();
-    this.month = date.getMonth() + 1;
-    this.year = date.getFullYear();
+    const state = this.listStateSV.load(
+      ReporteMensualComponent.LIST_STATE_KEY,
+    );
+    // Se restaura el período consultado la última vez
+    this.month = state?.extra?.['month'] ?? date.getMonth() + 1;
+    this.year = state?.extra?.['year'] ?? date.getFullYear();
     //add years to list, from 2023 to this year
     for (let i = 2023; i <= this.year; i++) {
       this.yearList.push(i);
@@ -103,6 +112,12 @@ export class ReporteMensualComponent implements OnInit {
 
     const month = this.dateForm.value.month;
     const year = this.dateForm.value.year;
+
+    // Se persiste el período para restaurarlo la próxima vez
+    this.listStateSV.save(ReporteMensualComponent.LIST_STATE_KEY, {
+      page: 1,
+      extra: { month: +month, year: +year },
+    });
 
     // Calcular mes anterior
     let previousMonth = month - 1;

@@ -67,6 +67,11 @@ export class CreateComponent implements OnInit {
       this.spinner.hide();
     }
   }
+  /** Vuelve al listado de entidades conservando el estado (página/orden/búsqueda) */
+  volver(): void {
+    this.router.navigate(['/entidades']);
+  }
+
   getRegions() {
     this.apiService.get(ApiRequest.getRegiones).subscribe({
       next: (response: ServerResponse) => {

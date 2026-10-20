@@ -127,4 +127,9 @@ export class VerVentaComponent implements OnInit {
   onViewArticulo(detalle: SaleDetail) {
     window.open('/articulos/ver/' + detalle.articulo.id, '_blank');
   }
+
+  /** Vuelve al listado de ventas conservando el estado (página/orden/búsqueda) */
+  volver(): void {
+    this.router.navigate(['/ventas']);
+  }
 }

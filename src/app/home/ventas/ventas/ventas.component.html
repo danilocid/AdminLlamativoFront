@@ -29,12 +29,13 @@
           [serverSide]="true"
           [totalRecords]="totalRecords"
           [loading]="loading"
+          [initialState]="initialState"
           [showSearch]="false"
           [showViewButton]="true"
           [showEditButton]="false"
           [showDeleteButton]="false"
           (dataRequest)="onDataRequest($event)"
-          (onView)="onView($event)"
+          (view)="onView($event)"
         ></app-simple-table>
       </div>
     </div>

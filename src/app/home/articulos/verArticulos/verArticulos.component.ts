@@ -63,10 +63,12 @@ export class VerArticulosComponent implements OnInit {
     this.getProductMovements();
   }
 
-  openLabelModal() {
-    console.log('🎯 Abriendo modal de etiquetas personalizado');
-    console.log('📦 Producto a enviar:', this.producto);
+  /** Vuelve al listado de articulos conservando el estado (página/orden/búsqueda) */
+  volver(): void {
+    this.router.navigate(['/articulos']);
+  }
 
+  openLabelModal() {
     const modalRef = this.modalService.open(LabelModalComponent, {
       centered: true,
       backdrop: false,
@@ -74,13 +76,11 @@ export class VerArticulosComponent implements OnInit {
       size: 'md',
       windowClass: 'custom-modal-window no-animation',
     });
-    console.log('✅ Modal creado:', modalRef);
 
     modalRef.componentInstance.producto = this.producto;
 
     modalRef.result.then(
       (result) => {
-        console.log('✅ Modal cerrado con resultado:', result);
         if (result) {
           this.generateLabel(result);
         }
@@ -97,8 +97,6 @@ export class VerArticulosComponent implements OnInit {
     const barcodeText = this.producto.cod_barras;
 
     try {
-      console.log('� Generando etiquetas en PDF...');
-
       // Generar PDF con las etiquetas
       this.pdfGeneratorService.generateSingleLabelPerPagePdf(
         productName,

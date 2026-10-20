@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AlertService } from 'src/app/shared/services/alert.service';
@@ -17,7 +17,7 @@ export interface BulkCountItem {
   templateUrl: './conteo-multiple.component.html',
   styleUrls: [],
 })
-export class ConteoMultipleComponent implements OnInit {
+export class ConteoMultipleComponent {
   @ViewChild('skuInput') skuInput: ElementRef<HTMLInputElement>;
 
   items: BulkCountItem[] = [];
@@ -40,8 +40,6 @@ export class ConteoMultipleComponent implements OnInit {
   ) {
     this.titleService.setTitle('Conteo Múltiple');
   }
-
-  ngOnInit(): void {}
 
   get canAddMore(): boolean {
     return this.items.length < this.MAX_ITEMS;

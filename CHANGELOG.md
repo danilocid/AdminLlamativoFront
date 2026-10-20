@@ -9,6 +9,26 @@ y este proyecto adhiere al [Versionado Semántico](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+## [0.0.107] - 2026-10-19
+
+### Added
+
+- **Estado persistente de los listados** (guardado en `localStorage` mediante el nuevo servicio `ListStateService`)
+  - Al volver desde una vista de detalle se conservan página, orden, búsqueda, tamaño de página y los filtros propios de cada pantalla
+  - Aplicado a: **Ventas**, **Artículos** (búsqueda, activos, con stock, solo vigentes), **Entidades**, **Recepciones**, **Ajustes de inventario**, **Compras** (período mes/año) y **Reportes** (período del reporte mensual)
+  - Botón **"Volver atrás"** en las vistas de detalle: Ver venta, Ver artículo, Entidad (ver/editar), Ver recepción y Ver ajuste de inventario
+- **`app-simple-table`**
+  - Input `initialState` para restaurar el estado de la tabla al iniciar
+  - Output `stateChange` que emite el estado tras cada cambio de página, orden o búsqueda (necesario en tablas client-side)
+  - Salto automático a la última página válida cuando la página actual queda fuera de rango
+
+### Changed
+
+- Renombrados los outputs con prefijo `on` para cumplir `@angular-eslint/no-output-on-prefix` y `no-output-native`: `onView`/`onEdit`/`onDelete` → `view`/`edit`/`delete`, `onClose` → `cerrado`, `onAsociada` → `asociada`, `onVinculada` → `vinculada`, `onPrintLabel` → `printLabel` (bindings actualizados en los templates consumidores)
+- Reporte mensual: recuerda el último período (mes/año) consultado
+- `label-modal` y `verArticulos`: eliminados `console.log` de debug; `conteo-multiple`: eliminado `ngOnInit` vacío
+- Lint del frontend en **0 errores y 0 warnings** (antes 63); regla `prefer-standalone` desactivada (el proyecto es NgModule por diseño)
+
 ## [0.0.105] - 2026-10-08
 
 ### Changed

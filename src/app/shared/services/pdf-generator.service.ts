@@ -1016,7 +1016,7 @@ export class PdfGeneratorService {
         return 0.2;
       },
       vLineWidth: () => 0.2,
-      hLineColor: (i: number, node: any) => {
+      hLineColor: (i: number) => {
         if (highlightHeader && i < 2) return '#1e40af';
         return '#e2e8f0';
       },

@@ -86,7 +86,6 @@ export class NewInventoryComponent implements OnInit, OnDestroy {
           return;
         }
         this.movementTypes = resp.data;
-        console.log(this.movementTypes);
         this.spinner.hide();
       },
       error: (error) => {

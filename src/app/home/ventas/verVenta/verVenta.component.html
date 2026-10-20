@@ -6,6 +6,15 @@
       </div>
       <!-- /.col -->
 
+      <div class="col-sm-6">
+        <button
+          type="button"
+          class="btn btn-secondary float-sm-right"
+          (click)="volver()"
+        >
+          <i class="fas fa-arrow-left mr-1"></i>Volver atrás
+        </button>
+      </div>
       <!-- /.col -->
     </div>
     <!-- /.row -->
@@ -140,7 +149,7 @@
           [showEditButton]="false"
           [showDeleteButton]="false"
           [emptyMessage]="'No hay detalles de venta'"
-          (onView)="onViewArticulo($event)"
+          (view)="onViewArticulo($event)"
         ></app-simple-table>
       </div>
     </div>
