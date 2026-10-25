@@ -9,6 +9,16 @@ y este proyecto adhiere al [Versionado Semántico](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-10-24
+
+### Added
+
+- **Columna ID en el listado de Ventas de Mercado Libre**: nueva primera columna con el ID interno de la venta ML (`venta.id`), útil para contrastar con el panel de Mercado Libre; la tabla pasó de 8 a 9 columnas
+
+### Changed
+
+- **Paginación siempre visible en Ventas ML**: el control de paginación se muestra también cuando solo existe una página (antes solo aparecía con `totalPages > 1`, lo que daba la impresión de no existir), junto al resumen "Mostrando X–Y de Z"
+
 ## [1.0.0] - 2026-10-20
 
 ### Changed

@@ -4,7 +4,7 @@ Frontend de administración para Llamativo, desarrollado con Angular 22. Sistema
 
 ## Versión Actual
 
-**1.0.0**
+**1.0.1**
 
 La versión se incrementa automáticamente (patch) en cada deploy mediante `pnpm version patch`.
 
@@ -183,7 +183,8 @@ src/
 ### Ventas de Mercado Libre (`/mercado-libre/ventas-ml`)
 
 - Sincronización de órdenes desde Mercado Libre
-- Listado y detalle de ventas ML (órdenes, productos, comisión y envío)
+- Listado paginado con columna **ID** de la venta ML, resumen "Mostrando X–Y de Z" y paginación siempre visible (aunque solo haya una página)
+- Detalle de ventas ML (órdenes, productos, comisión y envío)
 - Asociación: crea una venta del sistema desde una venta ML
 - Vinculación: asocia una venta ML a una venta ya existente del sistema
 - Selección manual de producto cuando un producto de ML no tiene SKU
