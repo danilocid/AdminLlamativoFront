@@ -9,6 +9,13 @@ y este proyecto adhiere al [Versionado Semántico](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-10-27
+
+### Added
+
+- **Módulo de Configuraciones** (`/configuraciones`, lazy) — listado y edición de los parámetros del sistema (`settings` del backend) con campo de token oculto (ojo mostrar/ocultar) y botón **Probar Telegram** que envía un mensaje de prueba al chat configurado
+- Ítem **Configuraciones** en el sidebar, endpoint `settings` en `shared/constants.ts` y modelo `Setting` en `shared/models`
+
 ## [1.0.1] - 2026-10-24
 
 ### Added
