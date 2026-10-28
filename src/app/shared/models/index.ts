@@ -12,4 +12,5 @@ export * from './receptions.model';
 export * from './region.model';
 export * from './sale-extra-cost.model';
 export * from './sale.model';
+export * from './setting.model';
 export * from './user.model';

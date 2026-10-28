@@ -43,6 +43,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('./mercado-libre/mercado-libre.module').then((m) => m.MercadoLibreModule),
   },
+  {
+    path: 'configuraciones',
+    loadChildren: () =>
+      import('./configuraciones/configuraciones.module').then(
+        (m) => m.ConfiguracionesModule
+      ),
+  },
   /*
   {
     path: 'google-drive',

@@ -55,6 +55,11 @@ export const ApiRequest = {
   getNotificaciones: environment.urlBackend + 'notifications',
   markAsReaded: environment.urlBackend + 'notifications/readed',
 
+  // configuraciones
+  getSettings: environment.urlBackend + 'settings',
+  updateSetting: environment.urlBackend + 'settings/',
+  testTelegram: environment.urlBackend + 'settings/telegram/test',
+
   // Mercado Libre
   syncSalesMl: environment.urlBackend + 'mercado-libre/sync-sales',
   getVentasMl: environment.urlBackend + 'mercado-libre/ventas-ml',

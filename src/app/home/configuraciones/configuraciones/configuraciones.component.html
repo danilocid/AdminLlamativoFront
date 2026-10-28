@@ -1,0 +1,96 @@
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">Configuraciones</h1>
+      </div>
+    </div>
+  </div>
+</div>
+<section class="content">
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h4 class="card-title mb-0">Parámetros del sistema</h4>
+        <button
+          class="btn btn-outline-info btn-sm"
+          (click)="probarTelegram()"
+          [disabled]="testing"
+        >
+          <i class="fas fa-paper-plane mr-1"></i>
+          {{ testing ? 'Enviando…' : 'Probar Telegram' }}
+        </button>
+      </div>
+
+      <div class="card-body">
+        <div *ngIf="loading" class="text-center text-muted py-4">
+          <i class="fas fa-spinner fa-spin fa-2x"></i>
+          <p class="mt-2 mb-0">Cargando parámetros…</p>
+        </div>
+
+        <div *ngIf="!loading && settings.length === 0" class="text-center text-muted py-4">
+          No hay parámetros de configuración registrados.
+        </div>
+
+        <form *ngIf="!loading && settings.length > 0" (ngSubmit)="$event.preventDefault()">
+          <div class="row" *ngFor="let setting of settings">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label [for]="'param-' + setting.name">
+                  {{ tituloDe(setting) }}
+                  <small class="text-muted ml-1">({{ setting.name }})</small>
+                </label>
+                <small class="d-block text-muted mb-1">
+                  {{ descripcionDe(setting) }}
+                </small>
+                <div class="input-group">
+                  <input
+                    [id]="'param-' + setting.name"
+                    [type]=" esOculto(setting) && !showToken ? 'password' : 'text'"
+                    class="form-control"
+                    [(ngModel)]="setting.parameter"
+                    [name]="setting.name"
+                    autocomplete="off"
+                  />
+                  <div class="input-group-append" *ngIf="esOculto(setting)">
+                    <button
+                      type="button"
+                      class="btn btn-outline-secondary"
+                      (click)="showToken = !showToken"
+                      [title]="showToken ? 'Ocultar' : 'Mostrar'"
+                    >
+                      <i class="fas" [class.fa-eye]="!showToken" [class.fa-eye-slash]="showToken"></i>
+                    </button>
+                  </div>
+                  <div class="input-group-append">
+                    <button
+                      type="button"
+                      class="btn btn-primary"
+                      (click)="guardar(setting)"
+                      [disabled]="savingName === setting.name"
+                    >
+                      <i
+                        class="fas"
+                        [class.fa-spinner.fa-spin]="savingName === setting.name"
+                        [class.fa-save]="savingName !== setting.name"
+                      ></i>
+                      Guardar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12"><hr /></div>
+          </div>
+        </form>
+
+        <div class="alert alert-info mb-0">
+          <i class="fas fa-info-circle mr-1"></i>
+          Las notificaciones de <b>nuevas ventas de Mercado Libre</b> y de
+          <b>compras encontradas en el RCV</b> se envían a Telegram cuando el
+          token y el chat ID están configurados.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
